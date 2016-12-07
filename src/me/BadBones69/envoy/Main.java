@@ -30,6 +30,7 @@ public class Main extends JavaPlugin implements Listener{
 		settings.setup(this);
 		Envoy.load();
 		Prizes.loadPrizes();
+		Methods.hasUpdate();
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(this, this);
 		pm.registerEvents(new EnvoyControl(), this);
@@ -208,7 +209,7 @@ public class Main extends JavaPlugin implements Listener{
 						+ "&7It is running version &av" + Bukkit.getServer().getPluginManager().getPlugin("CrazyEnvoy").getDescription().getVersion() + "&7."));
 				}
 				if(player.isOp()){
-					//Methods.hasUpdate(player);
+					Methods.hasUpdate(player);
 				}
 			}
 		}, 1*20);

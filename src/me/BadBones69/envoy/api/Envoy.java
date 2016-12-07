@@ -490,7 +490,7 @@ public class Envoy {
 					ty = Integer.parseInt(b[1]);
 				}
 				Material m = Material.matchMaterial(type);
-				FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(0, 15, 0), m, (byte) ty);
+				FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(.5, 15, .5), m, (byte) ty);
 				chest.setDropItem(false);
 				fallingBlocks.add(chest);
 			}
@@ -504,7 +504,7 @@ public class Envoy {
 					ty = Integer.parseInt(b[1]);
 				}
 				Material m = Material.matchMaterial(type);
-				FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(0, 15, 0), m, (byte) ty);
+				FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(.5, 15, .5), m, (byte) ty);
 				chest.setDropItem(false);
 				fallingBlocks.add(chest);
 			}

@@ -18,7 +18,7 @@ public class NMS_v1_11_R1 {
             tagCompound = new NBTTagCompound();
         }
         NBTTagCompound id = new NBTTagCompound();
-        id.setString("id", type.getName());
+        id.setString("id", "minecraft:" + type.getName());
         tagCompound.set("EntityTag", id);
         stack.setTag(tagCompound);
         return CraftItemStack.asBukkitCopy(stack);

@@ -1,5 +1,9 @@
 package me.BadBones69.envoy;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,22 +127,23 @@ public class Methods {
 		}
 		Material material = Material.matchMaterial(ma);
 		ItemStack item = new ItemStack(material, amount, (short) type);
-		switch(Version.getVersion()){
-		case v1_11_R1:
-			item = NMS_v1_11_R1.getSpawnEgg(EntityType.fromId(type), amount);
-			break;
-		case v1_10_R1:
-			item = NMS_v1_10_R1.getSpawnEgg(EntityType.fromId(type), amount);
-			break;
-		case v1_9_R1:
-			item = NMS_v1_9_R2.getSpawnEgg(EntityType.fromId(type), amount);
-			break;
-		case v1_9_R2:
-			item = NMS_v1_9_R1.getSpawnEgg(EntityType.fromId(type), amount);
-			break;
-		default:
-			break;
-		
+		if(material == Material.MONSTER_EGG){
+			switch(Version.getVersion()){
+			case v1_11_R1:
+				item = NMS_v1_11_R1.getSpawnEgg(EntityType.fromId(type), amount);
+				break;
+			case v1_10_R1:
+				item = NMS_v1_10_R1.getSpawnEgg(EntityType.fromId(type), amount);
+				break;
+			case v1_9_R1:
+				item = NMS_v1_9_R2.getSpawnEgg(EntityType.fromId(type), amount);
+				break;
+			case v1_9_R2:
+				item = NMS_v1_9_R1.getSpawnEgg(EntityType.fromId(type), amount);
+				break;
+			default:
+				break;
+			}
 		}
 		ItemMeta m = item.getItemMeta();
 		m.setDisplayName(color(name));
@@ -241,12 +246,12 @@ public class Methods {
 		}
 		return false;
 	}
-/*	public static void hasUpdate(){
+	public static void hasUpdate(){
 		try {
 			HttpURLConnection c = (HttpURLConnection)new URL("http://www.spigotmc.org/api/general.php").openConnection();
 			c.setDoOutput(true);
 			c.setRequestMethod("POST");
-			c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=16470").getBytes("UTF-8"));
+			c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes("UTF-8"));
 			String oldVersion = plugin.getDescription().getVersion();
 			String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replaceAll("[a-zA-Z ]", "");
 			if(!newVersion.equals(oldVersion)) {
@@ -262,7 +267,7 @@ public class Methods {
 			HttpURLConnection c = (HttpURLConnection)new URL("http://www.spigotmc.org/api/general.php").openConnection();
 			c.setDoOutput(true);
 			c.setRequestMethod("POST");
-			c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=16470").getBytes("UTF-8"));
+			c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes("UTF-8"));
 			String oldVersion = plugin.getDescription().getVersion();
 			String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replaceAll("[a-zA-Z ]", "");
 			if(!newVersion.equals(oldVersion)) {
@@ -272,6 +277,6 @@ public class Methods {
 		catch(Exception e) {
 			return;
 		}
-	} */
+	} 
 	
 }
