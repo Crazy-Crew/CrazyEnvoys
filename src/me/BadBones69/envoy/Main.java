@@ -1,0 +1,217 @@
+package me.BadBones69.envoy;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import me.BadBones69.envoy.api.Envoy;
+import me.BadBones69.envoy.api.Prizes;
+import me.BadBones69.envoy.controlers.EditControl;
+import me.BadBones69.envoy.controlers.EnvoyControl;
+
+public class Main extends JavaPlugin implements Listener{
+	
+	public static SettingsManager settings = SettingsManager.getInstance();
+	
+	@Override
+	public void onEnable(){
+		settings.setup(this);
+		Envoy.load();
+		Prizes.loadPrizes();
+		PluginManager pm = Bukkit.getPluginManager();
+		pm.registerEvents(this, this);
+		pm.registerEvents(new EnvoyControl(), this);
+		pm.registerEvents(new EditControl(), this);
+		try{
+			Metrics metrics = new Metrics(this); metrics.start();
+		}catch (IOException e) {}
+	}
+	
+	@Override
+	public void onDisable(){
+		for(Player player : Bukkit.getOnlinePlayers()){
+			if(EditControl.isEditor(player)){
+				EditControl.removeEditor(player);
+				EditControl.removeFakeBlocks(player);
+			}
+		}
+		Envoy.unload();
+	}
+	
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLable, String[] args){
+		if(commandLable.equalsIgnoreCase("envoy")){
+			if(args.length <= 0){
+				if(!(sender.hasPermission("envoy.time") || sender.hasPermission("envoy.bypass"))){
+					sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
+					return true;
+				}
+				Bukkit.dispatchCommand(sender, "envoy time");
+				return true;
+			}else{
+				if(args[0].equalsIgnoreCase("help")){
+					if(!(sender.hasPermission("envoy.help") || sender.hasPermission("envoy.bypass"))){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
+						return true;
+					}
+					sender.sendMessage(Methods.color("&6/Envoy help &7- Shows the envoy help menu."));
+					sender.sendMessage(Methods.color("&6/Envoy reload &7- Reloads all the config files."));
+					sender.sendMessage(Methods.color("&6/Envoy time &7- Shows the time till the envoy starts or ends."));
+					sender.sendMessage(Methods.color("&6/Envoy drops &7- Shows all current crate locations."));
+					sender.sendMessage(Methods.color("&6/Envoy edit &7- Edit the crate locations with bedrock."));
+					sender.sendMessage(Methods.color("&6/Envoy start &7- Force starts the envoy."));
+					sender.sendMessage(Methods.color("&6/Envoy stop &7- Force stops the envoy."));
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("reload")){
+					if(!(sender.hasPermission("envoy.reload") || sender.hasPermission("envoy.bypass"))){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
+						return true;
+					}
+					settings.reloadConfig();
+					settings.reloadData();
+					settings.reloadMessages();
+					settings.setup(this);
+					Envoy.unload();
+					Envoy.load();
+					Prizes.loadPrizes();
+					sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Reloaded")));
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("drops") || args[0].equalsIgnoreCase("drop")){
+					if(!(sender.hasPermission("envoy.drops") || sender.hasPermission("envoy.bypass"))){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
+						return true;
+					}
+					ArrayList<String> locs = new ArrayList<String>();
+					int page = 1;
+					if(args.length >= 2){
+						if(Methods.isInt(args[1])){
+							page = Integer.parseInt(args[1]);
+						}else{
+							sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Not-A-Number")));
+							return true;
+						}
+					}
+					if(Envoy.isEnvoyActive()){
+						int i = 1;
+						for(Location loc : Envoy.getActiveEvoys()){
+							locs.add("&7[&6" + i + "&7]: " + loc.getWorld().getName() + ", " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
+							i++;
+						}
+					}else{
+						int i = 1;
+						for(Location loc : Envoy.getLocations()){
+							locs.add("&7[&6" + i + "&7]: " + loc.getWorld().getName() + ", " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
+							i++;
+						}
+					}
+					if(Envoy.isEnvoyActive()){
+						sender.sendMessage(Methods.getPrefix() + Methods.color("&7List of all available envoys."));
+					}else{
+						sender.sendMessage(Methods.getPrefix() + Methods.color("&7List of location envoy's may spawn at."));
+					}
+					for(String loc : Methods.getPage(locs, page)){
+						sender.sendMessage(Methods.color("&6" + loc));
+					}
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("time")){
+					if(!(sender.hasPermission("envoy.time") || sender.hasPermission("envoy.bypass"))){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
+						return true;
+					}
+					if(Envoy.isEnvoyActive()){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Time-Left")
+								.replaceAll("%Time%", Envoy.getEnvoyRunTimeLeft()).replaceAll("%time%", Envoy.getEnvoyRunTimeLeft())));
+					}else{
+						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Time-Till-Event")
+								.replaceAll("%Time%", Envoy.getNextEnvoyTime()).replaceAll("%time%", Envoy.getNextEnvoyTime())));
+					}
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("start") || args[0].equalsIgnoreCase("begin")){
+					if(!(sender.hasPermission("envoy.start") || sender.hasPermission("envoy.bypass"))){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
+						return true;
+					}
+					if(Envoy.isEnvoyActive()){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Already-Started")));
+					}else{
+						Envoy.startEnvoy();
+						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Force-Start")));
+					}
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("stop") || args[0].equalsIgnoreCase("end")){
+					if(!(sender.hasPermission("envoy.stop") || sender.hasPermission("envoy.bypass"))){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
+						return true;
+					}
+					if(Envoy.isEnvoyActive()){
+						Envoy.endEnvoy();
+						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Force-Ended")));
+					}else{
+						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Not-Started")));
+					}
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("edit")){
+					if(!(sender.hasPermission("envoy.edit") || sender.hasPermission("envoy.bypass"))){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
+						return true;
+					}
+					if(Envoy.isEnvoyActive()){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Kicked-From-Editor-Mode")));
+					}else{
+						Player player = (Player) sender;
+						if(EditControl.isEditor(player)){
+							EditControl.removeEditor(player);
+							EditControl.removeFakeBlocks(player);
+							player.getInventory().remove(Material.BEDROCK);
+							player.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Leave-Editor-Mode")));
+						}else{
+							EditControl.addEditor(player);
+							EditControl.showFakeBlocks(player);
+							player.getInventory().addItem(new ItemStack(Material.BEDROCK, 1));
+							player.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Enter-Editor-Mode")));
+						}
+					}
+					return true;
+				}
+				sender.sendMessage(Methods.getPrefix() + Methods.color("&cPlease do /envoy help for more information."));
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent e){
+		final Player player = e.getPlayer();
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+			@Override
+			public void run() {
+				if(player.getName().equals("BadBones69")){
+					player.sendMessage(Methods.getPrefix() + Methods.color("&7This server is running your Crazy Envoy Plugin. "
+						+ "&7It is running version &av" + Bukkit.getServer().getPluginManager().getPlugin("CrazyEnvoy").getDescription().getVersion() + "&7."));
+				}
+				if(player.isOp()){
+					//Methods.hasUpdate(player);
+				}
+			}
+		}, 1*20);
+	}
+	
+}
