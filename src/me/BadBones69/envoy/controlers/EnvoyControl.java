@@ -88,6 +88,7 @@ public class EnvoyControl implements Listener{
 			if(e.getEntity() instanceof FallingBlock){
 				if(!Envoy.getFallingBlocks().isEmpty()){
 					if(Envoy.getFallingBlocks().contains(e.getEntity())){
+						e.setCancelled(true);
 						e.getBlock().setType(Methods.makeItem(Main.settings.getConfig().getString("Settings.Placed-Block"), 1, "").getType());
 						if(Methods.hasHolographicDisplay()){
 							HolographicSupport.createHologram(e.getBlock().getLocation().add(.5, 1.5, .5));
