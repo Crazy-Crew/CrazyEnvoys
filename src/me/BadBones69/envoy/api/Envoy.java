@@ -258,7 +258,7 @@ public class Envoy {
 		if(D > 0 || H > 0 || M > 0) msg += M + "m, ";
 		if(D > 0 || H > 0 || M > 0 || S > 0) msg += S + "s, ";
 		if(msg.length() < 2){
-			msg = "On Gaoing";
+			msg = "On Going";
 		}else{
 			msg = msg.substring(0, msg.length() - 2);
 		}
@@ -482,6 +482,7 @@ public class Envoy {
 				}
 			}
 			for(Location loc : locs){
+				loc.getChunk().load();
 				String type = Main.settings.getConfig().getString("Settings.Falling-Block");
 				int ty = 0;
 				if(type.contains(":")){
@@ -491,11 +492,27 @@ public class Envoy {
 				}
 				Material m = Material.matchMaterial(type);
 				FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(.5, 15, .5), m, (byte) ty);
-				chest.setDropItem(false);
-				fallingBlocks.add(chest);
+				boolean toggle = false;
+				for(Entity en : chest.getNearbyEntities(100, 100, 100)){
+					if(en instanceof Player){
+						toggle = true;
+					}
+				}
+				if(!toggle){
+					chest.remove();
+					loc.getBlock().setType(Methods.makeItem(Main.settings.getConfig().getString("Settings.Placed-Block"), 1, "").getType());
+					if(Methods.hasHolographicDisplay()){
+						HolographicSupport.createHologram(loc.getBlock().getLocation().add(.5, 1.5, .5));
+					}
+					addActiveEvoy(loc.getBlock().getLocation());
+				}else{
+					chest.setDropItem(false);
+					fallingBlocks.add(chest);
+				}
 			}
 		}else{
 			for(Location loc : locations){
+				loc.getChunk().load();
 				String type = Main.settings.getConfig().getString("Settings.Falling-Block");
 				int ty = 0;
 				if(type.contains(":")){
@@ -505,8 +522,23 @@ public class Envoy {
 				}
 				Material m = Material.matchMaterial(type);
 				FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(.5, 15, .5), m, (byte) ty);
-				chest.setDropItem(false);
-				fallingBlocks.add(chest);
+				boolean toggle = false;
+				for(Entity en : chest.getNearbyEntities(100, 100, 100)){
+					if(en instanceof Player){
+						toggle = true;
+					}
+				}
+				if(!toggle){
+					chest.remove();
+					loc.getBlock().setType(Methods.makeItem(Main.settings.getConfig().getString("Settings.Placed-Block"), 1, "").getType());
+					if(Methods.hasHolographicDisplay()){
+						HolographicSupport.createHologram(loc.getBlock().getLocation().add(.5, 1.5, .5));
+					}
+					addActiveEvoy(loc.getBlock().getLocation());
+				}else{
+					chest.setDropItem(false);
+					fallingBlocks.add(chest);
+				}
 			}
 		}
 		runTimeTask = new BukkitRunnable(){

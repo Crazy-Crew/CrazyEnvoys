@@ -52,7 +52,7 @@ public class Methods {
 		HashMap<String, String> enchants = new HashMap<String, String>();
 		enchants.put("ARROW_DAMAGE", "Power");
 		enchants.put("ARROW_FIRE", "Flame");
-		enchants.put("ARROW_INFINITE", "Infinite");
+		enchants.put("ARROW_INFINITE", "Infinity");
 		enchants.put("ARROW_KNOCKBACK", "Punch");
 		enchants.put("DAMAGE_ALL", "Sharpness");
 		enchants.put("DAMAGE_ARTHROPODS", "Bane_Of_Arthropods");
