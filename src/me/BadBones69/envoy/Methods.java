@@ -100,6 +100,19 @@ public class Methods {
 	    return true;
 	}
 	
+	public static boolean isOnline(String name){
+		for(Player player : Bukkit.getServer().getOnlinePlayers()){
+			if(player.getName().equalsIgnoreCase(name)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static Player getPlayer(String name){
+		return Bukkit.getServer().getPlayer(name);
+	}
+	
 	public static ItemStack makeItem(String type, int amount, String name){
 		int ty = 0;
 		if(type.contains(":")){
@@ -112,6 +125,44 @@ public class Methods {
 		ItemMeta me = item.getItemMeta();
 		me.setDisplayName(color(name));
 		item.setItemMeta(me);
+		return item;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static ItemStack makeItem(String id, int amount, String name, List<String> lore){
+		ArrayList<String> l = new ArrayList<String>();
+		String ma = id;
+		int type = 0;
+		if(ma.contains(":")){
+			String[] b = ma.split(":");
+			ma = b[0];
+			type = Integer.parseInt(b[1]);
+		}
+		Material material = Material.matchMaterial(ma);
+		ItemStack item = new ItemStack(material, amount, (short) type);
+		if(material == Material.MONSTER_EGG){
+			switch(Version.getVersion()){
+			case v1_11_R1:
+				item = NMS_v1_11_R1.getSpawnEgg(EntityType.fromId(type), amount);
+				break;
+			case v1_10_R1:
+				item = NMS_v1_10_R1.getSpawnEgg(EntityType.fromId(type), amount);
+				break;
+			case v1_9_R1:
+				item = NMS_v1_9_R2.getSpawnEgg(EntityType.fromId(type), amount);
+				break;
+			case v1_9_R2:
+				item = NMS_v1_9_R1.getSpawnEgg(EntityType.fromId(type), amount);
+				break;
+			default:
+				break;
+			}
+		}
+		ItemMeta m = item.getItemMeta();
+		m.setDisplayName(color(name));
+		for(String L:lore)l.add(color(L));
+		m.setLore(l);
+		item.setItemMeta(m);
 		return item;
 	}
 	

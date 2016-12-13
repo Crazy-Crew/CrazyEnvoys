@@ -2,16 +2,22 @@ package me.BadBones69.envoy.api;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Random;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -25,13 +31,14 @@ public class Envoy {
 	
 	private static BukkitTask runTimeTask;
 	private static BukkitTask coolDownTask;
-	private static Boolean envoyActive = false;
 	private static Calendar nextEnvoy;
 	private static Calendar envoyTimeLeft;
+	private static Boolean envoyActive = false;
 	private static ArrayList<Calendar> warnings = new ArrayList<Calendar>();
 	private static ArrayList<Location> locations = new ArrayList<Location>();
 	private static ArrayList<Entity> fallingBlocks = new ArrayList<Entity>();
-	private static ArrayList<Location> activeEnvoys = new ArrayList<Location>();
+	private static HashMap<Location, String> activeEnvoys = new HashMap<Location, String>();
+	private static HashMap<Location, BukkitTask> activeSignals = new HashMap<Location, BukkitTask>();
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 	
 	/**
@@ -94,7 +101,7 @@ public class Envoy {
 	}
 	
 	/**
-	 * Used when the plugin starts to control the countdown and when the event starts
+	 * Used when the plugin starts to control the count down and when the event starts
 	 */
 	public static void startEnvoyCountDown(){
 		cancelEnvoyCooldownTime();
@@ -124,6 +131,15 @@ public class Envoy {
 		}.runTaskTimer(plugin, 20, 20);
 	}
 	
+	/**
+	 * 
+	 * @param loc The location you want the tier from.
+	 * @return The tier that location is.
+	 */
+	public static String getTier(Location loc){
+		return activeEnvoys.get(loc);
+	}
+	
 	private static void setEnvoyActive(Boolean toggle){
 		envoyActive = toggle;
 	}
@@ -143,6 +159,7 @@ public class Envoy {
 		envoyActive = false;
 		for(Location loc : getActiveEvoys()){
 			loc.getBlock().setType(Material.AIR);
+			stopSignalFlare(loc);
 		}
 		for(Entity en : fallingBlocks){
 			en.remove();
@@ -180,8 +197,8 @@ public class Envoy {
 	 * 
 	 * @return All the active envoys that are active.
 	 */
-	public static ArrayList<Location> getActiveEvoys(){
-		return activeEnvoys;
+	public static Set<Location> getActiveEvoys(){
+		return activeEnvoys.keySet();
 	}
 	
 	/**
@@ -190,15 +207,15 @@ public class Envoy {
 	 * @return Turn if it is and false if not.
 	 */
 	public static Boolean isActiveEnvoy(Location loc){
-		return activeEnvoys.contains(loc);
+		return activeEnvoys.containsKey(loc);
 	}
 	
 	/**
 	 * 
 	 * @param loc The location you wish to add.
 	 */
-	public static void addActiveEvoy(Location loc){
-		activeEnvoys.add(loc);
+	public static void addActiveEvoy(Location loc, String tier){
+		activeEnvoys.put(loc, tier);
 	}
 	
 	/**
@@ -250,7 +267,7 @@ public class Envoy {
 		int S = 0;
 		for(;total > 86400; total -= 86400, D++);
 		for(;total > 3600; total -= 3600, H++);
-		for(;total > 60; total -= 60, M++);
+		for(;total >= 60; total -= 60, M++);
 		S += total;
 		String msg = "";
 		if(D > 0) msg += D + "d, ";
@@ -258,7 +275,7 @@ public class Envoy {
 		if(D > 0 || H > 0 || M > 0) msg += M + "m, ";
 		if(D > 0 || H > 0 || M > 0 || S > 0) msg += S + "s, ";
 		if(msg.length() < 2){
-			msg = "On Going";
+			msg = Main.settings.getMessages().getString("Messages.Hologram-Placeholders.On-Going");
 		}else{
 			msg = msg.substring(0, msg.length() - 2);
 		}
@@ -396,7 +413,7 @@ public class Envoy {
 		int S = 0;
 		for(;total > 86400; total -= 86400, D++);
 		for(;total > 3600; total -= 3600, H++);
-		for(;total > 60; total -= 60, M++);
+		for(;total >= 60; total -= 60, M++);
 		S += total;
 		String msg = "";
 		if(D > 0) msg += D + "d, ";
@@ -404,7 +421,7 @@ public class Envoy {
 		if(D > 0 || H > 0 || M > 0) msg += M + "m, ";
 		if(D > 0 || H > 0 || M > 0 || S > 0) msg += S + "s, ";
 		if(msg.length() < 2){
-			msg = "Over";
+			msg = Main.settings.getMessages().getString("Messages.Hologram-Placeholders.Not-Running");
 		}else{
 			msg = msg.substring(0, msg.length() - 2);
 		}
@@ -414,6 +431,25 @@ public class Envoy {
 	private static Integer getEnvoyRunTime(){
 		Integer seconds = 0;
 		String time = Main.settings.getConfig().getString("Settings.Envoy-Run-Time");
+		for(String i : time.split(" ")){
+			if(i.contains("D")||i.contains("d")){
+				seconds += Integer.parseInt(i.replaceAll("D", "").replaceAll("d", ""))*86400;
+			}
+			if(i.contains("H")||i.contains("h")){
+				seconds += Integer.parseInt(i.replaceAll("H", "").replaceAll("h", ""))*3600;
+			}
+			if(i.contains("M")||i.contains("m")){
+				seconds += Integer.parseInt(i.replaceAll("M", "").replaceAll("m", ""))*60;
+			}
+			if(i.contains("S")||i.contains("s")){
+				seconds += Integer.parseInt(i.replaceAll("S", "").replaceAll("s", ""));
+			}
+		}
+		return seconds;
+	}
+	
+	private static Integer getTimeSeconds(String time){
+		Integer seconds = 0;
 		for(String i : time.split(" ")){
 			if(i.contains("D")||i.contains("d")){
 				seconds += Integer.parseInt(i.replaceAll("D", "").replaceAll("d", ""))*86400;
@@ -459,6 +495,11 @@ public class Envoy {
 			player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Kicked-From-Editor-Mode")));
 		}
 		EditControl.getEditors().clear();
+		if(Prizes.getTiers().size() == 0){
+			Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder"
+					+ " to allow it to remake the default tier files."));
+			return;
+		}
 		deSpawnCrates();
 		setEnvoyActive(true);
 		int max = getLocations().size();
@@ -499,12 +540,16 @@ public class Envoy {
 					}
 				}
 				if(!toggle){
+					String tier = Prizes.pickTierByChance();
 					chest.remove();
-					loc.getBlock().setType(Methods.makeItem(Main.settings.getConfig().getString("Settings.Placed-Block"), 1, "").getType());
+					loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
 					if(Methods.hasHolographicDisplay()){
-						HolographicSupport.createHologram(loc.getBlock().getLocation().add(.5, 1.5, .5));
+						HolographicSupport.createHologram(loc.clone().add(.5, 1.5, .5), tier);
 					}
-					addActiveEvoy(loc.getBlock().getLocation());
+					addActiveEvoy(loc, tier);
+					if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){
+						startSignalFlare(loc, tier);
+					}
 				}else{
 					chest.setDropItem(false);
 					fallingBlocks.add(chest);
@@ -529,12 +574,16 @@ public class Envoy {
 					}
 				}
 				if(!toggle){
+					String tier = Prizes.pickTierByChance();
 					chest.remove();
-					loc.getBlock().setType(Methods.makeItem(Main.settings.getConfig().getString("Settings.Placed-Block"), 1, "").getType());
+					loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
 					if(Methods.hasHolographicDisplay()){
-						HolographicSupport.createHologram(loc.getBlock().getLocation().add(.5, 1.5, .5));
+						HolographicSupport.createHologram(loc.clone().add(.5, 1.5, .5), tier);
 					}
-					addActiveEvoy(loc.getBlock().getLocation());
+					addActiveEvoy(loc, tier);
+					if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){
+						startSignalFlare(loc, tier);
+					}
 				}else{
 					chest.setDropItem(false);
 					fallingBlocks.add(chest);
@@ -560,6 +609,54 @@ public class Envoy {
 		cancelEnvoyRunTime();
 		setNextEnvoy(getEnvoyCooldown());
 		resetWarnings();
+	}
+	
+	/**
+	 * 
+	 * @param loc The location the signals will be at.
+	 * @param tier The tier the signal is.
+	 */
+	public static void startSignalFlare(final Location loc, final String tier){
+		BukkitTask task;
+		task = new BukkitRunnable(){
+			@Override
+			public void run() {
+				playSignal(loc.clone().add(.5, 0, .5), tier);
+			}
+		}.runTaskTimer(plugin, getTimeSeconds(Main.settings.getFile(tier).getString("Settings.Signal-Flare.Time")) * 20,
+				getTimeSeconds(Main.settings.getFile(tier).getString("Settings.Signal-Flare.Time")) * 20);
+		activeSignals.put(loc, task);
+	}
+	
+	/**
+	 * 
+	 * @param loc The location that the signal is stopping.
+	 */
+	public static void stopSignalFlare(Location loc){
+		try{
+			activeSignals.get(loc).cancel();
+		}catch(Exception e){}
+		activeSignals.remove(loc);
+	}
+	
+	private static void playSignal(Location loc, String tier) {
+		ArrayList<Color> colors = new ArrayList<Color>();
+		for(String c : Main.settings.getFile(tier).getStringList("Settings.Signal-Flare.Colors")){
+			Color color = Methods.getColor(c);
+			if(color != null){
+				colors.add(color);
+			}
+		}
+		Firework fw = loc.getWorld().spawn(loc, Firework.class);
+		FireworkMeta fm = fw.getFireworkMeta();
+		fm.addEffects(FireworkEffect.builder()
+				.with(FireworkEffect.Type.BALL_LARGE)
+				.withColor(colors)
+				.trail(true)
+				.flicker(false)
+				.build());
+		fm.setPower(1);
+		fw.setFireworkMeta(fm);
 	}
 	
 }

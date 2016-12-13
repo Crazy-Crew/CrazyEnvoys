@@ -1,5 +1,7 @@
 Messages:
   No-Permission: '&cYou do not have permission to use that command.'
+  Players-Only: '&cOnly players can use that command.'
+  Not-Online: '&cThat player is not online at this time.'
   Not-A-Number: '&cThat is not a number.'
   Reloaded: '&7You have just reloaded all the files.'
   Already-Started: '&cThere is already an envoy event running. Please stop it to start a new one.'
@@ -17,3 +19,10 @@ Messages:
   Remove-Location: '&cYou have just removed a spawn location.'
   Time-Left: '&7The next envoy has &6%Time%&7 left.'
   Time-Till-Event: '&7The next envoy will start in &6%Time%&7.'
+  Used-Flare: '&7You have just started a envoy event with a flare.'
+  Cant-Use-Flares: '&cYou do not have permission to use flares.'
+  Give-Flare: '&7You have just given &6%Player% %Amount% &7flares.'
+  Given-Flare: '&7You have been given &6%Amount% &7flares.'
+  Hologram-Placeholders:
+    On-Going: 'On Going'
+    Not-Running: 'Not Running'

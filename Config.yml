@@ -1,17 +1,14 @@
 Settings:
   Prefix: '&7[&cCrazyEnvoy&7]: ' #The prefix before the messages CrazyEnvoys sends.
+  Falling-Block: '138' #The block that will be falling.
   Max-Crate-Toggle: false #If ture then only a specified amount of crates will spawn and if false then all crates will spawn.
-  Use-Chance: false #If true then it uses the chance option in the prizes and if false then each prize has a 1/(Amount of Prizes) chance of winning.
   Max-Crates: 20 #The max amount of crates that will spawn.
   Envoy-Run-Time: '5m' #The amount of time the envoy event will go for.
   Envoy-Cooldown: '1h' #The time till the envoy event will happen again.
-  Falling-Block: '138' #The block that will be falling.
-  Placed-Block: '116' #The block that will be clicked when they land.
   Envoy-Warnings: #The times that will make the warning messages.
     - '30m'
     - '15m'
     - '10m'
-    - '15m'
     - '1m'
     - '30s'
     - '20s'
@@ -19,31 +16,9 @@ Settings:
     - '5s'
     - '3s'
     - '1s'
-  Hologram: #The messages that will be above the crate. (Holographic Displays is needed for this.) https://dev.bukkit.org/projects/holographic-displays
-    - '&7&l(&6&l!&7&l) &cClick me!'
-  Firework-Toggle: true #Toggle if fireworks happen when the player hits the crate.
-  Firework-Colors: #The colors that the fireworks will be.
-    - 'Gray'
-    - 'Red'
-    - 'Black'
-###################################
-#             Items: Options
-# Item: <ID:MD> - You can choose the item with its id and meta data.
-# Amount: <Number> - Choose how many of the item you get.
-# Name: <Name> - The display name that goes on the item.
-# Lore: <Line 1>,<Line 2>,<Line 3>,<Line 4> - The lore that will go under the enchantments. Split lines with a ','
-# <Enchantment>:<Level> - Choose the enchantment you want to add to the item. You can use the in-game names of the enchantment if you want. Replace the spaces in the name with "_".
-###################################
-Prizes: #The prizes that can be won.
-  '1': #Prize number
-    Chance: 10 #The chance that it will be won.
-    Messages: #The message that will be sent to the player if won.
-      - '&7You have just won &a$1000&7.'
-    Commands: #The commands that will be run when this prize is won.
-      - 'eco give %Player% 1000'
-  '2':
-    Chance: 75
-    Messages:
-      - '&7You have just won &616 Gold Apples&7.'
-    Items:
-      - 'Item:322, Amount:16, Name:&dJuicy Golden Apple, Lore:&7I am a yummy apple,&7Make sure to savor my flavor.'
+  Flares:
+    Item: '76'
+    Name: '&7&l(&4&l!&7&l) &cFlare'
+    Lore:
+      - '&7Right click me to'
+      - '&7start an envoy event.'

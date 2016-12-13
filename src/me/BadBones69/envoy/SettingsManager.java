@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,11 +31,31 @@ public class SettingsManager {
 	
 	FileConfiguration data;
 	File dfile;
+	
+	File tierfolder;
 
 	public void setup(Plugin p) {
-		
+		this.p = p;
 		if (!p.getDataFolder().exists()) {
 			p.getDataFolder().mkdir();
+		}
+		
+		tierfolder = new File(p.getDataFolder() + "/Tiers");
+		if (!tierfolder.exists()) {
+			tierfolder.mkdir();
+			try {
+				File basic = new File(p.getDataFolder() + "/Tiers/", "Basic.yml");
+				File lucky = new File(p.getDataFolder() + "/Tiers/", "Lucky.yml");
+				File titan = new File(p.getDataFolder() + "/Tiers/", "Titan.yml");
+				InputStream B = getClass().getResourceAsStream("/Tiers/Basic.yml");
+				InputStream L = getClass().getResourceAsStream("/Tiers/Lucky.yml");
+				InputStream T = getClass().getResourceAsStream("/Tiers/Titan.yml");
+				copyFile(B, basic);
+				copyFile(L, lucky);
+				copyFile(T, titan);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		cfile = new File(p.getDataFolder(), "Config.yml");
@@ -75,6 +96,32 @@ public class SettingsManager {
 		
 	}
 	
+	public ArrayList<File> getAllTiers() {
+		ArrayList<File> files = new ArrayList<File>();
+		for (String name : tierfolder.list()) {
+			if (!name.equalsIgnoreCase(".DS_Store")) {
+				files.add(new File(tierfolder, name));
+			}
+		}
+		return files;
+	}
+	
+	public ArrayList<String> getAllTierNames() {
+		ArrayList<String> files = new ArrayList<String>();
+		for (String name : tierfolder.list()) {
+			if (!name.equalsIgnoreCase(".DS_Store")) {
+				File f = new File(tierfolder, name);
+				files.add(f.getName().replaceAll(".yml", ""));
+			}
+		}
+		return files;
+	}
+	
+	public FileConfiguration getFile(String tier) {
+		File file = new File(p.getDataFolder() + "/Tiers/", tier + ".yml");
+		return YamlConfiguration.loadConfiguration(file);
+	}
+	
 	public FileConfiguration getConfig() {
 		return config;
 	}
@@ -111,6 +158,14 @@ public class SettingsManager {
 		} catch (IOException e) {
 			Bukkit.getServer().getLogger()
 					.severe(ChatColor.RED + "Could not save Data.yml!");
+		}
+	}
+	
+	public void reloadTiers() {
+		config = YamlConfiguration.loadConfiguration(cfile);
+		data = YamlConfiguration.loadConfiguration(dfile);
+		for (File c : getAllTiers()) {
+			YamlConfiguration.loadConfiguration(c);
 		}
 	}
 	

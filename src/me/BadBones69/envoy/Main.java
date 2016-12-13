@@ -16,10 +16,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.BadBones69.envoy.MultiSupport.HolographicSupport;
 import me.BadBones69.envoy.api.Envoy;
+import me.BadBones69.envoy.api.Flare;
 import me.BadBones69.envoy.api.Prizes;
 import me.BadBones69.envoy.controlers.EditControl;
 import me.BadBones69.envoy.controlers.EnvoyControl;
+import me.BadBones69.envoy.controlers.FlareControl;
 
 public class Main extends JavaPlugin implements Listener{
 	
@@ -33,8 +36,12 @@ public class Main extends JavaPlugin implements Listener{
 		Methods.hasUpdate();
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(this, this);
-		pm.registerEvents(new EnvoyControl(), this);
 		pm.registerEvents(new EditControl(), this);
+		pm.registerEvents(new EnvoyControl(), this);
+		pm.registerEvents(new FlareControl(), this);
+		if(Methods.hasHolographicDisplay()){
+			HolographicSupport.registerPlaceHolders();
+		}
 		try{
 			Metrics metrics = new Metrics(this); metrics.start();
 		}catch (IOException e) {}
@@ -47,6 +54,12 @@ public class Main extends JavaPlugin implements Listener{
 				EditControl.removeEditor(player);
 				EditControl.removeFakeBlocks(player);
 			}
+		}
+		if(Methods.hasHolographicDisplay()){
+			HolographicSupport.unregisterPlaceHolders();
+		}
+		if(Envoy.isEnvoyActive()){
+			Envoy.endEnvoy();
 		}
 		Envoy.unload();
 	}
@@ -70,6 +83,7 @@ public class Main extends JavaPlugin implements Listener{
 					sender.sendMessage(Methods.color("&6/Envoy reload &7- Reloads all the config files."));
 					sender.sendMessage(Methods.color("&6/Envoy time &7- Shows the time till the envoy starts or ends."));
 					sender.sendMessage(Methods.color("&6/Envoy drops &7- Shows all current crate locations."));
+					sender.sendMessage(Methods.color("&6/Envoy flare [amount] [player] &7- Give a player a flare to call an envoy event."));
 					sender.sendMessage(Methods.color("&6/Envoy edit &7- Edit the crate locations with bedrock."));
 					sender.sendMessage(Methods.color("&6/Envoy start &7- Force starts the envoy."));
 					sender.sendMessage(Methods.color("&6/Envoy stop &7- Force stops the envoy."));
@@ -80,14 +94,60 @@ public class Main extends JavaPlugin implements Listener{
 						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
 						return true;
 					}
-					settings.reloadConfig();
-					settings.reloadData();
-					settings.reloadMessages();
+					try{
+						settings.reloadConfig();
+						settings.reloadData();
+						settings.reloadMessages();
+						settings.reloadTiers();
+					}catch(Exception e){}
 					settings.setup(this);
+					if(Envoy.isEnvoyActive()){
+						Envoy.endEnvoy();
+					}
 					Envoy.unload();
 					Envoy.load();
 					Prizes.loadPrizes();
 					sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Reloaded")));
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("flare")){// /Envoy Flare [Amount] [Player]
+					if(!(sender.hasPermission("envoy.flare.give") || sender.hasPermission("envoy.bypass"))){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
+						return true;
+					}
+					int amount = 1;
+					Player player = null;
+					if(args.length >= 2){
+						if(Methods.isInt(args[1])){
+							amount = Integer.parseInt(args[1]);
+						}else{
+							sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-A-Number")));
+							return true;
+						}
+					}
+					if(args.length>=3){
+						if(Methods.isOnline(args[2])){
+							player = Methods.getPlayer(args[2]);
+						}else{
+							sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-Online")));
+							return true;
+						}
+					}else{
+						if(!(sender instanceof Player)){
+							sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Players-Only")));
+							return true;
+						}else{
+							player = (Player) sender;
+						}
+					}
+					sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Give-Flare")
+							.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName())
+							.replaceAll("%Amount%", amount + "").replaceAll("%amount%", amount + "")));
+					if(!sender.getName().equalsIgnoreCase(player.getName())){
+						player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Given-Flare")
+								.replaceAll("%Amount%", amount + "").replaceAll("%amount%", amount + "")));
+					}
+					Flare.giveFlare(player, amount);
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("drops") || args[0].equalsIgnoreCase("drop")){
