@@ -23,9 +23,15 @@ public class FlareControl implements Listener{
 				if(Flare.isFlare(flare)){
 					e.setCancelled(true);
 					if(player.hasPermission("envoy.flare.use")){
-						Flare.takeFlare(player, flare);
-						player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Used-Flare")));
-						Envoy.startEnvoy();
+						if(Envoy.isEnvoyActive()){
+							player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Already-Started")));
+							return;
+						}else{
+							player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Used-Flare")));
+							Flare.takeFlare(player, flare);
+							Envoy.startEnvoy();
+							return;
+						}
 					}else{
 						player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Cant-Use-Flares")));
 						return;
