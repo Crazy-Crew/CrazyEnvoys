@@ -74,7 +74,7 @@ public class Methods {
 		enchants.put("PROTECTION_PROJECTILE", "Projectile_Protection");
 		enchants.put("SILK_TOUCH", "Silk_Touch");
 		enchants.put("THORNS", "Thorns");
-		enchants.put("WATER_WORKER", "Aqua_Infinite");
+		enchants.put("WATER_WORKER", "Aqua_Affinity");
 		enchants.put("BINDING_CURSE", "Curse_Of_Binding");
 		enchants.put("MENDING", "Mending");
 		enchants.put("FROST_WALKER", "Frost_Walker");
