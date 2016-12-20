@@ -53,11 +53,12 @@ public class Prizes {
 					HashMap<Enchantment, Integer> enchs = new HashMap<Enchantment, Integer>();
 					String name = "";
 					int amount = 1;
-					String m = "Stone";
+					String item = "Stone";
+					boolean glowing = false;
 					for(String i : l.split(", ")){
 						if(i.contains("Item:")){
 							i = i.replaceAll("Item:", "");
-							m = i;
+							item = i;
 						}
 						if(i.contains("Amount:")){
 							i = i.replaceAll("Amount:", "");
@@ -74,6 +75,10 @@ public class Prizes {
 								lore.add(L);
 							}
 						}
+						if(i.contains("Glowing:")){
+							i = i.replaceAll("Glowing:", "");
+							glowing = Boolean.parseBoolean(i);
+						}
 						for(Enchantment enc : Enchantment.values()){
 							if(i.contains(enc.getName() + ":") || i.contains(Methods.getEnchantmentName(enc) + ":")){
 								String[] breakdown = i.split(":");
@@ -82,7 +87,7 @@ public class Prizes {
 							}
 						}
 					}
-					iTS.add(Methods.makeItem(m, amount, name, lore, enchs));
+					iTS.add(Methods.addGlow(Methods.makeItem(item, amount, name, lore, enchs), glowing));
 				}
 				its.put(p, iTS);
 				chances.put(tier, chance);

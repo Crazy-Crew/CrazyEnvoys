@@ -5,6 +5,8 @@ Settings:
   Max-Crates: 20 #The max amount of crates that will spawn.
   Envoy-Run-Time: '5m' #The amount of time the envoy event will go for.
   Envoy-Cooldown: '1h' #The time till the envoy event will happen again.
+  Minimum-Players-Toggle: false #When the envoy is about to start toggle if there needs to be a minimum amount of players. (Does not affect flares)
+  Minimum-Players: 12 #The minimum amount of players needed to start the envoy.
   Envoy-Warnings: #The times that will make the warning messages.
     - '30m'
     - '15m'
@@ -16,9 +18,9 @@ Settings:
     - '5s'
     - '3s'
     - '1s'
-  Flares:
-    Item: '76'
-    Name: '&7&l(&4&l!&7&l) &cFlare'
-    Lore:
+  Flares: #Options about flares. Players need the crazyenvoy.flare.use permission to use the flares.
+    Item: '76' #The time the flares are.
+    Name: '&7&l(&4&l!&7&l) &cFlare' #The name of the flare.
+    Lore: #The lore of the flare.
       - '&7Right click me to'
       - '&7start an envoy event.'

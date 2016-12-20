@@ -29,7 +29,7 @@ public class FlareControl implements Listener{
 						}else{
 							player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Used-Flare")));
 							Flare.takeFlare(player, flare);
-							Envoy.startEnvoy();
+							Envoy.startEnvoyEvent();
 							return;
 						}
 					}else{

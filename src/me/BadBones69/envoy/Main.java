@@ -59,7 +59,7 @@ public class Main extends JavaPlugin implements Listener{
 			HolographicSupport.unregisterPlaceHolders();
 		}
 		if(Envoy.isEnvoyActive()){
-			Envoy.endEnvoy();
+			Envoy.endEnvoyEvent();
 		}
 		Envoy.unload();
 	}
@@ -102,7 +102,7 @@ public class Main extends JavaPlugin implements Listener{
 					}catch(Exception e){}
 					settings.setup(this);
 					if(Envoy.isEnvoyActive()){
-						Envoy.endEnvoy();
+						Envoy.endEnvoyEvent();
 					}
 					Envoy.unload();
 					Envoy.load();
@@ -210,7 +210,7 @@ public class Main extends JavaPlugin implements Listener{
 					if(Envoy.isEnvoyActive()){
 						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Already-Started")));
 					}else{
-						Envoy.startEnvoy();
+						Envoy.startEnvoyEvent();
 						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Force-Start")));
 					}
 					return true;
@@ -221,7 +221,8 @@ public class Main extends JavaPlugin implements Listener{
 						return true;
 					}
 					if(Envoy.isEnvoyActive()){
-						Envoy.endEnvoy();
+						Envoy.endEnvoyEvent();
+						Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
 						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Force-Ended")));
 					}else{
 						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Not-Started")));

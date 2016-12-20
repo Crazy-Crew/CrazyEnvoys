@@ -17,6 +17,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -124,7 +125,24 @@ public class Envoy {
 					next.setTimeInMillis(getNextEnvoy().getTimeInMillis());
 					next.clear(Calendar.MILLISECOND);
 					if(next.compareTo(cal) == 0){
-						startEnvoy();
+						if(Main.settings.getConfig().contains("Settings.Minimum-Players-Toggle") && Main.settings.getConfig().contains("Settings.Minimum-Players")){
+							if(Main.settings.getConfig().getBoolean("Settings.Minimum-Players-Toggle")){
+								int online = Bukkit.getServer().getOnlinePlayers().size();
+								if(online < Main.settings.getConfig().getInt("Settings.Minimum-Players")){
+									if(Main.settings.getMessages().contains("Messages.Not-Enough-Players")){
+										Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-Enough-Players")
+												.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")));
+									}else{
+										Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&7Not enough players are online to start the envoy event. Only &6%Amount% &7players are online."
+												.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")));
+									}
+									setNextEnvoy(getEnvoyCooldown());
+									resetWarnings();
+									return;
+								}
+							}
+						}
+						startEnvoyEvent();
 					}
 				}
 			}
@@ -489,9 +507,10 @@ public class Envoy {
 	 * Starts the envoy event.
 	 */
 	@SuppressWarnings("deprecation")
-	public static void startEnvoy(){
+	public static void startEnvoyEvent(){
 		for(Player player : EditControl.getEditors()){
 			EditControl.removeFakeBlocks(player);
+			player.getInventory().removeItem(new ItemStack(Material.BEDROCK, 1));
 			player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Kicked-From-Editor-Mode")));
 		}
 		EditControl.getEditors().clear();
@@ -594,7 +613,7 @@ public class Envoy {
 			@Override
 			public void run() {
 				Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
-				endEnvoy();
+				endEnvoyEvent();
 			}
 		}.runTaskLater(plugin, getEnvoyRunTime() * 20);
 		envoyTimeLeft = getEnvoyRunTimeCalendar();
@@ -603,7 +622,7 @@ public class Envoy {
 	/**
 	 * Ends the envoy event.
 	 */
-	public static void endEnvoy(){
+	public static void endEnvoyEvent(){
 		deSpawnCrates();
 		setEnvoyActive(false);
 		cancelEnvoyRunTime();

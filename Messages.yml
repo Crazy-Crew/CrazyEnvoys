@@ -12,6 +12,7 @@ Messages:
   Started: '&7An envoy event has just started. &6%Amount% &7crates have spawned around spawn for 5m.'
   Left: '&6%Player% &7has gotten a crate. There are now &6%Amount% &7left to find.'
   Ended: '&cThe envoy event has ended. Thanks for playing and please come back for the next one.'
+  Not-Enough-Players: '&7Not enough players are online to start the envoy event. Only &6%Amount% &7players are online.'
   Enter-Editor-Mode: '&7You are now in editor mode.'
   Leave-Editor-Mode: '&7You have now left editor mode.'
   Kicked-From-Editor-Mode: '&cSorry but a envoy is active. Please stop it or wait till its over.'

@@ -83,7 +83,7 @@ public class EnvoyControl implements Listener{
 								.replaceAll("%Amount%", Envoy.getActiveEvoys().size() + "")
 								.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")));
 					}else{
-						Envoy.endEnvoy();
+						Envoy.endEnvoyEvent();
 						Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
 					}
 				}
