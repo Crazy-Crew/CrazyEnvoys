@@ -126,7 +126,6 @@ public class Prizes {
 		if(getTiers().size() == 1){
 			return getTiers().get(0);
 		}
-		Random r = new Random();
 		ArrayList<String> T = new ArrayList<String>();
 		for(; T.size() == 0;){
 			for(String tier : tiers){
@@ -135,7 +134,7 @@ public class Prizes {
 				}
 			}
 		}
-		return T.get(r.nextInt(T.size()));
+		return T.get(new Random().nextInt(T.size()));
 	}
 	
 	/**
@@ -159,8 +158,7 @@ public class Prizes {
 	 * @return A random prize.
 	 */
 	public static String pickRandomPrize(String tier){
-		Random r = new Random();
-		return prizes.get(tier).get(r.nextInt(prizes.size()));
+		return prizes.get(tier).get(new Random().nextInt(prizes.get(tier).size()));
 	}
 	
 	/**
@@ -168,7 +166,6 @@ public class Prizes {
 	 * @return A prize based on the chance the prize has.
 	 */
 	public static String pickPrizeByChance(String tier){
-		Random r = new Random();
 		ArrayList<String> P = new ArrayList<String>();
 		for(; P.size() == 0;){
 			for(String prize : getPrizes(tier)){
@@ -177,7 +174,7 @@ public class Prizes {
 				}
 			}
 		}
-		return P.get(r.nextInt(P.size()));
+		return P.get(new Random().nextInt(P.size()));
 	}
 	
 	/**
