@@ -24,6 +24,7 @@ Messages:
   Cant-Use-Flares: '&cYou do not have permission to use flares.'
   Give-Flare: '&7You have just given &6%Player% %Amount% &7flares.'
   Given-Flare: '&7You have been given &6%Amount% &7flares.'
+  New-Center: '&7You have just set a new center for the random envoy crates.'
   Hologram-Placeholders:
     On-Going: 'On Going'
     Not-Running: 'Not Running'

@@ -119,10 +119,26 @@ public class EnvoyControl implements Listener{
 	@EventHandler
 	public void onItemSpawn(ItemSpawnEvent e){
 		if(Envoy.isEnvoyActive()){
-			for(Entity en : e.getEntity().getNearbyEntities(2, 2, 2)){
+			for(Entity en : e.getEntity().getNearbyEntities(0, 0, 0)){
 				if(!Envoy.getFallingBlocks().isEmpty()){
 					if(Envoy.getFallingBlocks().contains(en)){
 						e.setCancelled(true);
+						String tier = Prizes.pickTierByChance();
+						Location loc = en.getLocation();
+						if(loc.getBlock().getType() != Material.AIR){
+							loc.add(0, 1, 0);
+						}
+						loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
+				        if(Methods.hasHolographicDisplay()){
+							if(Main.settings.getFile(tier).getBoolean("Settings.Hologram-Toggle")){
+								HolographicSupport.createHologram(loc.getBlock().getLocation().add(.5, 1.5, .5), tier);
+							}
+						}
+						Envoy.removeFallingBlock(en);
+						Envoy.addActiveEvoy(loc.getBlock().getLocation(), tier);
+						if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){
+							Envoy.startSignalFlare(loc.getBlock().getLocation(), tier);
+						}
 					}
 				}
 			}

@@ -22,6 +22,7 @@ import me.BadBones69.envoy.api.Flare;
 import me.BadBones69.envoy.api.Prizes;
 import me.BadBones69.envoy.controlers.EditControl;
 import me.BadBones69.envoy.controlers.EnvoyControl;
+import me.BadBones69.envoy.controlers.FireworkDamageAPI;
 import me.BadBones69.envoy.controlers.FlareControl;
 
 public class Main extends JavaPlugin implements Listener{
@@ -39,6 +40,7 @@ public class Main extends JavaPlugin implements Listener{
 		pm.registerEvents(new EditControl(), this);
 		pm.registerEvents(new EnvoyControl(), this);
 		pm.registerEvents(new FlareControl(), this);
+		pm.registerEvents(new FireworkDamageAPI(this), this);
 		if(Methods.hasHolographicDisplay()){
 			HolographicSupport.registerPlaceHolders();
 		}
@@ -87,6 +89,7 @@ public class Main extends JavaPlugin implements Listener{
 					sender.sendMessage(Methods.color("&6/Envoy edit &7- Edit the crate locations with bedrock."));
 					sender.sendMessage(Methods.color("&6/Envoy start &7- Force starts the envoy."));
 					sender.sendMessage(Methods.color("&6/Envoy stop &7- Force stops the envoy."));
+					sender.sendMessage(Methods.color("&6/Envoy center &7- Set the center of the random crate drops."));
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("reload")){
@@ -108,6 +111,15 @@ public class Main extends JavaPlugin implements Listener{
 					Envoy.load();
 					Prizes.loadPrizes();
 					sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Reloaded")));
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("center")){// /Envoy Center
+					if(!(sender.hasPermission("envoy.center") || sender.hasPermission("envoy.bypass"))){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
+						return true;
+					}
+					Envoy.setCenter(((Player) sender).getLocation());
+					sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.New-Center")));
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("flare")){// /Envoy Flare [Amount] [Player]

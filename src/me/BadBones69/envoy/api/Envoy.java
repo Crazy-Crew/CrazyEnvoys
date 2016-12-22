@@ -27,6 +27,7 @@ import me.BadBones69.envoy.Main;
 import me.BadBones69.envoy.Methods;
 import me.BadBones69.envoy.MultiSupport.HolographicSupport;
 import me.BadBones69.envoy.controlers.EditControl;
+import me.BadBones69.envoy.controlers.FireworkDamageAPI;
 
 public class Envoy {
 	
@@ -35,6 +36,7 @@ public class Envoy {
 	private static Calendar nextEnvoy;
 	private static Calendar envoyTimeLeft;
 	private static Boolean envoyActive = false;
+	private static Location center = Bukkit.getWorlds().get(0).getSpawnLocation();
 	private static ArrayList<Calendar> warnings = new ArrayList<Calendar>();
 	private static ArrayList<Location> locations = new ArrayList<Location>();
 	private static ArrayList<Entity> fallingBlocks = new ArrayList<Entity>();
@@ -60,30 +62,37 @@ public class Envoy {
 		envoyTimeLeft = Calendar.getInstance();
 		resetWarnings();
 		for(String l : data.getStringList("Locations.Spawns")){
-			World w = Bukkit.getWorlds().get(0);
-			int x = 0;
-			int y = 0;
-			int z = 0;
-			for(String i : l.split(", ")){
-				if(i.startsWith("World:")){
-					w = Bukkit.getWorld(i.replaceAll("World:", ""));
-				}
-				if(i.startsWith("X:")){
-					x = Integer.parseInt(i.replaceAll("X:", ""));
-				}
-				if(i.startsWith("Y:")){
-					y = Integer.parseInt(i.replaceAll("Y:", ""));
-				}
-				if(i.startsWith("Z:")){
-					z = Integer.parseInt(i.replaceAll("Z:", ""));
-				}
-			}
-			locations.add(new Location(w, x, y, z));
+			locations.add(getLocationFromString(l));
 		}
 		if(Calendar.getInstance().after(getNextEnvoy())){
 			setEnvoyActive(false);
 		}
+		if(Main.settings.getData().contains("Center")){
+			center = getLocationFromString(Main.settings.getData().getString("Center"));
+		}
 		startEnvoyCountDown();
+	}
+	
+	private static Location getLocationFromString(String locationString){
+		World w = Bukkit.getWorlds().get(0);
+		int x = 0;
+		int y = 0;
+		int z = 0;
+		for(String i : locationString.split(", ")){
+			if(i.startsWith("World:")){
+				w = Bukkit.getWorld(i.replaceAll("World:", ""));
+			}
+			if(i.startsWith("X:")){
+				x = Integer.parseInt(i.replaceAll("X:", ""));
+			}
+			if(i.startsWith("Y:")){
+				y = Integer.parseInt(i.replaceAll("Y:", ""));
+			}
+			if(i.startsWith("Z:")){
+				z = Integer.parseInt(i.replaceAll("Z:", ""));
+			}
+		}
+		return new Location(w, x, y, z);
 	}
 	
 	/**
@@ -96,6 +105,7 @@ public class Envoy {
 		}
 		deSpawnCrates();
 		Main.settings.getData().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
+		Main.settings.getData().set("Center", "World:" + center.getWorld().getName() + ", X:" + center.getBlockX() + ", Y:" + center.getBlockY() + ", Z:" + center.getBlockZ());
 		Main.settings.getData().set("Locations.Spawns", locs);
 		Main.settings.saveData();
 		locations.clear();
@@ -528,85 +538,81 @@ public class Envoy {
 				max = getLocations().size();
 			}
 		}
-		Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Started")
-				.replaceAll("%Amount%", max + "")
-				.replaceAll("%amount%", max + "")));
+		ArrayList<Location> locs = new ArrayList<Location>();
 		if(Main.settings.getConfig().getBoolean("Settings.Max-Crate-Toggle")){
-			ArrayList<Location> locs = new ArrayList<Location>();
-			Random r = new Random();
 			for(int i = 0; i < max;){
-				Location loc = locations.get(r.nextInt(locations.size()));
+				Location loc = locations.get(new Random().nextInt(locations.size()));
 				if(!locs.contains(loc)){
 					locs.add(loc);
 					i++;
 				}
 			}
-			for(Location loc : locs){
-				loc.getChunk().load();
-				String type = Main.settings.getConfig().getString("Settings.Falling-Block");
-				int ty = 0;
-				if(type.contains(":")){
-					String[] b = type.split(":");
-					type = b[0];
-					ty = Integer.parseInt(b[1]);
+		}else{
+			locs.addAll(locations);
+		}
+		if(Main.settings.getConfig().getBoolean("Settings.Random-Locations")){
+			locs.clear();
+			max = Main.settings.getConfig().getInt("Settings.Max-Crates");
+			ArrayList<Location> min = getBlocks(center.clone(), Main.settings.getConfig().getInt("Settings.Min-Radius"));
+			for(int i = 0; i < max;){
+				int m = Main.settings.getConfig().getInt("Settings.Max-Radius");
+				Location loc = center.clone();
+				loc.add(-(m/2) + new Random().nextInt(m), 0, -(m/2) + new Random().nextInt(m));
+				loc.setY(255);
+				for(; loc.getBlock().getType() == Material.AIR && loc.getBlockY() >= 0;){
+					if(loc.getBlockY() <= 0){
+						break;
+					}
+					loc.add(0, -1, 0);
 				}
-				Material m = Material.matchMaterial(type);
-				FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(.5, 15, .5), m, (byte) ty);
-				boolean toggle = false;
-				for(Entity en : chest.getNearbyEntities(100, 100, 100)){
-					if(en instanceof Player){
-						toggle = true;
-					}
+				if(loc.getBlockY() <= 0){
+					continue;
 				}
-				if(!toggle){
-					String tier = Prizes.pickTierByChance();
-					chest.remove();
-					loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
-					if(Methods.hasHolographicDisplay()){
-						HolographicSupport.createHologram(loc.clone().add(.5, 1.5, .5), tier);
-					}
-					addActiveEvoy(loc, tier);
-					if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){
-						startSignalFlare(loc, tier);
-					}
-				}else{
-					chest.setDropItem(false);
-					fallingBlocks.add(chest);
+				Location check = loc.clone();
+				check.setY(255);
+				if(min.contains(check)){
+					continue;
+				}
+				if(locs.contains(loc.clone().add(0, 1, 0))){
+					continue;
+				}
+				locs.add(loc.add(0, 1, 0));
+				i++;
+			}
+		}
+		Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Started")
+				.replaceAll("%Amount%", max + "")
+				.replaceAll("%amount%", max + "")));
+		for(Location loc : locs){
+			loc.getChunk().load();
+			String type = Main.settings.getConfig().getString("Settings.Falling-Block");
+			int ty = 0;
+			if(type.contains(":")){
+				String[] b = type.split(":");
+				type = b[0];
+				ty = Integer.parseInt(b[1]);
+			}
+			Material m = Material.matchMaterial(type);
+			FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(.5, 15, .5), m, (byte) ty);
+			boolean toggle = false;
+			for(Entity en : chest.getNearbyEntities(100, 100, 100)){
+				if(en instanceof Player){
+					toggle = true;
 				}
 			}
-		}else{
-			for(Location loc : locations){
-				loc.getChunk().load();
-				String type = Main.settings.getConfig().getString("Settings.Falling-Block");
-				int ty = 0;
-				if(type.contains(":")){
-					String[] b = type.split(":");
-					type = b[0];
-					ty = Integer.parseInt(b[1]);
+			if(!toggle){
+				String tier = Prizes.pickTierByChance();
+				chest.remove();
+				loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
+				if(Methods.hasHolographicDisplay()){
+					HolographicSupport.createHologram(loc.clone().add(.5, 1.5, .5), tier);
 				}
-				Material m = Material.matchMaterial(type);
-				FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(.5, 15, .5), m, (byte) ty);
-				boolean toggle = false;
-				for(Entity en : chest.getNearbyEntities(100, 100, 100)){
-					if(en instanceof Player){
-						toggle = true;
-					}
+				addActiveEvoy(loc, tier);
+				if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){
+					startSignalFlare(loc, tier);
 				}
-				if(!toggle){
-					String tier = Prizes.pickTierByChance();
-					chest.remove();
-					loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
-					if(Methods.hasHolographicDisplay()){
-						HolographicSupport.createHologram(loc.clone().add(.5, 1.5, .5), tier);
-					}
-					addActiveEvoy(loc, tier);
-					if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){
-						startSignalFlare(loc, tier);
-					}
-				}else{
-					chest.setDropItem(false);
-					fallingBlocks.add(chest);
-				}
+			}else{
+				fallingBlocks.add(chest);
 			}
 		}
 		runTimeTask = new BukkitRunnable(){
@@ -617,6 +623,23 @@ public class Envoy {
 			}
 		}.runTaskLater(plugin, getEnvoyRunTime() * 20);
 		envoyTimeLeft = getEnvoyRunTimeCalendar();
+	}
+	
+	private static ArrayList<Location> getBlocks(Location loc, int radius){
+		Location loc2 = loc.clone();
+		loc.add(-radius, 0, -radius);
+		loc2.add(radius, 0, radius);
+		ArrayList<Location> locs = new ArrayList<Location>();
+		int topBlockX = (loc.getBlockX() < loc2.getBlockX() ? loc2.getBlockX() : loc.getBlockX());
+		int bottomBlockX = (loc.getBlockX() > loc2.getBlockX() ? loc2.getBlockX() : loc.getBlockX());
+		int topBlockZ = (loc.getBlockZ() < loc2.getBlockZ() ? loc2.getBlockZ() : loc.getBlockZ());
+		int bottomBlockZ = (loc.getBlockZ() > loc2.getBlockZ() ? loc2.getBlockZ() : loc.getBlockZ());
+		for(int x = bottomBlockX; x <= topBlockX; x++){
+			for(int z = bottomBlockZ; z <= topBlockZ; z++){
+				locs.add(loc.getWorld().getBlockAt(x, 255, z).getLocation());
+			}
+		}
+		return locs;
 	}
 	
 	/**
@@ -676,6 +699,23 @@ public class Envoy {
 				.build());
 		fm.setPower(1);
 		fw.setFireworkMeta(fm);
+		FireworkDamageAPI.addFirework(fw);
+	}
+	
+	/**
+	 * 
+	 * @return The center location for the random crates.
+	 */
+	public static Location getCenter(){
+		return center;
+	}
+	
+	/**
+	 * Sets the center location for the random crates.
+	 * @param loc The new center location.
+	 */
+	public static void setCenter(Location loc){
+		center = loc;
 	}
 	
 }

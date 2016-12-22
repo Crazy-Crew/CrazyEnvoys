@@ -18,6 +18,7 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -34,6 +35,7 @@ import me.BadBones69.envoy.MultiSupport.NMS_v1_8_R2;
 import me.BadBones69.envoy.MultiSupport.NMS_v1_8_R3;
 import me.BadBones69.envoy.MultiSupport.NMS_v1_9_R1;
 import me.BadBones69.envoy.MultiSupport.NMS_v1_9_R2;
+import me.BadBones69.envoy.controlers.FireworkDamageAPI;
 
 public class Methods {
 	
@@ -216,7 +218,7 @@ public class Methods {
 		return false;
 	}
 	
-	public static void fireWork(Location loc, ArrayList<Color> colors) {
+	public static Entity fireWork(Location loc, ArrayList<Color> colors) {
 		Firework fw = loc.getWorld().spawn(loc, Firework.class);
 		FireworkMeta fm = fw.getFireworkMeta();
 		fm.addEffects(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE)
@@ -226,7 +228,9 @@ public class Methods {
 				.build());
 		fm.setPower(0);
 		fw.setFireworkMeta(fm);
+		FireworkDamageAPI.addFirework(fw);
 		detonate(fw);
+		return fw;
 	}
 	
 	private static void detonate(final Firework f) {
@@ -255,7 +259,7 @@ public class Methods {
 		if (color.equalsIgnoreCase("TEAL")) return Color.TEAL;
 		if (color.equalsIgnoreCase("WHITE")) return Color.WHITE;
 		if (color.equalsIgnoreCase("YELLOW")) return Color.YELLOW;
-		return null;
+		return Color.WHITE;
 	}
 	
 	public static Boolean hasHolographicDisplay(){
