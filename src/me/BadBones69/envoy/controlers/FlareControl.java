@@ -1,5 +1,6 @@
 package me.BadBones69.envoy.controlers;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,6 +28,16 @@ public class FlareControl implements Listener{
 							player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Already-Started")));
 							return;
 						}else{
+							int online = Bukkit.getServer().getOnlinePlayers().size();
+							if(Main.settings.getConfig().getBoolean("Settings.Minimum-Players-Toggle")){
+								if(Main.settings.getConfig().getBoolean("Settings.Minimum-Flare-Toggle")){
+									if(online < Main.settings.getConfig().getInt("Settings.Minimum-Players")){
+										player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-Enough-Players")
+												.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")));
+										return;
+									}
+								}
+							}
 							player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Used-Flare")));
 							Flare.takeFlare(player, flare);
 							Envoy.startEnvoyEvent();

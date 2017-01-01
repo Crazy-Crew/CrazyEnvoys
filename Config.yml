@@ -9,6 +9,7 @@ Settings:
   Envoy-Run-Time: '5m' #The amount of time the envoy event will go for.
   Envoy-Cooldown: '1h' #The time till the envoy event will happen again.
   Minimum-Players-Toggle: false #When the envoy is about to start toggle if there needs to be a minimum amount of players. (Does not affect flares)
+  Minimum-Flare-Toggle: false #Toggle if using a flare has to meet the minimum players requirement. Minimum-Players-Toggle must be true for this to work.
   Minimum-Players: 12 #The minimum amount of players needed to start the envoy.
   Envoy-Warnings: #The times that will make the warning messages.
     - '30m'
