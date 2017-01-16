@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -19,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import me.BadBones69.envoy.Main;
 import me.BadBones69.envoy.Methods;
 import me.BadBones69.envoy.MultiSupport.HolographicSupport;
+import me.BadBones69.envoy.MultiSupport.Support;
 import me.BadBones69.envoy.api.Envoy;
 import me.BadBones69.envoy.api.Prizes;
 
@@ -26,12 +28,17 @@ public class EnvoyControl implements Listener{
 	
 	@EventHandler
 	public void onPlayerClick(PlayerInteractEvent e){
+		Player player = e.getPlayer();
 		if(Envoy.isEnvoyActive()){
 			if(e.getClickedBlock() != null){
 				Location loc = e.getClickedBlock().getLocation();
 				if(Envoy.isActiveEnvoy(loc)){
+					if(GameMode.valueOf("SPECTATOR") != null){
+						if(player.getGameMode() == GameMode.valueOf("SPECTATOR")){
+							return;
+						}
+					}
 					String tier = Envoy.getTier(loc);
-					Player player = e.getPlayer();
 					e.setCancelled(true);
 					if(Main.settings.getFile(tier).getBoolean("Settings.Firework-Toggle")){
 						ArrayList<Color> colors = new ArrayList<Color>();
@@ -44,23 +51,23 @@ public class EnvoyControl implements Listener{
 						Methods.fireWork(loc.clone().add(.5, 0, .5), colors);
 					}
 					e.getClickedBlock().setType(Material.AIR);
-					if(Methods.hasHolographicDisplay()){
+					if(Support.hasHolographicDisplay()){
 						HolographicSupport.removeHologram(loc.clone().add(.5, 1.5, .5));
 					}
 					Envoy.stopSignalFlare(e.getClickedBlock().getLocation());
 					Envoy.removeActiveEvoy(loc);
-					String prize = "";
+					ArrayList<String> prizes = new ArrayList<String>();
 					if(Prizes.getPrizes(tier).size() == 0){
-						Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier."
+						Methods.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier."
 								+ " Please add prizes other wise errors will occur."));
 						return;
 					}
 					if(Prizes.isRandom(tier)){
-						prize = Prizes.pickRandomPrize(tier);
+						prizes = Prizes.pickRandomPrizes(tier);
 					}else{
-						prize = Prizes.pickPrizeByChance(tier);
+						prizes = Prizes.pickPrizesByChance(tier);
 					}
-					if(!prize.equals("")){
+					for(String prize : prizes){
 						for(String msg : Prizes.getMessages(tier, prize)){
 							player.sendMessage(Methods.color(msg));
 						}
@@ -74,17 +81,15 @@ public class EnvoyControl implements Listener{
 								player.getInventory().addItem(item);
 							}
 						}
-					}else{
-						player.sendMessage(Methods.getPrefix() + Methods.color("&cNo prize was found."));
 					}
 					if(Envoy.getActiveEvoys().size() >= 1){
-						Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Left")
-								.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName())
-								.replaceAll("%Amount%", Envoy.getActiveEvoys().size() + "")
-								.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")));
+						Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Left")
+											.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName())
+											.replaceAll("%Amount%", Envoy.getActiveEvoys().size() + "")
+											.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")));
 					}else{
 						Envoy.endEnvoyEvent();
-						Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
+						Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
 					}
 				}
 			}
@@ -97,18 +102,22 @@ public class EnvoyControl implements Listener{
 			if(e.getEntity() instanceof FallingBlock){
 				if(!Envoy.getFallingBlocks().isEmpty()){
 					if(Envoy.getFallingBlocks().contains(e.getEntity())){
+						Location loc = e.getBlock().getLocation();
 						e.setCancelled(true);
 						String tier = Prizes.pickTierByChance();
-						e.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
-						if(Methods.hasHolographicDisplay()){
+						if(loc.getBlock().getType() != Material.AIR){
+							loc.add(0, 1, 0);
+						}
+						loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
+						if(Support.hasHolographicDisplay()){
 							if(Main.settings.getFile(tier).getBoolean("Settings.Hologram-Toggle")){
-								HolographicSupport.createHologram(e.getBlock().getLocation().add(.5, 1.5, .5), tier);
+								HolographicSupport.createHologram(loc.getBlock().getLocation().add(.5, 1.5, .5), tier);
 							}
 						}
 						Envoy.removeFallingBlock(e.getEntity());
-						Envoy.addActiveEvoy(e.getBlock().getLocation(), tier);
+						Envoy.addActiveEvoy(loc.getBlock().getLocation(), tier);
 						if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){
-							Envoy.startSignalFlare(e.getBlock().getLocation(), tier);
+							Envoy.startSignalFlare(loc.getBlock().getLocation(), tier);
 						}
 					}
 				}
@@ -129,7 +138,7 @@ public class EnvoyControl implements Listener{
 							loc.add(0, 1, 0);
 						}
 						loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
-				        if(Methods.hasHolographicDisplay()){
+				        if(Support.hasHolographicDisplay()){
 							if(Main.settings.getFile(tier).getBoolean("Settings.Hologram-Toggle")){
 								HolographicSupport.createHologram(loc.getBlock().getLocation().add(.5, 1.5, .5), tier);
 							}

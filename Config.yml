@@ -1,6 +1,7 @@
 Settings:
   Prefix: '&7[&cCrazyEnvoy&7]: ' #The prefix before the messages CrazyEnvoys sends.
   Falling-Block: '138' #The block that will be falling.
+  Fall-Height: 15 #How high the falling blocks spawn.
   Max-Crate-Toggle: false #If ture then only a specified amount of crates will spawn and if false then all crates will spawn.
   Max-Crates: 20 #The max amount of crates that will spawn.
   Random-Locations: false #If true you will need to make sure to set the center location.
@@ -11,6 +12,10 @@ Settings:
   Minimum-Players-Toggle: false #When the envoy is about to start toggle if there needs to be a minimum amount of players. (Does not affect flares)
   Minimum-Flare-Toggle: false #Toggle if using a flare has to meet the minimum players requirement. Minimum-Players-Toggle must be true for this to work.
   Minimum-Players: 12 #The minimum amount of players needed to start the envoy.
+  World-Messages:
+    Toggle: false #Toggle if the broadcasted messages are only in a specific worlds.
+    Worlds: #The worlds you wish to have the messages only show up in.
+      - 'world'
   Envoy-Warnings: #The times that will make the warning messages.
     - '30m'
     - '15m'

@@ -26,6 +26,7 @@ import org.bukkit.scheduler.BukkitTask;
 import me.BadBones69.envoy.Main;
 import me.BadBones69.envoy.Methods;
 import me.BadBones69.envoy.MultiSupport.HolographicSupport;
+import me.BadBones69.envoy.MultiSupport.Support;
 import me.BadBones69.envoy.controlers.EditControl;
 import me.BadBones69.envoy.controlers.FireworkDamageAPI;
 
@@ -127,8 +128,8 @@ public class Envoy {
 						check.setTimeInMillis(warn.getTimeInMillis());
 						check.clear(Calendar.MILLISECOND);
 						if(check.compareTo(cal) == 0){
-							Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Warning")
-									.replaceAll("%Time%", getNextEnvoyTime()).replaceAll("%time%", getNextEnvoyTime())));
+								Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Warning")
+										.replaceAll("%Time%", getNextEnvoyTime()).replaceAll("%time%", getNextEnvoyTime())));
 						}
 					}
 					Calendar next = Calendar.getInstance();
@@ -139,13 +140,8 @@ public class Envoy {
 							if(Main.settings.getConfig().getBoolean("Settings.Minimum-Players-Toggle")){
 								int online = Bukkit.getServer().getOnlinePlayers().size();
 								if(online < Main.settings.getConfig().getInt("Settings.Minimum-Players")){
-									if(Main.settings.getMessages().contains("Messages.Not-Enough-Players")){
-										Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-Enough-Players")
-												.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")));
-									}else{
-										Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&7Not enough players are online to start the envoy event. Only &6%Amount% &7players are online."
-												.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")));
-									}
+									Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-Enough-Players")
+											.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")));
 									setNextEnvoy(getEnvoyCooldown());
 									resetWarnings();
 									return;
@@ -192,7 +188,7 @@ public class Envoy {
 		for(Entity en : fallingBlocks){
 			en.remove();
 		}
-		if(Methods.hasHolographicDisplay()){
+		if(Support.hasHolographicDisplay()){
 			HolographicSupport.removeAllHolograms();
 		}
 		fallingBlocks.clear();
@@ -525,7 +521,7 @@ public class Envoy {
 		}
 		EditControl.getEditors().clear();
 		if(Prizes.getTiers().size() == 0){
-			Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder"
+			Methods.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder"
 					+ " to allow it to remake the default tier files."));
 			return;
 		}
@@ -580,7 +576,7 @@ public class Envoy {
 				i++;
 			}
 		}
-		Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Started")
+		Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Started")
 				.replaceAll("%Amount%", max + "")
 				.replaceAll("%amount%", max + "")));
 		for(Location loc : locs){
@@ -593,7 +589,8 @@ public class Envoy {
 				ty = Integer.parseInt(b[1]);
 			}
 			Material m = Material.matchMaterial(type);
-			FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(.5, 15, .5), m, (byte) ty);
+			int height = Main.settings.getConfig().getInt("Settings.Fall-Height");
+			FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(.5, height, .5), m, (byte) ty);
 			boolean toggle = false;
 			for(Entity en : chest.getNearbyEntities(100, 100, 100)){
 				if(en instanceof Player){
@@ -604,7 +601,7 @@ public class Envoy {
 				String tier = Prizes.pickTierByChance();
 				chest.remove();
 				loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
-				if(Methods.hasHolographicDisplay()){
+				if(Support.hasHolographicDisplay()){
 					HolographicSupport.createHologram(loc.clone().add(.5, 1.5, .5), tier);
 				}
 				addActiveEvoy(loc, tier);
@@ -618,7 +615,7 @@ public class Envoy {
 		runTimeTask = new BukkitRunnable(){
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
+				Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
 				endEnvoyEvent();
 			}
 		}.runTaskLater(plugin, getEnvoyRunTime() * 20);

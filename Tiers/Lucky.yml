@@ -2,6 +2,10 @@ Settings:
   Spawn-Chance: 25
   Use-Chance: true
   Placed-Block: '130'
+  Bulk-Prizes:
+    Toggle: false
+    Random: true
+    Max-Bulk: 3
   Hologram-Toggle: true
   Hologram:
     - '&7&l(&e&l!&7&l) &e&lLucky Crate'

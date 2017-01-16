@@ -155,17 +155,27 @@ public class Prizes {
 	
 	/**
 	 * 
-	 * @return A random prize.
+	 * @return A random prizes.
 	 */
-	public static String pickRandomPrize(String tier){
-		return prizes.get(tier).get(new Random().nextInt(prizes.get(tier).size()));
+	public static ArrayList<String> pickRandomPrizes(String tier){
+		ArrayList<String> p = new ArrayList<String>();
+		int max = getPrizeAmount(tier);
+		for(int i = 0; p.size() < max && i < 500; i++){
+			String prize = prizes.get(tier).get(new Random().nextInt(prizes.get(tier).size()));
+			if(!p.contains(prize)){
+				p.add(prize);
+			}else{
+				continue;
+			}
+		}
+		return p;
 	}
 	
 	/**
 	 * 
 	 * @return A prize based on the chance the prize has.
 	 */
-	public static String pickPrizeByChance(String tier){
+	public static ArrayList<String> pickPrizesByChance(String tier){
 		ArrayList<String> P = new ArrayList<String>();
 		for(; P.size() == 0;){
 			for(String prize : getPrizes(tier)){
@@ -174,7 +184,17 @@ public class Prizes {
 				}
 			}
 		}
-		return P.get(new Random().nextInt(P.size()));
+		ArrayList<String> p = new ArrayList<String>();
+		int max = getPrizeAmount(tier);
+		for(int i = 0; p.size() < max || i < 500; i++){
+			String prize = P.get(new Random().nextInt(P.size()));
+			if(!p.contains(prize)){
+				p.add(prize);
+			}else{
+				continue;
+			}
+		}
+		return p;
 	}
 	
 	/**
@@ -202,6 +222,17 @@ public class Prizes {
 	 */
 	public static ArrayList<ItemStack> getItems(String tier, String prize){
 		return items.get(tier).get(prize);
+	}
+	
+	private static Integer getPrizeAmount(String tier){
+		int amount = 1;
+		if(Main.settings.getFile(tier).getBoolean("Settings.Bulk-Prizes.Toggle")){
+			amount = Main.settings.getFile(tier).getInt("Settings.Bulk-Prizes.Max-Bulk");
+			if(Main.settings.getFile(tier).getBoolean("Settings.Bulk-Prizes.Random")){
+				amount = 1 + new Random().nextInt(amount);
+			}
+		}
+		return amount;
 	}
 	
 }

@@ -17,6 +17,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.BadBones69.envoy.MultiSupport.HolographicSupport;
+import me.BadBones69.envoy.MultiSupport.PlaceholderAPISupport;
+import me.BadBones69.envoy.MultiSupport.Support;
 import me.BadBones69.envoy.api.Envoy;
 import me.BadBones69.envoy.api.Flare;
 import me.BadBones69.envoy.api.Prizes;
@@ -41,8 +43,11 @@ public class Main extends JavaPlugin implements Listener{
 		pm.registerEvents(new EnvoyControl(), this);
 		pm.registerEvents(new FlareControl(), this);
 		pm.registerEvents(new FireworkDamageAPI(this), this);
-		if(Methods.hasHolographicDisplay()){
+		if(Support.hasHolographicDisplay()){
 			HolographicSupport.registerPlaceHolders();
+		}
+		if(Support.hasPlaceholderAPI()){
+			new PlaceholderAPISupport(this).hook();
 		}
 		try{
 			Metrics metrics = new Metrics(this); metrics.start();
@@ -57,7 +62,7 @@ public class Main extends JavaPlugin implements Listener{
 				EditControl.removeFakeBlocks(player);
 			}
 		}
-		if(Methods.hasHolographicDisplay()){
+		if(Support.hasHolographicDisplay()){
 			HolographicSupport.unregisterPlaceHolders();
 		}
 		if(Envoy.isEnvoyActive()){
@@ -234,7 +239,7 @@ public class Main extends JavaPlugin implements Listener{
 					}
 					if(Envoy.isEnvoyActive()){
 						Envoy.endEnvoyEvent();
-						Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
+						Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
 						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Force-Ended")));
 					}else{
 						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Not-Started")));

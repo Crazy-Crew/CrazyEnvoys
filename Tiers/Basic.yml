@@ -2,6 +2,10 @@ Settings:
   Spawn-Chance: 85 #The chance that this tier will spawn.
   Use-Chance: true #If true then it uses the chance option in the prizes and if false then each prize has a 1/(Amount of Prizes) chance of winning.
   Placed-Block: '54' #The block that will be clicked when they land.
+  Bulk-Prizes: #This allows players to win multiple prizes from one crate.
+    Toggle: false #Toggle if players can win multiple prizes.
+    Random: true #If true then it will pick a random bulk from 1-MaxBulk.
+    Max-Bulk: 3 #The max amount of prizes.
   Hologram-Toggle: true #Toggle on and off holograms.
   Hologram: #Holograms only show if Holographic Displays is on the server.
     - '&7&l(&6&l!&7&l) Basic Crate'

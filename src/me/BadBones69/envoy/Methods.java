@@ -262,10 +262,6 @@ public class Methods {
 		return Color.WHITE;
 	}
 	
-	public static Boolean hasHolographicDisplay(){
-		return Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
-	}
-	
 	public static List<String> getPage(List<String> list, Integer page){
 		List<String> locations = new ArrayList<String>();
 		if(page <= 0){
@@ -373,6 +369,20 @@ public class Methods {
 			return "None Found";
 		}
 		return enchants.get(en.getName());
+	}
+	
+	public static void broadcastMessage(String msg){
+		if(Main.settings.getConfig().getBoolean("Settings.World-Messages.Toggle")){
+			for(Player p : Bukkit.getOnlinePlayers()){
+				for(String w : Main.settings.getConfig().getStringList("Settings.World-Messages.Worlds")){
+					if(p.getWorld().getName().equalsIgnoreCase(w)){
+						p.sendMessage(color(msg));
+					}
+				}
+			}
+		}else{
+			Bukkit.broadcastMessage(color(msg));
+		}
 	}
 	
 }
