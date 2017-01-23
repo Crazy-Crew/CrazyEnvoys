@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,12 +26,9 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
+import me.BadBones69.envoy.MultiSupport.EnchantGlow;
 import me.BadBones69.envoy.MultiSupport.NMS_v1_10_R1;
 import me.BadBones69.envoy.MultiSupport.NMS_v1_11_R1;
-import me.BadBones69.envoy.MultiSupport.NMS_v1_7_R4;
-import me.BadBones69.envoy.MultiSupport.NMS_v1_8_R1;
-import me.BadBones69.envoy.MultiSupport.NMS_v1_8_R2;
-import me.BadBones69.envoy.MultiSupport.NMS_v1_8_R3;
 import me.BadBones69.envoy.MultiSupport.NMS_v1_9_R1;
 import me.BadBones69.envoy.MultiSupport.NMS_v1_9_R2;
 import me.BadBones69.envoy.controlers.FireworkDamageAPI;
@@ -180,33 +176,7 @@ public class Methods {
 	
 	public static ItemStack addGlow(ItemStack item, boolean toggle) {
 		if(toggle){
-			Version ver = Version.getVersion();
-			switch(ver){
-			case v1_11_R1:
-				return NMS_v1_11_R1.addGlow(item);
-			case v1_10_R1:
-				return NMS_v1_10_R1.addGlow(item);
-			case v1_9_R2:
-				return NMS_v1_9_R2.addGlow(item);
-			case v1_9_R1:
-				return NMS_v1_9_R1.addGlow(item);
-			case v1_8_R3:
-				return NMS_v1_8_R3.addGlow(item);
-			case v1_8_R2:
-				return NMS_v1_8_R2.addGlow(item);
-			case v1_8_R1:
-				return NMS_v1_8_R1.addGlow(item);
-			case v1_7_R4:
-				return NMS_v1_7_R4.addGlow(item);
-			case TOO_NEW:
-				Bukkit.getLogger().log(Level.SEVERE, "[Crazy Envoy]>> Your server is too new. "
-						+ "Please update or remove this plugin to stop further Errors.");
-				return item;
-			case TOO_OLD:
-				Bukkit.getLogger().log(Level.SEVERE, "[Crazy Envoy]>> Your server is too far out of date. "
-						+ "Please update or remove this plugin to stop further Errors.");
-				return item;
-			}
+			return EnchantGlow.addGlow(item);
 		}
 		return item;
     }

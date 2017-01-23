@@ -18,4 +18,18 @@ public class Support {
 		return false;
 	}
 	
+	public static boolean hasWorldGuard(){
+		if(Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null){
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean hasWorldEdit(){
+		if(Bukkit.getServer().getPluginManager().getPlugin("WorldEdit") != null){
+			return true;
+		}
+		return false;
+	}
+	
 }

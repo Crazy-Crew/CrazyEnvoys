@@ -33,3 +33,7 @@ Settings:
     Lore: #The lore of the flare.
       - '&7Right click me to'
       - '&7start an envoy event.'
+    World-Guard: #The options for when using world guard regions to make flares work only in those regions.
+      Toggle: false #If they have to use flares in specified regions.
+      Regions: #The name of the regions you can use flares in.
+        - 'WarZone'

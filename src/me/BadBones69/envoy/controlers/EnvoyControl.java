@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.BadBones69.envoy.Main;
 import me.BadBones69.envoy.Methods;
+import me.BadBones69.envoy.Version;
 import me.BadBones69.envoy.MultiSupport.HolographicSupport;
 import me.BadBones69.envoy.MultiSupport.Support;
 import me.BadBones69.envoy.api.Envoy;
@@ -33,7 +34,7 @@ public class EnvoyControl implements Listener{
 			if(e.getClickedBlock() != null){
 				Location loc = e.getClickedBlock().getLocation();
 				if(Envoy.isActiveEnvoy(loc)){
-					if(GameMode.valueOf("SPECTATOR") != null){
+					if(Version.getVersion().getVersionInteger() > Version.v1_7_R4.getVersionInteger()){
 						if(player.getGameMode() == GameMode.valueOf("SPECTATOR")){
 							return;
 						}

@@ -25,6 +25,7 @@ Messages:
   Give-Flare: '&7You have just given &6%Player% %Amount% &7flares.'
   Given-Flare: '&7You have been given &6%Amount% &7flares.'
   New-Center: '&7You have just set a new center for the random envoy crates.'
+  Not-In-World-Guard-Region: '&cYou must be in the WarZone to use a flare.'
   Hologram-Placeholders:
     On-Going: 'On Going'
     Not-Running: 'Not Running'
