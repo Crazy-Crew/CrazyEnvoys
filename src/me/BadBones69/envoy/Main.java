@@ -17,6 +17,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.BadBones69.envoy.MultiSupport.HolographicSupport;
+import me.BadBones69.envoy.MultiSupport.MVdWPlaceholderAPISupport;
 import me.BadBones69.envoy.MultiSupport.PlaceholderAPISupport;
 import me.BadBones69.envoy.MultiSupport.Support;
 import me.BadBones69.envoy.api.Envoy;
@@ -48,6 +49,9 @@ public class Main extends JavaPlugin implements Listener{
 		}
 		if(Support.hasPlaceholderAPI()){
 			new PlaceholderAPISupport(this).hook();
+		}
+		if(Support.hasMVdWPlaceholderAPI()){
+			MVdWPlaceholderAPISupport.registerPlaceholders(this);
 		}
 		try{
 			Metrics metrics = new Metrics(this); metrics.start();

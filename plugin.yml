@@ -1,9 +1,9 @@
 name: CrazyEnvoy
 author: BadBones69
 main: me.BadBones69.envoy.Main
-version: 1.2.3
+version: 1.2.3.1
 description: A crazy envoy plugin.
-softdepend: [HolographicDisplays, PlaceholderAPI]
+softdepend: [HolographicDisplays, PlaceholderAPI, MVdWPlaceholderAPI]
 commands:
   envoy:
     description: Shows the next time till the next envoy.
