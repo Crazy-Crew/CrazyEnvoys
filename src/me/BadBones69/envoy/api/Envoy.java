@@ -54,14 +54,8 @@ public class Envoy {
 		}
 		locations.clear();
 		FileConfiguration data = Main.settings.getData();
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(data.getLong("Next-Envoy"));
-		if(Calendar.getInstance().after(cal)){
-			cal.setTimeInMillis(getEnvoyCooldown().getTimeInMillis());
-		}
-		nextEnvoy = cal;
+		FileConfiguration config = Main.settings.getConfig();
 		envoyTimeLeft = Calendar.getInstance();
-		resetWarnings();
 		for(String l : data.getStringList("Locations.Spawns")){
 			locations.add(getLocationFromString(l));
 		}
@@ -71,7 +65,36 @@ public class Envoy {
 		if(Main.settings.getData().contains("Center")){
 			center = getLocationFromString(Main.settings.getData().getString("Center"));
 		}
-		startEnvoyCountDown();
+		if(config.getBoolean("Settings.Envoy-Timer-Toggle")){
+			Calendar cal = Calendar.getInstance();
+			if(config.getBoolean("Settings.Envoy-Cooldown-Toggle")){
+				cal.setTimeInMillis(data.getLong("Next-Envoy"));
+				if(Calendar.getInstance().after(cal)){
+					cal.setTimeInMillis(getEnvoyCooldown().getTimeInMillis());
+				}
+			}else{
+				String time = config.getString("Settings.Envoy-Time");
+				int hour = Integer.parseInt(time.split(" ")[0].split(":")[0]);
+				int min = Integer.parseInt(time.split(" ")[0].split(":")[1]);
+				int c = Calendar.AM;
+				if(time.split(" ")[1].equalsIgnoreCase("AM")){
+					c = Calendar.AM;
+				}else if(time.split(" ")[1].equalsIgnoreCase("PM")){
+					c = Calendar.PM;
+				}
+				cal.set(Calendar.HOUR_OF_DAY, hour);
+				cal.getTime(); // Without this makes the hours not change for some reason.
+				cal.set(Calendar.MINUTE, min);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.AM_PM, c);
+				if(cal.before(Calendar.getInstance())){
+					cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1);
+				}
+			}
+			nextEnvoy = cal;
+			startEnvoyCountDown();
+			resetWarnings();
+		}
 	}
 	
 	private static Location getLocationFromString(String locationString){
@@ -106,7 +129,9 @@ public class Envoy {
 		}
 		deSpawnCrates();
 		Main.settings.getData().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
-		Main.settings.getData().set("Center", "World:" + center.getWorld().getName() + ", X:" + center.getBlockX() + ", Y:" + center.getBlockY() + ", Z:" + center.getBlockZ());
+		try{
+			Main.settings.getData().set("Center", "World:" + center.getWorld().getName() + ", X:" + center.getBlockX() + ", Y:" + center.getBlockY() + ", Z:" + center.getBlockZ());
+		}catch(Exception e){}
 		Main.settings.getData().set("Locations.Spawns", locs);
 		Main.settings.saveData();
 		locations.clear();
@@ -385,19 +410,40 @@ public class Envoy {
 	
 	private static Calendar getEnvoyCooldown(){
 		Calendar cal = Calendar.getInstance();
-		String time = Main.settings.getConfig().getString("Settings.Envoy-Cooldown");
-		for(String i : time.split(" ")){
-			if(i.contains("D")||i.contains("d")){
-				cal.add(Calendar.DATE, Integer.parseInt(i.replaceAll("D", "").replaceAll("d", "")));
+		FileConfiguration config = Main.settings.getConfig();
+		if(config.getBoolean("Settings.Envoy-Cooldown-Toggle")){
+			String time = config.getString("Settings.Envoy-Cooldown");
+			for(String i : time.split(" ")){
+				if(i.contains("D") || i.contains("d")){
+					cal.add(Calendar.DATE, Integer.parseInt(i.replaceAll("D", "").replaceAll("d", "")));
+				}
+				if(i.contains("H") || i.contains("h")){
+					cal.add(Calendar.HOUR, Integer.parseInt(i.replaceAll("H", "").replaceAll("h", "")));
+				}
+				if(i.contains("M") || i.contains("m")){
+					cal.add(Calendar.MINUTE, Integer.parseInt(i.replaceAll("M", "").replaceAll("m", "")));
+				}
+				if(i.contains("S") || i.contains("s")){
+					cal.add(Calendar.SECOND, Integer.parseInt(i.replaceAll("S", "").replaceAll("s", "")));
+				}
 			}
-			if(i.contains("H")||i.contains("h")){
-				cal.add(Calendar.HOUR, Integer.parseInt(i.replaceAll("H", "").replaceAll("h", "")));
+		}else{
+			String time = config.getString("Settings.Envoy-Time");
+			int hour = Integer.parseInt(time.split(" ")[0].split(":")[0]);
+			int min = Integer.parseInt(time.split(" ")[0].split(":")[1]);
+			int c = Calendar.AM;
+			if(time.split(" ")[1].equalsIgnoreCase("AM")){
+				c = Calendar.AM;
+			}else if(time.split(" ")[1].equalsIgnoreCase("PM")){
+				c = Calendar.PM;
 			}
-			if(i.contains("M")||i.contains("m")){
-				cal.add(Calendar.MINUTE, Integer.parseInt(i.replaceAll("M", "").replaceAll("m", "")));
-			}
-			if(i.contains("S")||i.contains("s")){
-				cal.add(Calendar.SECOND, Integer.parseInt(i.replaceAll("S", "").replaceAll("s", "")));
+			cal.set(Calendar.HOUR_OF_DAY, hour);
+			cal.getTime(); // Without this makes the hours not change for some reason.
+			cal.set(Calendar.MINUTE, min);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.AM_PM, c);
+			if(cal.before(Calendar.getInstance())){
+				cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1);
 			}
 		}
 		return cal;
@@ -646,8 +692,10 @@ public class Envoy {
 		deSpawnCrates();
 		setEnvoyActive(false);
 		cancelEnvoyRunTime();
-		setNextEnvoy(getEnvoyCooldown());
-		resetWarnings();
+		if(Main.settings.getConfig().getBoolean("Settings.Envoy-Timer-Toggle")){
+			setNextEnvoy(getEnvoyCooldown());
+			resetWarnings();
+		}
 	}
 	
 	/**
