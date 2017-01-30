@@ -94,6 +94,8 @@ public class Envoy {
 			nextEnvoy = cal;
 			startEnvoyCountDown();
 			resetWarnings();
+		}else{
+			nextEnvoy = Calendar.getInstance();
 		}
 	}
 	
