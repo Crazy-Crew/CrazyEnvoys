@@ -1,5 +1,6 @@
 Settings:
   Prefix: '&7[&cCrazyEnvoy&7]: ' #The prefix before the messages CrazyEnvoys sends.
+  Toggle-Metrics: true #Turn on and off if your server stats are sent to http://mcstats.org/plugin/CrazyEnvoy.
   Falling-Block: '138' #The block that will be falling.
   Fall-Height: 15 #How high the falling blocks spawn.
   Max-Crate-Toggle: false #If ture then only a specified amount of crates will spawn and if false then all crates will spawn.

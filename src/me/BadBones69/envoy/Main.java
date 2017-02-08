@@ -53,9 +53,11 @@ public class Main extends JavaPlugin implements Listener{
 		if(Support.hasMVdWPlaceholderAPI()){
 			MVdWPlaceholderAPISupport.registerPlaceholders(this);
 		}
-		try{
-			Metrics metrics = new Metrics(this); metrics.start();
-		}catch (IOException e) {}
+		if(settings.getConfig().getBoolean("Settings.Toggle-Metrics")){
+			try{
+				Metrics metrics = new Metrics(this); metrics.start();
+			}catch (IOException e) {}
+		}
 	}
 	
 	@Override
