@@ -19,6 +19,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -353,6 +354,14 @@ public class Methods {
 		}else{
 			Bukkit.broadcastMessage(color(msg));
 		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
+	    FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), 0, (byte) 0);
+	    List<Entity> out = ent.getNearbyEntities(x, y, z);
+	    ent.remove();
+	    return out;
 	}
 	
 }

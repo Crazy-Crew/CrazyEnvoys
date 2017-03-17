@@ -162,20 +162,22 @@ public class Envoy {
 					Calendar next = Calendar.getInstance();
 					next.setTimeInMillis(getNextEnvoy().getTimeInMillis());
 					next.clear(Calendar.MILLISECOND);
-					if(next.compareTo(cal) == 0){
-						if(Main.settings.getConfig().contains("Settings.Minimum-Players-Toggle") && Main.settings.getConfig().contains("Settings.Minimum-Players")){
-							if(Main.settings.getConfig().getBoolean("Settings.Minimum-Players-Toggle")){
-								int online = Bukkit.getServer().getOnlinePlayers().size();
-								if(online < Main.settings.getConfig().getInt("Settings.Minimum-Players")){
-									Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-Enough-Players")
-											.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")));
-									setNextEnvoy(getEnvoyCooldown());
-									resetWarnings();
-									return;
+					if(next.compareTo(cal) <= 0){
+						if(!isEnvoyActive()){
+							if(Main.settings.getConfig().contains("Settings.Minimum-Players-Toggle") && Main.settings.getConfig().contains("Settings.Minimum-Players")){
+								if(Main.settings.getConfig().getBoolean("Settings.Minimum-Players-Toggle")){
+									int online = Bukkit.getServer().getOnlinePlayers().size();
+									if(online < Main.settings.getConfig().getInt("Settings.Minimum-Players")){
+										Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-Enough-Players")
+												.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")));
+										setNextEnvoy(getEnvoyCooldown());
+										resetWarnings();
+										return;
+									}
 								}
 							}
+							startEnvoyEvent();
 						}
-						startEnvoyEvent();
 					}
 				}
 			}
@@ -598,11 +600,15 @@ public class Envoy {
 			locs.clear();
 			max = Main.settings.getConfig().getInt("Settings.Max-Crates");
 			ArrayList<Location> min = getBlocks(center.clone(), Main.settings.getConfig().getInt("Settings.Min-Radius"));
-			for(int i = 0; i < max;){
+			int stop = 0;
+			for(int i = 0; i < max && stop < 2000; stop++){
 				int m = Main.settings.getConfig().getInt("Settings.Max-Radius");
 				Location loc = center.clone();
 				loc.add(-(m/2) + new Random().nextInt(m), 0, -(m/2) + new Random().nextInt(m));
 				loc.setY(255);
+				if(!loc.getChunk().isLoaded()){
+					loc.getChunk().load();
+				}
 				for(; loc.getBlock().getType() == Material.AIR && loc.getBlockY() >= 0;){
 					if(loc.getBlockY() <= 0){
 						break;
@@ -628,36 +634,49 @@ public class Envoy {
 				.replaceAll("%Amount%", max + "")
 				.replaceAll("%amount%", max + "")));
 		for(Location loc : locs){
-			loc.getChunk().load();
-			String type = Main.settings.getConfig().getString("Settings.Falling-Block");
-			int ty = 0;
-			if(type.contains(":")){
-				String[] b = type.split(":");
-				type = b[0];
-				ty = Integer.parseInt(b[1]);
-			}
-			Material m = Material.matchMaterial(type);
-			int height = Main.settings.getConfig().getInt("Settings.Fall-Height");
-			FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(.5, height, .5), m, (byte) ty);
-			boolean toggle = false;
-			for(Entity en : chest.getNearbyEntities(100, 100, 100)){
+			boolean spawnFallingBlock = false;
+			for(Entity en : Methods.getNearbyEntities(loc, 100, 100, 100)){
 				if(en instanceof Player){
-					toggle = true;
+					spawnFallingBlock = true;
 				}
 			}
-			if(!toggle){
+			if(Main.settings.getConfig().contains("Settings.Falling-Block-Toggle")){
+				if(!Main.settings.getConfig().getBoolean("Settings.Falling-Block-Toggle")){
+					spawnFallingBlock = false;
+				}
+			}
+			if(spawnFallingBlock){
+				String type = Main.settings.getConfig().getString("Settings.Falling-Block");
+				int ty = 0;
+				if(type.contains(":")){
+					String[] b = type.split(":");
+					type = b[0];
+					ty = Integer.parseInt(b[1]);
+				}
+				Material m = Material.matchMaterial(type);
+				int height = Main.settings.getConfig().getInt("Settings.Fall-Height");
+				if(!loc.getChunk().isLoaded()){
+					loc.getChunk().load();
+				}
+				FallingBlock chest = (FallingBlock) loc.getWorld().spawnFallingBlock(loc.clone().add(.5, height, .5), m, (byte) ty);
+				fallingBlocks.add(chest);
+			}else{
 				String tier = Prizes.pickTierByChance();
-				chest.remove();
+				if(!loc.getChunk().isLoaded()){
+					loc.getChunk().load();
+				}
 				loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
 				if(Support.hasHolographicDisplay()){
-					HolographicSupport.createHologram(loc.clone().add(.5, 1.5, .5), tier);
+					double hight = 1.5;
+					if(Main.settings.getFile(tier).contains("Settings.Hologram-Hight")){
+						hight = Main.settings.getFile(tier).getDouble("Settings.Hologram-Hight");
+					}
+					HolographicSupport.createHologram(loc.clone().add(.5, hight, .5), tier);
 				}
-				addActiveEvoy(loc, tier);
+				addActiveEvoy(loc.clone(), tier);
 				if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){
-					startSignalFlare(loc, tier);
+					startSignalFlare(loc.clone(), tier);
 				}
-			}else{
-				fallingBlocks.add(chest);
 			}
 		}
 		runTimeTask = new BukkitRunnable(){

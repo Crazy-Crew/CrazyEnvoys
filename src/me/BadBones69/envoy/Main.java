@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.BadBones69.envoy.MultiSupport.HolographicSupport;
 import me.BadBones69.envoy.MultiSupport.MVdWPlaceholderAPISupport;
@@ -43,7 +44,11 @@ public class Main extends JavaPlugin implements Listener{
 		pm.registerEvents(new EditControl(), this);
 		pm.registerEvents(new EnvoyControl(), this);
 		pm.registerEvents(new FlareControl(), this);
-		pm.registerEvents(new FireworkDamageAPI(this), this);
+		try{
+			if(Version.getVersion().getVersionInteger() >= Version.v1_11_R1.getVersionInteger()){
+				pm.registerEvents(new FireworkDamageAPI(this), this);
+			}
+		}catch(Exception e){}
 		if(Support.hasHolographicDisplay()){
 			HolographicSupport.registerPlaceHolders();
 		}
@@ -285,7 +290,7 @@ public class Main extends JavaPlugin implements Listener{
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e){
 		final Player player = e.getPlayer();
-		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+		new BukkitRunnable(){
 			@Override
 			public void run() {
 				if(player.getName().equals("BadBones69")){
@@ -296,7 +301,7 @@ public class Main extends JavaPlugin implements Listener{
 					Methods.hasUpdate(player);
 				}
 			}
-		}, 1*20);
+		}.runTaskLaterAsynchronously(this, 20);
 	}
 	
 }

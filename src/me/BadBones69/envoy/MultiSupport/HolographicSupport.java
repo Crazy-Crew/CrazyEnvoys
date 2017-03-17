@@ -52,7 +52,9 @@ public class HolographicSupport {
 	}
 	
 	public static void unregisterPlaceHolders(){
-		HologramsAPI.unregisterPlaceholders(plugin);
+		try{
+			HologramsAPI.unregisterPlaceholders(plugin);
+		}catch(Exception e){}
 	}
 	
 	public static void createHologram(Location loc, String tier){
