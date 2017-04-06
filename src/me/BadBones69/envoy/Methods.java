@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,13 +40,11 @@ public class Methods {
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 	
 	public static String color(String msg){
-		msg = ChatColor.translateAlternateColorCodes('&', msg);
-		return msg;
+		return ChatColor.translateAlternateColorCodes('&', msg);
 	}
 	
 	public static String removeColor(String msg){
-		msg = ChatColor.stripColor(msg);
-		return msg;
+		return ChatColor.stripColor(msg);
 	}
 	
 	public static String getPrefix(){
@@ -352,7 +351,10 @@ public class Methods {
 				}
 			}
 		}else{
-			Bukkit.broadcastMessage(color(msg));
+			for(Player p : Bukkit.getOnlinePlayers()){
+				p.sendMessage(msg.split("%NL%"));
+			}
+			Bukkit.getLogger().log(Level.INFO, color(msg));
 		}
 	}
 	

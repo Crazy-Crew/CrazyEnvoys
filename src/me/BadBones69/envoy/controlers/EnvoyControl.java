@@ -84,10 +84,19 @@ public class EnvoyControl implements Listener{
 						}
 					}
 					if(Envoy.getActiveEvoys().size() >= 1){
-						Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Left")
-											.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName())
-											.replaceAll("%Amount%", Envoy.getActiveEvoys().size() + "")
-											.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")));
+						if(Main.settings.getConfig().contains("Settings.Broadcast-Crate-Pick-Up")){
+							if(Main.settings.getConfig().getBoolean("Settings.Broadcast-Crate-Pick-Up")){
+								Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Left")
+										.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName())
+										.replaceAll("%Amount%", Envoy.getActiveEvoys().size() + "")
+										.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")));
+							}
+						}else{
+							Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Left")
+									.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName())
+									.replaceAll("%Amount%", Envoy.getActiveEvoys().size() + "")
+									.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")));
+						}
 					}else{
 						Envoy.endEnvoyEvent();
 						Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));

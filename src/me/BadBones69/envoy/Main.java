@@ -62,6 +62,9 @@ public class Main extends JavaPlugin implements Listener{
 			try{
 				Metrics metrics = new Metrics(this); metrics.start();
 			}catch (IOException e) {}
+			try {
+				new MCUpdate(this, true);
+			} catch (IOException e) {}
 		}
 	}
 	

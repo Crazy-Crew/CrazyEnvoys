@@ -635,7 +635,7 @@ public class Envoy {
 				.replaceAll("%amount%", max + "")));
 		for(Location loc : locs){
 			boolean spawnFallingBlock = false;
-			for(Entity en : Methods.getNearbyEntities(loc, 100, 100, 100)){
+			for(Entity en : Methods.getNearbyEntities(loc, 40, 40, 40)){
 				if(en instanceof Player){
 					spawnFallingBlock = true;
 				}
