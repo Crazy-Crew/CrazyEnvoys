@@ -8,24 +8,26 @@ Messages:
   Force-Start: '&7You have just started the envoy.'
   Not-Started: '&cThere is no envoy event going on at this time.'
   Force-Ended: '&cYou have just ended the envoy.'
-  Warning: '&c[&4ALERT&c] &7There is an envoy event happening in &6%Time%&7.' #Can use %NL% for new line.
-  Started: '&7An envoy event has just started. &6%Amount% &7crates have spawned around spawn for 5m.' #Can use %NL% for new line.
-  Left: '&6%Player% &7has gotten a crate. There are now &6%Amount% &7left to find.' #Can use %NL% for new line.
-  Ended: '&cThe envoy event has ended. Thanks for playing and please come back for the next one.' #Can use %NL% for new line.
+  Warning: '&c[&4ALERT&c] &7There is an envoy event happening in &6%Time%&7.' #Can use %NL% for a new line.
+  Started: '&7An envoy event has just started. &6%Amount% &7crates have spawned around spawn for 5m.' #Can use %NL% for a new line.
+  Left: '&6%Player% &7has gotten a crate. There are now &6%Amount% &7left to find.' #Can use %NL% for a new line.
+  Ended: '&cThe envoy event has ended. Thanks for playing and please come back for the next one.' #Can use %NL% for a new line.
   Not-Enough-Players: '&7Not enough players are online to start the envoy event. Only &6%Amount% &7players are online.'
   Enter-Editor-Mode: '&7You are now in editor mode.'
   Leave-Editor-Mode: '&7You have now left editor mode.'
-  Kicked-From-Editor-Mode: '&cSorry but a envoy is active. Please stop it or wait till its over.'
+  Kicked-From-Editor-Mode: '&cSorry but an envoy is active. Please stop it or wait till it''s over.'
   Add-Location: '&7You have just added a spawn location.'
   Remove-Location: '&cYou have just removed a spawn location.'
-  Time-Left: '&7The next envoy has &6%Time%&7 left.' #Can use %NL% for new line.
-  Time-Till-Event: '&7The next envoy will start in &6%Time%&7.' #Can use %NL% for new line.
-  Used-Flare: '&7You have just started a envoy event with a flare.'
+  Time-Left: '&7The next envoy has &6%Time%&7 left.' #Can use %NL% for a new line.
+  Time-Till-Event: '&7The next envoy will start in &6%Time%&7.' #Can use %NL% for a new line.
+  Used-Flare: '&7You have just started an envoy event with a flare.'
   Cant-Use-Flares: '&cYou do not have permission to use flares.'
   Give-Flare: '&7You have just given &6%Player% %Amount% &7flares.'
   Given-Flare: '&7You have been given &6%Amount% &7flares.'
   New-Center: '&7You have just set a new center for the random envoy crates.'
   Not-In-World-Guard-Region: '&cYou must be in the WarZone to use a flare.'
+  Start-Ignoring-Messages: '&7You are now ignoring the collecting messages.'
+  Stop-Ignoring-Messages: '&7You now see all the collecting messages.'
   Hologram-Placeholders:
     On-Going: 'On Going'
     Not-Running: 'Not Running'

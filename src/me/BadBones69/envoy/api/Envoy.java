@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -37,10 +38,11 @@ public class Envoy {
 	private static Calendar nextEnvoy;
 	private static Calendar envoyTimeLeft;
 	private static Boolean envoyActive = false;
-	private static Location center = Bukkit.getWorlds().get(0).getSpawnLocation();
+	private static ArrayList<UUID> ignoreMessages = new ArrayList<UUID>();
 	private static ArrayList<Calendar> warnings = new ArrayList<Calendar>();
 	private static ArrayList<Location> locations = new ArrayList<Location>();
 	private static ArrayList<Entity> fallingBlocks = new ArrayList<Entity>();
+	private static Location center = Bukkit.getWorlds().get(0).getSpawnLocation();
 	private static HashMap<Location, String> activeEnvoys = new HashMap<Location, String>();
 	private static HashMap<Location, BukkitTask> activeSignals = new HashMap<Location, BukkitTask>();
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
@@ -156,7 +158,7 @@ public class Envoy {
 						check.clear(Calendar.MILLISECOND);
 						if(check.compareTo(cal) == 0){
 								Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Warning")
-										.replaceAll("%Time%", getNextEnvoyTime()).replaceAll("%time%", getNextEnvoyTime())));
+										.replaceAll("%Time%", getNextEnvoyTime()).replaceAll("%time%", getNextEnvoyTime())), false);
 						}
 					}
 					Calendar next = Calendar.getInstance();
@@ -169,7 +171,7 @@ public class Envoy {
 									int online = Bukkit.getServer().getOnlinePlayers().size();
 									if(online < Main.settings.getConfig().getInt("Settings.Minimum-Players")){
 										Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-Enough-Players")
-												.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")));
+												.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")), false);
 										setNextEnvoy(getEnvoyCooldown());
 										resetWarnings();
 										return;
@@ -572,7 +574,7 @@ public class Envoy {
 		EditControl.getEditors().clear();
 		if(Prizes.getTiers().size() == 0){
 			Methods.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder"
-					+ " to allow it to remake the default tier files."));
+					+ " to allow it to remake the default tier files."), false);
 			return;
 		}
 		deSpawnCrates();
@@ -632,7 +634,7 @@ public class Envoy {
 		}
 		Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Started")
 				.replaceAll("%Amount%", max + "")
-				.replaceAll("%amount%", max + "")));
+				.replaceAll("%amount%", max + "")), false);
 		for(Location loc : locs){
 			boolean spawnFallingBlock = false;
 			for(Entity en : Methods.getNearbyEntities(loc, 40, 40, 40)){
@@ -682,7 +684,7 @@ public class Envoy {
 		runTimeTask = new BukkitRunnable(){
 			@Override
 			public void run() {
-				Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
+				Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")), false);
 				endEnvoyEvent();
 			}
 		}.runTaskLater(plugin, getEnvoyRunTime() * 20);
@@ -782,6 +784,33 @@ public class Envoy {
 	 */
 	public static void setCenter(Location loc){
 		center = loc;
+	}
+	
+	/**
+	 * Check if a player is ignoring the messages.
+	 * @param uuid The player's UUID.
+	 * @return True if they are ignoring them and false if not.
+	 */
+	public static boolean isIgnoringMessages(UUID uuid){
+		return ignoreMessages.contains(uuid);
+	}
+	
+	/**
+	 * Make a player ignore the messages.
+	 * @param uuid The player's UUID.
+	 */
+	public static void addIgnorePlayer(UUID uuid){
+		ignoreMessages.add(uuid);
+	}
+	
+	/**
+	 * Make a player stop ignoring the messages.
+	 * @param uuid The player's UUID.
+	 */
+	public static void removeIgnorePlayer(UUID uuid){
+		if(ignoreMessages.contains(uuid)){
+			ignoreMessages.remove(uuid);
+		}
 	}
 	
 }

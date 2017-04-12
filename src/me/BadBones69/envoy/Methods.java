@@ -33,6 +33,7 @@ import me.BadBones69.envoy.MultiSupport.NMS_v1_10_R1;
 import me.BadBones69.envoy.MultiSupport.NMS_v1_11_R1;
 import me.BadBones69.envoy.MultiSupport.NMS_v1_9_R1;
 import me.BadBones69.envoy.MultiSupport.NMS_v1_9_R2;
+import me.BadBones69.envoy.api.Envoy;
 import me.BadBones69.envoy.controlers.FireworkDamageAPI;
 
 public class Methods {
@@ -341,18 +342,30 @@ public class Methods {
 		return enchants.get(en.getName());
 	}
 	
-	public static void broadcastMessage(String msg){
+	public static void broadcastMessage(String msg, Boolean ignore){
 		if(Main.settings.getConfig().getBoolean("Settings.World-Messages.Toggle")){
 			for(Player p : Bukkit.getOnlinePlayers()){
 				for(String w : Main.settings.getConfig().getStringList("Settings.World-Messages.Worlds")){
 					if(p.getWorld().getName().equalsIgnoreCase(w)){
-						p.sendMessage(color(msg));
+						if(ignore){
+							if(!Envoy.isIgnoringMessages(p.getUniqueId())){
+								p.sendMessage(color(msg));
+							}
+						}else{
+							p.sendMessage(color(msg));
+						}
 					}
 				}
 			}
 		}else{
 			for(Player p : Bukkit.getOnlinePlayers()){
-				p.sendMessage(msg.split("%NL%"));
+				if(ignore){
+					if(!Envoy.isIgnoringMessages(p.getUniqueId())){
+						p.sendMessage(msg.split("%NL%"));
+					}
+				}else{
+					p.sendMessage(msg.split("%NL%"));
+				}
 			}
 			Bukkit.getLogger().log(Level.INFO, color(msg));
 		}

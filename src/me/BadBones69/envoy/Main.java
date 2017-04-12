@@ -2,6 +2,7 @@ package me.BadBones69.envoy;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -59,9 +60,6 @@ public class Main extends JavaPlugin implements Listener{
 			MVdWPlaceholderAPISupport.registerPlaceholders(this);
 		}
 		if(settings.getConfig().getBoolean("Settings.Toggle-Metrics")){
-			try{
-				Metrics metrics = new Metrics(this); metrics.start();
-			}catch (IOException e) {}
 			try {
 				new MCUpdate(this, true);
 			} catch (IOException e) {}
@@ -104,6 +102,7 @@ public class Main extends JavaPlugin implements Listener{
 					sender.sendMessage(Methods.color("&6/Envoy reload &7- Reloads all the config files."));
 					sender.sendMessage(Methods.color("&6/Envoy time &7- Shows the time till the envoy starts or ends."));
 					sender.sendMessage(Methods.color("&6/Envoy drops &7- Shows all current crate locations."));
+					sender.sendMessage(Methods.color("&6/Envoy stfu &7- Shuts up the envoy collecting message."));
 					sender.sendMessage(Methods.color("&6/Envoy flare [amount] [player] &7- Give a player a flare to call an envoy event."));
 					sender.sendMessage(Methods.color("&6/Envoy edit &7- Edit the crate locations with bedrock."));
 					sender.sendMessage(Methods.color("&6/Envoy start &7- Force starts the envoy."));
@@ -130,6 +129,26 @@ public class Main extends JavaPlugin implements Listener{
 					Envoy.load();
 					Prizes.loadPrizes();
 					sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Reloaded")));
+					return true;
+				}
+				if(args[0].equalsIgnoreCase("stfu")){
+					if(!(sender.hasPermission("envoy.stfu") || sender.hasPermission("envoy.bypass"))){
+						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.No-Permission")));
+						return true;
+					}
+					if(sender instanceof Player){
+						Player player = (Player) sender;
+						UUID uuid = player.getUniqueId();
+						if(Envoy.isIgnoringMessages(uuid)){
+							Envoy.removeIgnorePlayer(uuid);
+							player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Stop-Ignoring-Messages")));
+						}else{
+							Envoy.addIgnorePlayer(uuid);
+							player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Start-Ignoring-Messages")));
+						}
+					}else{
+						sender.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Players-Only")));
+					}
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("center")){// /Envoy Center
@@ -253,7 +272,7 @@ public class Main extends JavaPlugin implements Listener{
 					}
 					if(Envoy.isEnvoyActive()){
 						Envoy.endEnvoyEvent();
-						Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
+						Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")), false);
 						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Force-Ended")));
 					}else{
 						sender.sendMessage(Methods.getPrefix() + Methods.color(settings.getMessages().getString("Messages.Not-Started")));

@@ -60,7 +60,7 @@ public class EnvoyControl implements Listener{
 					ArrayList<String> prizes = new ArrayList<String>();
 					if(Prizes.getPrizes(tier).size() == 0){
 						Methods.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier."
-								+ " Please add prizes other wise errors will occur."));
+								+ " Please add prizes other wise errors will occur."), false);
 						return;
 					}
 					if(Prizes.isRandom(tier)){
@@ -89,17 +89,17 @@ public class EnvoyControl implements Listener{
 								Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Left")
 										.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName())
 										.replaceAll("%Amount%", Envoy.getActiveEvoys().size() + "")
-										.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")));
+										.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")), true);
 							}
 						}else{
 							Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Left")
 									.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName())
 									.replaceAll("%Amount%", Envoy.getActiveEvoys().size() + "")
-									.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")));
+									.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")), true);
 						}
 					}else{
 						Envoy.endEnvoyEvent();
-						Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")));
+						Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")), false);
 					}
 				}
 			}
