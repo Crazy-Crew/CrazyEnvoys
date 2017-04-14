@@ -29,6 +29,7 @@ import me.BadBones69.envoy.Methods;
 import me.BadBones69.envoy.MultiSupport.HolographicSupport;
 import me.BadBones69.envoy.MultiSupport.Support;
 import me.BadBones69.envoy.controlers.EditControl;
+import me.BadBones69.envoy.controlers.EnvoyControl;
 import me.BadBones69.envoy.controlers.FireworkDamageAPI;
 
 public class Envoy {
@@ -139,6 +140,7 @@ public class Envoy {
 		Main.settings.getData().set("Locations.Spawns", locs);
 		Main.settings.saveData();
 		locations.clear();
+		EnvoyControl.clearCooldowns();
 	}
 	
 	/**
@@ -157,8 +159,9 @@ public class Envoy {
 						check.setTimeInMillis(warn.getTimeInMillis());
 						check.clear(Calendar.MILLISECOND);
 						if(check.compareTo(cal) == 0){
-								Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Warning")
-										.replaceAll("%Time%", getNextEnvoyTime()).replaceAll("%time%", getNextEnvoyTime())), false);
+							HashMap<String, String> placeholder = new HashMap<String, String>();
+							placeholder.put("%time%", getNextEnvoyTime());
+							Messages.WARNING.broadcastMessage(false, placeholder);
 						}
 					}
 					Calendar next = Calendar.getInstance();
@@ -170,8 +173,9 @@ public class Envoy {
 								if(Main.settings.getConfig().getBoolean("Settings.Minimum-Players-Toggle")){
 									int online = Bukkit.getServer().getOnlinePlayers().size();
 									if(online < Main.settings.getConfig().getInt("Settings.Minimum-Players")){
-										Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-Enough-Players")
-												.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")), false);
+										HashMap<String, String> placeholder = new HashMap<String, String>();
+										placeholder.put("%amount%", online + "");
+										Messages.NOT_ENOUGH_PLAYERS.broadcastMessage(false, placeholder);
 										setNextEnvoy(getEnvoyCooldown());
 										resetWarnings();
 										return;
@@ -212,7 +216,7 @@ public class Envoy {
 	 */
 	public static void deSpawnCrates(){
 		envoyActive = false;
-		for(Location loc : getActiveEvoys()){
+		for(Location loc : getActiveEnvoys()){
 			loc.getBlock().setType(Material.AIR);
 			stopSignalFlare(loc);
 		}
@@ -252,7 +256,7 @@ public class Envoy {
 	 * 
 	 * @return All the active envoys that are active.
 	 */
-	public static Set<Location> getActiveEvoys(){
+	public static Set<Location> getActiveEnvoys(){
 		return activeEnvoys.keySet();
 	}
 	
@@ -269,7 +273,7 @@ public class Envoy {
 	 * 
 	 * @param loc The location you wish to add.
 	 */
-	public static void addActiveEvoy(Location loc, String tier){
+	public static void addActiveEnvoy(Location loc, String tier){
 		activeEnvoys.put(loc, tier);
 	}
 	
@@ -277,7 +281,7 @@ public class Envoy {
 	 * 
 	 * @param loc The location you wish to remove.
 	 */
-	public static void removeActiveEvoy(Location loc){
+	public static void removeActiveEnvoy(Location loc){
 		activeEnvoys.remove(loc);
 	}
 	
@@ -504,26 +508,6 @@ public class Envoy {
 		return msg;
 	}
 	
-	private static Integer getEnvoyRunTime(){
-		Integer seconds = 0;
-		String time = Main.settings.getConfig().getString("Settings.Envoy-Run-Time");
-		for(String i : time.split(" ")){
-			if(i.contains("D")||i.contains("d")){
-				seconds += Integer.parseInt(i.replaceAll("D", "").replaceAll("d", ""))*86400;
-			}
-			if(i.contains("H")||i.contains("h")){
-				seconds += Integer.parseInt(i.replaceAll("H", "").replaceAll("h", ""))*3600;
-			}
-			if(i.contains("M")||i.contains("m")){
-				seconds += Integer.parseInt(i.replaceAll("M", "").replaceAll("m", ""))*60;
-			}
-			if(i.contains("S")||i.contains("s")){
-				seconds += Integer.parseInt(i.replaceAll("S", "").replaceAll("s", ""));
-			}
-		}
-		return seconds;
-	}
-	
 	private static Integer getTimeSeconds(String time){
 		Integer seconds = 0;
 		for(String i : time.split(" ")){
@@ -569,12 +553,12 @@ public class Envoy {
 		for(Player player : EditControl.getEditors()){
 			EditControl.removeFakeBlocks(player);
 			player.getInventory().removeItem(new ItemStack(Material.BEDROCK, 1));
-			player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Kicked-From-Editor-Mode")));
+			Messages.KICKED_FROM_EDITOR_MODE.sendMessage(player);
 		}
 		EditControl.getEditors().clear();
 		if(Prizes.getTiers().size() == 0){
-			Methods.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder"
-					+ " to allow it to remake the default tier files."), false);
+			Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder"
+					+ " to allow it to remake the default tier files."));
 			return;
 		}
 		deSpawnCrates();
@@ -632,9 +616,9 @@ public class Envoy {
 				i++;
 			}
 		}
-		Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Started")
-				.replaceAll("%Amount%", max + "")
-				.replaceAll("%amount%", max + "")), false);
+		HashMap<String, String> placeholder = new HashMap<String, String>();
+		placeholder.put("%amount%", max + "");
+		Messages.STARTED.broadcastMessage(false, placeholder);
 		for(Location loc : locs){
 			boolean spawnFallingBlock = false;
 			for(Entity en : Methods.getNearbyEntities(loc, 40, 40, 40)){
@@ -675,7 +659,7 @@ public class Envoy {
 					}
 					HolographicSupport.createHologram(loc.clone().add(.5, hight, .5), tier);
 				}
-				addActiveEvoy(loc.clone(), tier);
+				addActiveEnvoy(loc.clone(), tier);
 				if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){
 					startSignalFlare(loc.clone(), tier);
 				}
@@ -684,10 +668,10 @@ public class Envoy {
 		runTimeTask = new BukkitRunnable(){
 			@Override
 			public void run() {
-				Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")), false);
+				Messages.ENDED.broadcastMessage(false, null);
 				endEnvoyEvent();
 			}
-		}.runTaskLater(plugin, getEnvoyRunTime() * 20);
+		}.runTaskLater(plugin, getTimeSeconds(Main.settings.getConfig().getString("Settings.Envoy-Run-Time")) * 20);
 		envoyTimeLeft = getEnvoyRunTimeCalendar();
 	}
 	
@@ -719,6 +703,7 @@ public class Envoy {
 			setNextEnvoy(getEnvoyCooldown());
 			resetWarnings();
 		}
+		EnvoyControl.clearCooldowns();
 	}
 	
 	/**

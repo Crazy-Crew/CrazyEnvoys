@@ -18,6 +18,9 @@ Settings:
   Minimum-Flare-Toggle: false #Toggle if using a flare has to meet the minimum players requirement. Minimum-Players-Toggle must be true for this to work.
   Minimum-Players: 12 #The minimum amount of players needed to start the envoy.
   Broadcast-Crate-Pick-Up: true #Toggle if when a player gets a crate if it broadcasts the message.
+  Crate-Collect-Cooldown: #If when a player collects a crate if they have to wait to collect another.
+    Toggle: true #Toggle this option on and off.
+    Time: '15s' #The time till they have to wait.
   World-Messages:
     Toggle: false #Toggle if the broadcasted messages are only in a specific worlds.
     Worlds: #The worlds you wish to have the messages only show up in.

@@ -36,7 +36,7 @@ public class MVdWPlaceholderAPISupport {
 		PlaceholderAPI.registerPlaceholder(plugin, "envoy_crates_left", new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				return Envoy.getActiveEvoys().size() + "";
+				return Envoy.getActiveEnvoys().size() + "";
 			}
 		});
 	}

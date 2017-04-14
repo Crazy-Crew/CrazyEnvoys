@@ -30,7 +30,7 @@ public class PlaceholderAPISupport extends EZPlaceholderHook{
 			}
 		}
 		if(placeHolder.equalsIgnoreCase("crates_left")){
-			return Envoy.getActiveEvoys().size() + "";
+			return Envoy.getActiveEnvoys().size() + "";
 		}
 		return null;
 	}

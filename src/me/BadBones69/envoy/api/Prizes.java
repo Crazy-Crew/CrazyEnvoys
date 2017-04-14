@@ -15,7 +15,7 @@ import me.BadBones69.envoy.Methods;
 public class Prizes {
 	
 	private static List<String> tiers = new ArrayList<String>();
-	private static HashMap<String, Boolean> isRandom = new HashMap<String, Boolean>();
+	private static HashMap<String, Boolean> useChance = new HashMap<String, Boolean>();
 	private static HashMap<String, Integer> spawnChance = new HashMap<String, Integer>();
 	private static HashMap<String, List<String>> prizes = new HashMap<String, List<String>>();
 	private static HashMap<String, HashMap<String, Integer>> chances = new HashMap<String, HashMap<String, Integer>>();
@@ -36,7 +36,7 @@ public class Prizes {
 		spawnChance.clear();
 		for(String tier : Main.settings.getAllTierNames()){
 			FileConfiguration tfile = Main.settings.getFile(tier);
-			isRandom.put(tier, tfile.getBoolean("Settings.Use-Chance"));
+			useChance.put(tier, tfile.getBoolean("Settings.Use-Chance"));
 			ArrayList<String> ps = new ArrayList<String>();
 			HashMap<String, Integer> chance = new HashMap<String, Integer>();
 			HashMap<String, List<String>> cmds = new HashMap<String, List<String>>();
@@ -149,8 +149,8 @@ public class Prizes {
 	 * 
 	 * @return If true then prizes are random and if false it uses chance.
 	 */
-	public static Boolean isRandom(String tier){
-		return isRandom.get(tier);
+	public static Boolean useChance(String tier){
+		return useChance.get(tier);
 	}
 	
 	/**
@@ -186,7 +186,7 @@ public class Prizes {
 		}
 		ArrayList<String> p = new ArrayList<String>();
 		int max = getPrizeAmount(tier);
-		for(int i = 0; p.size() < max || i < 500; i++){
+		for(int i = 0; p.size() < max && i < 500; i++){
 			String prize = P.get(new Random().nextInt(P.size()));
 			if(!p.contains(prize)){
 				p.add(prize);

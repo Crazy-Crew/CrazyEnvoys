@@ -1,5 +1,7 @@
 package me.BadBones69.envoy.controlers;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -15,6 +17,7 @@ import me.BadBones69.envoy.MultiSupport.Support;
 import me.BadBones69.envoy.MultiSupport.WorldGuard;
 import me.BadBones69.envoy.api.Envoy;
 import me.BadBones69.envoy.api.Flare;
+import me.BadBones69.envoy.api.Messages;
 
 public class FlareControl implements Listener{
 	
@@ -29,15 +32,16 @@ public class FlareControl implements Listener{
 					e.setCancelled(true);
 					if(player.hasPermission("envoy.flare.use")){
 						if(Envoy.isEnvoyActive()){
-							player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Already-Started")));
+							Messages.ALREADY_STARTED.sendMessage(player);
 							return;
 						}else{
 							int online = Bukkit.getServer().getOnlinePlayers().size();
 							if(config.getBoolean("Settings.Minimum-Players-Toggle")){
 								if(config.getBoolean("Settings.Minimum-Flare-Toggle")){
 									if(online < config.getInt("Settings.Minimum-Players")){
-										player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-Enough-Players")
-												.replaceAll("%Amount%", online + "").replaceAll("%amount%", online + "")));
+										HashMap<String, String> placeholder = new HashMap<String, String>();
+										placeholder.put("%amount%", online + "");
+										Messages.NOT_ENOUGH_PLAYERS.sendMessage(player, placeholder);
 										return;
 									}
 								}
@@ -57,16 +61,16 @@ public class FlareControl implements Listener{
 								toggle = true;
 							}
 							if(!toggle){
-								player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Not-In-World-Guard-Region")));
+								Messages.NOT_IN_WORLD_GUARD_REGION.sendMessage(player);
 								return;
 							}
-							player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Used-Flare")));
+							Messages.USED_FLARE.sendMessage(player);
 							Flare.takeFlare(player, flare);
 							Envoy.startEnvoyEvent();
 							return;
 						}
 					}else{
-						player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Cant-Use-Flares")));
+						Messages.CANT_USE_FLARES.sendMessage(player);
 						return;
 					}
 				}

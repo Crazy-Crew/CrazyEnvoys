@@ -13,9 +13,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.BadBones69.envoy.Main;
 import me.BadBones69.envoy.Methods;
 import me.BadBones69.envoy.api.Envoy;
+import me.BadBones69.envoy.api.Messages;
 
 public class EditControl implements Listener{
 	
@@ -60,7 +60,7 @@ public class EditControl implements Listener{
 			e.setCancelled(true);
 			if(Methods.getItemInHand(player).getType() == Material.BEDROCK){
 				Envoy.addLocation(e.getBlock().getLocation());
-				player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Add-Location")));
+				Messages.ADD_LOCATION.sendMessage(player);
 				new BukkitRunnable(){
 					@Override
 					public void run() {
@@ -82,7 +82,7 @@ public class EditControl implements Listener{
 			if(Envoy.isLocation(loc)){
 				e.getBlock().getState().update();
 				Envoy.removeLocation(loc);
-				player.sendMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Remove-Location")));
+				Messages.REMOVE_LOCATION.sendMessage(player);
 			}
 		}
 	}

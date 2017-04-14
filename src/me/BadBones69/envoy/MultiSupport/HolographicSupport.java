@@ -45,7 +45,7 @@ public class HolographicSupport {
 		HologramsAPI.registerPlaceholder(plugin, "{envoy_crates_left}", .5, new PlaceholderReplacer() {
 			@Override
 			public String update() {
-				return Envoy.getActiveEvoys().size() + "";
+				return Envoy.getActiveEnvoys().size() + "";
 			}
 		});
 		

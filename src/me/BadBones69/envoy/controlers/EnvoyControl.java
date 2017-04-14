@@ -1,6 +1,9 @@
 package me.BadBones69.envoy.controlers;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -23,9 +26,12 @@ import me.BadBones69.envoy.Version;
 import me.BadBones69.envoy.MultiSupport.HolographicSupport;
 import me.BadBones69.envoy.MultiSupport.Support;
 import me.BadBones69.envoy.api.Envoy;
+import me.BadBones69.envoy.api.Messages;
 import me.BadBones69.envoy.api.Prizes;
 
 public class EnvoyControl implements Listener{
+	
+	private static HashMap<UUID, Calendar> cooldown = new HashMap<UUID, Calendar>();
 	
 	@EventHandler
 	public void onPlayerClick(PlayerInteractEvent e){
@@ -39,8 +45,24 @@ public class EnvoyControl implements Listener{
 							return;
 						}
 					}
-					String tier = Envoy.getTier(loc);
 					e.setCancelled(true);
+					if(!player.hasPermission("envoy.bypass")){
+						if(Main.settings.getConfig().contains("Settings.Crate-Collect-Cooldown")){
+							if(Main.settings.getConfig().getBoolean("Settings.Crate-Collect-Cooldown.Toggle")){
+								UUID uuid = player.getUniqueId();
+								if(cooldown.containsKey(uuid)){
+									if(Calendar.getInstance().before(cooldown.get(uuid))){
+										HashMap<String, String> placeholder = new HashMap<String, String>();
+										placeholder.put("%time%", getTimeLeft(cooldown.get(uuid)));
+										Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
+										return;
+									}
+								}
+								cooldown.put(uuid, getTimeFromString(Main.settings.getConfig().getString("Settings.Crate-Collect-Cooldown.Time")));
+							}
+						}
+					}
+					String tier = Envoy.getTier(loc);
 					if(Main.settings.getFile(tier).getBoolean("Settings.Firework-Toggle")){
 						ArrayList<Color> colors = new ArrayList<Color>();
 						for(String c : Main.settings.getFile(tier).getStringList("Settings.Firework-Colors")){
@@ -56,17 +78,17 @@ public class EnvoyControl implements Listener{
 						HolographicSupport.removeHologram(loc.clone().add(.5, 1.5, .5));
 					}
 					Envoy.stopSignalFlare(e.getClickedBlock().getLocation());
-					Envoy.removeActiveEvoy(loc);
+					Envoy.removeActiveEnvoy(loc);
 					ArrayList<String> prizes = new ArrayList<String>();
 					if(Prizes.getPrizes(tier).size() == 0){
-						Methods.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier."
-								+ " Please add prizes other wise errors will occur."), false);
+						Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier."
+								+ " Please add prizes other wise errors will occur."));
 						return;
 					}
-					if(Prizes.isRandom(tier)){
-						prizes = Prizes.pickRandomPrizes(tier);
-					}else{
+					if(Prizes.useChance(tier)){
 						prizes = Prizes.pickPrizesByChance(tier);
+					}else{
+						prizes = Prizes.pickRandomPrizes(tier);
 					}
 					for(String prize : prizes){
 						for(String msg : Prizes.getMessages(tier, prize)){
@@ -83,23 +105,23 @@ public class EnvoyControl implements Listener{
 							}
 						}
 					}
-					if(Envoy.getActiveEvoys().size() >= 1){
+					if(Envoy.getActiveEnvoys().size() >= 1){
 						if(Main.settings.getConfig().contains("Settings.Broadcast-Crate-Pick-Up")){
 							if(Main.settings.getConfig().getBoolean("Settings.Broadcast-Crate-Pick-Up")){
-								Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Left")
-										.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName())
-										.replaceAll("%Amount%", Envoy.getActiveEvoys().size() + "")
-										.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")), true);
+								HashMap<String, String> placeholder = new HashMap<String, String>();
+								placeholder.put("%player%", player.getName());
+								placeholder.put("%amount%", Envoy.getActiveEnvoys().size() + "");
+								Messages.LEFT.broadcastMessage(true, placeholder);
 							}
 						}else{
-							Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Left")
-									.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName())
-									.replaceAll("%Amount%", Envoy.getActiveEvoys().size() + "")
-									.replaceAll("%amount%", Envoy.getActiveEvoys().size() +  "")), true);
+							HashMap<String, String> placeholder = new HashMap<String, String>();
+							placeholder.put("%player%", player.getName());
+							placeholder.put("%amount%", Envoy.getActiveEnvoys().size() + "");
+							Messages.LEFT.broadcastMessage(true, placeholder);
 						}
 					}else{
 						Envoy.endEnvoyEvent();
-						Methods.broadcastMessage(Methods.getPrefix() + Methods.color(Main.settings.getMessages().getString("Messages.Ended")), false);
+						Messages.ENDED.broadcastMessage(false, null);
 					}
 				}
 			}
@@ -125,7 +147,7 @@ public class EnvoyControl implements Listener{
 							}
 						}
 						Envoy.removeFallingBlock(e.getEntity());
-						Envoy.addActiveEvoy(loc.getBlock().getLocation(), tier);
+						Envoy.addActiveEnvoy(loc.getBlock().getLocation(), tier);
 						if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){
 							Envoy.startSignalFlare(loc.getBlock().getLocation(), tier);
 						}
@@ -154,7 +176,7 @@ public class EnvoyControl implements Listener{
 							}
 						}
 						Envoy.removeFallingBlock(en);
-						Envoy.addActiveEvoy(loc.getBlock().getLocation(), tier);
+						Envoy.addActiveEnvoy(loc.getBlock().getLocation(), tier);
 						if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){
 							Envoy.startSignalFlare(loc.getBlock().getLocation(), tier);
 						}
@@ -162,6 +184,53 @@ public class EnvoyControl implements Listener{
 				}
 			}
 		}
+	}
+	
+	public static void clearCooldowns(){
+		cooldown.clear();
+	}
+	
+	private Calendar getTimeFromString(String time){
+		Calendar cal = Calendar.getInstance();
+		for(String i : time.split(" ")){
+			if(i.contains("D")||i.contains("d")){
+				cal.add(Calendar.DATE, Integer.parseInt(i.replaceAll("D", "").replaceAll("d", "")));
+			}
+			if(i.contains("H")||i.contains("h")){
+				cal.add(Calendar.HOUR, Integer.parseInt(i.replaceAll("H", "").replaceAll("h", "")));
+			}
+			if(i.contains("M")||i.contains("m")){
+				cal.add(Calendar.MINUTE, Integer.parseInt(i.replaceAll("M", "").replaceAll("m", "")));
+			}
+			if(i.contains("S")||i.contains("s")){
+				cal.add(Calendar.SECOND, Integer.parseInt(i.replaceAll("S", "").replaceAll("s", "")));
+			}
+		}
+		return cal;
+	}
+	
+	private String getTimeLeft(Calendar timeTill){
+		Calendar C = Calendar.getInstance();
+		int total = ((int) (timeTill.getTimeInMillis() / 1000) - (int) (C.getTimeInMillis() / 1000));
+		int D = 0;
+		int H = 0;
+		int M = 0;
+		int S = 0;
+		for(;total > 86400; total -= 86400, D++);
+		for(;total > 3600; total -= 3600, H++);
+		for(;total >= 60; total -= 60, M++);
+		S += total;
+		String msg = "";
+		if(D > 0) msg += D + "d, ";
+		if(D > 0 || H > 0) msg += H + "h, ";
+		if(D > 0 || H > 0 || M > 0) msg += M + "m, ";
+		if(D > 0 || H > 0 || M > 0 || S > 0) msg += S + "s, ";
+		if(msg.length() < 2){
+			msg = "0s";
+		}else{
+			msg = msg.substring(0, msg.length() - 2);
+		}
+		return msg;
 	}
 	
 }
