@@ -1,7 +1,7 @@
 name: CrazyEnvoy
 author: BadBones69
 main: me.BadBones69.envoy.Main
-version: 1.2.7
+version: 1.2.7.1
 description: A crazy envoy plugin.
 softdepend: [HolographicDisplays, PlaceholderAPI, MVdWPlaceholderAPI, Multiverse-Core, MultiWorld]
 commands:

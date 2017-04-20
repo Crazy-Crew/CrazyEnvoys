@@ -27,12 +27,12 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-import me.BadBones69.envoy.MultiSupport.EnchantGlow;
-import me.BadBones69.envoy.MultiSupport.NMS_v1_10_R1;
-import me.BadBones69.envoy.MultiSupport.NMS_v1_11_R1;
-import me.BadBones69.envoy.MultiSupport.NMS_v1_9_R1;
-import me.BadBones69.envoy.MultiSupport.NMS_v1_9_R2;
 import me.BadBones69.envoy.controlers.FireworkDamageAPI;
+import me.BadBones69.envoy.multisupport.EnchantGlow;
+import me.BadBones69.envoy.multisupport.NMS_v1_10_R1;
+import me.BadBones69.envoy.multisupport.NMS_v1_11_R1;
+import me.BadBones69.envoy.multisupport.NMS_v1_9_R1;
+import me.BadBones69.envoy.multisupport.NMS_v1_9_R2;
 
 public class Methods {
 	

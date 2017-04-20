@@ -19,10 +19,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.BadBones69.envoy.MultiSupport.HolographicSupport;
-import me.BadBones69.envoy.MultiSupport.MVdWPlaceholderAPISupport;
-import me.BadBones69.envoy.MultiSupport.PlaceholderAPISupport;
-import me.BadBones69.envoy.MultiSupport.Support;
 import me.BadBones69.envoy.api.Envoy;
 import me.BadBones69.envoy.api.Flare;
 import me.BadBones69.envoy.api.Messages;
@@ -31,6 +27,10 @@ import me.BadBones69.envoy.controlers.EditControl;
 import me.BadBones69.envoy.controlers.EnvoyControl;
 import me.BadBones69.envoy.controlers.FireworkDamageAPI;
 import me.BadBones69.envoy.controlers.FlareControl;
+import me.BadBones69.envoy.multisupport.HolographicSupport;
+import me.BadBones69.envoy.multisupport.MVdWPlaceholderAPISupport;
+import me.BadBones69.envoy.multisupport.PlaceholderAPISupport;
+import me.BadBones69.envoy.multisupport.Support;
 
 public class Main extends JavaPlugin implements Listener{
 	
@@ -194,7 +194,9 @@ public class Main extends JavaPlugin implements Listener{
 					}
 					HashMap<String, String> placeholder = new HashMap<String, String>();
 					placeholder.put("%player%", player.getName());
+					placeholder.put("%Player%", player.getName());
 					placeholder.put("%amount%", amount + "");
+					placeholder.put("%Amount%", amount + "");
 					Messages.GIVE_FLARE.sendMessage(sender, placeholder);
 					if(!sender.getName().equalsIgnoreCase(player.getName())){
 						Messages.GIVEN_FLARE.sendMessage(player, placeholder);
@@ -248,6 +250,7 @@ public class Main extends JavaPlugin implements Listener{
 					HashMap<String, String> placeholder = new HashMap<String, String>();
 					if(Envoy.isEnvoyActive()){
 						placeholder.put("%time%", Envoy.getEnvoyRunTimeLeft());
+						placeholder.put("%Time%", Envoy.getEnvoyRunTimeLeft());
 						Messages.TIME_LEFT.sendMessage(sender, placeholder);
 					}else{
 						placeholder.put("%time%", Envoy.getNextEnvoyTime());

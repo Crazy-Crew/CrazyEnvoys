@@ -13,11 +13,11 @@ import org.bukkit.inventory.ItemStack;
 
 import me.BadBones69.envoy.Main;
 import me.BadBones69.envoy.Methods;
-import me.BadBones69.envoy.MultiSupport.Support;
-import me.BadBones69.envoy.MultiSupport.WorldGuard;
 import me.BadBones69.envoy.api.Envoy;
 import me.BadBones69.envoy.api.Flare;
 import me.BadBones69.envoy.api.Messages;
+import me.BadBones69.envoy.multisupport.Support;
+import me.BadBones69.envoy.multisupport.WorldGuard;
 
 public class FlareControl implements Listener{
 	
@@ -41,6 +41,7 @@ public class FlareControl implements Listener{
 									if(online < config.getInt("Settings.Minimum-Players")){
 										HashMap<String, String> placeholder = new HashMap<String, String>();
 										placeholder.put("%amount%", online + "");
+										placeholder.put("%Amount%", online + "");
 										Messages.NOT_ENOUGH_PLAYERS.sendMessage(player, placeholder);
 										return;
 									}

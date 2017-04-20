@@ -26,11 +26,11 @@ import org.bukkit.scheduler.BukkitTask;
 
 import me.BadBones69.envoy.Main;
 import me.BadBones69.envoy.Methods;
-import me.BadBones69.envoy.MultiSupport.HolographicSupport;
-import me.BadBones69.envoy.MultiSupport.Support;
 import me.BadBones69.envoy.controlers.EditControl;
 import me.BadBones69.envoy.controlers.EnvoyControl;
 import me.BadBones69.envoy.controlers.FireworkDamageAPI;
+import me.BadBones69.envoy.multisupport.HolographicSupport;
+import me.BadBones69.envoy.multisupport.Support;
 
 public class Envoy {
 	
@@ -161,6 +161,7 @@ public class Envoy {
 						if(check.compareTo(cal) == 0){
 							HashMap<String, String> placeholder = new HashMap<String, String>();
 							placeholder.put("%time%", getNextEnvoyTime());
+							placeholder.put("%Time%", getNextEnvoyTime());
 							Messages.WARNING.broadcastMessage(false, placeholder);
 						}
 					}
@@ -175,6 +176,7 @@ public class Envoy {
 									if(online < Main.settings.getConfig().getInt("Settings.Minimum-Players")){
 										HashMap<String, String> placeholder = new HashMap<String, String>();
 										placeholder.put("%amount%", online + "");
+										placeholder.put("%Amount%", online + "");
 										Messages.NOT_ENOUGH_PLAYERS.broadcastMessage(false, placeholder);
 										setNextEnvoy(getEnvoyCooldown());
 										resetWarnings();
@@ -618,6 +620,7 @@ public class Envoy {
 		}
 		HashMap<String, String> placeholder = new HashMap<String, String>();
 		placeholder.put("%amount%", max + "");
+		placeholder.put("%Amount%", max + "");
 		Messages.STARTED.broadcastMessage(false, placeholder);
 		for(Location loc : locs){
 			boolean spawnFallingBlock = false;
@@ -686,7 +689,9 @@ public class Envoy {
 		int bottomBlockZ = (loc.getBlockZ() > loc2.getBlockZ() ? loc2.getBlockZ() : loc.getBlockZ());
 		for(int x = bottomBlockX; x <= topBlockX; x++){
 			for(int z = bottomBlockZ; z <= topBlockZ; z++){
-				locs.add(loc.getWorld().getBlockAt(x, 255, z).getLocation());
+				if(loc.getWorld().getBlockAt(x, 255, z) != null){
+					locs.add(loc.getWorld().getBlockAt(x, 255, z).getLocation());
+				}
 			}
 		}
 		return locs;

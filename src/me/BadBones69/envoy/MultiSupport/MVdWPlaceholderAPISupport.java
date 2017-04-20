@@ -1,4 +1,4 @@
-package me.BadBones69.envoy.MultiSupport;
+package me.BadBones69.envoy.multisupport;
 
 import org.bukkit.plugin.Plugin;
 

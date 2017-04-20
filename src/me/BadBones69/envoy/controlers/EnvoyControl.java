@@ -23,11 +23,11 @@ import org.bukkit.inventory.ItemStack;
 import me.BadBones69.envoy.Main;
 import me.BadBones69.envoy.Methods;
 import me.BadBones69.envoy.Version;
-import me.BadBones69.envoy.MultiSupport.HolographicSupport;
-import me.BadBones69.envoy.MultiSupport.Support;
 import me.BadBones69.envoy.api.Envoy;
 import me.BadBones69.envoy.api.Messages;
 import me.BadBones69.envoy.api.Prizes;
+import me.BadBones69.envoy.multisupport.HolographicSupport;
+import me.BadBones69.envoy.multisupport.Support;
 
 public class EnvoyControl implements Listener{
 	
@@ -54,6 +54,7 @@ public class EnvoyControl implements Listener{
 									if(Calendar.getInstance().before(cooldown.get(uuid))){
 										HashMap<String, String> placeholder = new HashMap<String, String>();
 										placeholder.put("%time%", getTimeLeft(cooldown.get(uuid)));
+										placeholder.put("%Time%", getTimeLeft(cooldown.get(uuid)));
 										Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
 										return;
 									}
@@ -110,13 +111,17 @@ public class EnvoyControl implements Listener{
 							if(Main.settings.getConfig().getBoolean("Settings.Broadcast-Crate-Pick-Up")){
 								HashMap<String, String> placeholder = new HashMap<String, String>();
 								placeholder.put("%player%", player.getName());
+								placeholder.put("%Player%", player.getName());
 								placeholder.put("%amount%", Envoy.getActiveEnvoys().size() + "");
+								placeholder.put("%Amount%", Envoy.getActiveEnvoys().size() + "");
 								Messages.LEFT.broadcastMessage(true, placeholder);
 							}
 						}else{
 							HashMap<String, String> placeholder = new HashMap<String, String>();
 							placeholder.put("%player%", player.getName());
+							placeholder.put("%Player%", player.getName());
 							placeholder.put("%amount%", Envoy.getActiveEnvoys().size() + "");
+							placeholder.put("%Amount%", Envoy.getActiveEnvoys().size() + "");
 							Messages.LEFT.broadcastMessage(true, placeholder);
 						}
 					}else{
