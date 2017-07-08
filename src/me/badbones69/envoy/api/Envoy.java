@@ -1,4 +1,4 @@
-package me.BadBones69.envoy.api;
+package me.badbones69.envoy.api;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,13 +24,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.BadBones69.envoy.Main;
-import me.BadBones69.envoy.Methods;
-import me.BadBones69.envoy.controlers.EditControl;
-import me.BadBones69.envoy.controlers.EnvoyControl;
-import me.BadBones69.envoy.controlers.FireworkDamageAPI;
-import me.BadBones69.envoy.multisupport.HolographicSupport;
-import me.BadBones69.envoy.multisupport.Support;
+import me.badbones69.envoy.Main;
+import me.badbones69.envoy.Methods;
+import me.badbones69.envoy.controlers.EditControl;
+import me.badbones69.envoy.controlers.EnvoyControl;
+import me.badbones69.envoy.controlers.FireworkDamageAPI;
+import me.badbones69.envoy.multisupport.HolographicSupport;
+import me.badbones69.envoy.multisupport.Support;
 
 public class Envoy {
 	

@@ -1,12 +1,12 @@
-package me.BadBones69.envoy.multisupport;
+package me.badbones69.envoy.multisupport;
 
 import org.bukkit.plugin.Plugin;
 
 import be.maximvdw.placeholderapi.PlaceholderAPI;
 import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
 import be.maximvdw.placeholderapi.PlaceholderReplacer;
-import me.BadBones69.envoy.Main;
-import me.BadBones69.envoy.api.Envoy;
+import me.badbones69.envoy.Main;
+import me.badbones69.envoy.api.Envoy;
 
 public class MVdWPlaceholderAPISupport {
 	

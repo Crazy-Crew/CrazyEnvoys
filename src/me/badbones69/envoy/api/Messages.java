@@ -1,4 +1,4 @@
-package me.BadBones69.envoy.api;
+package me.badbones69.envoy.api;
 
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -7,8 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.BadBones69.envoy.Main;
-import me.BadBones69.envoy.Methods;
+import me.badbones69.envoy.Main;
+import me.badbones69.envoy.Methods;
 
 public enum Messages {
 	

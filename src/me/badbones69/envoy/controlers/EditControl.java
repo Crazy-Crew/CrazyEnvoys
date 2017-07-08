@@ -1,4 +1,4 @@
-package me.BadBones69.envoy.controlers;
+package me.badbones69.envoy.controlers;
 
 import java.util.ArrayList;
 
@@ -13,9 +13,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.BadBones69.envoy.Methods;
-import me.BadBones69.envoy.api.Envoy;
-import me.BadBones69.envoy.api.Messages;
+import me.badbones69.envoy.Methods;
+import me.badbones69.envoy.api.Envoy;
+import me.badbones69.envoy.api.Messages;
 
 public class EditControl implements Listener{
 	

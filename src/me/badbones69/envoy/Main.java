@@ -1,4 +1,4 @@
-package me.BadBones69.envoy;
+package me.badbones69.envoy;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,18 +19,19 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.BadBones69.envoy.api.Envoy;
-import me.BadBones69.envoy.api.Flare;
-import me.BadBones69.envoy.api.Messages;
-import me.BadBones69.envoy.api.Prizes;
-import me.BadBones69.envoy.controlers.EditControl;
-import me.BadBones69.envoy.controlers.EnvoyControl;
-import me.BadBones69.envoy.controlers.FireworkDamageAPI;
-import me.BadBones69.envoy.controlers.FlareControl;
-import me.BadBones69.envoy.multisupport.HolographicSupport;
-import me.BadBones69.envoy.multisupport.MVdWPlaceholderAPISupport;
-import me.BadBones69.envoy.multisupport.PlaceholderAPISupport;
-import me.BadBones69.envoy.multisupport.Support;
+import me.badbones69.envoy.api.Envoy;
+import me.badbones69.envoy.api.Flare;
+import me.badbones69.envoy.api.Messages;
+import me.badbones69.envoy.api.Prizes;
+import me.badbones69.envoy.controlers.EditControl;
+import me.badbones69.envoy.controlers.EnvoyControl;
+import me.badbones69.envoy.controlers.FireworkDamageAPI;
+import me.badbones69.envoy.controlers.FlareControl;
+import me.badbones69.envoy.multisupport.HolographicSupport;
+import me.badbones69.envoy.multisupport.MVdWPlaceholderAPISupport;
+import me.badbones69.envoy.multisupport.PlaceholderAPISupport;
+import me.badbones69.envoy.multisupport.Support;
+import me.badbones69.envoy.multisupport.Version;
 
 public class Main extends JavaPlugin implements Listener{
 	
@@ -103,7 +104,7 @@ public class Main extends JavaPlugin implements Listener{
 					sender.sendMessage(Methods.color("&6/Envoy help &7- Shows the envoy help menu."));
 					sender.sendMessage(Methods.color("&6/Envoy reload &7- Reloads all the config files."));
 					sender.sendMessage(Methods.color("&6/Envoy time &7- Shows the time till the envoy starts or ends."));
-					sender.sendMessage(Methods.color("&6/Envoy drops &7- Shows all current crate locations."));
+					sender.sendMessage(Methods.color("&6/Envoy drops [page] &7- Shows all current crate locations."));
 					sender.sendMessage(Methods.color("&6/Envoy ignore &7- Shuts up the envoy collecting message."));
 					sender.sendMessage(Methods.color("&6/Envoy flare [amount] [player] &7- Give a player a flare to call an envoy event."));
 					sender.sendMessage(Methods.color("&6/Envoy edit &7- Edit the crate locations with bedrock."));
@@ -239,6 +240,9 @@ public class Main extends JavaPlugin implements Listener{
 					}
 					for(String loc : Methods.getPage(locs, page)){
 						sender.sendMessage(Methods.color("&6" + loc));
+					}
+					if(!Envoy.isEnvoyActive()){
+						sender.sendMessage(Methods.getPrefix() + Methods.color("&7Use /envoy drops [page] to see more."));
 					}
 					return true;
 				}

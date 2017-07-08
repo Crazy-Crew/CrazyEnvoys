@@ -1,4 +1,4 @@
-package me.BadBones69.envoy.controlers;
+package me.badbones69.envoy.controlers;
 
 import java.util.ArrayList;
 

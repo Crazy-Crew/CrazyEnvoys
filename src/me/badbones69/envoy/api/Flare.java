@@ -1,4 +1,4 @@
-package me.BadBones69.envoy.api;
+package me.badbones69.envoy.api;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.BadBones69.envoy.Main;
-import me.BadBones69.envoy.Methods;
+import me.badbones69.envoy.Main;
+import me.badbones69.envoy.Methods;
 
 public class Flare {
 	

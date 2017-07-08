@@ -1,4 +1,4 @@
-package me.BadBones69.envoy.api;
+package me.badbones69.envoy.api;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import me.BadBones69.envoy.Main;
-import me.BadBones69.envoy.Methods;
+import me.badbones69.envoy.Main;
+import me.badbones69.envoy.Methods;
 
 public class Prizes {
 	

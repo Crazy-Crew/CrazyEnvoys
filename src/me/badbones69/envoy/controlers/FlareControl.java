@@ -1,4 +1,4 @@
-package me.BadBones69.envoy.controlers;
+package me.badbones69.envoy.controlers;
 
 import java.util.HashMap;
 
@@ -11,13 +11,13 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.BadBones69.envoy.Main;
-import me.BadBones69.envoy.Methods;
-import me.BadBones69.envoy.api.Envoy;
-import me.BadBones69.envoy.api.Flare;
-import me.BadBones69.envoy.api.Messages;
-import me.BadBones69.envoy.multisupport.Support;
-import me.BadBones69.envoy.multisupport.WorldGuard;
+import me.badbones69.envoy.Main;
+import me.badbones69.envoy.Methods;
+import me.badbones69.envoy.api.Envoy;
+import me.badbones69.envoy.api.Flare;
+import me.badbones69.envoy.api.Messages;
+import me.badbones69.envoy.multisupport.Support;
+import me.badbones69.envoy.multisupport.WorldGuard;
 
 public class FlareControl implements Listener{
 	

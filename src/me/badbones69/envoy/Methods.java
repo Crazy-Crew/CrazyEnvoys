@@ -1,4 +1,4 @@
-package me.BadBones69.envoy;
+package me.badbones69.envoy;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -27,12 +27,14 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-import me.BadBones69.envoy.controlers.FireworkDamageAPI;
-import me.BadBones69.envoy.multisupport.EnchantGlow;
-import me.BadBones69.envoy.multisupport.NMS_v1_10_R1;
-import me.BadBones69.envoy.multisupport.NMS_v1_11_R1;
-import me.BadBones69.envoy.multisupport.NMS_v1_9_R1;
-import me.BadBones69.envoy.multisupport.NMS_v1_9_R2;
+import me.badbones69.envoy.controlers.FireworkDamageAPI;
+import me.badbones69.envoy.multisupport.EnchantGlow;
+import me.badbones69.envoy.multisupport.NMS_v1_10_R1;
+import me.badbones69.envoy.multisupport.NMS_v1_11_R1;
+import me.badbones69.envoy.multisupport.NMS_v1_12_R1;
+import me.badbones69.envoy.multisupport.NMS_v1_9_R1;
+import me.badbones69.envoy.multisupport.NMS_v1_9_R2;
+import me.badbones69.envoy.multisupport.Version;
 
 public class Methods {
 	
@@ -110,6 +112,9 @@ public class Methods {
 		ItemStack item = new ItemStack(material, amount, (short) type);
 		if(material == Material.MONSTER_EGG){
 			switch(Version.getVersion()){
+			case v1_12_R1:
+				item = NMS_v1_12_R1.getSpawnEgg(EntityType.fromId(type), amount);
+				break;
 			case v1_11_R1:
 				item = NMS_v1_11_R1.getSpawnEgg(EntityType.fromId(type), amount);
 				break;
@@ -148,6 +153,9 @@ public class Methods {
 		ItemStack item = new ItemStack(material, amount, (short) type);
 		if(material == Material.MONSTER_EGG){
 			switch(Version.getVersion()){
+			case v1_12_R1:
+				item = NMS_v1_12_R1.getSpawnEgg(EntityType.fromId(type), amount);
+				break;
 			case v1_11_R1:
 				item = NMS_v1_11_R1.getSpawnEgg(EntityType.fromId(type), amount);
 				break;
@@ -234,21 +242,21 @@ public class Methods {
 	public static List<String> getPage(List<String> list, Integer page){
 		List<String> locations = new ArrayList<String>();
 		if(page <= 0){
-			page=1;
+			page = 1;
 		}
 		int max = 10;
 		int index = page * max-max;
 		int endIndex = index >= list.size() ? list.size() - 1 : index+max;
-		for (;index < endIndex ; index++){
+		for (; index < endIndex; index++){
 			if(index < list.size()){
 				locations.add(list.get(index));
 			}
 		}
-		for(;locations.size() == 0; page--){
+		for(; locations.size() == 0; page--){
 			if(page <= 0){
 				break;
 			}
-			index = page*max - max;
+			index = page * max - max;
 			endIndex = index >= list.size() ? list.size() - 1 : index+max;
 			for (;index < endIndex; index++){
 				if(index < list.size()){

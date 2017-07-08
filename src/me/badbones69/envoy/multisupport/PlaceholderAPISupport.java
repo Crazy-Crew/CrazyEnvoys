@@ -1,10 +1,10 @@
-package me.BadBones69.envoy.multisupport;
+package me.badbones69.envoy.multisupport;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import me.BadBones69.envoy.Main;
-import me.BadBones69.envoy.api.Envoy;
+import me.badbones69.envoy.Main;
+import me.badbones69.envoy.api.Envoy;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 
 public class PlaceholderAPISupport extends EZPlaceholderHook{

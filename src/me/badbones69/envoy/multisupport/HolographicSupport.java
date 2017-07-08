@@ -1,4 +1,4 @@
-package me.BadBones69.envoy.multisupport;
+package me.badbones69.envoy.multisupport;
 
 import java.util.HashMap;
 
@@ -10,9 +10,9 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.placeholder.PlaceholderReplacer;
 
-import me.BadBones69.envoy.Main;
-import me.BadBones69.envoy.Methods;
-import me.BadBones69.envoy.api.Envoy;
+import me.badbones69.envoy.Main;
+import me.badbones69.envoy.Methods;
+import me.badbones69.envoy.api.Envoy;
 
 public class HolographicSupport {
 	

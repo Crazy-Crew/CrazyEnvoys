@@ -1,4 +1,4 @@
-package me.BadBones69.envoy.multisupport;
+package me.badbones69.envoy.multisupport;
 
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;

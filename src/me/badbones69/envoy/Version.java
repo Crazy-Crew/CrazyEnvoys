@@ -1,4 +1,4 @@
-package me.BadBones69.envoy;
+package me.badbones69.envoy;
 
 import org.bukkit.Bukkit;
 
