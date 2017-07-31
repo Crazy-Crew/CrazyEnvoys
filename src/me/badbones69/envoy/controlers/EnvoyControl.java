@@ -103,6 +103,8 @@ public class EnvoyControl implements Listener{
 								e.getClickedBlock().getWorld().dropItem(loc, item);
 							}else{
 								player.getInventory().addItem(item);
+								//Prevent inventory Glitch//
+								player.updateInventory();
 							}
 						}
 					}
