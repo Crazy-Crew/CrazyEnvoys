@@ -1,6 +1,9 @@
 package me.badbones69.envoy.api;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -28,6 +31,10 @@ public enum Messages {
 	GIVEN_FLARE("Given-Flare"),
 	FORCE_START("Force-Start"),
 	FORCE_ENDED("Force-Ended"),
+	DROPS_PAGE("Drops-Page", "%prefix%&7Use /envoy drops [page] to see more."),
+	DROPS_FORMAT("Drops-Format", "&7[&6%id%&7]: %world%, %x%, %y%, %z%"),
+	DROPS_AVAILABLE("Drops-Available", "%prefix%&7List of all available envoys."),
+	DROPS_POSABILITIES("Drops-Possabilities", "%prefix%&7List of location envoy's may spawn at."),
 	PLAYERS_ONLY("Players-Only"),
 	NOT_A_NUMBER("Not-A-Number"),
 	ADD_LOCATION("Add-Location"),
@@ -46,36 +53,88 @@ public enum Messages {
 	NOT_IN_WORLD_GUARD_REGION("Not-In-World-Guard-Region");
 	
 	private String path;
+	private String defaultMessage;
 	
 	private Messages(String path){
-		this.path = path;
+		this.path = "Messages." + path;
+	}
+	
+	private Messages(String path, String defaultMessage){
+		this.path = "Messages." + path;
+		this.defaultMessage = defaultMessage;
+	}
+	
+	public String getMessage() {
+		return Methods.color(Main.settings.getMessages().contains(path) ? 
+				Main.settings.getMessages().getString(path).replaceAll("%prefix%", Methods.getPrefix())
+						: defaultMessage.replaceAll("%prefix%", Methods.getPrefix()));
+	}
+	
+	public List<String> getMessages(){
+		List<String> msgs = new ArrayList<>();
+		for(String msg : Main.settings.getMessages().contains(path) ? Main.settings.getMessages().getStringList(path) : Arrays.asList(defaultMessage)) {
+			msgs.add(Methods.color(msg.replaceAll("%prefix%", Methods.getPrefix())));
+		}
+		return msgs;
+	}
+	
+	public String getMessage(HashMap<String, String> placeholder) {
+		String msg = getMessage();
+		if(placeholder != null){
+			for(String ph : placeholder.keySet()){
+				if(msg.contains(ph)){
+					msg = msg.replaceAll(ph, placeholder.get(ph));
+				}
+			}
+		}
+		return msg;
+	}
+	
+	public List<String> getMessages(HashMap<String, String> placeholder){
+		List<String> msgs = new ArrayList<>();
+		for(String msg : getMessages()){
+			if(placeholder != null){
+				for(String ph : placeholder.keySet()){
+					if(msg.contains(ph)){
+							msg = msg.replaceAll(ph, placeholder.get(ph));
+					}
+				}
+			}
+			msgs.add(msg);
+		}
+		return msgs;
+	}
+	
+	public Boolean isList() {
+		if(Main.settings.getMessages().getStringList(path).isEmpty()){
+			return false;
+		}
+		return true;
 	}
 	
 	public void sendMessage(Player player){
-		if(!Main.settings.getMessages().getStringList("Messages." + path).isEmpty()){
-			for(String msg : Main.settings.getMessages().getStringList("Messages." + path)){
-				player.sendMessage(Methods.color(msg).replaceAll("%prefix%", Methods.getPrefix()));
+		if(isList()){
+			for(String msg : getMessages()){
+				player.sendMessage(msg);
 			}
 		}else{
-			String msg = Methods.color(Main.settings.getMessages().getString("Messages." + path)).replaceAll("%prefix%", Methods.getPrefix());
-			player.sendMessage(msg);
+			player.sendMessage(getMessage());
 		}
 	}
 	
 	public void sendMessage(CommandSender sender){
-		if(!Main.settings.getMessages().getStringList("Messages." + path).isEmpty()){
-			for(String msg : Main.settings.getMessages().getStringList("Messages." + path)){
-				sender.sendMessage(Methods.color(msg).replaceAll("%prefix%", Methods.getPrefix()));
+		if(isList()){
+			for(String msg : getMessages()){
+				sender.sendMessage(msg);
 			}
 		}else{
-			String msg = Methods.color(Main.settings.getMessages().getString("Messages." + path)).replaceAll("%prefix%", Methods.getPrefix());
-			sender.sendMessage(msg);
+			sender.sendMessage(getMessage());
 		}
 	}
 	
 	public void sendMessage(Player player, HashMap<String, String> placeholder){
-		if(!Main.settings.getMessages().getStringList("Messages." + path).isEmpty()){
-			for(String msg : Main.settings.getMessages().getStringList("Messages." + path)){
+		if(isList()){
+			for(String msg : getMessages()){
 				if(placeholder != null){
 					for(String ph : placeholder.keySet()){
 						if(msg.contains(ph)){
@@ -83,10 +142,10 @@ public enum Messages {
 						}
 					}
 				}
-				player.sendMessage(Methods.color(msg).replaceAll("%prefix%", Methods.getPrefix()));
+				player.sendMessage(msg);
 			}
 		}else{
-			String msg = Methods.color(Main.settings.getMessages().getString("Messages." + path)).replaceAll("%prefix%", Methods.getPrefix());
+			String msg = getMessage();
 			if(placeholder != null){
 				for(String ph : placeholder.keySet()){
 					if(msg.contains(ph)){
@@ -99,8 +158,8 @@ public enum Messages {
 	}
 	
 	public void sendMessage(CommandSender sender, HashMap<String, String> placeholder){
-		if(!Main.settings.getMessages().getStringList("Messages." + path).isEmpty()){
-			for(String msg : Main.settings.getMessages().getStringList("Messages." + path)){
+		if(isList()){
+			for(String msg : getMessages()){
 				if(placeholder != null){
 					for(String ph : placeholder.keySet()){
 						if(msg.contains(ph)){
@@ -108,10 +167,10 @@ public enum Messages {
 						}
 					}
 				}
-				sender.sendMessage(Methods.color(msg).replaceAll("%prefix%", Methods.getPrefix()));
+				sender.sendMessage(msg);
 			}
 		}else{
-			String msg = Methods.color(Main.settings.getMessages().getString("Messages." + path)).replaceAll("%prefix%", Methods.getPrefix());
+			String msg = getMessage();
 			if(placeholder != null){
 				for(String ph : placeholder.keySet()){
 					if(msg.contains(ph)){
@@ -149,8 +208,8 @@ public enum Messages {
 				}
 			}
 		}
-		if(!Main.settings.getMessages().getStringList("Messages." + path).isEmpty()){
-			for(String msg : Main.settings.getMessages().getStringList("Messages." + path)){
+		if(isList()){
+			for(String msg : getMessages()){
 				if(placeholder != null){
 					for(String ph : placeholder.keySet()){
 						if(msg.contains(ph)){
@@ -158,10 +217,10 @@ public enum Messages {
 						}
 					}
 				}
-				Bukkit.getLogger().log(Level.INFO, Methods.color(msg).replaceAll("%prefix%", Methods.getPrefix()));
+				Bukkit.getLogger().log(Level.INFO, msg);
 			}
 		}else{
-			String msg = Methods.color(Main.settings.getMessages().getString("Messages." + path)).replaceAll("%prefix%", Methods.getPrefix());
+			String msg = getMessage();
 			if(placeholder != null){
 				for(String ph : placeholder.keySet()){
 					if(msg.contains(ph)){

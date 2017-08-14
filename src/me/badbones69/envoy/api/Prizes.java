@@ -54,40 +54,46 @@ public class Prizes {
 					String name = "";
 					int amount = 1;
 					String item = "Stone";
-					boolean glowing = false;
+					Boolean glowing = false;
+					Boolean unbreaking = false;
 					for(String i : l.split(", ")){
 						if(i.contains("Item:")){
 							i = i.replaceAll("Item:", "");
 							item = i;
-						}
-						if(i.contains("Amount:")){
+						}else if(i.contains("Amount:")){
 							i = i.replaceAll("Amount:", "");
 							amount = Integer.parseInt(i);
-						}
-						if(i.contains("Name:")){
+						}else if(i.contains("Name:")){
 							i = i.replaceAll("Name:", "");
 							name = Methods.color(i);
-						}
-						if(i.contains("Lore:")){
+						}else if(i.contains("Lore:")){
 							i = i.replaceAll("Lore:", "");
 							for(String L : i.split(",")){
 								L = Methods.color(L);
 								lore.add(L);
 							}
-						}
-						if(i.contains("Glowing:")){
+						}else if(i.contains("Glowing:")){
 							i = i.replaceAll("Glowing:", "");
 							glowing = Boolean.parseBoolean(i);
-						}
-						for(Enchantment enc : Enchantment.values()){
-							if(i.contains(enc.getName() + ":") || i.contains(Methods.getEnchantmentName(enc) + ":")){
-								String[] breakdown = i.split(":");
-								int lvl = Integer.parseInt(breakdown[1]);
-								enchs.put(enc, lvl);
+						}else if(i.contains("Unbreaking:")){
+							if(i.replaceAll("Unbreaking:", "").equalsIgnoreCase("true")) {
+								unbreaking = true;
+							}
+						}else {
+							for(Enchantment enc : Enchantment.values()){
+								if(i.contains(enc.getName() + ":") || i.contains(Methods.getEnchantmentName(enc) + ":")){
+									String[] breakdown = i.split(":");
+									int lvl = Integer.parseInt(breakdown[1]);
+									enchs.put(enc, lvl);
+								}
 							}
 						}
 					}
-					iTS.add(Methods.addGlow(Methods.makeItem(item, amount, name, lore, enchs), glowing));
+					if(unbreaking) {
+						iTS.add(Methods.addUnbreaking(Methods.addGlow(Methods.makeItem(item, amount, name, lore, enchs), glowing)));
+					}else {
+						iTS.add(Methods.addGlow(Methods.makeItem(item, amount, name, lore, enchs), glowing));
+					}
 				}
 				its.put(p, iTS);
 				chances.put(tier, chance);

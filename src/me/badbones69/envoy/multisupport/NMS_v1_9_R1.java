@@ -23,5 +23,21 @@ public class NMS_v1_9_R1 {
         stack.setTag(tagCompound);
         return CraftItemStack.asBukkitCopy(stack);
     }
+    
+    public static ItemStack addUnbreaking(ItemStack item) {
+		net.minecraft.server.v1_9_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+		NBTTagCompound tag = null;
+		if (!nmsStack.hasTag()) {
+			tag = new NBTTagCompound();
+			nmsStack.setTag(tag);
+		}
+		if (tag == null) {
+			tag = nmsStack.getTag();
+		}
+		tag.setBoolean("Unbreakable", true);
+		tag.setInt("HideFlags", 4);
+		nmsStack.setTag(tag);
+		return CraftItemStack.asCraftMirror(nmsStack);
+	}
 	
 }

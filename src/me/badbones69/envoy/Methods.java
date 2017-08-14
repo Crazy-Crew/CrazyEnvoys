@@ -22,13 +22,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import me.badbones69.envoy.controlers.FireworkDamageAPI;
-import me.badbones69.envoy.multisupport.EnchantGlow;
 import me.badbones69.envoy.multisupport.NMS_v1_10_R1;
 import me.badbones69.envoy.multisupport.NMS_v1_11_R1;
 import me.badbones69.envoy.multisupport.NMS_v1_12_R1;
@@ -182,8 +182,38 @@ public class Methods {
 	}
 	
 	public static ItemStack addGlow(ItemStack item, boolean toggle) {
-		if(toggle){
-			return EnchantGlow.addGlow(item);
+		if(Version.getVersion().comparedTo(Version.v1_8_R1) >= 0) {
+			if(toggle){
+				if(item != null){
+			        if(item.hasItemMeta()){
+			            if(item.getItemMeta().hasEnchants()){
+			                return item;
+			            }
+			        }
+			        item.addUnsafeEnchantment(Enchantment.LUCK, 1);
+			        ItemMeta  meta = item.getItemMeta();
+			        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+			        item.setItemMeta(meta);
+		        }
+			}
+		}
+		return item;
+    }
+	
+	public static ItemStack addUnbreaking(ItemStack item) {
+		switch(Version.getVersion()){
+			case v1_12_R1:
+				return NMS_v1_12_R1.addUnbreaking(item);
+			case v1_11_R1:
+				return NMS_v1_11_R1.addUnbreaking(item);
+			case v1_10_R1:
+				return NMS_v1_10_R1.addUnbreaking(item);
+			case v1_9_R2:
+				return NMS_v1_9_R2.addUnbreaking(item);
+			case v1_9_R1:
+				return NMS_v1_9_R1.addUnbreaking(item);
+			default:
+				break;
 		}
 		return item;
     }
@@ -278,6 +308,7 @@ public class Methods {
 		}
 		return false;
 	}
+	
 	public static void hasUpdate(){
 		try {
 			HttpURLConnection c = (HttpURLConnection)new URL("http://www.spigotmc.org/api/general.php").openConnection();
@@ -294,6 +325,7 @@ public class Methods {
 			return;
 		}
 	}
+	
 	public static void hasUpdate(Player player){
 		try {
 			HttpURLConnection c = (HttpURLConnection)new URL("http://www.spigotmc.org/api/general.php").openConnection();
