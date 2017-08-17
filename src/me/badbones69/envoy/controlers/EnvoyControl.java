@@ -105,6 +105,7 @@ public class EnvoyControl implements Listener{
 								player.getInventory().addItem(item);
 							}
 						}
+						player.updateInventory();
 					}
 					if(Envoy.getActiveEnvoys().size() >= 1){
 						if(Main.settings.getConfig().contains("Settings.Broadcast-Crate-Pick-Up")){
@@ -148,7 +149,7 @@ public class EnvoyControl implements Listener{
 						loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
 						if(Support.hasHolographicDisplay()){
 							if(Main.settings.getFile(tier).getBoolean("Settings.Hologram-Toggle")){
-								HolographicSupport.createHologram(loc.getBlock().getLocation().add(.5, 1.5, .5), tier);
+								HolographicSupport.createHologram(loc.getBlock().getLocation(), tier);
 							}
 						}
 						Envoy.removeFallingBlock(e.getEntity());
@@ -177,7 +178,7 @@ public class EnvoyControl implements Listener{
 						loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
 				        if(Support.hasHolographicDisplay()){
 							if(Main.settings.getFile(tier).getBoolean("Settings.Hologram-Toggle")){
-								HolographicSupport.createHologram(loc.getBlock().getLocation().add(.5, 1.5, .5), tier);
+								HolographicSupport.createHologram(loc.getBlock().getLocation(), tier);
 							}
 						}
 						Envoy.removeFallingBlock(en);

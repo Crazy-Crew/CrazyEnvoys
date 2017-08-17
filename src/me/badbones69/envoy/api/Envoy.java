@@ -130,7 +130,9 @@ public class Envoy {
 	public static void unload(){
 		ArrayList<String> locs = new ArrayList<String>();
 		for(Location loc : locations){
-			locs.add("World:" + loc.getWorld().getName() + ", X:" + loc.getBlockX() + ", Y:" + loc.getBlockY() + ", Z:" + loc.getBlockZ());
+			try {
+				locs.add("World:" + loc.getWorld().getName() + ", X:" + loc.getBlockX() + ", Y:" + loc.getBlockY() + ", Z:" + loc.getBlockZ());
+			}catch(Exception e) {}
 		}
 		deSpawnCrates();
 		Main.settings.getData().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
@@ -656,11 +658,7 @@ public class Envoy {
 				}
 				loc.getBlock().setType(Methods.makeItem(Main.settings.getFile(tier).getString("Settings.Placed-Block"), 1, "").getType());
 				if(Support.hasHolographicDisplay()){
-					double hight = 1.5;
-					if(Main.settings.getFile(tier).contains("Settings.Hologram-Hight")){
-						hight = Main.settings.getFile(tier).getDouble("Settings.Hologram-Hight");
-					}
-					HolographicSupport.createHologram(loc.clone().add(.5, hight, .5), tier);
+					HolographicSupport.createHologram(loc.clone(), tier);
 				}
 				addActiveEnvoy(loc.clone(), tier);
 				if(Main.settings.getFile(tier).getBoolean("Settings.Signal-Flare.Toggle")){

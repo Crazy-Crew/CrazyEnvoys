@@ -220,29 +220,28 @@ public class Main extends JavaPlugin implements Listener{
 							return true;
 						}
 					}
-					if(Envoy.isEnvoyActive()){
-						int i = 1;
-						for(Location loc : Envoy.getActiveEnvoys()){
-							locs.add("&7[&6" + i + "&7]: " + loc.getWorld().getName() + ", " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
-							i++;
-						}
-					}else{
-						int i = 1;
-						for(Location loc : Envoy.getLocations()){
-							locs.add("&7[&6" + i + "&7]: " + loc.getWorld().getName() + ", " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
-							i++;
-						}
+					int i = 1;
+					HashMap<String, String> ph = new HashMap<String, String>();
+					for(Location loc : Envoy.isEnvoyActive() ? Envoy.getActiveEnvoys() : Envoy.getLocations()){
+						ph.put("%id%", i + "");
+						ph.put("%world%", loc.getWorld().getName());
+						ph.put("%x%", loc.getBlockX() + "");
+						ph.put("%y%", loc.getBlockY() + "");
+						ph.put("%z%", loc.getBlockZ() + "");
+						locs.add(Messages.DROPS_FORMAT.getMessage(ph));
+						i++;
+						ph.clear();
 					}
 					if(Envoy.isEnvoyActive()){
-						sender.sendMessage(Methods.getPrefix() + Methods.color("&7List of all available envoys."));
+						Messages.DROPS_AVAILABLE.sendMessage(sender);
 					}else{
-						sender.sendMessage(Methods.getPrefix() + Methods.color("&7List of location envoy's may spawn at."));
+						Messages.DROPS_POSSIBILITIES.sendMessage(sender);
 					}
-					for(String loc : Methods.getPage(locs, page)){
-						sender.sendMessage(Methods.color("&6" + loc));
+					for(String dropLocation : Methods.getPage(locs, page)){
+						sender.sendMessage(dropLocation);
 					}
 					if(!Envoy.isEnvoyActive()){
-						sender.sendMessage(Methods.getPrefix() + Methods.color("&7Use /envoy drops [page] to see more."));
+						Messages.DROPS_PAGE.sendMessage(sender);
 					}
 					return true;
 				}

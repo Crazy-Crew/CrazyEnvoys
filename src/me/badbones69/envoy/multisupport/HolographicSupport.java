@@ -58,7 +58,11 @@ public class HolographicSupport {
 	}
 	
 	public static void createHologram(Location loc, String tier){
-		Hologram hg = HologramsAPI.createHologram(plugin, loc);
+		double hight = 1.5;
+		if(Main.settings.getFile(tier).contains("Settings.Hologram-Hight")){
+			hight = Main.settings.getFile(tier).getDouble("Settings.Hologram-Hight");
+		}
+		Hologram hg = HologramsAPI.createHologram(plugin, loc.add(.5, hight, .5));
 		for(String line : Main.settings.getFile(tier).getStringList("Settings.Hologram")){
 			hg.appendTextLine(Methods.color(line));
 		}
