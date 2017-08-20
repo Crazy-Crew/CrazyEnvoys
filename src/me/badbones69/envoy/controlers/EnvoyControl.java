@@ -76,7 +76,11 @@ public class EnvoyControl implements Listener{
 					}
 					e.getClickedBlock().setType(Material.AIR);
 					if(Support.hasHolographicDisplay()){
-						HolographicSupport.removeHologram(loc.clone().add(.5, 1.5, .5));
+						double hight = 1.5;
+						if(Main.settings.getFile(tier).contains("Settings.Hologram-Hight")){
+							hight = Main.settings.getFile(tier).getDouble("Settings.Hologram-Hight");
+						}
+						HolographicSupport.removeHologram(loc.clone().add(.5, hight, .5));
 					}
 					Envoy.stopSignalFlare(e.getClickedBlock().getLocation());
 					Envoy.removeActiveEnvoy(loc);
