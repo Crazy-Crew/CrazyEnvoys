@@ -17,54 +17,54 @@ import me.badbones69.envoy.Methods;
 import me.badbones69.envoy.api.Envoy;
 import me.badbones69.envoy.api.Messages;
 
-public class EditControl implements Listener{
+public class EditControl implements Listener {
 	
 	private static ArrayList<Player> editors = new ArrayList<Player>();
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 	
-	public static ArrayList<Player> getEditors(){
+	public static ArrayList<Player> getEditors() {
 		return editors;
 	}
 	
-	public static void addEditor(Player player){
+	public static void addEditor(Player player) {
 		editors.add(player);
 	}
 	
-	public static void removeEditor(Player player){
+	public static void removeEditor(Player player) {
 		editors.remove(player);
 	}
 	
-	public static Boolean isEditor(Player player){
+	public static Boolean isEditor(Player player) {
 		return editors.contains(player);
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static void showFakeBlocks(Player player){
-		for(Location loc : Envoy.getLocations()){
+	public static void showFakeBlocks(Player player) {
+		for(Location loc : Envoy.getLocations()) {
 			player.sendBlockChange(loc, Material.BEDROCK, (byte) 0);
 		}
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static void removeFakeBlocks(Player player){
-		for(Location loc : Envoy.getLocations()){
+	public static void removeFakeBlocks(Player player) {
+		for(Location loc : Envoy.getLocations()) {
 			player.sendBlockChange(loc, loc.getBlock().getType(), loc.getBlock().getData());
 		}
 	}
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler
-	public void onBlockPlace(final BlockPlaceEvent e){
+	public void onBlockPlace(final BlockPlaceEvent e) {
 		final Player player = e.getPlayer();
-		if(isEditor(player)){
+		if(isEditor(player)) {
 			e.setCancelled(true);
-			if(Methods.getItemInHand(player).getType() == Material.BEDROCK){
+			if(Methods.getItemInHand(player).getType() == Material.BEDROCK) {
 				Envoy.addLocation(e.getBlock().getLocation());
 				Messages.ADD_LOCATION.sendMessage(player);
-				new BukkitRunnable(){
+				new BukkitRunnable() {
 					@Override
 					public void run() {
-						for(Player p : editors){
+						for(Player p : editors) {
 							p.sendBlockChange(e.getBlock().getLocation(), Material.BEDROCK, (byte) 0);
 						}
 					}
@@ -74,12 +74,12 @@ public class EditControl implements Listener{
 	}
 	
 	@EventHandler
-	public void onBlockBreak(BlockBreakEvent e){
+	public void onBlockBreak(BlockBreakEvent e) {
 		Player player = e.getPlayer();
-		if(isEditor(player)){
+		if(isEditor(player)) {
 			e.setCancelled(true);
 			Location loc = e.getBlock().getLocation();
-			if(Envoy.isLocation(loc)){
+			if(Envoy.isLocation(loc)) {
 				e.getBlock().getState().update();
 				Envoy.removeLocation(loc);
 				Messages.REMOVE_LOCATION.sendMessage(player);

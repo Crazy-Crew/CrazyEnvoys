@@ -40,52 +40,52 @@ public class Methods {
 	
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 	
-	public static String color(String msg){
+	public static String color(String msg) {
 		return ChatColor.translateAlternateColorCodes('&', msg);
 	}
 	
-	public static String removeColor(String msg){
+	public static String removeColor(String msg) {
 		return ChatColor.stripColor(msg);
 	}
 	
-	public static String getPrefix(){
+	public static String getPrefix() {
 		return color(Main.settings.getConfig().getString("Settings.Prefix"));
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static ItemStack getItemInHand(Player player){
-		if(Version.getVersion().getVersionInteger() >= Version.v1_9_R1.getVersionInteger()){
+	public static ItemStack getItemInHand(Player player) {
+		if(Version.getVersion().getVersionInteger() >= Version.v1_9_R1.getVersionInteger()) {
 			return player.getInventory().getItemInMainHand();
-		}else{
+		}else {
 			return player.getItemInHand();
 		}
 	}
 	
 	public static boolean isInt(String s) {
-	    try {
-	        Integer.parseInt(s);
-	    } catch (NumberFormatException nfe) {
-	        return false;
-	    }
-	    return true;
+		try {
+			Integer.parseInt(s);
+		}catch(NumberFormatException nfe) {
+			return false;
+		}
+		return true;
 	}
 	
-	public static boolean isOnline(String name){
-		for(Player player : Bukkit.getServer().getOnlinePlayers()){
-			if(player.getName().equalsIgnoreCase(name)){
+	public static boolean isOnline(String name) {
+		for(Player player : Bukkit.getServer().getOnlinePlayers()) {
+			if(player.getName().equalsIgnoreCase(name)) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public static Player getPlayer(String name){
+	public static Player getPlayer(String name) {
 		return Bukkit.getServer().getPlayer(name);
 	}
 	
-	public static ItemStack makeItem(String type, int amount, String name){
+	public static ItemStack makeItem(String type, int amount, String name) {
 		int ty = 0;
-		if(type.contains(":")){
+		if(type.contains(":")) {
 			String[] b = type.split(":");
 			type = b[0];
 			ty = Integer.parseInt(b[1]);
@@ -99,82 +99,84 @@ public class Methods {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static ItemStack makeItem(String id, int amount, String name, List<String> lore){
+	public static ItemStack makeItem(String id, int amount, String name, List<String> lore) {
 		ArrayList<String> l = new ArrayList<String>();
 		String ma = id;
 		int type = 0;
-		if(ma.contains(":")){
+		if(ma.contains(":")) {
 			String[] b = ma.split(":");
 			ma = b[0];
 			type = Integer.parseInt(b[1]);
 		}
 		Material material = Material.matchMaterial(ma);
 		ItemStack item = new ItemStack(material, amount, (short) type);
-		if(material == Material.MONSTER_EGG){
-			switch(Version.getVersion()){
-			case v1_12_R1:
-				item = NMS_v1_12_R1.getSpawnEgg(EntityType.fromId(type), amount);
-				break;
-			case v1_11_R1:
-				item = NMS_v1_11_R1.getSpawnEgg(EntityType.fromId(type), amount);
-				break;
-			case v1_10_R1:
-				item = NMS_v1_10_R1.getSpawnEgg(EntityType.fromId(type), amount);
-				break;
-			case v1_9_R1:
-				item = NMS_v1_9_R2.getSpawnEgg(EntityType.fromId(type), amount);
-				break;
-			case v1_9_R2:
-				item = NMS_v1_9_R1.getSpawnEgg(EntityType.fromId(type), amount);
-				break;
-			default:
-				break;
+		if(material == Material.MONSTER_EGG) {
+			switch(Version.getVersion()) {
+				case v1_12_R1:
+					item = NMS_v1_12_R1.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				case v1_11_R1:
+					item = NMS_v1_11_R1.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				case v1_10_R1:
+					item = NMS_v1_10_R1.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				case v1_9_R1:
+					item = NMS_v1_9_R2.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				case v1_9_R2:
+					item = NMS_v1_9_R1.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				default:
+					break;
 			}
 		}
 		ItemMeta m = item.getItemMeta();
 		m.setDisplayName(color(name));
-		for(String L:lore)l.add(color(L));
+		for(String L : lore)
+			l.add(color(L));
 		m.setLore(l);
 		item.setItemMeta(m);
 		return item;
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static ItemStack makeItem(String id, int amount, String name, List<String> lore, Map<Enchantment, Integer> enchants){
+	public static ItemStack makeItem(String id, int amount, String name, List<String> lore, Map<Enchantment, Integer> enchants) {
 		ArrayList<String> l = new ArrayList<String>();
 		String ma = id;
 		int type = 0;
-		if(ma.contains(":")){
+		if(ma.contains(":")) {
 			String[] b = ma.split(":");
 			ma = b[0];
 			type = Integer.parseInt(b[1]);
 		}
 		Material material = Material.matchMaterial(ma);
 		ItemStack item = new ItemStack(material, amount, (short) type);
-		if(material == Material.MONSTER_EGG){
-			switch(Version.getVersion()){
-			case v1_12_R1:
-				item = NMS_v1_12_R1.getSpawnEgg(EntityType.fromId(type), amount);
-				break;
-			case v1_11_R1:
-				item = NMS_v1_11_R1.getSpawnEgg(EntityType.fromId(type), amount);
-				break;
-			case v1_10_R1:
-				item = NMS_v1_10_R1.getSpawnEgg(EntityType.fromId(type), amount);
-				break;
-			case v1_9_R1:
-				item = NMS_v1_9_R2.getSpawnEgg(EntityType.fromId(type), amount);
-				break;
-			case v1_9_R2:
-				item = NMS_v1_9_R1.getSpawnEgg(EntityType.fromId(type), amount);
-				break;
-			default:
-				break;
+		if(material == Material.MONSTER_EGG) {
+			switch(Version.getVersion()) {
+				case v1_12_R1:
+					item = NMS_v1_12_R1.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				case v1_11_R1:
+					item = NMS_v1_11_R1.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				case v1_10_R1:
+					item = NMS_v1_10_R1.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				case v1_9_R1:
+					item = NMS_v1_9_R2.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				case v1_9_R2:
+					item = NMS_v1_9_R1.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				default:
+					break;
 			}
 		}
 		ItemMeta m = item.getItemMeta();
 		m.setDisplayName(color(name));
-		for(String L:lore)l.add(color(L));
+		for(String L : lore)
+			l.add(color(L));
 		m.setLore(l);
 		item.setItemMeta(m);
 		item.addUnsafeEnchantments(enchants);
@@ -183,25 +185,25 @@ public class Methods {
 	
 	public static ItemStack addGlow(ItemStack item, boolean toggle) {
 		if(Version.getVersion().comparedTo(Version.v1_8_R1) >= 0) {
-			if(toggle){
-				if(item != null){
-			        if(item.hasItemMeta()){
-			            if(item.getItemMeta().hasEnchants()){
-			                return item;
-			            }
-			        }
-			        item.addUnsafeEnchantment(Enchantment.LUCK, 1);
-			        ItemMeta  meta = item.getItemMeta();
-			        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-			        item.setItemMeta(meta);
-		        }
+			if(toggle) {
+				if(item != null) {
+					if(item.hasItemMeta()) {
+						if(item.getItemMeta().hasEnchants()) {
+							return item;
+						}
+					}
+					item.addUnsafeEnchantment(Enchantment.LUCK, 1);
+					ItemMeta meta = item.getItemMeta();
+					meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+					item.setItemMeta(meta);
+				}
 			}
 		}
 		return item;
-    }
+	}
 	
 	public static ItemStack addUnbreaking(ItemStack item) {
-		switch(Version.getVersion()){
+		switch(Version.getVersion()) {
 			case v1_12_R1:
 				return NMS_v1_12_R1.addUnbreaking(item);
 			case v1_11_R1:
@@ -216,10 +218,10 @@ public class Methods {
 				break;
 		}
 		return item;
-    }
+	}
 	
-	public static boolean isInvFull(Player player){
-		if(player.getInventory().firstEmpty() == -1){
+	public static boolean isInvFull(Player player) {
+		if(player.getInventory().firstEmpty() == -1) {
 			return true;
 		}
 		return false;
@@ -228,11 +230,7 @@ public class Methods {
 	public static Entity fireWork(Location loc, ArrayList<Color> colors) {
 		Firework fw = loc.getWorld().spawn(loc, Firework.class);
 		FireworkMeta fm = fw.getFireworkMeta();
-		fm.addEffects(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE)
-				.withColor(colors)
-				.trail(false)
-				.flicker(false)
-				.build());
+		fm.addEffects(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(colors).trail(false).flicker(false).build());
 		fm.setPower(0);
 		fw.setFireworkMeta(fm);
 		FireworkDamageAPI.addFirework(fw);
@@ -249,47 +247,47 @@ public class Methods {
 	}
 	
 	public static Color getColor(String color) {
-		if (color.equalsIgnoreCase("AQUA")) return Color.AQUA;
-		if (color.equalsIgnoreCase("BLACK")) return Color.BLACK;
-		if (color.equalsIgnoreCase("BLUE")) return Color.BLUE;
-		if (color.equalsIgnoreCase("FUCHSIA")) return Color.FUCHSIA;
-		if (color.equalsIgnoreCase("GRAY")) return Color.GRAY;
-		if (color.equalsIgnoreCase("GREEN")) return Color.GREEN;
-		if (color.equalsIgnoreCase("LIME")) return Color.LIME;
-		if (color.equalsIgnoreCase("MAROON")) return Color.MAROON;
-		if (color.equalsIgnoreCase("NAVY")) return Color.NAVY;
-		if (color.equalsIgnoreCase("OLIVE")) return Color.OLIVE;
-		if (color.equalsIgnoreCase("ORANGE")) return Color.ORANGE;
-		if (color.equalsIgnoreCase("PURPLE")) return Color.PURPLE;
-		if (color.equalsIgnoreCase("RED")) return Color.RED;
-		if (color.equalsIgnoreCase("SILVER")) return Color.SILVER;
-		if (color.equalsIgnoreCase("TEAL")) return Color.TEAL;
-		if (color.equalsIgnoreCase("WHITE")) return Color.WHITE;
-		if (color.equalsIgnoreCase("YELLOW")) return Color.YELLOW;
+		if(color.equalsIgnoreCase("AQUA")) return Color.AQUA;
+		if(color.equalsIgnoreCase("BLACK")) return Color.BLACK;
+		if(color.equalsIgnoreCase("BLUE")) return Color.BLUE;
+		if(color.equalsIgnoreCase("FUCHSIA")) return Color.FUCHSIA;
+		if(color.equalsIgnoreCase("GRAY")) return Color.GRAY;
+		if(color.equalsIgnoreCase("GREEN")) return Color.GREEN;
+		if(color.equalsIgnoreCase("LIME")) return Color.LIME;
+		if(color.equalsIgnoreCase("MAROON")) return Color.MAROON;
+		if(color.equalsIgnoreCase("NAVY")) return Color.NAVY;
+		if(color.equalsIgnoreCase("OLIVE")) return Color.OLIVE;
+		if(color.equalsIgnoreCase("ORANGE")) return Color.ORANGE;
+		if(color.equalsIgnoreCase("PURPLE")) return Color.PURPLE;
+		if(color.equalsIgnoreCase("RED")) return Color.RED;
+		if(color.equalsIgnoreCase("SILVER")) return Color.SILVER;
+		if(color.equalsIgnoreCase("TEAL")) return Color.TEAL;
+		if(color.equalsIgnoreCase("WHITE")) return Color.WHITE;
+		if(color.equalsIgnoreCase("YELLOW")) return Color.YELLOW;
 		return Color.WHITE;
 	}
 	
-	public static List<String> getPage(List<String> list, Integer page){
+	public static List<String> getPage(List<String> list, Integer page) {
 		List<String> locations = new ArrayList<String>();
-		if(page <= 0){
+		if(page <= 0) {
 			page = 1;
 		}
 		int max = 10;
-		int index = page * max-max;
-		int endIndex = index >= list.size() ? list.size() - 1 : index+max;
-		for (; index < endIndex; index++){
-			if(index < list.size()){
+		int index = page * max - max;
+		int endIndex = index >= list.size() ? list.size() - 1 : index + max;
+		for(; index < endIndex; index++) {
+			if(index < list.size()) {
 				locations.add(list.get(index));
 			}
 		}
-		for(; locations.size() == 0; page--){
-			if(page <= 0){
+		for(; locations.size() == 0; page--) {
+			if(page <= 0) {
 				break;
 			}
 			index = page * max - max;
-			endIndex = index >= list.size() ? list.size() - 1 : index+max;
-			for (;index < endIndex; index++){
-				if(index < list.size()){
+			endIndex = index >= list.size() ? list.size() - 1 : index + max;
+			for(; index < endIndex; index++) {
+				if(index < list.size()) {
 					locations.add(list.get(index));
 				}
 			}
@@ -297,21 +295,21 @@ public class Methods {
 		return locations;
 	}
 	
-	public static boolean isSuccessful(int min, int max){
-		if(max == min || max <= min || max <= 0){
+	public static boolean isSuccessful(int min, int max) {
+		if(max == min || max <= min || max <= 0) {
 			return true;
 		}
 		Random number = new Random();
 		int chance = 1 + number.nextInt(max);
-		if(chance >= 1 && chance <= min){
+		if(chance >= 1 && chance <= min) {
 			return true;
 		}
 		return false;
 	}
 	
-	public static void hasUpdate(){
+	public static void hasUpdate() {
 		try {
-			HttpURLConnection c = (HttpURLConnection)new URL("http://www.spigotmc.org/api/general.php").openConnection();
+			HttpURLConnection c = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php").openConnection();
 			c.setDoOutput(true);
 			c.setRequestMethod("POST");
 			c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes("UTF-8"));
@@ -320,15 +318,14 @@ public class Methods {
 			if(!newVersion.equals(oldVersion)) {
 				Bukkit.getConsoleSender().sendMessage(getPrefix() + color("&cYour server is running &7v" + oldVersion + "&c and the newest is &7v" + newVersion + "&c."));
 			}
-		}
-		catch(Exception e) {
+		}catch(Exception e) {
 			return;
 		}
 	}
 	
-	public static void hasUpdate(Player player){
+	public static void hasUpdate(Player player) {
 		try {
-			HttpURLConnection c = (HttpURLConnection)new URL("http://www.spigotmc.org/api/general.php").openConnection();
+			HttpURLConnection c = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php").openConnection();
 			c.setDoOutput(true);
 			c.setRequestMethod("POST");
 			c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes("UTF-8"));
@@ -337,13 +334,12 @@ public class Methods {
 			if(!newVersion.equals(oldVersion)) {
 				player.sendMessage(getPrefix() + color("&cYour server is running &7v" + oldVersion + "&c and the newest is &7v" + newVersion + "&c."));
 			}
-		}
-		catch(Exception e) {
+		}catch(Exception e) {
 			return;
 		}
-	} 
+	}
 	
-	public static String getEnchantmentName(Enchantment en){
+	public static String getEnchantmentName(Enchantment en) {
 		HashMap<String, String> enchants = new HashMap<String, String>();
 		enchants.put("ARROW_DAMAGE", "Power");
 		enchants.put("ARROW_FIRE", "Flame");
@@ -374,7 +370,7 @@ public class Methods {
 		enchants.put("MENDING", "Mending");
 		enchants.put("FROST_WALKER", "Frost_Walker");
 		enchants.put("VANISHING_CURSE", "Curse_Of_Vanishing");
-		if(enchants.get(en.getName()) == null){
+		if(enchants.get(en.getName()) == null) {
 			return "None Found";
 		}
 		return enchants.get(en.getName());
@@ -382,10 +378,10 @@ public class Methods {
 	
 	@SuppressWarnings("deprecation")
 	public static List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
-	    FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), 0, (byte) 0);
-	    List<Entity> out = ent.getNearbyEntities(x, y, z);
-	    ent.remove();
-	    return out;
+		FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), 0, (byte) 0);
+		List<Entity> out = ent.getNearbyEntities(x, y, z);
+		ent.remove();
+		return out;
 	}
 	
 }

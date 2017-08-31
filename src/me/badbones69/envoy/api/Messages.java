@@ -55,22 +55,20 @@ public enum Messages {
 	private String path;
 	private String defaultMessage;
 	
-	private Messages(String path){
+	private Messages(String path) {
 		this.path = "Messages." + path;
 	}
 	
-	private Messages(String path, String defaultMessage){
+	private Messages(String path, String defaultMessage) {
 		this.path = "Messages." + path;
 		this.defaultMessage = defaultMessage;
 	}
 	
 	public String getMessage() {
-		return Methods.color(Main.settings.getMessages().contains(path) ? 
-				Main.settings.getMessages().getString(path).replaceAll("%prefix%", Methods.getPrefix())
-						: defaultMessage.replaceAll("%prefix%", Methods.getPrefix()));
+		return Methods.color(Main.settings.getMessages().contains(path) ? Main.settings.getMessages().getString(path).replaceAll("%prefix%", Methods.getPrefix()) : defaultMessage.replaceAll("%prefix%", Methods.getPrefix()));
 	}
 	
-	public List<String> getMessages(){
+	public List<String> getMessages() {
 		List<String> msgs = new ArrayList<>();
 		for(String msg : Main.settings.getMessages().contains(path) ? Main.settings.getMessages().getStringList(path) : Arrays.asList(defaultMessage)) {
 			msgs.add(Methods.color(msg.replaceAll("%prefix%", Methods.getPrefix())));
@@ -80,9 +78,9 @@ public enum Messages {
 	
 	public String getMessage(HashMap<String, String> placeholder) {
 		String msg = getMessage();
-		if(placeholder != null){
-			for(String ph : placeholder.keySet()){
-				if(msg.contains(ph)){
+		if(placeholder != null) {
+			for(String ph : placeholder.keySet()) {
+				if(msg.contains(ph)) {
 					msg = msg.replaceAll(ph, placeholder.get(ph));
 				}
 			}
@@ -90,13 +88,13 @@ public enum Messages {
 		return msg;
 	}
 	
-	public List<String> getMessages(HashMap<String, String> placeholder){
+	public List<String> getMessages(HashMap<String, String> placeholder) {
 		List<String> msgs = new ArrayList<>();
-		for(String msg : getMessages()){
-			if(placeholder != null){
-				for(String ph : placeholder.keySet()){
-					if(msg.contains(ph)){
-							msg = msg.replaceAll(ph, placeholder.get(ph));
+		for(String msg : getMessages()) {
+			if(placeholder != null) {
+				for(String ph : placeholder.keySet()) {
+					if(msg.contains(ph)) {
+						msg = msg.replaceAll(ph, placeholder.get(ph));
 					}
 				}
 			}
@@ -106,49 +104,49 @@ public enum Messages {
 	}
 	
 	public Boolean isList() {
-		if(Main.settings.getMessages().getStringList(path).isEmpty()){
+		if(Main.settings.getMessages().getStringList(path).isEmpty()) {
 			return false;
 		}
 		return true;
 	}
 	
-	public void sendMessage(Player player){
-		if(isList()){
-			for(String msg : getMessages()){
+	public void sendMessage(Player player) {
+		if(isList()) {
+			for(String msg : getMessages()) {
 				player.sendMessage(msg);
 			}
-		}else{
+		}else {
 			player.sendMessage(getMessage());
 		}
 	}
 	
-	public void sendMessage(CommandSender sender){
-		if(isList()){
-			for(String msg : getMessages()){
+	public void sendMessage(CommandSender sender) {
+		if(isList()) {
+			for(String msg : getMessages()) {
 				sender.sendMessage(msg);
 			}
-		}else{
+		}else {
 			sender.sendMessage(getMessage());
 		}
 	}
 	
-	public void sendMessage(Player player, HashMap<String, String> placeholder){
-		if(isList()){
-			for(String msg : getMessages()){
-				if(placeholder != null){
-					for(String ph : placeholder.keySet()){
-						if(msg.contains(ph)){
+	public void sendMessage(Player player, HashMap<String, String> placeholder) {
+		if(isList()) {
+			for(String msg : getMessages()) {
+				if(placeholder != null) {
+					for(String ph : placeholder.keySet()) {
+						if(msg.contains(ph)) {
 							msg = msg.replaceAll(ph, placeholder.get(ph));
 						}
 					}
 				}
 				player.sendMessage(msg);
 			}
-		}else{
+		}else {
 			String msg = getMessage();
-			if(placeholder != null){
-				for(String ph : placeholder.keySet()){
-					if(msg.contains(ph)){
+			if(placeholder != null) {
+				for(String ph : placeholder.keySet()) {
+					if(msg.contains(ph)) {
 						msg = msg.replaceAll(ph, placeholder.get(ph));
 					}
 				}
@@ -157,23 +155,23 @@ public enum Messages {
 		}
 	}
 	
-	public void sendMessage(CommandSender sender, HashMap<String, String> placeholder){
-		if(isList()){
-			for(String msg : getMessages()){
-				if(placeholder != null){
-					for(String ph : placeholder.keySet()){
-						if(msg.contains(ph)){
+	public void sendMessage(CommandSender sender, HashMap<String, String> placeholder) {
+		if(isList()) {
+			for(String msg : getMessages()) {
+				if(placeholder != null) {
+					for(String ph : placeholder.keySet()) {
+						if(msg.contains(ph)) {
 							msg = msg.replaceAll(ph, placeholder.get(ph));
 						}
 					}
 				}
 				sender.sendMessage(msg);
 			}
-		}else{
+		}else {
 			String msg = getMessage();
-			if(placeholder != null){
-				for(String ph : placeholder.keySet()){
-					if(msg.contains(ph)){
+			if(placeholder != null) {
+				for(String ph : placeholder.keySet()) {
+					if(msg.contains(ph)) {
 						msg = msg.replaceAll(ph, placeholder.get(ph));
 					}
 				}
@@ -182,48 +180,48 @@ public enum Messages {
 		}
 	}
 	
-	public void broadcastMessage(Boolean ignore, HashMap<String, String> placeholder){
-		if(Main.settings.getConfig().getBoolean("Settings.World-Messages.Toggle")){
-			for(Player p : Bukkit.getOnlinePlayers()){
-				for(String w : Main.settings.getConfig().getStringList("Settings.World-Messages.Worlds")){
-					if(p.getWorld().getName().equalsIgnoreCase(w)){
-						if(ignore){
-							if(!Envoy.isIgnoringMessages(p.getUniqueId())){
+	public void broadcastMessage(Boolean ignore, HashMap<String, String> placeholder) {
+		if(Main.settings.getConfig().getBoolean("Settings.World-Messages.Toggle")) {
+			for(Player p : Bukkit.getOnlinePlayers()) {
+				for(String w : Main.settings.getConfig().getStringList("Settings.World-Messages.Worlds")) {
+					if(p.getWorld().getName().equalsIgnoreCase(w)) {
+						if(ignore) {
+							if(!Envoy.isIgnoringMessages(p.getUniqueId())) {
 								sendMessage(p, placeholder);
 							}
-						}else{
+						}else {
 							sendMessage(p, placeholder);
 						}
 					}
 				}
 			}
-		}else{
-			for(Player p : Bukkit.getOnlinePlayers()){
-				if(ignore){
-					if(!Envoy.isIgnoringMessages(p.getUniqueId())){
+		}else {
+			for(Player p : Bukkit.getOnlinePlayers()) {
+				if(ignore) {
+					if(!Envoy.isIgnoringMessages(p.getUniqueId())) {
 						sendMessage(p, placeholder);
 					}
-				}else{
+				}else {
 					sendMessage(p, placeholder);
 				}
 			}
 		}
-		if(isList()){
-			for(String msg : getMessages()){
-				if(placeholder != null){
-					for(String ph : placeholder.keySet()){
-						if(msg.contains(ph)){
+		if(isList()) {
+			for(String msg : getMessages()) {
+				if(placeholder != null) {
+					for(String ph : placeholder.keySet()) {
+						if(msg.contains(ph)) {
 							msg = msg.replaceAll(ph, placeholder.get(ph));
 						}
 					}
 				}
 				Bukkit.getLogger().log(Level.INFO, msg);
 			}
-		}else{
+		}else {
 			String msg = getMessage();
-			if(placeholder != null){
-				for(String ph : placeholder.keySet()){
-					if(msg.contains(ph)){
+			if(placeholder != null) {
+				for(String ph : placeholder.keySet()) {
+					if(msg.contains(ph)) {
 						msg = msg.replaceAll(ph, placeholder.get(ph));
 					}
 				}

@@ -19,13 +19,13 @@ public class HolographicSupport {
 	private static HashMap<Location, Hologram> holos = new HashMap<Location, Hologram>();
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 	
-	public static void registerPlaceHolders(){
+	public static void registerPlaceHolders() {
 		HologramsAPI.registerPlaceholder(plugin, "{envoy_cooldown}", 1, new PlaceholderReplacer() {
 			@Override
 			public String update() {
-				if(Envoy.isEnvoyActive()){
+				if(Envoy.isEnvoyActive()) {
 					return Main.settings.getMessages().getString("Messages.Hologram-Placeholders.On-Going");
-				}else{
+				}else {
 					return Envoy.getNextEnvoyTime();
 				}
 			}
@@ -34,9 +34,9 @@ public class HolographicSupport {
 		HologramsAPI.registerPlaceholder(plugin, "{envoy_time_left}", 1, new PlaceholderReplacer() {
 			@Override
 			public String update() {
-				if(Envoy.isEnvoyActive()){
+				if(Envoy.isEnvoyActive()) {
 					return Envoy.getEnvoyRunTimeLeft();
-				}else{
+				}else {
 					return Main.settings.getMessages().getString("Messages.Hologram-Placeholders.Not-Running");
 				}
 			}
@@ -51,34 +51,34 @@ public class HolographicSupport {
 		
 	}
 	
-	public static void unregisterPlaceHolders(){
-		try{
+	public static void unregisterPlaceHolders() {
+		try {
 			HologramsAPI.unregisterPlaceholders(plugin);
-		}catch(Exception e){}
+		}catch(Exception e) {}
 	}
 	
-	public static void createHologram(Location loc, String tier){
+	public static void createHologram(Location loc, String tier) {
 		double hight = 1.5;
-		if(Main.settings.getFile(tier).contains("Settings.Hologram-Hight")){
+		if(Main.settings.getFile(tier).contains("Settings.Hologram-Hight")) {
 			hight = Main.settings.getFile(tier).getDouble("Settings.Hologram-Hight");
 		}
 		Hologram hg = HologramsAPI.createHologram(plugin, loc.add(.5, hight, .5));
-		for(String line : Main.settings.getFile(tier).getStringList("Settings.Hologram")){
+		for(String line : Main.settings.getFile(tier).getStringList("Settings.Hologram")) {
 			hg.appendTextLine(Methods.color(line));
 		}
 		holos.put(loc, hg);
 	}
 	
-	public static void removeHologram(Location loc){
-		if(holos.containsKey(loc)){
+	public static void removeHologram(Location loc) {
+		if(holos.containsKey(loc)) {
 			Hologram hg = holos.get(loc);
 			holos.remove(loc);
 			hg.delete();
 		}
 	}
 	
-	public static void removeAllHolograms(){
-		for(Location loc : holos.keySet()){
+	public static void removeAllHolograms() {
+		for(Location loc : holos.keySet()) {
 			holos.get(loc).delete();
 		}
 		holos.clear();

@@ -19,26 +19,26 @@ import me.badbones69.envoy.api.Messages;
 import me.badbones69.envoy.multisupport.Support;
 import me.badbones69.envoy.multisupport.WorldGuard;
 
-public class FlareControl implements Listener{
+public class FlareControl implements Listener {
 	
 	@EventHandler
-	public void onFlareActivate(PlayerInteractEvent e){
+	public void onFlareActivate(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
 		FileConfiguration config = Main.settings.getConfig();
-		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK){
+		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			ItemStack flare = Methods.getItemInHand(player);
-			if(flare != null){
-				if(Flare.isFlare(flare)){
+			if(flare != null) {
+				if(Flare.isFlare(flare)) {
 					e.setCancelled(true);
-					if(player.hasPermission("envoy.flare.use")){
-						if(Envoy.isEnvoyActive()){
+					if(player.hasPermission("envoy.flare.use")) {
+						if(Envoy.isEnvoyActive()) {
 							Messages.ALREADY_STARTED.sendMessage(player);
 							return;
-						}else{
+						}else {
 							int online = Bukkit.getServer().getOnlinePlayers().size();
-							if(config.getBoolean("Settings.Minimum-Players-Toggle")){
-								if(config.getBoolean("Settings.Minimum-Flare-Toggle")){
-									if(online < config.getInt("Settings.Minimum-Players")){
+							if(config.getBoolean("Settings.Minimum-Players-Toggle")) {
+								if(config.getBoolean("Settings.Minimum-Flare-Toggle")) {
+									if(online < config.getInt("Settings.Minimum-Players")) {
 										HashMap<String, String> placeholder = new HashMap<String, String>();
 										placeholder.put("%amount%", online + "");
 										placeholder.put("%Amount%", online + "");
@@ -48,20 +48,20 @@ public class FlareControl implements Listener{
 								}
 							}
 							Boolean toggle = false;
-							if(Support.hasWorldEdit() && Support.hasWorldGuard()){
-								if(config.getBoolean("Settings.Flares.World-Guard.Toggle")){
-									for(String r : config.getStringList("Settings.Flares.World-Guard.Regions")){
-										if(WorldGuard.inRegion(r, player.getLocation())){
+							if(Support.hasWorldEdit() && Support.hasWorldGuard()) {
+								if(config.getBoolean("Settings.Flares.World-Guard.Toggle")) {
+									for(String r : config.getStringList("Settings.Flares.World-Guard.Regions")) {
+										if(WorldGuard.inRegion(r, player.getLocation())) {
 											toggle = true;
 										}
 									}
-								}else{
+								}else {
 									toggle = true;
 								}
-							}else{
+							}else {
 								toggle = true;
 							}
-							if(!toggle){
+							if(!toggle) {
 								Messages.NOT_IN_WORLD_GUARD_REGION.sendMessage(player);
 								return;
 							}
@@ -70,7 +70,7 @@ public class FlareControl implements Listener{
 							Envoy.startEnvoyEvent();
 							return;
 						}
-					}else{
+					}else {
 						Messages.CANT_USE_FLARES.sendMessage(player);
 						return;
 					}

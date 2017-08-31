@@ -33,12 +33,12 @@ import me.badbones69.envoy.multisupport.PlaceholderAPISupport;
 import me.badbones69.envoy.multisupport.Support;
 import me.badbones69.envoy.multisupport.Version;
 
-public class Main extends JavaPlugin implements Listener{
+public class Main extends JavaPlugin implements Listener {
 	
 	public static SettingsManager settings = SettingsManager.getInstance();
 	
 	@Override
-	public void onEnable(){
+	public void onEnable() {
 		settings.setup(this);
 		Envoy.load();
 		Prizes.loadPrizes();
@@ -48,56 +48,56 @@ public class Main extends JavaPlugin implements Listener{
 		pm.registerEvents(new EditControl(), this);
 		pm.registerEvents(new EnvoyControl(), this);
 		pm.registerEvents(new FlareControl(), this);
-		try{
-			if(Version.getVersion().getVersionInteger() >= Version.v1_11_R1.getVersionInteger()){
+		try {
+			if(Version.getVersion().getVersionInteger() >= Version.v1_11_R1.getVersionInteger()) {
 				pm.registerEvents(new FireworkDamageAPI(this), this);
 			}
-		}catch(Exception e){}
-		if(Support.hasHolographicDisplay()){
+		}catch(Exception e) {}
+		if(Support.hasHolographicDisplay()) {
 			HolographicSupport.registerPlaceHolders();
 		}
-		if(Support.hasPlaceholderAPI()){
+		if(Support.hasPlaceholderAPI()) {
 			new PlaceholderAPISupport(this).hook();
 		}
-		if(Support.hasMVdWPlaceholderAPI()){
+		if(Support.hasMVdWPlaceholderAPI()) {
 			MVdWPlaceholderAPISupport.registerPlaceholders(this);
 		}
-		if(settings.getConfig().getBoolean("Settings.Toggle-Metrics")){
+		if(settings.getConfig().getBoolean("Settings.Toggle-Metrics")) {
 			try {
 				new MCUpdate(this, true);
-			} catch (IOException e) {}
+			}catch(IOException e) {}
 		}
 	}
 	
 	@Override
-	public void onDisable(){
-		for(Player player : Bukkit.getOnlinePlayers()){
-			if(EditControl.isEditor(player)){
+	public void onDisable() {
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			if(EditControl.isEditor(player)) {
 				EditControl.removeEditor(player);
 				EditControl.removeFakeBlocks(player);
 			}
 		}
-		if(Support.hasHolographicDisplay()){
+		if(Support.hasHolographicDisplay()) {
 			HolographicSupport.unregisterPlaceHolders();
 		}
-		if(Envoy.isEnvoyActive()){
+		if(Envoy.isEnvoyActive()) {
 			Envoy.endEnvoyEvent();
 		}
 		Envoy.unload();
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLable, String[] args){
-		if(commandLable.equalsIgnoreCase("envoy")){
-			if(args.length <= 0){
-				if(!(sender.hasPermission("envoy.time") || sender.hasPermission("envoy.bypass"))){
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLable, String[] args) {
+		if(commandLable.equalsIgnoreCase("envoy")) {
+			if(args.length <= 0) {
+				if(!(sender.hasPermission("envoy.time") || sender.hasPermission("envoy.bypass"))) {
 					Messages.NO_PERMISSION.sendMessage(sender);
 					return true;
 				}
 				Bukkit.dispatchCommand(sender, "envoy time");
 				return true;
-			}else{
-				if(args[0].equalsIgnoreCase("help")){
-					if(!(sender.hasPermission("envoy.help") || sender.hasPermission("envoy.bypass"))){
+			}else {
+				if(args[0].equalsIgnoreCase("help")) {
+					if(!(sender.hasPermission("envoy.help") || sender.hasPermission("envoy.bypass"))) {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
@@ -113,19 +113,19 @@ public class Main extends JavaPlugin implements Listener{
 					sender.sendMessage(Methods.color("&6/Envoy center &7- Set the center of the random crate drops."));
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("reload")){
-					if(!(sender.hasPermission("envoy.reload") || sender.hasPermission("envoy.bypass"))){
+				if(args[0].equalsIgnoreCase("reload")) {
+					if(!(sender.hasPermission("envoy.reload") || sender.hasPermission("envoy.bypass"))) {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
-					try{
+					try {
 						settings.reloadConfig();
 						settings.reloadData();
 						settings.reloadMessages();
 						settings.reloadTiers();
-					}catch(Exception e){}
+					}catch(Exception e) {}
 					settings.setup(this);
-					if(Envoy.isEnvoyActive()){
+					if(Envoy.isEnvoyActive()) {
 						Envoy.endEnvoyEvent();
 					}
 					Envoy.unload();
@@ -134,28 +134,28 @@ public class Main extends JavaPlugin implements Listener{
 					Messages.RELOADED.sendMessage(sender);
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("ignore") || args[0].equalsIgnoreCase("stfu")){
-					if(!(sender.hasPermission("envoy.ignore") || sender.hasPermission("envoy.bypass"))){
+				if(args[0].equalsIgnoreCase("ignore") || args[0].equalsIgnoreCase("stfu")) {
+					if(!(sender.hasPermission("envoy.ignore") || sender.hasPermission("envoy.bypass"))) {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
-					if(sender instanceof Player){
+					if(sender instanceof Player) {
 						Player player = (Player) sender;
 						UUID uuid = player.getUniqueId();
-						if(Envoy.isIgnoringMessages(uuid)){
+						if(Envoy.isIgnoringMessages(uuid)) {
 							Envoy.removeIgnorePlayer(uuid);
 							Messages.STOP_IGNORING_MESSAGES.sendMessage(player);
-						}else{
+						}else {
 							Envoy.addIgnorePlayer(uuid);
 							Messages.START_IGNORING_MESSAGES.sendMessage(player);
 						}
-					}else{
+					}else {
 						Messages.PLAYERS_ONLY.sendMessage(sender);
 					}
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("center")){// /Envoy Center
-					if(!(sender.hasPermission("envoy.center") || sender.hasPermission("envoy.bypass"))){
+				if(args[0].equalsIgnoreCase("center")) {// /Envoy Center
+					if(!(sender.hasPermission("envoy.center") || sender.hasPermission("envoy.bypass"))) {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
@@ -163,33 +163,33 @@ public class Main extends JavaPlugin implements Listener{
 					Messages.NEW_CENTER.sendMessage(sender);
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("flare")){// /Envoy Flare [Amount] [Player]
-					if(!(sender.hasPermission("envoy.flare.give") || sender.hasPermission("envoy.bypass"))){
+				if(args[0].equalsIgnoreCase("flare")) {// /Envoy Flare [Amount] [Player]
+					if(!(sender.hasPermission("envoy.flare.give") || sender.hasPermission("envoy.bypass"))) {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
 					int amount = 1;
 					Player player = null;
-					if(args.length >= 2){
-						if(Methods.isInt(args[1])){
+					if(args.length >= 2) {
+						if(Methods.isInt(args[1])) {
 							amount = Integer.parseInt(args[1]);
-						}else{
+						}else {
 							Messages.NOT_A_NUMBER.sendMessage(sender);
 							return true;
 						}
 					}
-					if(args.length>=3){
-						if(Methods.isOnline(args[2])){
+					if(args.length >= 3) {
+						if(Methods.isOnline(args[2])) {
 							player = Methods.getPlayer(args[2]);
-						}else{
+						}else {
 							Messages.NOT_ONLINE.sendMessage(sender);
 							return true;
 						}
-					}else{
-						if(!(sender instanceof Player)){
+					}else {
+						if(!(sender instanceof Player)) {
 							Messages.PLAYERS_ONLY.sendMessage(sender);
 							return true;
-						}else{
+						}else {
 							player = (Player) sender;
 						}
 					}
@@ -199,30 +199,30 @@ public class Main extends JavaPlugin implements Listener{
 					placeholder.put("%amount%", amount + "");
 					placeholder.put("%Amount%", amount + "");
 					Messages.GIVE_FLARE.sendMessage(sender, placeholder);
-					if(!sender.getName().equalsIgnoreCase(player.getName())){
+					if(!sender.getName().equalsIgnoreCase(player.getName())) {
 						Messages.GIVEN_FLARE.sendMessage(player, placeholder);
 					}
 					Flare.giveFlare(player, amount);
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("drops") || args[0].equalsIgnoreCase("drop")){
-					if(!(sender.hasPermission("envoy.drops") || sender.hasPermission("envoy.bypass"))){
+				if(args[0].equalsIgnoreCase("drops") || args[0].equalsIgnoreCase("drop")) {
+					if(!(sender.hasPermission("envoy.drops") || sender.hasPermission("envoy.bypass"))) {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
 					ArrayList<String> locs = new ArrayList<String>();
 					int page = 1;
-					if(args.length >= 2){
-						if(Methods.isInt(args[1])){
+					if(args.length >= 2) {
+						if(Methods.isInt(args[1])) {
 							page = Integer.parseInt(args[1]);
-						}else{
+						}else {
 							Messages.NOT_A_NUMBER.sendMessage(sender);
 							return true;
 						}
 					}
 					int i = 1;
 					HashMap<String, String> ph = new HashMap<String, String>();
-					for(Location loc : Envoy.isEnvoyActive() ? Envoy.getActiveEnvoys() : Envoy.getLocations()){
+					for(Location loc : Envoy.isEnvoyActive() ? Envoy.getActiveEnvoys() : Envoy.getLocations()) {
 						ph.put("%id%", i + "");
 						ph.put("%world%", loc.getWorld().getName());
 						ph.put("%x%", loc.getBlockX() + "");
@@ -232,77 +232,77 @@ public class Main extends JavaPlugin implements Listener{
 						i++;
 						ph.clear();
 					}
-					if(Envoy.isEnvoyActive()){
+					if(Envoy.isEnvoyActive()) {
 						Messages.DROPS_AVAILABLE.sendMessage(sender);
-					}else{
+					}else {
 						Messages.DROPS_POSSIBILITIES.sendMessage(sender);
 					}
-					for(String dropLocation : Methods.getPage(locs, page)){
+					for(String dropLocation : Methods.getPage(locs, page)) {
 						sender.sendMessage(dropLocation);
 					}
-					if(!Envoy.isEnvoyActive()){
+					if(!Envoy.isEnvoyActive()) {
 						Messages.DROPS_PAGE.sendMessage(sender);
 					}
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("time")){
-					if(!(sender.hasPermission("envoy.time") || sender.hasPermission("envoy.bypass"))){
+				if(args[0].equalsIgnoreCase("time")) {
+					if(!(sender.hasPermission("envoy.time") || sender.hasPermission("envoy.bypass"))) {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
 					HashMap<String, String> placeholder = new HashMap<String, String>();
-					if(Envoy.isEnvoyActive()){
+					if(Envoy.isEnvoyActive()) {
 						placeholder.put("%time%", Envoy.getEnvoyRunTimeLeft());
 						placeholder.put("%Time%", Envoy.getEnvoyRunTimeLeft());
 						Messages.TIME_LEFT.sendMessage(sender, placeholder);
-					}else{
+					}else {
 						placeholder.put("%time%", Envoy.getNextEnvoyTime());
 						Messages.TIME_TILL_EVENT.sendMessage(sender, placeholder);
 					}
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("start") || args[0].equalsIgnoreCase("begin")){
-					if(!(sender.hasPermission("envoy.start") || sender.hasPermission("envoy.bypass"))){
+				if(args[0].equalsIgnoreCase("start") || args[0].equalsIgnoreCase("begin")) {
+					if(!(sender.hasPermission("envoy.start") || sender.hasPermission("envoy.bypass"))) {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
-					if(Envoy.isEnvoyActive()){
+					if(Envoy.isEnvoyActive()) {
 						Messages.ALREADY_STARTED.sendMessage(sender);
-					}else{
+					}else {
 						Envoy.startEnvoyEvent();
 						Messages.FORCE_START.sendMessage(sender);
 					}
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("stop") || args[0].equalsIgnoreCase("end")){
-					if(!(sender.hasPermission("envoy.stop") || sender.hasPermission("envoy.bypass"))){
+				if(args[0].equalsIgnoreCase("stop") || args[0].equalsIgnoreCase("end")) {
+					if(!(sender.hasPermission("envoy.stop") || sender.hasPermission("envoy.bypass"))) {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
-					if(Envoy.isEnvoyActive()){
+					if(Envoy.isEnvoyActive()) {
 						Envoy.endEnvoyEvent();
 						Messages.ENDED.broadcastMessage(false, null);
 						Messages.FORCE_ENDED.sendMessage(sender);
-					}else{
+					}else {
 						Messages.NOT_STARTED.sendMessage(sender);
 					}
 					return true;
 				}
-				if(args[0].equalsIgnoreCase("edit")){
-					if(!(sender.hasPermission("envoy.edit") || sender.hasPermission("envoy.bypass"))){
+				if(args[0].equalsIgnoreCase("edit")) {
+					if(!(sender.hasPermission("envoy.edit") || sender.hasPermission("envoy.bypass"))) {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
-					if(Envoy.isEnvoyActive()){
+					if(Envoy.isEnvoyActive()) {
 						Messages.KICKED_FROM_EDITOR_MODE.sendMessage(sender);
-					}else{
+					}else {
 						Player player = (Player) sender;
-						if(EditControl.isEditor(player)){
+						if(EditControl.isEditor(player)) {
 							EditControl.removeEditor(player);
 							EditControl.removeFakeBlocks(player);
 							player.getInventory().remove(Material.BEDROCK);
 							Messages.LEAVE_EDITOR_MODE.sendMessage(player);
-						}else{
+						}else {
 							EditControl.addEditor(player);
 							EditControl.showFakeBlocks(player);
 							player.getInventory().addItem(new ItemStack(Material.BEDROCK, 1));
@@ -319,16 +319,15 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	
 	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent e){
+	public void onPlayerJoin(PlayerJoinEvent e) {
 		final Player player = e.getPlayer();
-		new BukkitRunnable(){
+		new BukkitRunnable() {
 			@Override
 			public void run() {
-				if(player.getName().equals("BadBones69")){
-					player.sendMessage(Methods.getPrefix() + Methods.color("&7This server is running your Crazy Envoy Plugin. "
-						+ "&7It is running version &av" + Bukkit.getServer().getPluginManager().getPlugin("CrazyEnvoy").getDescription().getVersion() + "&7."));
+				if(player.getName().equals("BadBones69")) {
+					player.sendMessage(Methods.getPrefix() + Methods.color("&7This server is running your Crazy Envoy Plugin. " + "&7It is running version &av" + Bukkit.getServer().getPluginManager().getPlugin("CrazyEnvoy").getDescription().getVersion() + "&7."));
 				}
-				if(player.isOp()){
+				if(player.isOp()) {
 					Methods.hasUpdate(player);
 				}
 			}
