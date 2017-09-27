@@ -1,4 +1,4 @@
-package me.badbones69.envoy.controlers;
+package me.badbones69.envoy.controllers;
 
 import java.util.ArrayList;
 import java.util.Calendar;
