@@ -28,7 +28,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-import me.badbones69.envoy.controlers.FireworkDamageAPI;
+import me.badbones69.envoy.controllers.FireworkDamageAPI;
 import me.badbones69.envoy.multisupport.NMS_v1_10_R1;
 import me.badbones69.envoy.multisupport.NMS_v1_11_R1;
 import me.badbones69.envoy.multisupport.NMS_v1_12_R1;

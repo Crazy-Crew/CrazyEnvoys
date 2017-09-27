@@ -113,7 +113,9 @@ public enum Messages {
 	public void sendMessage(Player player) {
 		if(isList()) {
 			for(String msg : getMessages()) {
-				player.sendMessage(msg);
+				if (!msg.isEmpty()) {
+					player.sendMessage(msg);
+				}
 			}
 		}else {
 			player.sendMessage(getMessage());
@@ -123,7 +125,9 @@ public enum Messages {
 	public void sendMessage(CommandSender sender) {
 		if(isList()) {
 			for(String msg : getMessages()) {
-				sender.sendMessage(msg);
+				if (!msg.isEmpty()) {
+					sender.sendMessage(msg);
+				}
 			}
 		}else {
 			sender.sendMessage(getMessage());
@@ -140,7 +144,9 @@ public enum Messages {
 						}
 					}
 				}
-				player.sendMessage(msg);
+				if (!msg.isEmpty()) {
+					player.sendMessage(msg);
+				}
 			}
 		}else {
 			String msg = getMessage();
@@ -151,7 +157,9 @@ public enum Messages {
 					}
 				}
 			}
-			player.sendMessage(msg);
+			if (!msg.isEmpty()) {
+				player.sendMessage(msg);
+			}
 		}
 	}
 	
@@ -165,7 +173,9 @@ public enum Messages {
 						}
 					}
 				}
-				sender.sendMessage(msg);
+				if (!msg.isEmpty()) {
+					sender.sendMessage(msg);
+				}
 			}
 		}else {
 			String msg = getMessage();
@@ -176,7 +186,9 @@ public enum Messages {
 					}
 				}
 			}
-			sender.sendMessage(msg);
+			if (!msg.isEmpty()) {
+				sender.sendMessage(msg);
+			}
 		}
 	}
 	
