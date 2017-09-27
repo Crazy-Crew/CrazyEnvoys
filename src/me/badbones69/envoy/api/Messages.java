@@ -116,7 +116,11 @@ public enum Messages {
 				player.sendMessage(msg);
 			}
 		}else {
-			player.sendMessage(getMessage());
+			if (msg.length() == 0) {
+				return;
+			} else {
+				player.sendMessage(msg);
+			}
 		}
 	}
 	
@@ -126,7 +130,11 @@ public enum Messages {
 				sender.sendMessage(msg);
 			}
 		}else {
-			sender.sendMessage(getMessage());
+			if (msg.length() == 0) {
+				return;
+			} else {
+				sender.sendMessage(msg);
+			}
 		}
 	}
 	
@@ -140,7 +148,11 @@ public enum Messages {
 						}
 					}
 				}
+				if (msg.length() == 0) {
+				return;
+			} else {
 				player.sendMessage(msg);
+			}
 			}
 		}else {
 			String msg = getMessage();
@@ -151,7 +163,11 @@ public enum Messages {
 					}
 				}
 			}
-			player.sendMessage(msg);
+			if (msg.length() == 0) {
+				return;
+			} else {
+				player.sendMessage(msg);
+			}
 		}
 	}
 	
@@ -165,7 +181,11 @@ public enum Messages {
 						}
 					}
 				}
+				if (msg.length() == 0) {
+				return;
+			} else {
 				sender.sendMessage(msg);
+			}
 			}
 		}else {
 			String msg = getMessage();
@@ -176,7 +196,11 @@ public enum Messages {
 					}
 				}
 			}
-			sender.sendMessage(msg);
+			if (msg.length() == 0) {
+				return;
+			} else {
+				sender.sendMessage(msg);
+			}
 		}
 	}
 	
