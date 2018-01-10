@@ -28,7 +28,7 @@ Messages:
   Kicked-From-Editor-Mode: '%prefix%&cSorry but an envoy is active. Please stop it or wait till it''s over.'
   Add-Location: '%prefix%&7You have just added a spawn location.'
   Remove-Location: '%prefix%&cYou have just removed a spawn location.'
-  Time-Left: '%prefix%&7The next envoy has &6%time%&7 left.'
+  Time-Left: '%prefix%&7The current envoy has &6%time%&7 left.'
   Time-Till-Event: '%prefix%&7The next envoy will start in &6%time%&7.'
   Used-Flare: '%prefix%&7You have just started an envoy event with a flare.'
   Cant-Use-Flares: '%prefix%&cYou do not have permission to use flares.'
