@@ -622,6 +622,16 @@ public class Envoy {
 		HashMap<String, String> placeholder = new HashMap<String, String>();
 		placeholder.put("%amount%", max + "");
 		placeholder.put("%Amount%", max + "");
+		String endtime = Main.settings.getConfig().getString("Settings.Envoy-Run-Time").replace("d", "")
+			.replace("D", "")
+			.replace("h", "")
+			.replace("H", "")
+			.replace("m", "")
+			.replace("M", "")
+			.replace("s", "")
+			.replace("S", "");
+		placeholder.put("%endtime%", endtime + "");
+		placeholder.put("%Endtime%", endtime + "");
 		Messages.STARTED.broadcastMessage(false, placeholder);
 		for(Location loc : locs) {
 			boolean spawnFallingBlock = false;
