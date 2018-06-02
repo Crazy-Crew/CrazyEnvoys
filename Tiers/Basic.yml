@@ -7,7 +7,7 @@ Settings:
     Random: true #If true then it will pick a random bulk from 1-MaxBulk.
     Max-Bulk: 3 #The max amount of prizes.
   Hologram-Toggle: true #Toggle on and off holograms.
-  Hologram-Hight: 1.5 #How high the hologram will be from the crate.
+  Hologram-Height: 1.5 #How high the hologram will be from the crate.
   Hologram: #Holograms only show if Holographic Displays is on the server.
     - '&7&l(&6&l!&7&l) Basic Crate'
   Firework-Toggle: true #Toggle on or off fireworks.
