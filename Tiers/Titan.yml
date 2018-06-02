@@ -7,7 +7,7 @@ Settings:
     Random: true
     Max-Bulk: 3
   Hologram-Toggle: true
-  Hologram-Hight: 1.5
+  Hologram-Height: 1.5
   Hologram:
     - '&7&l(&4&l!&7&l) &4&lTitan Crate'
   Firework-Toggle: true
