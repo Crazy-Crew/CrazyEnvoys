@@ -7,7 +7,7 @@ Settings:
     Random: true
     Max-Bulk: 3
   Hologram-Toggle: true
-  Hologram-Hight: 1.5
+  Hologram-Height: 1.5
   Hologram:
     - '&7&l(&e&l!&7&l) &e&lLucky Crate'
   Firework-Toggle: true
