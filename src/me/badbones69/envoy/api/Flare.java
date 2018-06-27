@@ -10,7 +10,7 @@ import me.badbones69.envoy.Main;
 import me.badbones69.envoy.Methods;
 
 public class Flare {
-	
+
 	public static ItemStack getFlare(int amount) {
 		FileConfiguration config = Main.settings.getConfig();
 		String id = config.getString("Settings.Flares.Item");
@@ -18,14 +18,14 @@ public class Flare {
 		List<String> lore = config.getStringList("Settings.Flares.Lore");
 		return Methods.makeItem(id, amount, name, lore);
 	}
-	
+
 	public static Boolean isFlare(ItemStack item) {
 		if(getFlare(1).isSimilar(item)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public static void giveFlare(Player player, int amount) {
 		if(Methods.isInvFull(player)) {
 			player.getWorld().dropItem(player.getLocation(), getFlare(amount));
@@ -33,7 +33,7 @@ public class Flare {
 			player.getInventory().addItem(getFlare(amount));
 		}
 	}
-	
+
 	public static void takeFlare(Player player, ItemStack flare) {
 		if(flare.getAmount() <= 1) {
 			player.getInventory().removeItem(flare);
@@ -42,5 +42,5 @@ public class Flare {
 			flare.setAmount(flare.getAmount() - 1);
 		}
 	}
-	
+
 }
