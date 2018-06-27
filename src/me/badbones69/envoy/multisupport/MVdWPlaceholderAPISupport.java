@@ -9,7 +9,7 @@ import me.badbones69.envoy.Main;
 import me.badbones69.envoy.api.Envoy;
 
 public class MVdWPlaceholderAPISupport {
-	
+
 	public static void registerPlaceholders(Plugin plugin) {
 		PlaceholderAPI.registerPlaceholder(plugin, "envoy_cooldown", new PlaceholderReplacer() {
 			@Override
@@ -21,7 +21,7 @@ public class MVdWPlaceholderAPISupport {
 				}
 			}
 		});
-		
+
 		PlaceholderAPI.registerPlaceholder(plugin, "envoy_time_left", new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
@@ -32,7 +32,7 @@ public class MVdWPlaceholderAPISupport {
 				}
 			}
 		});
-		
+
 		PlaceholderAPI.registerPlaceholder(plugin, "envoy_crates_left", new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
@@ -40,5 +40,5 @@ public class MVdWPlaceholderAPISupport {
 			}
 		});
 	}
-	
+
 }
