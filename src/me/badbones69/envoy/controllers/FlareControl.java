@@ -20,7 +20,7 @@ import me.badbones69.envoy.multisupport.Support;
 import me.badbones69.envoy.multisupport.WorldGuard;
 
 public class FlareControl implements Listener {
-	
+
 	@EventHandler
 	public void onFlareActivate(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
@@ -41,7 +41,6 @@ public class FlareControl implements Listener {
 									if(online < config.getInt("Settings.Minimum-Players")) {
 										HashMap<String, String> placeholder = new HashMap<String, String>();
 										placeholder.put("%amount%", online + "");
-										placeholder.put("%Amount%", online + "");
 										Messages.NOT_ENOUGH_PLAYERS.sendMessage(player, placeholder);
 										return;
 									}
@@ -78,5 +77,5 @@ public class FlareControl implements Listener {
 			}
 		}
 	}
-	
+
 }
