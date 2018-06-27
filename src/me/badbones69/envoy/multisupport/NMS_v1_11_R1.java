@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import net.minecraft.server.v1_11_R1.NBTTagCompound;
 
 public class NMS_v1_11_R1 {
-	
+
 	@SuppressWarnings("deprecation")
 	public static ItemStack getSpawnEgg(EntityType type, int amount) {
 		ItemStack item = new ItemStack(Material.MONSTER_EGG, amount);
@@ -23,7 +23,7 @@ public class NMS_v1_11_R1 {
 		stack.setTag(tagCompound);
 		return CraftItemStack.asBukkitCopy(stack);
 	}
-	
+
 	public static ItemStack addUnbreaking(ItemStack item) {
 		net.minecraft.server.v1_11_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 		NBTTagCompound tag = null;
@@ -39,5 +39,5 @@ public class NMS_v1_11_R1 {
 		nmsStack.setTag(tag);
 		return CraftItemStack.asCraftMirror(nmsStack);
 	}
-	
+
 }
