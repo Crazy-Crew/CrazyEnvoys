@@ -30,9 +30,9 @@ import me.badbones69.envoy.multisupport.Support;
 import me.badbones69.envoy.multisupport.Version;
 
 public class EnvoyControl implements Listener {
-	
+
 	private static HashMap<UUID, Calendar> cooldown = new HashMap<UUID, Calendar>();
-	
+
 	@EventHandler
 	public void onPlayerClick(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
@@ -54,7 +54,6 @@ public class EnvoyControl implements Listener {
 									if(Calendar.getInstance().before(cooldown.get(uuid))) {
 										HashMap<String, String> placeholder = new HashMap<String, String>();
 										placeholder.put("%time%", getTimeLeft(cooldown.get(uuid)));
-										placeholder.put("%Time%", getTimeLeft(cooldown.get(uuid)));
 										Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
 										return;
 									}
@@ -99,7 +98,7 @@ public class EnvoyControl implements Listener {
 							player.sendMessage(Methods.color(msg));
 						}
 						for(String cmd : Prizes.getCommands(tier, prize)) {
-							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName()));
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%player%", player.getName()));
 						}
 						for(ItemStack item : Prizes.getItems(tier, prize)) {
 							if(Methods.isInvFull(player)) {
@@ -115,17 +114,13 @@ public class EnvoyControl implements Listener {
 							if(Main.settings.getConfig().getBoolean("Settings.Broadcast-Crate-Pick-Up")) {
 								HashMap<String, String> placeholder = new HashMap<String, String>();
 								placeholder.put("%player%", player.getName());
-								placeholder.put("%Player%", player.getName());
 								placeholder.put("%amount%", Envoy.getActiveEnvoys().size() + "");
-								placeholder.put("%Amount%", Envoy.getActiveEnvoys().size() + "");
 								Messages.LEFT.broadcastMessage(true, placeholder);
 							}
 						}else {
 							HashMap<String, String> placeholder = new HashMap<String, String>();
 							placeholder.put("%player%", player.getName());
-							placeholder.put("%Player%", player.getName());
 							placeholder.put("%amount%", Envoy.getActiveEnvoys().size() + "");
-							placeholder.put("%Amount%", Envoy.getActiveEnvoys().size() + "");
 							Messages.LEFT.broadcastMessage(true, placeholder);
 						}
 					}else {
@@ -136,7 +131,7 @@ public class EnvoyControl implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onChestSpawn(EntityChangeBlockEvent e) {
 		if(Envoy.isEnvoyActive()) {
@@ -165,7 +160,7 @@ public class EnvoyControl implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onItemSpawn(ItemSpawnEvent e) {
 		if(Envoy.isEnvoyActive()) {
@@ -194,11 +189,11 @@ public class EnvoyControl implements Listener {
 			}
 		}
 	}
-	
+
 	public static void clearCooldowns() {
 		cooldown.clear();
 	}
-	
+
 	private Calendar getTimeFromString(String time) {
 		Calendar cal = Calendar.getInstance();
 		for(String i : time.split(" ")) {
@@ -217,7 +212,7 @@ public class EnvoyControl implements Listener {
 		}
 		return cal;
 	}
-	
+
 	private String getTimeLeft(Calendar timeTill) {
 		Calendar C = Calendar.getInstance();
 		int total = ((int) (timeTill.getTimeInMillis() / 1000) - (int) (C.getTimeInMillis() / 1000));
@@ -241,5 +236,5 @@ public class EnvoyControl implements Listener {
 		}
 		return msg;
 	}
-	
+
 }
