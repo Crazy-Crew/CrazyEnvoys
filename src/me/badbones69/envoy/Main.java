@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,10 +34,10 @@ import me.badbones69.envoy.multisupport.PlaceholderAPISupport;
 import me.badbones69.envoy.multisupport.Support;
 import me.badbones69.envoy.multisupport.Version;
 
-public class Main extends JavaPlugin implements Listener {
-	
+public class Main extends JavaPlugin implements Listener, CommandExecutor {
+
 	public static SettingsManager settings = SettingsManager.getInstance();
-	
+
 	@Override
 	public void onEnable() {
 		settings.setup(this);
@@ -48,6 +49,7 @@ public class Main extends JavaPlugin implements Listener {
 		pm.registerEvents(new EditControl(), this);
 		pm.registerEvents(new EnvoyControl(), this);
 		pm.registerEvents(new FlareControl(), this);
+		getCommand("envoy").setExecutor(this);
 		try {
 			if(Version.getVersion().getVersionInteger() >= Version.v1_11_R1.getVersionInteger()) {
 				pm.registerEvents(new FireworkDamageAPI(this), this);
@@ -68,7 +70,7 @@ public class Main extends JavaPlugin implements Listener {
 			}catch(IOException e) {}
 		}
 	}
-	
+
 	@Override
 	public void onDisable() {
 		for(Player player : Bukkit.getOnlinePlayers()) {
@@ -85,9 +87,10 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		Envoy.unload();
 	}
-	
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLable, String[] args) {
-		if(commandLable.equalsIgnoreCase("envoy")) {
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+		if(commandLabel.equalsIgnoreCase("envoy")) {
 			if(args.length <= 0) {
 				if(!(sender.hasPermission("envoy.time") || sender.hasPermission("envoy.bypass"))) {
 					Messages.NO_PERMISSION.sendMessage(sender);
@@ -101,16 +104,9 @@ public class Main extends JavaPlugin implements Listener {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
-					sender.sendMessage(Methods.color("&6/Envoy help &7- Shows the envoy help menu."));
-					sender.sendMessage(Methods.color("&6/Envoy reload &7- Reloads all the config files."));
-					sender.sendMessage(Methods.color("&6/Envoy time &7- Shows the time till the envoy starts or ends."));
-					sender.sendMessage(Methods.color("&6/Envoy drops [page] &7- Shows all current crate locations."));
-					sender.sendMessage(Methods.color("&6/Envoy ignore &7- Shuts up the envoy collecting message."));
-					sender.sendMessage(Methods.color("&6/Envoy flare [amount] [player] &7- Give a player a flare to call an envoy event."));
-					sender.sendMessage(Methods.color("&6/Envoy edit &7- Edit the crate locations with bedrock."));
-					sender.sendMessage(Methods.color("&6/Envoy start &7- Force starts the envoy."));
-					sender.sendMessage(Methods.color("&6/Envoy stop &7- Force stops the envoy."));
-					sender.sendMessage(Methods.color("&6/Envoy center &7- Set the center of the random crate drops."));
+					for(String msgs : settings.getMessages().getStringList("Messages.Chat-Messages")) {
+						sender.sendMessage(Methods.color(msgs.replaceAll("%prefix%", Methods.getPrefix())));
+					}
 					return true;
 				}
 				if(args[0].equalsIgnoreCase("reload")) {
@@ -195,9 +191,7 @@ public class Main extends JavaPlugin implements Listener {
 					}
 					HashMap<String, String> placeholder = new HashMap<String, String>();
 					placeholder.put("%player%", player.getName());
-					placeholder.put("%Player%", player.getName());
 					placeholder.put("%amount%", amount + "");
-					placeholder.put("%Amount%", amount + "");
 					Messages.GIVE_FLARE.sendMessage(sender, placeholder);
 					if(!sender.getName().equalsIgnoreCase(player.getName())) {
 						Messages.GIVEN_FLARE.sendMessage(player, placeholder);
@@ -253,7 +247,6 @@ public class Main extends JavaPlugin implements Listener {
 					HashMap<String, String> placeholder = new HashMap<String, String>();
 					if(Envoy.isEnvoyActive()) {
 						placeholder.put("%time%", Envoy.getEnvoyRunTimeLeft());
-						placeholder.put("%Time%", Envoy.getEnvoyRunTimeLeft());
 						Messages.TIME_LEFT.sendMessage(sender, placeholder);
 					}else {
 						placeholder.put("%time%", Envoy.getNextEnvoyTime());
@@ -311,13 +304,13 @@ public class Main extends JavaPlugin implements Listener {
 					}
 					return true;
 				}
-				sender.sendMessage(Methods.getPrefix() + Methods.color("&cPlease do /envoy help for more information."));
+				Messages.MORE_INFORMATION.sendMessage(sender);
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		final Player player = e.getPlayer();
@@ -333,5 +326,5 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}.runTaskLaterAsynchronously(this, 20);
 	}
-	
+
 }
