@@ -18,40 +18,40 @@ import me.badbones69.envoy.api.Envoy;
 import me.badbones69.envoy.api.Messages;
 
 public class EditControl implements Listener {
-	
+
 	private static ArrayList<Player> editors = new ArrayList<Player>();
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
-	
+
 	public static ArrayList<Player> getEditors() {
 		return editors;
 	}
-	
+
 	public static void addEditor(Player player) {
 		editors.add(player);
 	}
-	
+
 	public static void removeEditor(Player player) {
 		editors.remove(player);
 	}
-	
+
 	public static Boolean isEditor(Player player) {
 		return editors.contains(player);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static void showFakeBlocks(Player player) {
 		for(Location loc : Envoy.getLocations()) {
 			player.sendBlockChange(loc, Material.BEDROCK, (byte) 0);
 		}
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static void removeFakeBlocks(Player player) {
 		for(Location loc : Envoy.getLocations()) {
 			player.sendBlockChange(loc, loc.getBlock().getType(), loc.getBlock().getData());
 		}
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onBlockPlace(final BlockPlaceEvent e) {
@@ -72,7 +72,7 @@ public class EditControl implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
 		Player player = e.getPlayer();
@@ -86,5 +86,5 @@ public class EditControl implements Listener {
 			}
 		}
 	}
-	
+
 }
