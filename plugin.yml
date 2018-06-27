@@ -1,9 +1,14 @@
 name: CrazyEnvoy
 author: BadBones69
 main: me.badbones69.envoy.Main
-version: 1.2.8.3
+version: ${project.version}
 description: A crazy envoy plugin.
 softdepend: [HolographicDisplays, PlaceholderAPI, MVdWPlaceholderAPI, Multiverse-Core, MultiWorld]
 commands:
   envoy:
     description: Shows the next time till the next envoy.
+
+permissions:
+  envoy.bypass:
+    description: Bypass all CrazyEnvoy permission.
+    default: false
