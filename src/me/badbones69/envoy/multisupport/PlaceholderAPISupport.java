@@ -8,11 +8,11 @@ import me.badbones69.envoy.api.Envoy;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 
 public class PlaceholderAPISupport extends EZPlaceholderHook {
-	
+
 	public PlaceholderAPISupport(Plugin plugin) {
 		super(plugin, "envoy");
 	}
-	
+
 	@Override
 	public String onPlaceholderRequest(Player player, String placeHolder) {
 		if(placeHolder.equalsIgnoreCase("cooldown")) {
@@ -34,5 +34,5 @@ public class PlaceholderAPISupport extends EZPlaceholderHook {
 		}
 		return null;
 	}
-	
+
 }
