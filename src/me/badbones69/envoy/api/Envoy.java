@@ -33,7 +33,7 @@ import me.badbones69.envoy.multisupport.HolographicSupport;
 import me.badbones69.envoy.multisupport.Support;
 
 public class Envoy {
-	
+
 	private static BukkitTask runTimeTask;
 	private static BukkitTask coolDownTask;
 	private static Calendar nextEnvoy;
@@ -47,7 +47,7 @@ public class Envoy {
 	private static HashMap<Location, String> activeEnvoys = new HashMap<Location, String>();
 	private static HashMap<Location, BukkitTask> activeSignals = new HashMap<Location, BukkitTask>();
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
-	
+
 	/**
 	 * Run this when you need to load the new locations.
 	 */
@@ -101,7 +101,7 @@ public class Envoy {
 			nextEnvoy = Calendar.getInstance();
 		}
 	}
-	
+
 	private static Location getLocationFromString(String locationString) {
 		World w = Bukkit.getWorlds().get(0);
 		int x = 0;
@@ -123,7 +123,7 @@ public class Envoy {
 		}
 		return new Location(w, x, y, z);
 	}
-	
+
 	/**
 	 * Run this when you need to save the locations.
 	 */
@@ -144,7 +144,7 @@ public class Envoy {
 		locations.clear();
 		EnvoyControl.clearCooldowns();
 	}
-	
+
 	/**
 	 * Used when the plugin starts to control the count down and when the event starts
 	 */
@@ -163,7 +163,6 @@ public class Envoy {
 						if(check.compareTo(cal) == 0) {
 							HashMap<String, String> placeholder = new HashMap<String, String>();
 							placeholder.put("%time%", getNextEnvoyTime());
-							placeholder.put("%Time%", getNextEnvoyTime());
 							Messages.WARNING.broadcastMessage(false, placeholder);
 						}
 					}
@@ -178,7 +177,6 @@ public class Envoy {
 									if(online < Main.settings.getConfig().getInt("Settings.Minimum-Players")) {
 										HashMap<String, String> placeholder = new HashMap<String, String>();
 										placeholder.put("%amount%", online + "");
-										placeholder.put("%Amount%", online + "");
 										Messages.NOT_ENOUGH_PLAYERS.broadcastMessage(false, placeholder);
 										setNextEnvoy(getEnvoyCooldown());
 										resetWarnings();
@@ -193,7 +191,7 @@ public class Envoy {
 			}
 		}.runTaskTimer(plugin, 20, 20);
 	}
-	
+
 	/**
 	 * 
 	 * @param loc The location you want the tier from.
@@ -202,11 +200,11 @@ public class Envoy {
 	public static String getTier(Location loc) {
 		return activeEnvoys.get(loc);
 	}
-	
+
 	private static void setEnvoyActive(Boolean toggle) {
 		envoyActive = toggle;
 	}
-	
+
 	/**
 	 * 
 	 * @return True if the envoy event is currently happening and false if not.
@@ -214,7 +212,7 @@ public class Envoy {
 	public static Boolean isEnvoyActive() {
 		return envoyActive;
 	}
-	
+
 	/**
 	 * Despawns all of the active crates.
 	 */
@@ -233,7 +231,7 @@ public class Envoy {
 		fallingBlocks.clear();
 		activeEnvoys.clear();
 	}
-	
+
 	/**
 	 * 
 	 * @return All the location the chests will spawn.
@@ -241,7 +239,7 @@ public class Envoy {
 	public static ArrayList<Location> getLocations() {
 		return locations;
 	}
-	
+
 	/**
 	 * 
 	 * @param Loc The location that you want to check.
@@ -255,7 +253,7 @@ public class Envoy {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 
 	 * @return All the active envoys that are active.
@@ -263,7 +261,7 @@ public class Envoy {
 	public static Set<Location> getActiveEnvoys() {
 		return activeEnvoys.keySet();
 	}
-	
+
 	/**
 	 * 
 	 * @param loc The location your are checking.
@@ -272,7 +270,7 @@ public class Envoy {
 	public static Boolean isActiveEnvoy(Location loc) {
 		return activeEnvoys.containsKey(loc);
 	}
-	
+
 	/**
 	 * 
 	 * @param loc The location you wish to add.
@@ -280,7 +278,7 @@ public class Envoy {
 	public static void addActiveEnvoy(Location loc, String tier) {
 		activeEnvoys.put(loc, tier);
 	}
-	
+
 	/**
 	 * 
 	 * @param loc The location you wish to remove.
@@ -288,7 +286,7 @@ public class Envoy {
 	public static void removeActiveEnvoy(Location loc) {
 		activeEnvoys.remove(loc);
 	}
-	
+
 	/**
 	 * 
 	 * @param loc The location you want to add.
@@ -296,7 +294,7 @@ public class Envoy {
 	public static void addLocation(Location loc) {
 		locations.add(loc);
 	}
-	
+
 	/**
 	 * 
 	 * @param loc The location you want to remove.
@@ -306,7 +304,7 @@ public class Envoy {
 			locations.remove(loc);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @return The next envoy time as a calendar.
@@ -314,7 +312,7 @@ public class Envoy {
 	public static Calendar getNextEnvoy() {
 		return nextEnvoy;
 	}
-	
+
 	/**
 	 * 
 	 * @param cal The time of the next envoy.
@@ -344,7 +342,7 @@ public class Envoy {
 		}
 		return msg;
 	}
-	
+
 	/**
 	 * 
 	 * @param cal A calendar that has the next time the envoy will happen.
@@ -352,7 +350,7 @@ public class Envoy {
 	public static void setNextEnvoy(Calendar cal) {
 		nextEnvoy = cal;
 	}
-	
+
 	/**
 	 * 
 	 * @return All falling blocks are are currently going.
@@ -360,7 +358,7 @@ public class Envoy {
 	public static ArrayList<Entity> getFallingBlocks() {
 		return fallingBlocks;
 	}
-	
+
 	/**
 	 * 
 	 * @param en Remove a falling block from the list.
@@ -370,7 +368,7 @@ public class Envoy {
 			fallingBlocks.remove(en);
 		}
 	}
-	
+
 	/**
 	 * Call when you want to set the new warning.
 	 */
@@ -380,7 +378,7 @@ public class Envoy {
 			addWarning(makeWarning(time));
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param cal When adding a new warning.
@@ -388,7 +386,7 @@ public class Envoy {
 	public static void addWarning(Calendar cal) {
 		warnings.add(cal);
 	}
-	
+
 	/**
 	 * 
 	 * @return All the current warnings.
@@ -396,7 +394,7 @@ public class Envoy {
 	public static ArrayList<Calendar> getWarnings() {
 		return warnings;
 	}
-	
+
 	/**
 	 * 
 	 * @param time The new time for the warning.
@@ -421,7 +419,7 @@ public class Envoy {
 		}
 		return cal;
 	}
-	
+
 	private static Calendar getEnvoyCooldown() {
 		Calendar cal = Calendar.getInstance();
 		FileConfiguration config = Main.settings.getConfig();
@@ -462,7 +460,7 @@ public class Envoy {
 		}
 		return cal;
 	}
-	
+
 	private static Calendar getEnvoyRunTimeCalendar() {
 		Calendar cal = Calendar.getInstance();
 		String time = Main.settings.getConfig().getString("Settings.Envoy-Run-Time");
@@ -482,7 +480,7 @@ public class Envoy {
 		}
 		return cal;
 	}
-	
+
 	/**
 	 * 
 	 * @return The time left in the current envoy evnet.
@@ -511,7 +509,7 @@ public class Envoy {
 		}
 		return msg;
 	}
-	
+
 	private static Integer getTimeSeconds(String time) {
 		Integer seconds = 0;
 		for(String i : time.split(" ")) {
@@ -530,7 +528,7 @@ public class Envoy {
 		}
 		return seconds;
 	}
-	
+
 	/**
 	 * Call when the run time needs canceled.
 	 */
@@ -539,7 +537,7 @@ public class Envoy {
 			runTimeTask.cancel();
 		}catch(Exception e) {}
 	}
-	
+
 	/**
 	 * Call when the cool down time needs canceled.
 	 */
@@ -548,7 +546,7 @@ public class Envoy {
 			coolDownTask.cancel();
 		}catch(Exception e) {}
 	}
-	
+
 	/**
 	 * Starts the envoy event.
 	 */
@@ -621,7 +619,6 @@ public class Envoy {
 		}
 		HashMap<String, String> placeholder = new HashMap<String, String>();
 		placeholder.put("%amount%", max + "");
-		placeholder.put("%Amount%", max + "");
 		Messages.STARTED.broadcastMessage(false, placeholder);
 		for(Location loc : locs) {
 			boolean spawnFallingBlock = false;
@@ -674,7 +671,7 @@ public class Envoy {
 		}.runTaskLater(plugin, getTimeSeconds(Main.settings.getConfig().getString("Settings.Envoy-Run-Time")) * 20);
 		envoyTimeLeft = getEnvoyRunTimeCalendar();
 	}
-	
+
 	private static ArrayList<Location> getBlocks(Location loc, int radius) {
 		Location loc2 = loc.clone();
 		loc.add(-radius, 0, -radius);
@@ -693,7 +690,7 @@ public class Envoy {
 		}
 		return locs;
 	}
-	
+
 	/**
 	 * Ends the envoy event.
 	 */
@@ -707,7 +704,7 @@ public class Envoy {
 		}
 		EnvoyControl.clearCooldowns();
 	}
-	
+
 	/**
 	 * 
 	 * @param loc The location the signals will be at.
@@ -723,7 +720,7 @@ public class Envoy {
 		}.runTaskTimer(plugin, getTimeSeconds(Main.settings.getFile(tier).getString("Settings.Signal-Flare.Time")) * 20, getTimeSeconds(Main.settings.getFile(tier).getString("Settings.Signal-Flare.Time")) * 20);
 		activeSignals.put(loc, task);
 	}
-	
+
 	/**
 	 * 
 	 * @param loc The location that the signal is stopping.
@@ -734,7 +731,7 @@ public class Envoy {
 		}catch(Exception e) {}
 		activeSignals.remove(loc);
 	}
-	
+
 	private static void playSignal(Location loc, String tier) {
 		ArrayList<Color> colors = new ArrayList<Color>();
 		for(String c : Main.settings.getFile(tier).getStringList("Settings.Signal-Flare.Colors")) {
@@ -750,7 +747,7 @@ public class Envoy {
 		fw.setFireworkMeta(fm);
 		FireworkDamageAPI.addFirework(fw);
 	}
-	
+
 	/**
 	 * 
 	 * @return The center location for the random crates.
@@ -758,7 +755,7 @@ public class Envoy {
 	public static Location getCenter() {
 		return center;
 	}
-	
+
 	/**
 	 * Sets the center location for the random crates.
 	 * @param loc The new center location.
@@ -775,7 +772,7 @@ public class Envoy {
 	public static boolean isIgnoringMessages(UUID uuid) {
 		return ignoreMessages.contains(uuid);
 	}
-	
+
 	/**
 	 * Make a player ignore the messages.
 	 * @param uuid The player's UUID.
@@ -783,7 +780,7 @@ public class Envoy {
 	public static void addIgnorePlayer(UUID uuid) {
 		ignoreMessages.add(uuid);
 	}
-	
+
 	/**
 	 * Make a player stop ignoring the messages.
 	 * @param uuid The player's UUID.
@@ -793,5 +790,5 @@ public class Envoy {
 			ignoreMessages.remove(uuid);
 		}
 	}
-	
+
 }
