@@ -13,7 +13,7 @@ import me.badbones69.envoy.Main;
 import me.badbones69.envoy.Methods;
 
 public class Prizes {
-	
+
 	private static List<String> tiers = new ArrayList<String>();
 	private static HashMap<String, Boolean> useChance = new HashMap<String, Boolean>();
 	private static HashMap<String, Integer> spawnChance = new HashMap<String, Integer>();
@@ -22,7 +22,7 @@ public class Prizes {
 	private static HashMap<String, HashMap<String, List<String>>> commands = new HashMap<String, HashMap<String, List<String>>>();
 	private static HashMap<String, HashMap<String, List<String>>> messages = new HashMap<String, HashMap<String, List<String>>>();
 	private static HashMap<String, HashMap<String, ArrayList<ItemStack>>> items = new HashMap<String, HashMap<String, ArrayList<ItemStack>>>();
-	
+
 	/**
 	 * Use when you want to get the prizes.
 	 */
@@ -106,7 +106,7 @@ public class Prizes {
 			tiers.add(tier);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @return All the tier.
@@ -114,7 +114,7 @@ public class Prizes {
 	public static List<String> getTiers() {
 		return tiers;
 	}
-	
+
 	/**
 	 * 
 	 * @param tier The tier you wish to get the spawn chance from.
@@ -123,7 +123,7 @@ public class Prizes {
 	public static Integer getSpawnChance(String tier) {
 		return spawnChance.get(tier);
 	}
-	
+
 	/**
 	 * 
 	 * @return A tier based on the spawn chance.
@@ -142,7 +142,7 @@ public class Prizes {
 		}
 		return T.get(new Random().nextInt(T.size()));
 	}
-	
+
 	/**
 	 * 
 	 * @return All the prize names.
@@ -150,7 +150,7 @@ public class Prizes {
 	public static List<String> getPrizes(String tier) {
 		return prizes.get(tier);
 	}
-	
+
 	/**
 	 * 
 	 * @return If true then prizes are random and if false it uses chance.
@@ -158,7 +158,7 @@ public class Prizes {
 	public static Boolean useChance(String tier) {
 		return useChance.get(tier);
 	}
-	
+
 	/**
 	 * 
 	 * @return A random prizes.
@@ -176,7 +176,7 @@ public class Prizes {
 		}
 		return p;
 	}
-	
+
 	/**
 	 * 
 	 * @return A prize based on the chance the prize has.
@@ -202,7 +202,7 @@ public class Prizes {
 		}
 		return p;
 	}
-	
+
 	/**
 	 * 
 	 * @param prize The prize you want.
@@ -211,7 +211,7 @@ public class Prizes {
 	public static List<String> getCommands(String tier, String prize) {
 		return commands.get(tier).get(prize);
 	}
-	
+
 	/**
 	 * 
 	 * @param prize The prize you want.
@@ -220,7 +220,7 @@ public class Prizes {
 	public static List<String> getMessages(String tier, String prize) {
 		return messages.get(tier).get(prize);
 	}
-	
+
 	/**
 	 * 
 	 * @param prize The prize you want.
@@ -229,7 +229,7 @@ public class Prizes {
 	public static ArrayList<ItemStack> getItems(String tier, String prize) {
 		return items.get(tier).get(prize);
 	}
-	
+
 	private static Integer getPrizeAmount(String tier) {
 		int amount = 1;
 		if(Main.settings.getFile(tier).getBoolean("Settings.Bulk-Prizes.Toggle")) {
@@ -240,5 +240,5 @@ public class Prizes {
 		}
 		return amount;
 	}
-	
+
 }
