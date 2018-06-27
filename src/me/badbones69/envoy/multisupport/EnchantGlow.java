@@ -16,43 +16,43 @@ import org.bukkit.inventory.ItemStack;
  */
 
 public class EnchantGlow extends EnchantmentWrapper {
-	
+
 	private static Enchantment glow;
-	
+
 	public EnchantGlow(int id) {
 		super(id);
 	}
-	
+
 	@Override
 	public boolean canEnchantItem(ItemStack item) {
 		return true;
 	}
-	
+
 	@Override
 	public boolean conflictsWith(Enchantment other) {
 		return false;
 	}
-	
+
 	@Override
 	public EnchantmentTarget getItemTarget() {
 		return null;
 	}
-	
+
 	@Override
 	public int getMaxLevel() {
 		return 10;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "Crazy_Glow";
 	}
-	
+
 	@Override
 	public int getStartLevel() {
 		return 1;
 	}
-	
+
 	public static Enchantment getGlow() {
 		if(glow != null) {
 			return glow;
@@ -74,11 +74,11 @@ public class EnchantGlow extends EnchantmentWrapper {
 		Enchantment.registerEnchantment(glow);
 		return glow;
 	}
-	
+
 	public static ItemStack addGlow(ItemStack item) {
 		Enchantment glow = getGlow();
 		item.addEnchantment(glow, 1);
 		return item;
 	}
-	
+
 }
