@@ -3,7 +3,7 @@ package me.badbones69.envoy.multisupport;
 import org.bukkit.Bukkit;
 
 public enum Version {
-	
+
 	TOO_OLD(-1),
 	v1_7_R1(171), v1_7_R2(172), v1_7_R3(173), v1_7_R4(174), 
 	v1_8_R1(181), v1_8_R2(182), v1_8_R3(183),
@@ -12,15 +12,15 @@ public enum Version {
 	v1_11_R1(1111),
 	v1_12_R1(1121),
 	TOO_NEW(-2);
-	
+
 	private static Version latest;
 	private Integer versionInteger;
 	public static Version currentVersion;
-	
+
 	private Version(int versionInteger) {
 		this.versionInteger = versionInteger;
 	}
-	
+
 	/**
 	 * 
 	 * @return Get the server's Minecraft version.
@@ -44,7 +44,7 @@ public enum Version {
 		}
 		return currentVersion;
 	}
-	
+
 	/**
 	 * 
 	 * @return The server's minecraft version as an integer.
@@ -52,7 +52,7 @@ public enum Version {
 	public Integer getVersionInteger() {
 		return this.versionInteger;
 	}
-	
+
 	/**
 	 * Get the latest version allowed by the Version class.
 	 * @return The latest version.
@@ -70,7 +70,7 @@ public enum Version {
 			return latest;
 		}
 	}
-	
+
 	/**
 	 * This checks if the current version is older, newer, or is the checked version.
 	 * @param version The version you are checking.
@@ -89,5 +89,5 @@ public enum Version {
 		}
 		return resault;
 	}
-	
+
 }
