@@ -14,7 +14,7 @@ import me.badbones69.envoy.Main;
 import me.badbones69.envoy.Methods;
 
 public enum Messages {
-	
+
 	LEFT("Left"),
 	ENDED("Ended"),
 	WARNING("Warning"),
@@ -51,23 +51,24 @@ public enum Messages {
 	START_IGNORING_MESSAGES("Start-Ignoring-Messages"),
 	KICKED_FROM_EDITOR_MODE("Kicked-From-Editor-Mode"),
 	NOT_IN_WORLD_GUARD_REGION("Not-In-World-Guard-Region");
-	
+	MORE_INFORMATION("More-Information");
+
 	private String path;
 	private String defaultMessage;
-	
+
 	private Messages(String path) {
 		this.path = "Messages." + path;
 	}
-	
+
 	private Messages(String path, String defaultMessage) {
 		this.path = "Messages." + path;
 		this.defaultMessage = defaultMessage;
 	}
-	
+
 	public String getMessage() {
 		return Methods.color(Main.settings.getMessages().contains(path) ? Main.settings.getMessages().getString(path).replaceAll("%prefix%", Methods.getPrefix()) : defaultMessage.replaceAll("%prefix%", Methods.getPrefix()));
 	}
-	
+
 	public List<String> getMessages() {
 		List<String> msgs = new ArrayList<>();
 		for(String msg : Main.settings.getMessages().contains(path) ? Main.settings.getMessages().getStringList(path) : Arrays.asList(defaultMessage)) {
@@ -75,7 +76,7 @@ public enum Messages {
 		}
 		return msgs;
 	}
-	
+
 	public String getMessage(HashMap<String, String> placeholder) {
 		String msg = getMessage();
 		if(placeholder != null) {
@@ -87,7 +88,7 @@ public enum Messages {
 		}
 		return msg;
 	}
-	
+
 	public List<String> getMessages(HashMap<String, String> placeholder) {
 		List<String> msgs = new ArrayList<>();
 		for(String msg : getMessages()) {
@@ -102,14 +103,14 @@ public enum Messages {
 		}
 		return msgs;
 	}
-	
+
 	public Boolean isList() {
 		if(Main.settings.getMessages().getStringList(path).isEmpty()) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	public void sendMessage(Player player) {
 		if(isList()) {
 			for(String msg : getMessages()) {
@@ -121,7 +122,7 @@ public enum Messages {
 			player.sendMessage(getMessage());
 		}
 	}
-	
+
 	public void sendMessage(CommandSender sender) {
 		if(isList()) {
 			for(String msg : getMessages()) {
@@ -133,7 +134,7 @@ public enum Messages {
 			sender.sendMessage(getMessage());
 		}
 	}
-	
+
 	public void sendMessage(Player player, HashMap<String, String> placeholder) {
 		if(isList()) {
 			for(String msg : getMessages()) {
@@ -162,7 +163,7 @@ public enum Messages {
 			}
 		}
 	}
-	
+
 	public void sendMessage(CommandSender sender, HashMap<String, String> placeholder) {
 		if(isList()) {
 			for(String msg : getMessages()) {
@@ -191,7 +192,7 @@ public enum Messages {
 			}
 		}
 	}
-	
+
 	public void broadcastMessage(Boolean ignore, HashMap<String, String> placeholder) {
 		if(Main.settings.getConfig().getBoolean("Settings.World-Messages.Toggle")) {
 			for(Player p : Bukkit.getOnlinePlayers()) {
@@ -241,5 +242,5 @@ public enum Messages {
 			Bukkit.getLogger().log(Level.INFO, msg);
 		}
 	}
-	
+
 }
