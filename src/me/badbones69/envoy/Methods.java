@@ -37,21 +37,21 @@ import me.badbones69.envoy.multisupport.NMS_v1_9_R2;
 import me.badbones69.envoy.multisupport.Version;
 
 public class Methods {
-	
+
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
-	
+
 	public static String color(String msg) {
 		return ChatColor.translateAlternateColorCodes('&', msg);
 	}
-	
+
 	public static String removeColor(String msg) {
 		return ChatColor.stripColor(msg);
 	}
-	
+
 	public static String getPrefix() {
 		return color(Main.settings.getConfig().getString("Settings.Prefix"));
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static ItemStack getItemInHand(Player player) {
 		if(Version.getVersion().getVersionInteger() >= Version.v1_9_R1.getVersionInteger()) {
@@ -60,7 +60,7 @@ public class Methods {
 			return player.getItemInHand();
 		}
 	}
-	
+
 	public static boolean isInt(String s) {
 		try {
 			Integer.parseInt(s);
@@ -69,7 +69,7 @@ public class Methods {
 		}
 		return true;
 	}
-	
+
 	public static boolean isOnline(String name) {
 		for(Player player : Bukkit.getServer().getOnlinePlayers()) {
 			if(player.getName().equalsIgnoreCase(name)) {
@@ -78,11 +78,11 @@ public class Methods {
 		}
 		return false;
 	}
-	
+
 	public static Player getPlayer(String name) {
 		return Bukkit.getServer().getPlayer(name);
 	}
-	
+
 	public static ItemStack makeItem(String type, int amount, String name) {
 		int ty = 0;
 		if(type.contains(":")) {
@@ -97,7 +97,7 @@ public class Methods {
 		item.setItemMeta(me);
 		return item;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static ItemStack makeItem(String id, int amount, String name, List<String> lore) {
 		ArrayList<String> l = new ArrayList<String>();
@@ -139,7 +139,7 @@ public class Methods {
 		item.setItemMeta(m);
 		return item;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static ItemStack makeItem(String id, int amount, String name, List<String> lore, Map<Enchantment, Integer> enchants) {
 		ArrayList<String> l = new ArrayList<String>();
@@ -182,7 +182,7 @@ public class Methods {
 		item.addUnsafeEnchantments(enchants);
 		return item;
 	}
-	
+
 	public static ItemStack addGlow(ItemStack item, boolean toggle) {
 		if(Version.getVersion().comparedTo(Version.v1_8_R1) >= 0) {
 			if(toggle) {
@@ -201,7 +201,7 @@ public class Methods {
 		}
 		return item;
 	}
-	
+
 	public static ItemStack addUnbreaking(ItemStack item) {
 		switch(Version.getVersion()) {
 			case v1_12_R1:
@@ -219,14 +219,14 @@ public class Methods {
 		}
 		return item;
 	}
-	
+
 	public static boolean isInvFull(Player player) {
 		if(player.getInventory().firstEmpty() == -1) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public static Entity fireWork(Location loc, ArrayList<Color> colors) {
 		Firework fw = loc.getWorld().spawn(loc, Firework.class);
 		FireworkMeta fm = fw.getFireworkMeta();
@@ -237,7 +237,7 @@ public class Methods {
 		detonate(fw);
 		return fw;
 	}
-	
+
 	private static void detonate(final Firework f) {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
@@ -245,7 +245,7 @@ public class Methods {
 			}
 		}, 2);
 	}
-	
+
 	public static Color getColor(String color) {
 		if(color.equalsIgnoreCase("AQUA")) return Color.AQUA;
 		if(color.equalsIgnoreCase("BLACK")) return Color.BLACK;
@@ -266,7 +266,7 @@ public class Methods {
 		if(color.equalsIgnoreCase("YELLOW")) return Color.YELLOW;
 		return Color.WHITE;
 	}
-	
+
 	public static List<String> getPage(List<String> list, Integer page) {
 		List<String> locations = new ArrayList<String>();
 		if(page <= 0) {
@@ -294,7 +294,7 @@ public class Methods {
 		}
 		return locations;
 	}
-	
+
 	public static boolean isSuccessful(int min, int max) {
 		if(max == min || max <= min || max <= 0) {
 			return true;
@@ -306,7 +306,7 @@ public class Methods {
 		}
 		return false;
 	}
-	
+
 	public static void hasUpdate() {
 		try {
 			HttpURLConnection c = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php").openConnection();
@@ -322,7 +322,7 @@ public class Methods {
 			return;
 		}
 	}
-	
+
 	public static void hasUpdate(Player player) {
 		try {
 			HttpURLConnection c = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php").openConnection();
@@ -338,7 +338,7 @@ public class Methods {
 			return;
 		}
 	}
-	
+
 	public static String getEnchantmentName(Enchantment en) {
 		HashMap<String, String> enchants = new HashMap<String, String>();
 		enchants.put("ARROW_DAMAGE", "Power");
@@ -375,7 +375,7 @@ public class Methods {
 		}
 		return enchants.get(en.getName());
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
 		FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), 0, (byte) 0);
@@ -383,5 +383,5 @@ public class Methods {
 		ent.remove();
 		return out;
 	}
-	
+
 }
