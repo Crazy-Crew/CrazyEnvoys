@@ -15,10 +15,10 @@ import me.badbones69.envoy.Methods;
 import me.badbones69.envoy.api.Envoy;
 
 public class HolographicSupport {
-	
+
 	private static HashMap<Location, Hologram> holos = new HashMap<Location, Hologram>();
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
-	
+
 	public static void registerPlaceHolders() {
 		HologramsAPI.registerPlaceholder(plugin, "{envoy_cooldown}", 1, new PlaceholderReplacer() {
 			@Override
@@ -30,7 +30,7 @@ public class HolographicSupport {
 				}
 			}
 		});
-		
+
 		HologramsAPI.registerPlaceholder(plugin, "{envoy_time_left}", 1, new PlaceholderReplacer() {
 			@Override
 			public String update() {
@@ -41,22 +41,22 @@ public class HolographicSupport {
 				}
 			}
 		});
-		
+
 		HologramsAPI.registerPlaceholder(plugin, "{envoy_crates_left}", .5, new PlaceholderReplacer() {
 			@Override
 			public String update() {
 				return Envoy.getActiveEnvoys().size() + "";
 			}
 		});
-		
+
 	}
-	
+
 	public static void unregisterPlaceHolders() {
 		try {
 			HologramsAPI.unregisterPlaceholders(plugin);
 		}catch(Exception e) {}
 	}
-	
+
 	public static void createHologram(Location loc, String tier) {
 		double hight = 1.5;
 		if(Main.settings.getFile(tier).contains("Settings.Hologram-Hight")) {
@@ -68,7 +68,7 @@ public class HolographicSupport {
 		}
 		holos.put(loc, hg);
 	}
-	
+
 	public static void removeHologram(Location loc) {
 		if(holos.containsKey(loc)) {
 			Hologram hg = holos.get(loc);
@@ -76,12 +76,12 @@ public class HolographicSupport {
 			hg.delete();
 		}
 	}
-	
+
 	public static void removeAllHolograms() {
 		for(Location loc : holos.keySet()) {
 			holos.get(loc).delete();
 		}
 		holos.clear();
 	}
-	
+
 }
