@@ -39,13 +39,13 @@ public class Envoy {
 	private static Calendar nextEnvoy;
 	private static Calendar envoyTimeLeft;
 	private static Boolean envoyActive = false;
-	private static ArrayList<UUID> ignoreMessages = new ArrayList<UUID>();
-	private static ArrayList<Calendar> warnings = new ArrayList<Calendar>();
-	private static ArrayList<Location> locations = new ArrayList<Location>();
-	private static ArrayList<Entity> fallingBlocks = new ArrayList<Entity>();
+	private static ArrayList<UUID> ignoreMessages = new ArrayList<>();
+	private static ArrayList<Calendar> warnings = new ArrayList<>();
+	private static ArrayList<Location> locations = new ArrayList<>();
+	private static ArrayList<Entity> fallingBlocks = new ArrayList<>();
 	private static Location center = Bukkit.getWorlds().get(0).getSpawnLocation();
-	private static HashMap<Location, String> activeEnvoys = new HashMap<Location, String>();
-	private static HashMap<Location, BukkitTask> activeSignals = new HashMap<Location, BukkitTask>();
+	private static HashMap<Location, String> activeEnvoys = new HashMap<>();
+	private static HashMap<Location, BukkitTask> activeSignals = new HashMap<>();
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 
 	/**
@@ -128,7 +128,7 @@ public class Envoy {
 	 * Run this when you need to save the locations.
 	 */
 	public static void unload() {
-		ArrayList<String> locs = new ArrayList<String>();
+		ArrayList<String> locs = new ArrayList<>();
 		for(Location loc : locations) {
 			try {
 				locs.add("World:" + loc.getWorld().getName() + ", X:" + loc.getBlockX() + ", Y:" + loc.getBlockY() + ", Z:" + loc.getBlockZ());
@@ -161,7 +161,7 @@ public class Envoy {
 						check.setTimeInMillis(warn.getTimeInMillis());
 						check.clear(Calendar.MILLISECOND);
 						if(check.compareTo(cal) == 0) {
-							HashMap<String, String> placeholder = new HashMap<String, String>();
+							HashMap<String, String> placeholder = new HashMap<>();
 							placeholder.put("%time%", getNextEnvoyTime());
 							Messages.WARNING.broadcastMessage(false, placeholder);
 						}
@@ -175,7 +175,7 @@ public class Envoy {
 								if(Main.settings.getConfig().getBoolean("Settings.Minimum-Players-Toggle")) {
 									int online = Bukkit.getServer().getOnlinePlayers().size();
 									if(online < Main.settings.getConfig().getInt("Settings.Minimum-Players")) {
-										HashMap<String, String> placeholder = new HashMap<String, String>();
+										HashMap<String, String> placeholder = new HashMap<>();
 										placeholder.put("%amount%", online + "");
 										Messages.NOT_ENOUGH_PLAYERS.broadcastMessage(false, placeholder);
 										setNextEnvoy(getEnvoyCooldown());
@@ -571,7 +571,7 @@ public class Envoy {
 				max = getLocations().size();
 			}
 		}
-		ArrayList<Location> locs = new ArrayList<Location>();
+		ArrayList<Location> locs = new ArrayList<>();
 		if(Main.settings.getConfig().getBoolean("Settings.Max-Crate-Toggle")) {
 			for(int i = 0; i < max;) {
 				Location loc = locations.get(new Random().nextInt(locations.size()));
@@ -617,7 +617,7 @@ public class Envoy {
 				i++;
 			}
 		}
-		HashMap<String, String> placeholder = new HashMap<String, String>();
+		HashMap<String, String> placeholder = new HashMap<>();
 		placeholder.put("%amount%", max + "");
 		Messages.STARTED.broadcastMessage(false, placeholder);
 		for(Location loc : locs) {
@@ -733,7 +733,7 @@ public class Envoy {
 	}
 
 	private static void playSignal(Location loc, String tier) {
-		ArrayList<Color> colors = new ArrayList<Color>();
+		ArrayList<Color> colors = new ArrayList<>();
 		for(String c : Main.settings.getFile(tier).getStringList("Settings.Signal-Flare.Colors")) {
 			Color color = Methods.getColor(c);
 			if(color != null) {
