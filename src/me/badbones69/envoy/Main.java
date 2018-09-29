@@ -189,7 +189,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 							player = (Player) sender;
 						}
 					}
-					HashMap<String, String> placeholder = new HashMap<String, String>();
+					HashMap<String, String> placeholder = new HashMap<>();
 					placeholder.put("%player%", player.getName());
 					placeholder.put("%amount%", amount + "");
 					Messages.GIVE_FLARE.sendMessage(sender, placeholder);
@@ -204,7 +204,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
-					ArrayList<String> locs = new ArrayList<String>();
+					ArrayList<String> locs = new ArrayList<>();
 					int page = 1;
 					if(args.length >= 2) {
 						if(Methods.isInt(args[1])) {
@@ -215,7 +215,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 						}
 					}
 					int i = 1;
-					HashMap<String, String> ph = new HashMap<String, String>();
+					HashMap<String, String> ph = new HashMap<>();
 					for(Location loc : Envoy.isEnvoyActive() ? Envoy.getActiveEnvoys() : Envoy.getLocations()) {
 						ph.put("%id%", i + "");
 						ph.put("%world%", loc.getWorld().getName());
@@ -244,7 +244,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
-					HashMap<String, String> placeholder = new HashMap<String, String>();
+					HashMap<String, String> placeholder = new HashMap<>();
 					if(Envoy.isEnvoyActive()) {
 						placeholder.put("%time%", Envoy.getEnvoyRunTimeLeft());
 						Messages.TIME_LEFT.sendMessage(sender, placeholder);
@@ -318,7 +318,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 			@Override
 			public void run() {
 				if(player.getName().equals("BadBones69")) {
-					player.sendMessage(Methods.getPrefix() + Methods.color("&7This server is running your Crazy Envoy Plugin. " + "&7It is running version &av" + Bukkit.getServer().getPluginManager().getPlugin("CrazyEnvoy").getDescription().getVersion() + "&7."));
+					player.sendMessage(Methods.getPrefix() + Methods.color("&7This server is running your Crazy Envoy Plugin. " + "&7It is running version &av" + this.getDescription().getVersion() + "&7."));
 				}
 				if(player.isOp()) {
 					Methods.hasUpdate(player);
