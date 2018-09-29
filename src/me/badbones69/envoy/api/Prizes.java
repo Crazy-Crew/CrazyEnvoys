@@ -14,14 +14,14 @@ import me.badbones69.envoy.Methods;
 
 public class Prizes {
 
-	private static List<String> tiers = new ArrayList<String>();
-	private static HashMap<String, Boolean> useChance = new HashMap<String, Boolean>();
-	private static HashMap<String, Integer> spawnChance = new HashMap<String, Integer>();
-	private static HashMap<String, List<String>> prizes = new HashMap<String, List<String>>();
-	private static HashMap<String, HashMap<String, Integer>> chances = new HashMap<String, HashMap<String, Integer>>();
-	private static HashMap<String, HashMap<String, List<String>>> commands = new HashMap<String, HashMap<String, List<String>>>();
-	private static HashMap<String, HashMap<String, List<String>>> messages = new HashMap<String, HashMap<String, List<String>>>();
-	private static HashMap<String, HashMap<String, ArrayList<ItemStack>>> items = new HashMap<String, HashMap<String, ArrayList<ItemStack>>>();
+	private static List<String> tiers = new ArrayList<>();
+	private static HashMap<String, Boolean> useChance = new HashMap<>();
+	private static HashMap<String, Integer> spawnChance = new HashMap<>();
+	private static HashMap<String, List<String>> prizes = new HashMap<>();
+	private static HashMap<String, HashMap<String, Integer>> chances = new HashMap<>();
+	private static HashMap<String, HashMap<String, List<String>>> commands = new HashMap<>();
+	private static HashMap<String, HashMap<String, List<String>>> messages = new HashMap<>();
+	private static HashMap<String, HashMap<String, ArrayList<ItemStack>>> items = new HashMap<>();
 
 	/**
 	 * Use when you want to get the prizes.
@@ -37,20 +37,20 @@ public class Prizes {
 		for(String tier : Main.settings.getAllTierNames()) {
 			FileConfiguration tfile = Main.settings.getFile(tier);
 			useChance.put(tier, tfile.getBoolean("Settings.Use-Chance"));
-			ArrayList<String> ps = new ArrayList<String>();
-			HashMap<String, Integer> chance = new HashMap<String, Integer>();
-			HashMap<String, List<String>> cmds = new HashMap<String, List<String>>();
-			HashMap<String, List<String>> msg = new HashMap<String, List<String>>();
-			HashMap<String, ArrayList<ItemStack>> its = new HashMap<String, ArrayList<ItemStack>>();
+			ArrayList<String> ps = new ArrayList<>();
+			HashMap<String, Integer> chance = new HashMap<>();
+			HashMap<String, List<String>> cmds = new HashMap<>();
+			HashMap<String, List<String>> msg = new HashMap<>();
+			HashMap<String, ArrayList<ItemStack>> its = new HashMap<>();
 			for(String p : tfile.getConfigurationSection("Prizes").getKeys(false)) {
 				ps.add(p);
 				chance.put(p, tfile.getInt("Prizes." + p + ".Chance"));
 				cmds.put(p, tfile.getStringList("Prizes." + p + ".Commands"));
 				msg.put(p, tfile.getStringList("Prizes." + p + ".Messages"));
-				ArrayList<ItemStack> iTS = new ArrayList<ItemStack>();
+				ArrayList<ItemStack> iTS = new ArrayList<>();
 				for(String l : tfile.getStringList("Prizes." + p + ".Items")) {
-					ArrayList<String> lore = new ArrayList<String>();
-					HashMap<Enchantment, Integer> enchs = new HashMap<Enchantment, Integer>();
+					ArrayList<String> lore = new ArrayList<>();
+					HashMap<Enchantment, Integer> enchs = new HashMap<>();
 					String name = "";
 					int amount = 1;
 					String item = "Stone";
@@ -164,7 +164,7 @@ public class Prizes {
 	 * @return A random prizes.
 	 */
 	public static ArrayList<String> pickRandomPrizes(String tier) {
-		ArrayList<String> p = new ArrayList<String>();
+		ArrayList<String> p = new ArrayList<>();
 		int max = getPrizeAmount(tier);
 		for(int i = 0; p.size() < max && i < 500; i++) {
 			String prize = prizes.get(tier).get(new Random().nextInt(prizes.get(tier).size()));
@@ -182,7 +182,7 @@ public class Prizes {
 	 * @return A prize based on the chance the prize has.
 	 */
 	public static ArrayList<String> pickPrizesByChance(String tier) {
-		ArrayList<String> P = new ArrayList<String>();
+		ArrayList<String> P = new ArrayList<>();
 		for(; P.size() == 0;) {
 			for(String prize : getPrizes(tier)) {
 				if(Methods.isSuccessful(chances.get(tier).get(prize), 100)) {
