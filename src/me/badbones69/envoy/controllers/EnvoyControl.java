@@ -31,7 +31,7 @@ import me.badbones69.envoy.multisupport.Version;
 
 public class EnvoyControl implements Listener {
 
-	private static HashMap<UUID, Calendar> cooldown = new HashMap<UUID, Calendar>();
+	private static HashMap<UUID, Calendar> cooldown = new HashMap<>();
 
 	@EventHandler
 	public void onPlayerClick(PlayerInteractEvent e) {
@@ -52,7 +52,7 @@ public class EnvoyControl implements Listener {
 								UUID uuid = player.getUniqueId();
 								if(cooldown.containsKey(uuid)) {
 									if(Calendar.getInstance().before(cooldown.get(uuid))) {
-										HashMap<String, String> placeholder = new HashMap<String, String>();
+										HashMap<String, String> placeholder = new HashMap<>();
 										placeholder.put("%time%", getTimeLeft(cooldown.get(uuid)));
 										Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
 										return;
@@ -64,7 +64,7 @@ public class EnvoyControl implements Listener {
 					}
 					String tier = Envoy.getTier(loc);
 					if(Main.settings.getFile(tier).getBoolean("Settings.Firework-Toggle")) {
-						ArrayList<Color> colors = new ArrayList<Color>();
+						ArrayList<Color> colors = new ArrayList<>();
 						for(String c : Main.settings.getFile(tier).getStringList("Settings.Firework-Colors")) {
 							Color color = Methods.getColor(c);
 							if(color != null) {
@@ -83,7 +83,7 @@ public class EnvoyControl implements Listener {
 					}
 					Envoy.stopSignalFlare(e.getClickedBlock().getLocation());
 					Envoy.removeActiveEnvoy(loc);
-					ArrayList<String> prizes = new ArrayList<String>();
+					ArrayList<String> prizes = new ArrayList<>();
 					if(Prizes.getPrizes(tier).size() == 0) {
 						Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
 						return;
@@ -112,13 +112,13 @@ public class EnvoyControl implements Listener {
 					if(Envoy.getActiveEnvoys().size() >= 1) {
 						if(Main.settings.getConfig().contains("Settings.Broadcast-Crate-Pick-Up")) {
 							if(Main.settings.getConfig().getBoolean("Settings.Broadcast-Crate-Pick-Up")) {
-								HashMap<String, String> placeholder = new HashMap<String, String>();
+								HashMap<String, String> placeholder = new HashMap<>();
 								placeholder.put("%player%", player.getName());
 								placeholder.put("%amount%", Envoy.getActiveEnvoys().size() + "");
 								Messages.LEFT.broadcastMessage(true, placeholder);
 							}
 						}else {
-							HashMap<String, String> placeholder = new HashMap<String, String>();
+							HashMap<String, String> placeholder = new HashMap<>();
 							placeholder.put("%player%", player.getName());
 							placeholder.put("%amount%", Envoy.getActiveEnvoys().size() + "");
 							Messages.LEFT.broadcastMessage(true, placeholder);
