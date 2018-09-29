@@ -97,7 +97,7 @@ public class SettingsManager {
 	}
 
 	public ArrayList<File> getAllTiers() {
-		ArrayList<File> files = new ArrayList<File>();
+		ArrayList<File> files = new ArrayList<>();
 		for(String name : tierfolder.list()) {
 			if(!name.equalsIgnoreCase(".DS_Store")) {
 				files.add(new File(tierfolder, name));
@@ -107,7 +107,7 @@ public class SettingsManager {
 	}
 
 	public ArrayList<String> getAllTierNames() {
-		ArrayList<String> files = new ArrayList<String>();
+		ArrayList<String> files = new ArrayList<>();
 		for(String name : tierfolder.list()) {
 			if(!name.equalsIgnoreCase(".DS_Store")) {
 				File f = new File(tierfolder, name);
