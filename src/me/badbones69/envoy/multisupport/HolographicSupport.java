@@ -16,7 +16,7 @@ import me.badbones69.envoy.api.Envoy;
 
 public class HolographicSupport {
 
-	private static HashMap<Location, Hologram> holos = new HashMap<Location, Hologram>();
+	private static HashMap<Location, Hologram> holos = new HashMap<>();
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 
 	public static void registerPlaceHolders() {
