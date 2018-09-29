@@ -19,7 +19,7 @@ import me.badbones69.envoy.api.Messages;
 
 public class EditControl implements Listener {
 
-	private static ArrayList<Player> editors = new ArrayList<Player>();
+	private static ArrayList<Player> editors = new ArrayList<>();
 	private static Plugin plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 
 	public static ArrayList<Player> getEditors() {
