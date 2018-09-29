@@ -100,7 +100,7 @@ public class Methods {
 
 	@SuppressWarnings("deprecation")
 	public static ItemStack makeItem(String id, int amount, String name, List<String> lore) {
-		ArrayList<String> l = new ArrayList<String>();
+		ArrayList<String> l = new ArrayList<>();
 		String ma = id;
 		int type = 0;
 		if(ma.contains(":")) {
@@ -142,7 +142,7 @@ public class Methods {
 
 	@SuppressWarnings("deprecation")
 	public static ItemStack makeItem(String id, int amount, String name, List<String> lore, Map<Enchantment, Integer> enchants) {
-		ArrayList<String> l = new ArrayList<String>();
+		ArrayList<String> l = new ArrayList<>();
 		String ma = id;
 		int type = 0;
 		if(ma.contains(":")) {
@@ -268,7 +268,7 @@ public class Methods {
 	}
 
 	public static List<String> getPage(List<String> list, Integer page) {
-		List<String> locations = new ArrayList<String>();
+		List<String> locations = new ArrayList<>();
 		if(page <= 0) {
 			page = 1;
 		}
@@ -340,7 +340,7 @@ public class Methods {
 	}
 
 	public static String getEnchantmentName(Enchantment en) {
-		HashMap<String, String> enchants = new HashMap<String, String>();
+		HashMap<String, String> enchants = new HashMap<>();
 		enchants.put("ARROW_DAMAGE", "Power");
 		enchants.put("ARROW_FIRE", "Flame");
 		enchants.put("ARROW_INFINITE", "Infinity");
