@@ -39,7 +39,7 @@ public class FlareControl implements Listener {
 							if(config.getBoolean("Settings.Minimum-Players-Toggle")) {
 								if(config.getBoolean("Settings.Minimum-Flare-Toggle")) {
 									if(online < config.getInt("Settings.Minimum-Players")) {
-										HashMap<String, String> placeholder = new HashMap<String, String>();
+										HashMap<String, String> placeholder = new HashMap<>();
 										placeholder.put("%amount%", online + "");
 										Messages.NOT_ENOUGH_PLAYERS.sendMessage(player, placeholder);
 										return;
