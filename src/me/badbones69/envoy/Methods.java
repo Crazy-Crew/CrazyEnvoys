@@ -32,6 +32,8 @@ import me.badbones69.envoy.controllers.FireworkDamageAPI;
 import me.badbones69.envoy.multisupport.NMS_v1_10_R1;
 import me.badbones69.envoy.multisupport.NMS_v1_11_R1;
 import me.badbones69.envoy.multisupport.NMS_v1_12_R1;
+import me.badbones69.envoy.multisupport.NMS_v1_13_R1;
+import me.badbones69.envoy.multisupport.NMS_v1_13_R2;
 import me.badbones69.envoy.multisupport.NMS_v1_9_R1;
 import me.badbones69.envoy.multisupport.NMS_v1_9_R2;
 import me.badbones69.envoy.multisupport.Version;
@@ -112,6 +114,12 @@ public class Methods {
 		ItemStack item = new ItemStack(material, amount, (short) type);
 		if(material == Material.MONSTER_EGG) {
 			switch(Version.getVersion()) {
+				case v1_13_R2:
+					item = NMS_v1_13_R2.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				case v1_13_R1:
+					item = NMS_v1_13_R1.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
 				case v1_12_R1:
 					item = NMS_v1_12_R1.getSpawnEgg(EntityType.fromId(type), amount);
 					break;
@@ -154,6 +162,12 @@ public class Methods {
 		ItemStack item = new ItemStack(material, amount, (short) type);
 		if(material == Material.MONSTER_EGG) {
 			switch(Version.getVersion()) {
+				case v1_13_R2:
+					item = NMS_v1_13_R2.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
+				case v1_13_R1:
+					item = NMS_v1_13_R1.getSpawnEgg(EntityType.fromId(type), amount);
+					break;
 				case v1_12_R1:
 					item = NMS_v1_12_R1.getSpawnEgg(EntityType.fromId(type), amount);
 					break;
@@ -204,6 +218,10 @@ public class Methods {
 
 	public static ItemStack addUnbreaking(ItemStack item) {
 		switch(Version.getVersion()) {
+			case v1_13_R2:
+				return NMS_v1_13_R2.addUnbreaking(item);
+			case v1_13_R1:
+				return NMS_v1_13_R1.addUnbreaking(item);
 			case v1_12_R1:
 				return NMS_v1_12_R1.addUnbreaking(item);
 			case v1_11_R1:
