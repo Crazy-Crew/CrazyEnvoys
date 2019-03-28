@@ -16,12 +16,15 @@ public class EnvoyStartEvent extends Event implements Cancellable {
 	
 	public EnvoyStartEvent(EnvoyStartReason reason) {
 		this.reason = reason;
+		this.cancelled = false;
 	}
 	
 	public EnvoyStartEvent(EnvoyStartReason reason, Player player) {
 		this.reason = reason;
 		this.player = player;
+		this.cancelled = false;
 	}
+	
 	/**
 	 * Get the reason the envoy event started.
 	 * @return The EnvoyStartReason the event started.

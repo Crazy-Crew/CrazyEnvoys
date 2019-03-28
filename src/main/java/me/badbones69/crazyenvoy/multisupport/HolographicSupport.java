@@ -23,7 +23,6 @@ public class HolographicSupport {
 				return envoy.getNextEnvoyTime();
 			}
 		});
-		
 		HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{envoy_time_left}", 1, () -> {
 			if(envoy.isEnvoyActive()) {
 				return envoy.getEnvoyRunTimeLeft();
@@ -31,9 +30,7 @@ public class HolographicSupport {
 				return Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
 			}
 		});
-		
 		HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{envoy_crates_left}", .5, () -> envoy.getActiveEnvoys().size() + "");
-		
 	}
 	
 	public static void unregisterPlaceHolders() {
@@ -45,18 +42,18 @@ public class HolographicSupport {
 	
 	public static void createHologram(Location loc, Tier tier) {
 		double hight = tier.getHoloHight();
-		Hologram hg = HologramsAPI.createHologram(envoy.getPlugin(), loc.add(.5, hight, .5));
+		Hologram hologram = HologramsAPI.createHologram(envoy.getPlugin(), loc.add(.5, hight, .5));
 		for(String line : tier.getHoloMessage()) {
-			hg.appendTextLine(Methods.color(line));
+			hologram.appendTextLine(Methods.color(line));
 		}
-		holos.put(loc, hg);
+		holos.put(loc, hologram);
 	}
 	
 	public static void removeHologram(Location loc) {
 		if(holos.containsKey(loc)) {
-			Hologram hg = holos.get(loc);
+			Hologram hologram = holos.get(loc);
 			holos.remove(loc);
-			hg.delete();
+			hologram.delete();
 		}
 	}
 	

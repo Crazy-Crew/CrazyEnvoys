@@ -153,10 +153,11 @@ public class EnvoyControl implements Listener {
 						}else if(Support.CMI.isPluginLoaded()) {
 							if(tier.getHoloToggle()) {
 								CMISupport.createHologram(loc.getBlock().getLocation(), tier);
-						}
+							}
 						}
 						envoy.removeFallingBlock(e.getEntity());
 						envoy.addActiveEnvoy(loc.getBlock().getLocation(), tier);
+						envoy.addSpawnedLocation(loc.getBlock().getLocation());
 						if(tier.getSignalFlareToggle()) {
 							envoy.startSignalFlare(loc.getBlock().getLocation(), tier);
 						}
@@ -186,10 +187,11 @@ public class EnvoyControl implements Listener {
 						}else if(Support.CMI.isPluginLoaded()) {
 							if(tier.getHoloToggle()) {
 								CMISupport.createHologram(loc.getBlock().getLocation(), tier);
-						}
+							}
 						}
 						envoy.removeFallingBlock(en);
 						envoy.addActiveEnvoy(loc.getBlock().getLocation(), tier);
+						envoy.addSpawnedLocation(loc.getBlock().getLocation());
 						if(tier.getSignalFlareToggle()) {
 							envoy.startSignalFlare(loc.getBlock().getLocation(), tier);
 						}

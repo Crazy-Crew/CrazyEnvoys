@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,14 +75,14 @@ public class Methods {
 	}
 	
 	public static Entity fireWork(Location loc, List<Color> colors) {
-		Firework fw = loc.getWorld().spawn(loc, Firework.class);
-		FireworkMeta fm = fw.getFireworkMeta();
-		fm.addEffects(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(colors).trail(false).flicker(false).build());
-		fm.setPower(0);
-		fw.setFireworkMeta(fm);
-		FireworkDamageAPI.addFirework(fw);
-		detonate(fw);
-		return fw;
+		Firework firework = loc.getWorld().spawn(loc, Firework.class);
+		FireworkMeta fireworkMeta = firework.getFireworkMeta();
+		fireworkMeta.addEffects(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(colors).trail(false).flicker(false).build());
+		fireworkMeta.setPower(0);
+		firework.setFireworkMeta(fireworkMeta);
+		FireworkDamageAPI.addFirework(firework);
+		detonate(firework);
+		return firework;
 	}
 	
 	private static void detonate(final Firework f) {
@@ -138,7 +139,7 @@ public class Methods {
 	}
 	
 	public static boolean isSuccessful(int min, int max) {
-		if(max == min || max <= min || max <= 0) {
+		if(max <= min || max <= 0) {
 			return true;
 		}
 		Random number = new Random();
@@ -151,7 +152,7 @@ public class Methods {
 			HttpURLConnection c = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php").openConnection();
 			c.setDoOutput(true);
 			c.setRequestMethod("POST");
-			c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes("UTF-8"));
+			c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes(StandardCharsets.UTF_8));
 			String oldVersion = envoy.getPlugin().getDescription().getVersion();
 			String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replaceAll("[a-zA-Z ]", "");
 			if(!newVersion.equals(oldVersion)) {
@@ -166,7 +167,7 @@ public class Methods {
 			HttpURLConnection c = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php").openConnection();
 			c.setDoOutput(true);
 			c.setRequestMethod("POST");
-			c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes("UTF-8"));
+			c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes(StandardCharsets.UTF_8));
 			String oldVersion = envoy.getPlugin().getDescription().getVersion();
 			String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replaceAll("[a-zA-Z ]", "");
 			if(!newVersion.equals(oldVersion)) {
@@ -215,7 +216,7 @@ public class Methods {
 	
 	@SuppressWarnings("deprecation")
 	public static List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
-		FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), 0, (byte) 0);
+		FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), Material.AIR, (byte) 0);
 		List<Entity> out = ent.getNearbyEntities(x, y, z);
 		ent.remove();
 		return out;

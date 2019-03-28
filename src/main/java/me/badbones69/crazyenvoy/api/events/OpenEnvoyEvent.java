@@ -24,6 +24,7 @@ public class OpenEnvoyEvent extends Event implements Cancellable {
 		this.location = location;
 		this.tier = tier;
 		this.prize = prize;
+		this.cancelled = false;
 	}
 	
 	/**

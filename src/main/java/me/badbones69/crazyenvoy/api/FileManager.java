@@ -143,9 +143,7 @@ public class FileManager {
 	 * @param homeFolder The folder with custom files in it.
 	 */
 	public FileManager unregisterCustomFilesFolder(String homeFolder) {
-		if(homeFolders.contains(homeFolder)) {
-			homeFolders.remove(homeFolder);
-		}
+		homeFolders.remove(homeFolder);
 		return this;
 	}
 	
@@ -164,9 +162,7 @@ public class FileManager {
 	 * @param fileName The file that you want to remove from auto-generating.
 	 */
 	public FileManager unregisterDefaultGenerateFiles(String fileName) {
-		if(autoGenerateFiles.containsKey(fileName)) {
-			autoGenerateFiles.remove(fileName);
-		}
+		autoGenerateFiles.remove(fileName);
 		return this;
 	}
 	
@@ -196,7 +192,7 @@ public class FileManager {
 	/**
 	 * Get a list of all the custom files.
 	 */
-	public List<CustomFile> getCustomFiles(){
+	public List<CustomFile> getCustomFiles() {
 		return customFiles;
 	}
 	
@@ -294,7 +290,7 @@ public class FileManager {
 	public enum Files {
 		
 		//ENUM_NAME("FileName.yml", "FilePath.yml"),
-		CONFIG("config.yml", "config.yml"),
+		CONFIG("Config.yml", "Config.yml"),
 		MESSAGES("Messages.yml", "Messages.yml"),
 		DATA("Data.yml", "Data.yml");
 		

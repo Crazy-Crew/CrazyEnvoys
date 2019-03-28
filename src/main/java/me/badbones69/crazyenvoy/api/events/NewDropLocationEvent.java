@@ -18,6 +18,7 @@ public class NewDropLocationEvent extends Event implements Cancellable {
 	public NewDropLocationEvent(Player player, Location location) {
 		this.player = player;
 		this.location = location;
+		this.cancelled = false;
 	}
 	
 	public Location getLocation() {

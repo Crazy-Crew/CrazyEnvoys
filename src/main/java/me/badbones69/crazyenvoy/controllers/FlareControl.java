@@ -49,7 +49,7 @@ public class FlareControl implements Listener {
 									}
 								}
 							}
-							Boolean toggle = false;
+							boolean toggle = false;
 							if(Support.WORLD_EDIT.isPluginLoaded() && Support.WORLD_GUARD.isPluginLoaded()) {
 								if(config.getBoolean("Settings.Flares.World-Guard.Toggle")) {
 									for(String r : config.getStringList("Settings.Flares.World-Guard.Regions")) {

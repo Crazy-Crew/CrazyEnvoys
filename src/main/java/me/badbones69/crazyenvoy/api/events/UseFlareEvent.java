@@ -15,6 +15,7 @@ public class UseFlareEvent extends Event implements Cancellable {
 	
 	public UseFlareEvent(Player player) {
 		this.player = player;
+		this.cancelled = false;
 	}
 	
 	/**

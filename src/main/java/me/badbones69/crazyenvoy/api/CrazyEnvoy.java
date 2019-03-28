@@ -17,6 +17,7 @@ import me.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
 import me.badbones69.crazyenvoy.multisupport.CMISupport;
 import me.badbones69.crazyenvoy.multisupport.HolographicSupport;
 import me.badbones69.crazyenvoy.multisupport.Support;
+import me.badbones69.crazyenvoy.multisupport.Version;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -39,12 +40,15 @@ public class CrazyEnvoy {
 	private BukkitTask runTimeTask;
 	private BukkitTask coolDownTask;
 	private Calendar nextEnvoy;
+	private Calendar nextClean;
 	private Calendar envoyTimeLeft;
 	private Boolean envoyActive = false;
 	private Boolean autoTimer = true;
+	private ArrayList<Material> blacklistedBlocks = new ArrayList<>();
 	private ArrayList<UUID> ignoreMessages = new ArrayList<>();
 	private ArrayList<Calendar> warnings = new ArrayList<>();
 	private ArrayList<Location> locations = new ArrayList<>();
+	private ArrayList<Location> spawnedLocations = new ArrayList<>();
 	private ArrayList<Entity> fallingBlocks = new ArrayList<>();
 	private Location center;
 	private HashMap<Location, Tier> activeEnvoys = new HashMap<>();
@@ -68,6 +72,7 @@ public class CrazyEnvoy {
 			envoyActive = false;
 		}
 		locations.clear();
+		blacklistedBlocks.clear();
 		plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 		FileConfiguration data = Files.DATA.getFile();
 		FileConfiguration config = Files.CONFIG.getFile();
@@ -157,8 +162,8 @@ public class CrazyEnvoy {
 					String name = "";
 					int amount = 1;
 					String item = "Stone";
-					Boolean glowing = false;
-					Boolean unbreaking = false;
+					boolean glowing = false;
+					boolean unbreaking = false;
 					for(String i : line.split(", ")) {
 						if(i.startsWith("Item:")) {
 							i = i.replaceAll("Item:", "");
@@ -197,6 +202,78 @@ public class CrazyEnvoy {
 				tier.addPrize(new Prize(prizeID).setChance(chance).setItems(items).setCommands(commands).setMessages(messages));
 			}
 			tiers.add(tier);
+			//Clean up any old spawned crate locations.
+			if(data.contains("Locations.Spawned")) {
+				spawnedLocations.addAll(getLocationsFromStringList(data.getStringList("Locations.Spawned")));
+			}
+			nextClean = Calendar.getInstance();
+			if(data.contains("Next-Clean")) {
+				nextClean.setTimeInMillis(data.getLong("Next-Clean"));
+			}else {
+				nextClean.add(Calendar.DATE, 1);
+				data.set("Next-Clean", nextClean.getTimeInMillis());
+				Files.DATA.saveFile();
+			}
+			cleanLocations();
+			//Loading the blacklisted blocks.
+			if(Version.getCurrentVersion().isNewer(Version.v1_12_R1)) {
+				blacklistedBlocks.add(Material.WATER);
+				blacklistedBlocks.add(Material.LILY_PAD);
+				blacklistedBlocks.add(Material.LAVA);
+				blacklistedBlocks.add(Material.CHORUS_PLANT);
+				blacklistedBlocks.add(Material.KELP_PLANT);
+				blacklistedBlocks.add(Material.TALL_GRASS);
+				blacklistedBlocks.add(Material.CHORUS_FLOWER);
+				blacklistedBlocks.add(Material.SUNFLOWER);
+				blacklistedBlocks.add(Material.IRON_BARS);
+				blacklistedBlocks.add(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
+				blacklistedBlocks.add(Material.IRON_TRAPDOOR);
+				blacklistedBlocks.add(Material.OAK_TRAPDOOR);
+				blacklistedBlocks.add(Material.OAK_FENCE);
+				blacklistedBlocks.add(Material.OAK_FENCE_GATE);
+				blacklistedBlocks.add(Material.ACACIA_FENCE);
+				blacklistedBlocks.add(Material.BIRCH_FENCE);
+				blacklistedBlocks.add(Material.DARK_OAK_FENCE);
+				blacklistedBlocks.add(Material.JUNGLE_FENCE);
+				blacklistedBlocks.add(Material.NETHER_BRICK_FENCE);
+				blacklistedBlocks.add(Material.SPRUCE_FENCE);
+				blacklistedBlocks.add(Material.ACACIA_FENCE_GATE);
+				blacklistedBlocks.add(Material.BIRCH_FENCE_GATE);
+				blacklistedBlocks.add(Material.DARK_OAK_FENCE_GATE);
+				blacklistedBlocks.add(Material.JUNGLE_FENCE_GATE);
+				blacklistedBlocks.add(Material.SPRUCE_FENCE_GATE);
+				blacklistedBlocks.add(Material.GLASS_PANE);
+				blacklistedBlocks.add(Material.STONE_SLAB);
+			}else {
+				blacklistedBlocks.add(Material.WATER);
+				blacklistedBlocks.add(Material.matchMaterial("STATIONARY_WATER"));
+				blacklistedBlocks.add(Material.matchMaterial("WATER_LILY"));
+				blacklistedBlocks.add(Material.LAVA);
+				blacklistedBlocks.add(Material.matchMaterial("STATIONARY_LAVA"));
+				blacklistedBlocks.add(Material.matchMaterial("CROPS"));
+				blacklistedBlocks.add(Material.matchMaterial("LONG_GRASS"));
+				blacklistedBlocks.add(Material.CHORUS_FLOWER);
+				blacklistedBlocks.add(Material.matchMaterial("YELLOW_FLOWER"));
+				blacklistedBlocks.add(Material.matchMaterial("IRON_FENCE"));
+				blacklistedBlocks.add(Material.matchMaterial("IRON_PLATE"));
+				blacklistedBlocks.add(Material.IRON_TRAPDOOR);
+				blacklistedBlocks.add(Material.matchMaterial("TRAP_DOOR"));
+				blacklistedBlocks.add(Material.matchMaterial("FENCE"));
+				blacklistedBlocks.add(Material.matchMaterial("FENCE_GATE"));
+				blacklistedBlocks.add(Material.ACACIA_FENCE);
+				blacklistedBlocks.add(Material.BIRCH_FENCE);
+				blacklistedBlocks.add(Material.DARK_OAK_FENCE);
+				blacklistedBlocks.add(Material.JUNGLE_FENCE);
+				blacklistedBlocks.add(Material.matchMaterial("NETHER_FENCE"));
+				blacklistedBlocks.add(Material.SPRUCE_FENCE);
+				blacklistedBlocks.add(Material.ACACIA_FENCE_GATE);
+				blacklistedBlocks.add(Material.BIRCH_FENCE_GATE);
+				blacklistedBlocks.add(Material.DARK_OAK_FENCE_GATE);
+				blacklistedBlocks.add(Material.JUNGLE_FENCE_GATE);
+				blacklistedBlocks.add(Material.SPRUCE_FENCE_GATE);
+				blacklistedBlocks.add(Material.matchMaterial("STAINED_GLASS_PANE"));
+				blacklistedBlocks.add(Material.matchMaterial("STONE_SLAB2"));
+			}
 		}
 	}
 	
@@ -207,9 +284,9 @@ public class CrazyEnvoy {
 		ArrayList<String> locs = new ArrayList<>();
 		for(Location loc : locations) {
 			try {
-				locs.add("World:" + loc.getWorld().getName() + ", X:" + loc.getBlockX() + ", Y:" + loc.getBlockY() + ", Z:" + loc.getBlockZ());
+				locs.add(getStringFromLocation(loc));
 			}catch(Exception e) {
-				System.out.print("[CrazyEnvoy] Error when saving the crate location.");
+				System.out.print("[CrazyEnvoy] Error when saving a crate drop location.");
 			}
 		}
 		deSpawnCrates();
@@ -301,6 +378,7 @@ public class CrazyEnvoy {
 	 */
 	public void deSpawnCrates() {
 		envoyActive = false;
+		cleanLocations();
 		for(Location loc : getActiveEnvoys()) {
 			loc.getBlock().setType(Material.AIR);
 			stopSignalFlare(loc);
@@ -611,10 +689,9 @@ public class CrazyEnvoy {
 				}
 				Location check = loc.clone();
 				check.setY(255);
-				if(min.contains(check)) {
-					continue;
-				}
-				if(dropLocations.contains(loc.clone().add(0, 1, 0))) {
+				if(min.contains(check) ||
+				dropLocations.contains(loc.clone().add(0, 1, 0)) ||
+				blacklistedBlocks.contains(loc.getBlock().getType())) {
 					continue;
 				}
 				dropLocations.add(loc.add(0, 1, 0));
@@ -664,6 +741,7 @@ public class CrazyEnvoy {
 					CMISupport.createHologram(loc.clone(), tier);
 				}
 				addActiveEnvoy(loc.clone(), tier);
+				addSpawnedLocation(loc.clone());
 				if(tier.getSignalFlareToggle()) {
 					startSignalFlare(loc.clone(), tier);
 				}
@@ -793,6 +871,52 @@ public class CrazyEnvoy {
 		return plugin;
 	}
 	
+	public void cleanLocations() {
+		ArrayList<Material> crateTypes = new ArrayList<>();
+		for(Tier tier : getTiers()) {
+			crateTypes.add(tier.getPlacedBlockMaterial());
+		}
+		List<Location> notFound = new ArrayList<>();
+		for(Location spawnedLocation : spawnedLocations) {
+			if(crateTypes.contains(spawnedLocation.getBlock().getType())) {
+				spawnedLocation.getBlock().setType(Material.AIR);
+				//				System.out.println("[CrazyEnvoy]: Removed the old crate at location " + getStringFromLocation(spawnedLocation));
+			}else {
+				notFound.add(spawnedLocation);
+			}
+			stopSignalFlare(spawnedLocation);
+			if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
+				HolographicSupport.removeAllHolograms();
+			}else if(Support.CMI.isPluginLoaded()) {
+				CMISupport.removeAllHolograms();
+			}
+			
+		}
+		spawnedLocations.clear();
+		if(Calendar.getInstance().after(nextClean)) {
+			nextClean.add(Calendar.DATE, 1);
+			Files.DATA.getFile().set("Locations.Spawned", spawnedLocations);
+			Files.DATA.getFile().set("Next-Clean", nextClean.getTimeInMillis());
+			Files.DATA.saveFile();
+			System.out.println();
+		}else {
+			Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(notFound));
+			Files.DATA.saveFile();
+		}
+	}
+	
+	public void addSpawnedLocation(Location location) {
+		if(!getStringsFromLocationList(spawnedLocations).contains(getStringFromLocation(location))) {
+			spawnedLocations.add(location);
+			Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(spawnedLocations));
+			Files.DATA.saveFile();
+		}
+	}
+	
+	public ArrayList<Location> getSpawnedLocations() {
+		return spawnedLocations;
+	}
+	
 	private void setEnvoyActive(Boolean toggle) {
 		envoyActive = toggle;
 	}
@@ -858,6 +982,18 @@ public class CrazyEnvoy {
 		return cal;
 	}
 	
+	private String getStringFromLocation(Location location) {
+		return "World:" + location.getWorld().getName() + ", X:" + location.getBlockX() + ", Y:" + location.getBlockY() + ", Z:" + location.getBlockZ();
+	}
+	
+	private List<String> getStringsFromLocationList(List<Location> stringList) {
+		ArrayList<String> strings = new ArrayList<>();
+		for(Location location : stringList) {
+			strings.add(getStringFromLocation(location));
+		}
+		return strings;
+	}
+	
 	private Location getLocationFromString(String locationString) {
 		World w = Bukkit.getWorlds().get(0);
 		int x = 0;
@@ -880,14 +1016,22 @@ public class CrazyEnvoy {
 		return new Location(w, x, y, z);
 	}
 	
+	private List<Location> getLocationsFromStringList(List<String> locationsList) {
+		ArrayList<Location> locations = new ArrayList<>();
+		for(String location : locationsList) {
+			locations.add(getLocationFromString(location));
+		}
+		return locations;
+	}
+	
 	private void playSignal(Location loc, Tier tier) {
 		List<Color> colors = tier.getFireworkColors();
-		Firework fw = loc.getWorld().spawn(loc, Firework.class);
-		FireworkMeta fm = fw.getFireworkMeta();
-		fm.addEffects(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(colors).trail(true).flicker(false).build());
-		fm.setPower(1);
-		fw.setFireworkMeta(fm);
-		FireworkDamageAPI.addFirework(fw);
+		Firework firework = loc.getWorld().spawn(loc, Firework.class);
+		FireworkMeta fireworkMeta = firework.getFireworkMeta();
+		fireworkMeta.addEffects(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(colors).trail(true).flicker(false).build());
+		fireworkMeta.setPower(1);
+		firework.setFireworkMeta(fireworkMeta);
+		FireworkDamageAPI.addFirework(firework);
 	}
 	
 	private ArrayList<Location> getBlocks(Location loc, int radius) {
@@ -910,7 +1054,7 @@ public class CrazyEnvoy {
 	}
 	
 	private Integer getTimeSeconds(String time) {
-		Integer seconds = 0;
+		int seconds = 0;
 		for(String i : time.split(" ")) {
 			if(i.contains("D") || i.contains("d")) {
 				seconds += Integer.parseInt(i.replaceAll("D", "").replaceAll("d", "")) * 86400;

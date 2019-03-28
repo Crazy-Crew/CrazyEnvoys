@@ -1,6 +1,5 @@
 package me.badbones69.crazyenvoy;
 
-import com.massivestats.MassiveStats;
 import me.badbones69.crazyenvoy.api.CrazyEnvoy;
 import me.badbones69.crazyenvoy.api.FileManager;
 import me.badbones69.crazyenvoy.api.FileManager.CustomFile;
@@ -68,13 +67,6 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		if(Support.MVDW_PLACEHOLDER_API.isPluginLoaded()) {
 			MVdWPlaceholderAPISupport.registerPlaceholders(this);
-		}
-		try {
-			MassiveStats massiveStats = new MassiveStats(this);
-			if(Files.CONFIG.getFile().contains("Settings.Toggle-Metrics")) {
-				massiveStats.setListenerDisabled(!Files.CONFIG.getFile().getBoolean("Settings.Toggle-Metrics"));
-			}
-		}catch(Exception e) {
 		}
 	}
 	
