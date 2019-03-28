@@ -14,6 +14,7 @@ import me.badbones69.crazyenvoy.api.objects.Tier;
 import me.badbones69.crazyenvoy.controllers.EditControl;
 import me.badbones69.crazyenvoy.controllers.EnvoyControl;
 import me.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
+import me.badbones69.crazyenvoy.multisupport.CMISupport;
 import me.badbones69.crazyenvoy.multisupport.HolographicSupport;
 import me.badbones69.crazyenvoy.multisupport.Support;
 import org.bukkit.*;
@@ -309,6 +310,9 @@ public class CrazyEnvoy {
 		}
 		if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
 			HolographicSupport.removeAllHolograms();
+		}
+		if(Support.CMI.isPluginLoaded()) {
+			CMISupport.removeAllHolograms();
 		}
 		fallingBlocks.clear();
 		activeEnvoys.clear();
@@ -656,6 +660,8 @@ public class CrazyEnvoy {
 				loc.getBlock().setType(tier.getPlacedBlockMaterial());
 				if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
 					HolographicSupport.createHologram(loc.clone(), tier);
+				}else if(Support.CMI.isPluginLoaded()) {
+					CMISupport.createHologram(loc.clone(), tier);
 				}
 				addActiveEnvoy(loc.clone(), tier);
 				if(tier.getSignalFlareToggle()) {

@@ -9,6 +9,7 @@ import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
 import me.badbones69.crazyenvoy.api.objects.ItemBuilder;
 import me.badbones69.crazyenvoy.api.objects.Prize;
 import me.badbones69.crazyenvoy.api.objects.Tier;
+import me.badbones69.crazyenvoy.multisupport.CMISupport;
 import me.badbones69.crazyenvoy.multisupport.HolographicSupport;
 import me.badbones69.crazyenvoy.multisupport.Support;
 import me.badbones69.crazyenvoy.multisupport.Version;
@@ -71,6 +72,9 @@ public class EnvoyControl implements Listener {
 					if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
 						double hight = tier.getHoloHight();
 						HolographicSupport.removeHologram(loc.clone().add(.5, hight, .5));
+					}else if(Support.CMI.isPluginLoaded()) {
+						double hight = tier.getHoloHight();
+						CMISupport.removeHologram(loc.clone().add(.5, hight, .5));
 					}
 					envoy.stopSignalFlare(e.getClickedBlock().getLocation());
 					envoy.removeActiveEnvoy(loc);
@@ -146,6 +150,10 @@ public class EnvoyControl implements Listener {
 							if(tier.getHoloToggle()) {
 								HolographicSupport.createHologram(loc.getBlock().getLocation(), tier);
 							}
+						}else if(Support.CMI.isPluginLoaded()) {
+							if(tier.getHoloToggle()) {
+								CMISupport.createHologram(loc.getBlock().getLocation(), tier);
+						}
 						}
 						envoy.removeFallingBlock(e.getEntity());
 						envoy.addActiveEnvoy(loc.getBlock().getLocation(), tier);
@@ -175,6 +183,10 @@ public class EnvoyControl implements Listener {
 							if(tier.getHoloToggle()) {
 								HolographicSupport.createHologram(loc.getBlock().getLocation(), tier);
 							}
+						}else if(Support.CMI.isPluginLoaded()) {
+							if(tier.getHoloToggle()) {
+								CMISupport.createHologram(loc.getBlock().getLocation(), tier);
+						}
 						}
 						envoy.removeFallingBlock(en);
 						envoy.addActiveEnvoy(loc.getBlock().getLocation(), tier);
