@@ -16,18 +16,12 @@ public class PlaceholderAPISupport extends EZPlaceholderHook {
 	@Override
 	public String onPlaceholderRequest(Player player, String placeHolder) {
 		if(placeHolder.equalsIgnoreCase("cooldown")) {
-			if(Envoy.isEnvoyActive()) {
-				return Main.settings.getMessages().getString("Messages.Hologram-Placeholders.On-Going");
-			}else {
-				return Envoy.getNextEnvoyTime();
-			}
+			return Envoy.isEnvoyActive() ? Main.settings.getMessages().getString("Messages.Hologram-Placeholders.On-Going")
+				: Envoy.getNextEnvoyTime();
 		}
 		if(placeHolder.equalsIgnoreCase("time_left")) {
-			if(Envoy.isEnvoyActive()) {
-				return Envoy.getEnvoyRunTimeLeft();
-			}else {
-				return Main.settings.getMessages().getString("Messages.Hologram-Placeholders.Not-Running");
-			}
+			return Envoy.isEnvoyActive() ? Envoy.getEnvoyRunTimeLeft()
+				: Main.settings.getMessages().getString("Messages.Hologram-Placeholders.Not-Running");
 		}
 		if(placeHolder.equalsIgnoreCase("crates_left")) {
 			return Envoy.getActiveEnvoys().size() + "";
