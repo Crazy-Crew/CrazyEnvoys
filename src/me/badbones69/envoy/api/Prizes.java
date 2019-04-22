@@ -132,7 +132,7 @@ public class Prizes {
 		if(getTiers().size() == 1) {
 			return getTiers().get(0);
 		}
-		ArrayList<String> T = new ArrayList<String>();
+		ArrayList<String> T = new ArrayList<>();
 		for(; T.size() == 0;) {
 			for(String tier : tiers) {
 				if(Methods.isSuccessful(spawnChance.get(tier), 100)) {
@@ -190,7 +190,7 @@ public class Prizes {
 				}
 			}
 		}
-		ArrayList<String> p = new ArrayList<String>();
+		ArrayList<String> p = new ArrayList<>();
 		int max = getPrizeAmount(tier);
 		for(int i = 0; p.size() < max && i < 500; i++) {
 			String prize = P.get(new Random().nextInt(P.size()));
