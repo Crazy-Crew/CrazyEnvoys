@@ -5,12 +5,12 @@ import me.badbones69.crazyenvoy.multisupport.nbttagapi.utils.MethodNames;
 import java.lang.reflect.Method;
 
 public class NBTList {
-
+	
 	private String listName;
 	private NBTCompound parent;
 	private NBTType type;
 	private Object listObject;
-
+	
 	protected NBTList(NBTCompound owner, String name, NBTType type, Object list) {
 		parent = owner;
 		listName = name;
@@ -20,11 +20,11 @@ public class NBTList {
 			System.err.println("List types != String/Compound are currently not implemented!");
 		}
 	}
-
+	
 	protected void save() {
 		parent.set(listName, listObject);
 	}
-
+	
 	public NBTListCompound addCompound() {
 		if(type != NBTType.NBTTagCompound) {
 			new Throwable("Using Compound method on a non Compound list!").printStackTrace();
@@ -40,7 +40,7 @@ public class NBTList {
 		}
 		return null;
 	}
-
+	
 	public NBTListCompound getCompound(int id) {
 		if(type != NBTType.NBTTagCompound) {
 			new Throwable("Using Compound method on a non Compound list!").printStackTrace();
@@ -55,7 +55,7 @@ public class NBTList {
 		}
 		return null;
 	}
-
+	
 	public String getString(int i) {
 		if(type != NBTType.NBTTagString) {
 			new Throwable("Using String method on a non String list!").printStackTrace();
@@ -69,7 +69,7 @@ public class NBTList {
 		}
 		return null;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public void addString(String s) {
 		if(type != NBTType.NBTTagString) {
@@ -84,7 +84,7 @@ public class NBTList {
 			ex.printStackTrace();
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public void setString(int i, String s) {
 		if(type != NBTType.NBTTagString) {
@@ -99,7 +99,7 @@ public class NBTList {
 			ex.printStackTrace();
 		}
 	}
-
+	
 	public void remove(int i) {
 		try {
 			Method method = listObject.getClass().getMethod(MethodNames.getRemoveMethodName(), int.class);
@@ -109,7 +109,7 @@ public class NBTList {
 			ex.printStackTrace();
 		}
 	}
-
+	
 	public int size() {
 		try {
 			Method method = listObject.getClass().getMethod("size");
@@ -119,9 +119,9 @@ public class NBTList {
 		}
 		return -1;
 	}
-
+	
 	public NBTType getType() {
 		return type;
 	}
-
+	
 }

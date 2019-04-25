@@ -13,22 +13,22 @@ public enum NBTType {
 	NBTTagString(8),
 	NBTTagList(9),
 	NBTTagCompound(10);
-
+	
 	NBTType(int i) {
 		id = i;
 	}
-
+	
 	private final int id;
-
+	
 	public int getId() {
 		return id;
 	}
-
+	
 	public static NBTType valueOf(int id) {
 		for(NBTType t : values())
 			if(t.getId() == id)
 				return t;
 		return NBTType.NBTTagEnd;
 	}
-
+	
 }

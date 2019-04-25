@@ -716,18 +716,21 @@ public class CrazyEnvoy {
 			}
 			if(spawnFallingBlock) {
 				String type = Files.CONFIG.getFile().getString("Settings.Falling-Block");
-				int ty = 0;
+				int durrability = 0;
 				if(type.contains(":")) {
 					String[] b = type.split(":");
 					type = b[0];
-					ty = Integer.parseInt(b[1]);
+					durrability = Integer.parseInt(b[1]);
 				}
-				Material m = Material.matchMaterial(type);
+				Material material = Material.matchMaterial(type);
+				if(material == null) {
+					material = Material.BEACON;
+				}
 				int height = Files.CONFIG.getFile().getInt("Settings.Fall-Height");
 				if(!loc.getChunk().isLoaded()) {
 					loc.getChunk().load();
 				}
-				FallingBlock chest = loc.getWorld().spawnFallingBlock(loc.clone().add(.5, height, .5), m, (byte) ty);
+				FallingBlock chest = loc.getWorld().spawnFallingBlock(loc.clone().add(.5, height, .5), material, (byte) durrability);
 				fallingBlocks.add(chest);
 			}else {
 				Tier tier = pickRandomTier();
