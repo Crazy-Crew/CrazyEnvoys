@@ -110,7 +110,7 @@ public class ItemBuilder {
 		Material material = Material.matchMaterial(string); //Needs to be changed to getMaterial() for 1.13.
 		if(material != null) {
 			this.material = material;
-			if(Version.getCurrentVersion().isNewer(Version.v1_8_R3) && Version.getCurrentVersion().isOlder(Version.v1_13_R1)) {
+			if(Version.getCurrentVersion().isNewer(Version.v1_8_R3) && Version.getCurrentVersion().isOlder(Version.v1_13_R2)) {
 				if(material == Material.matchMaterial("MONSTER_EGG")) {
 					this.entityType = EntityType.fromId(metaData);
 				}else {
@@ -426,7 +426,7 @@ public class ItemBuilder {
 			nbt.setBoolean("Unbreakable", true);
 			nbt.setInteger("HideFlags", 4);
 		}
-		if(Version.getCurrentVersion().isOlder(Version.v1_13_R1)) {// 1.12.2 down
+		if(Version.getCurrentVersion().isOlder(Version.v1_13_R2)) {// 1.12.2 down
 			if(material == Material.matchMaterial("MONSTER_EGG")) {
 				nbt.addCompound("EntityTag").setString("id", "minecraft:" + entityType.name());
 			}

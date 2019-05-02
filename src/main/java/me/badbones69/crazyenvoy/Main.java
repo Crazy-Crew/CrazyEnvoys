@@ -37,11 +37,12 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@Override
 	public void onEnable() {
+		String homeFolder = Version.getCurrentVersion().isNewer(Version.v1_12_R1) ? "/Tiers1.13-Up" : "/Tiers1.12.2-Down";
 		fileManager.logInfo(true)
 		.registerCustomFilesFolder("/Tiers")
-		.registerDefaultGenerateFiles("Basic.yml", "/Tiers")
-		.registerDefaultGenerateFiles("Lucky.yml", "/Tiers")
-		.registerDefaultGenerateFiles("Titan.yml", "/Tiers")
+		.registerDefaultGenerateFiles("Basic.yml", "/Tiers", homeFolder)
+		.registerDefaultGenerateFiles("Lucky.yml", "/Tiers", homeFolder)
+		.registerDefaultGenerateFiles("Titan.yml", "/Tiers", homeFolder)
 		.setup(this);
 		envoy.load();
 		Methods.hasUpdate();

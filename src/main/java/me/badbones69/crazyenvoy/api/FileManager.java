@@ -1,5 +1,6 @@
 package me.badbones69.crazyenvoy.api;
 
+import me.badbones69.crazyenvoy.multisupport.Version;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -26,6 +27,10 @@ public class FileManager {
 	private HashMap<Files, File> files = new HashMap<>();
 	private ArrayList<String> homeFolders = new ArrayList<>();
 	private ArrayList<CustomFile> customFiles = new ArrayList<>();
+	/**
+	 * For allowing files to be grabbed from a folder with a different name then it will be put in.
+	 */
+	private HashMap<String, String> jarHomeFolders = new HashMap<>();
 	private HashMap<String, String> autoGenerateFiles = new HashMap<>();
 	private HashMap<Files, FileConfiguration> configurations = new HashMap<>();
 	
@@ -53,8 +58,17 @@ public class FileManager {
 			if(log) System.out.println(prefix + "Loading the " + file.getFileName());
 			if(!newFile.exists()) {
 				try {
+					String fileLocation = file.getFileLocation();
+					//Switch between 1.12.2- and 1.13+ config version.
+					if(file == Files.CONFIG) {
+						if(Version.getCurrentVersion().isOlder(Version.v1_13_R2)) {
+							fileLocation = "Config1.12.2-Down.yml";
+						}else {
+							fileLocation = "Config1.13-Up.yml";
+						}
+					}
 					File serverFile = new File(plugin.getDataFolder(), "/" + file.getFileLocation());
-					InputStream jarFile = getClass().getResourceAsStream("/" + file.getFileLocation());
+					InputStream jarFile = getClass().getResourceAsStream("/" + fileLocation);
 					copyFile(jarFile, serverFile);
 				}catch(Exception e) {
 					if(log) System.out.println(prefix + "Failed to load " + file.getFileName());
@@ -84,7 +98,6 @@ public class FileManager {
 							}
 						}
 					}
-					
 				}else {
 					homeFile.mkdir();
 					if(log) System.out.println(prefix + "The folder " + homeFolder + "/ was not found so it was created.");
@@ -93,7 +106,7 @@ public class FileManager {
 							homeFolder = autoGenerateFiles.get(fileName);
 							try {
 								File serverFile = new File(plugin.getDataFolder(), homeFolder + "/" + fileName);
-								InputStream jarFile = getClass().getResourceAsStream(homeFolder + "/" + fileName);
+								InputStream jarFile = getClass().getResourceAsStream((jarHomeFolders.getOrDefault(fileName, homeFolder)) + "/" + fileName);
 								copyFile(jarFile, serverFile);
 								if(fileName.toLowerCase().endsWith(".yml")) {
 									customFiles.add(new CustomFile(fileName, homeFolder, plugin));
@@ -158,11 +171,24 @@ public class FileManager {
 	}
 	
 	/**
+	 * Register a file that needs to be generated when it's home folder doesn't exist. Make sure to have a "/" in front of the home folder's name.
+	 * @param fileName The name of the file you want to auto-generate when the folder doesn't exist.
+	 * @param homeFolder The folder that has custom files in it.
+	 * @param jarHomeFolder The folder that the file is found in the jar.
+	 */
+	public FileManager registerDefaultGenerateFiles(String fileName, String homeFolder, String jarHomeFolder) {
+		autoGenerateFiles.put(fileName, homeFolder);
+		jarHomeFolders.put(fileName, jarHomeFolder);
+		return this;
+	}
+	
+	/**
 	 * Unregister a file that doesn't need to be generated when it's home folder doesn't exist. Make sure to have a "/" in front of the home folder's name.
 	 * @param fileName The file that you want to remove from auto-generating.
 	 */
 	public FileManager unregisterDefaultGenerateFiles(String fileName) {
 		autoGenerateFiles.remove(fileName);
+		jarHomeFolders.remove(fileName);
 		return this;
 	}
 	
