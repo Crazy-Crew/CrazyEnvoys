@@ -1,14 +1,14 @@
 
-*.class
+*.iml
 
-.classpath
+\.idea/
 
-.project
+target/
 
-*.prefs
+src/main/lib/
 
-Notes
+src/main/java/META-INF/
 
-Notes.txt
+src/\.DS_Store
 
-bin/
+\.DS_Store

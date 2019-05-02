@@ -1,0 +1,10 @@
+name: ${project.artifactId}
+author: BadBones69
+main: me.badbones69.crazyenvoy.Main
+version: ${project.version}
+api-version: 1.13
+description: A crazy crazyenvoy plugin.
+softdepend: [HolographicDisplays, PlaceholderAPI, MVdWPlaceholderAPI, Multiverse-Core, MultiWorld]
+commands:
+  envoy:
+    description: Shows the next time till the next crazyenvoy.
