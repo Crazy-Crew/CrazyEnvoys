@@ -1,7 +1,7 @@
 Settings:
   Spawn-Chance: 85 #The chance that this tier will spawn.
   Use-Chance: true #If true then it uses the chance option in the prizes and if false then each prize has a 1/(Amount of Prizes) chance of winning.
-  Placed-Block: '54' #The block that will be clicked when they land.
+  Placed-Block: 'CHEST' #The block that will be clicked when they land.
   Bulk-Prizes: #This allows players to win multiple prizes from one crate.
     Toggle: false #Toggle if players can win multiple prizes.
     Random: true #If true then it will pick a random bulk from 1-MaxBulk.
@@ -19,9 +19,9 @@ Settings:
     Toggle: true
     Time: '15s'
     Colors:
-    - 'Gray'
-    - 'Black'
-    - 'Orange'
+      - 'Gray'
+      - 'Black'
+      - 'Orange'
 ###################################
 #             Items: Options
 # Item:<ID:MD> - You can choose the item with its id and meta data.
@@ -44,15 +44,15 @@ Prizes: #The prizes that can be won.
     Messages:
       - '&7You have just won &616 Gold Apples&7.'
     Items:
-      - 'Item:322, Amount:16, Name:&dJuicy Golden Apple, Lore:&7I am a yummy apple,&7Make sure to savor my flavor.'
+      - 'Item:GOLDEN_APPLE, Amount:16, Name:&dJuicy Golden Apple, Lore:&7I am a yummy apple,&7Make sure to savor my flavor.'
   '3':
     Chance: 40
     Messages:
       - '&7You have just had a great Harvest.'
     Items:
-      - 'Item:364, Amount:16'
-      - 'Item:260, Amount:16'
-      - 'Item:350, Amount:16'
-      - 'Item:366, Amount:16'
-      - 'Item:391, Amount:16'
-      - 'Item:297, Amount:16'
+      - 'Item:COOKED_BEEF, Amount:16'
+      - 'Item:APPLE, Amount:16'
+      - 'Item:COOKED_FISH, Amount:16'
+      - 'Item:COOKED_SALMON, Amount:16'
+      - 'Item:CARROT, Amount:16'
+      - 'Item:BREAD, Amount:16'

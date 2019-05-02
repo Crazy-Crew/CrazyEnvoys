@@ -1,7 +1,7 @@
 Settings:
   Spawn-Chance: 10
   Use-Chance: true
-  Placed-Block: '116'
+  Placed-Block: 'ENCHANTING_TABLE'
   Bulk-Prizes:
     Toggle: false
     Random: true
@@ -19,9 +19,9 @@ Settings:
     Toggle: true
     Time: '40s'
     Colors:
-    - 'Gray'
-    - 'Black'
-    - 'Red'
+      - 'Gray'
+      - 'Black'
+      - 'Red'
 ###################################
 #             Items: Options
 # Item:<ID:MD> - You can choose the item with its id and meta data.
@@ -44,13 +44,13 @@ Prizes:
     Messages:
       - '&7Congratulations you have just won a &4Titan &7sword.'
     Items:
-      - 'Item:276, Amount:1, Name:&4Titan Sword, Sharpness:5, Unbreaking:3, Knockback:2, Fire_Aspect:2, Looting:3'
+      - 'Item:DIAMOND_SWORD, Amount:1, Name:&4Titan Sword, Sharpness:5, Unbreaking:3, Knockback:2, Fire_Aspect:2, Looting:3'
   '3':
     Chance: 10
     Messages:
       - '&7Congratulations you have just won a &4Titan &7armor set.'
     Items:
-      - 'Item:310, Amount:1, Name:&4Titan Helmet, Protection:4, Unbreaking:3'
-      - 'Item:311, Amount:1, Name:&4Titan Chestplate, Protection:4, Unbreaking:3'
-      - 'Item:312, Amount:1, Name:&4Titan Leggings, Protection:4, Unbreaking:3'
-      - 'Item:313, Amount:1, Name:&4Titan Boots, Protection:4, Unbreaking:3'
+      - 'Item:DIAMOND_HELMET, Amount:1, Name:&4Titan Helmet, Protection:4, Unbreaking:3'
+      - 'Item:DIAMOND_CHESTPLATE, Amount:1, Name:&4Titan Chestplate, Protection:4, Unbreaking:3'
+      - 'Item:DIAMOND_LEGGINGS, Amount:1, Name:&4Titan Leggings, Protection:4, Unbreaking:3'
+      - 'Item:DIAMOND_BOOTS, Amount:1, Name:&4Titan Boots, Protection:4, Unbreaking:3'
