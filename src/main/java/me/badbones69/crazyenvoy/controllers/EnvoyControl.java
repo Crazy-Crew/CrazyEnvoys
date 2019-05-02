@@ -250,7 +250,7 @@ public class EnvoyControl implements Listener {
 	
 	private ArrayList<Prize> pickRandomPrizes(Tier tier) {
 		ArrayList<Prize> prizes = new ArrayList<>();
-		int max = tier.getBulkMax();
+		int max = tier.getBulkToggle() ? tier.getBulkMax() : 1;
 		for(int i = 0; prizes.size() < max && i < 500; i++) {
 			Prize prize = tier.getPrizes().get(new Random().nextInt(tier.getPrizes().size()));
 			if(!prizes.contains(prize)) {
@@ -270,7 +270,7 @@ public class EnvoyControl implements Listener {
 			}
 		}
 		ArrayList<Prize> finlePrizes = new ArrayList<>();
-		int max = tier.getBulkMax();
+		int max = tier.getBulkToggle() ? tier.getBulkMax() : 1;
 		for(int i = 0; finlePrizes.size() < max && i < 500; i++) {
 			Prize prize = prizes.get(new Random().nextInt(prizes.size()));
 			if(!finlePrizes.contains(prize)) {
