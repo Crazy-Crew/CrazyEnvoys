@@ -60,7 +60,7 @@ public class Prize {
 	 * @param messages The new messages the player gets. This will auto color code the messages.
 	 */
 	public Prize setMessages(List<String> messages) {
-		messages.clear();
+		this.messages.clear();
 		for(String message : messages) {
 			this.messages.add(Methods.color(message));
 		}
