@@ -252,7 +252,6 @@ public class CrazyEnvoy {
 				blacklistedBlocks.add(Material.matchMaterial("STATIONARY_LAVA"));
 				blacklistedBlocks.add(Material.matchMaterial("CROPS"));
 				blacklistedBlocks.add(Material.matchMaterial("LONG_GRASS"));
-				blacklistedBlocks.add(Material.CHORUS_FLOWER);
 				blacklistedBlocks.add(Material.matchMaterial("YELLOW_FLOWER"));
 				blacklistedBlocks.add(Material.matchMaterial("IRON_FENCE"));
 				blacklistedBlocks.add(Material.matchMaterial("IRON_PLATE"));
