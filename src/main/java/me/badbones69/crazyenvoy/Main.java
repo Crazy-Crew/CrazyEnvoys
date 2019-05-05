@@ -62,7 +62,7 @@ public class Main extends JavaPlugin implements Listener {
 			HolographicSupport.registerPlaceHolders();
 		}
 		if(Support.PLACEHOLDER_API.isPluginLoaded()) {
-			new PlaceholderAPISupport(this).hook();
+			new PlaceholderAPISupport(this).register();
 		}
 		if(Support.MVDW_PLACEHOLDER_API.isPluginLoaded()) {
 			MVdWPlaceholderAPISupport.registerPlaceholders(this);
