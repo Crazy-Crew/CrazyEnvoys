@@ -147,11 +147,11 @@ public class EnvoyControl implements Listener {
 						}
 						loc.getBlock().setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
 						if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-							if(tier.getHoloToggle()) {
+							if(tier.isHoloEnabled()) {
 								HolographicSupport.createHologram(loc.getBlock().getLocation(), tier);
 							}
 						}else if(Support.CMI.isPluginLoaded()) {
-							if(tier.getHoloToggle()) {
+							if(tier.isHoloEnabled()) {
 								CMISupport.createHologram(loc.getBlock().getLocation(), tier);
 							}
 						}
@@ -181,11 +181,11 @@ public class EnvoyControl implements Listener {
 						}
 						loc.getBlock().setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
 						if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-							if(tier.getHoloToggle()) {
+							if(tier.isHoloEnabled()) {
 								HolographicSupport.createHologram(loc.getBlock().getLocation(), tier);
 							}
 						}else if(Support.CMI.isPluginLoaded()) {
-							if(tier.getHoloToggle()) {
+							if(tier.isHoloEnabled()) {
 								CMISupport.createHologram(loc.getBlock().getLocation(), tier);
 							}
 						}

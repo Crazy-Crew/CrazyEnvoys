@@ -189,7 +189,7 @@ public class Tier {
 	/**
 	 * Check to see if holograms are on for the tier crate.
 	 */
-	public Boolean getHoloToggle() {
+	public Boolean isHoloEnabled() {
 		return holoToggle;
 	}
 	
