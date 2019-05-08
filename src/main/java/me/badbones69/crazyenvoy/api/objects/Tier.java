@@ -230,7 +230,7 @@ public class Tier {
 	 * @param holoMessage The message that is displayed. This auto color codes the message.
 	 */
 	public Tier setHoloMessage(List<String> holoMessage) {
-		holoMessage.clear();
+		this.holoMessage.clear();
 		for(String message : holoMessage) {
 			this.holoMessage.add(Methods.color(message));
 		}
