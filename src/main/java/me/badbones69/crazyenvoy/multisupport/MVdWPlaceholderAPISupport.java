@@ -10,7 +10,7 @@ public class MVdWPlaceholderAPISupport {
 	private static CrazyEnvoy envoy = CrazyEnvoy.getInstance();
 	
 	public static void registerPlaceholders(Plugin plugin) {
-		PlaceholderAPI.registerPlaceholder(plugin, "envoy_cooldown", e -> {
+		PlaceholderAPI.registerPlaceholder(plugin, "crazyenvoy_cooldown", e -> {
 			if(envoy.isEnvoyActive()) {
 				return Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going");
 			}else {
@@ -18,7 +18,7 @@ public class MVdWPlaceholderAPISupport {
 			}
 		});
 		
-		PlaceholderAPI.registerPlaceholder(plugin, "envoy_time_left", e -> {
+		PlaceholderAPI.registerPlaceholder(plugin, "crazyenvoy_time_left", e -> {
 			if(envoy.isEnvoyActive()) {
 				return envoy.getEnvoyRunTimeLeft();
 			}else {
@@ -26,7 +26,7 @@ public class MVdWPlaceholderAPISupport {
 			}
 		});
 		
-		PlaceholderAPI.registerPlaceholder(plugin, "envoy_crates_left", e -> envoy.getActiveEnvoys().size() + "");
+		PlaceholderAPI.registerPlaceholder(plugin, "crazyenvoy_crates_left", e -> envoy.getActiveEnvoys().size() + "");
 	}
 	
 }
