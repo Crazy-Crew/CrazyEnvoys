@@ -3,7 +3,7 @@ package me.badbones69.crazyenvoy.multisupport;
 import me.badbones69.crazyenvoy.api.CrazyEnvoy;
 import me.badbones69.crazyenvoy.api.FileManager.Files;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 public class PlaceholderAPISupport extends PlaceholderExpansion {
@@ -13,28 +13,6 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 	
 	public PlaceholderAPISupport(Plugin plugin) {
 		this.plugin = plugin;
-	}
-	
-	@Override
-	public String onRequest(OfflinePlayer player, String identifier) {
-		if(identifier.equalsIgnoreCase("cooldown")) {
-			if(envoy.isEnvoyActive()) {
-				return Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going");
-			}else {
-				return envoy.getNextEnvoyTime();
-			}
-		}
-		if(identifier.equalsIgnoreCase("time_left")) {
-			if(envoy.isEnvoyActive()) {
-				return envoy.getEnvoyRunTimeLeft();
-			}else {
-				return Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
-			}
-		}
-		if(identifier.equalsIgnoreCase("crates_left")) {
-			return envoy.getActiveEnvoys().size() + "";
-		}
-		return "";
 	}
 	
 	@Override
@@ -55,6 +33,23 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 	@Override
 	public String getVersion() {
 		return plugin.getDescription().getVersion();
+	}
+
+	@Override
+	public String onPlaceholderRequest(Player player, String identifier) {
+
+		String lower = identifier.toLowerCase();
+
+		switch (lower) {
+			case "cooldown":
+				return envoy.isEnvoyActive() ? Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going") : envoy.getNextEnvoyTime();
+			case "time_left":
+				return envoy.isEnvoyActive() ? envoy.getEnvoyRunTimeLeft() : Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
+			case "creates_left":
+				return String.valueOf(envoy.getActiveEnvoys().size());
+			default:
+				return "";
+		}
 	}
 	
 }
