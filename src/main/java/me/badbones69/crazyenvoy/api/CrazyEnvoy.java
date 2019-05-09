@@ -734,9 +734,13 @@ public class CrazyEnvoy {
 				}
 				loc.getBlock().setType(tier.getPlacedBlockMaterial());
 				if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-					HolographicSupport.createHologram(loc.clone(), tier);
+					if(tier.isHoloEnabled()) {
+						HolographicSupport.createHologram(loc.clone(), tier);
+					}
 				}else if(Support.CMI.isPluginLoaded()) {
-					CMISupport.createHologram(loc.clone(), tier);
+					if(tier.isHoloEnabled()) {
+						CMISupport.createHologram(loc.clone(), tier);
+					}
 				}
 				addActiveEnvoy(loc.clone(), tier);
 				addSpawnedLocation(loc.clone());
