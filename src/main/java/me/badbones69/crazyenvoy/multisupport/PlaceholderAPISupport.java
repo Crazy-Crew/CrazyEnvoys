@@ -16,6 +16,21 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 	}
 	
 	@Override
+	public String onPlaceholderRequest(Player player, String identifier) {
+		String lower = identifier.toLowerCase();
+		switch(lower) {
+			case "cooldown":
+				return envoy.isEnvoyActive() ? Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going") : envoy.getNextEnvoyTime();
+			case "time_left":
+				return envoy.isEnvoyActive() ? envoy.getEnvoyRunTimeLeft() : Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
+			case "creates_left":
+				return String.valueOf(envoy.getActiveEnvoys().size());
+			default:
+				return "";
+		}
+	}
+	
+	@Override
 	public boolean persist() {
 		return true;
 	}
@@ -33,23 +48,6 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 	@Override
 	public String getVersion() {
 		return plugin.getDescription().getVersion();
-	}
-
-	@Override
-	public String onPlaceholderRequest(Player player, String identifier) {
-
-		String lower = identifier.toLowerCase();
-
-		switch (lower) {
-			case "cooldown":
-				return envoy.isEnvoyActive() ? Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going") : envoy.getNextEnvoyTime();
-			case "time_left":
-				return envoy.isEnvoyActive() ? envoy.getEnvoyRunTimeLeft() : Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
-			case "creates_left":
-				return String.valueOf(envoy.getActiveEnvoys().size());
-			default:
-				return "";
-		}
 	}
 	
 }
