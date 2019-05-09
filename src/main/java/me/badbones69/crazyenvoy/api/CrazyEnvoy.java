@@ -133,11 +133,7 @@ public class CrazyEnvoy {
 			tier.setBulkRandom(file.getBoolean("Settings.Bulk-Prizes.Random"));
 			tier.setBulkMax(file.getInt("Settings.Bulk-Prizes.Max-Bulk"));
 			tier.setHoloToggle(file.getBoolean("Settings.Hologram-Toggle"));
-			if(file.contains("Settings.Hologram-Hight")) {
-				tier.setHoloHight(file.getDouble("Settings.Hologram-Hight"));
-			}else {
-				tier.setHoloHight(file.getDouble("Settings.Hologram-Height"));
-			}
+			tier.setHoloHight(file.getDouble("Settings.Hologram-Height", 1.5));
 			tier.setHoloMessage(file.getStringList("Settings.Hologram"));
 			ItemBuilder placedBlock = new ItemBuilder().setMaterial(file.getString("Settings.Placed-Block"));
 			tier.setPlacedBlockMaterial(placedBlock.getMaterial());
