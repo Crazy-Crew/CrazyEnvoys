@@ -21,6 +21,10 @@
             <id>placeholderapi</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+        <repository>
+            <id>filoghost-repo</id>
+            <url>https://ci.filoghost.me/plugin/repository/everything/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -60,11 +64,10 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.gmail.filoghost</groupId>
-            <artifactId>holographicdisplays</artifactId>
-            <version>2.2.6</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/lib/HolographicDisplays.jar</systemPath>
+            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
+            <artifactId>holographicdisplays-api</artifactId>
+            <version>2.3.3-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
