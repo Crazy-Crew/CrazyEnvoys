@@ -16,21 +16,21 @@ public class HolographicSupport {
 	private static HashMap<Location, Hologram> holos = new HashMap<>();
 	
 	public static void registerPlaceHolders() {
-		HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{envoy_cooldown}", 1, () -> {
+		HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{crazyenvoy_cooldown}", 1, () -> {
 			if(envoy.isEnvoyActive()) {
 				return Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going");
 			}else {
 				return envoy.getNextEnvoyTime();
 			}
 		});
-		HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{envoy_time_left}", 1, () -> {
+		HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{crazyenvoy_time_left}", 1, () -> {
 			if(envoy.isEnvoyActive()) {
 				return envoy.getEnvoyRunTimeLeft();
 			}else {
 				return Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
 			}
 		});
-		HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{envoy_crates_left}", .5, () -> envoy.getActiveEnvoys().size() + "");
+		HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{crazyenvoy_crates_left}", .5, () -> envoy.getActiveEnvoys().size() + "");
 	}
 	
 	public static void unregisterPlaceHolders() {
