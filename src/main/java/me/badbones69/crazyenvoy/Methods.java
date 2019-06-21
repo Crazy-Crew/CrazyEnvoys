@@ -216,9 +216,12 @@ public class Methods {
 	
 	@SuppressWarnings("deprecation")
 	public static List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
-		FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), Material.AIR, (byte) 0);
-		List<Entity> out = ent.getNearbyEntities(x, y, z);
-		ent.remove();
+		List<Entity> out = new ArrayList<>();
+		if(loc.getWorld() != null) {
+			FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), Material.AIR, (byte) 0);
+			out = ent.getNearbyEntities(x, y, z);
+			ent.remove();
+		}
 		return out;
 	}
 	

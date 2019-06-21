@@ -279,9 +279,12 @@ public class CrazyEnvoy {
 		ArrayList<String> locs = new ArrayList<>();
 		for(Location loc : locations) {
 			try {
-				locs.add(getStringFromLocation(loc));
+				if(loc.getWorld() != null) {
+					locs.add(getStringFromLocation(loc));
+				}
 			}catch(Exception e) {
 				System.out.print("[CrazyEnvoy] Error when saving a crate drop location.");
+				e.printStackTrace();
 			}
 		}
 		deSpawnCrates();
@@ -698,9 +701,11 @@ public class CrazyEnvoy {
 		placeholder.put("%Amount%", max + "");
 		Messages.STARTED.broadcastMessage(false, placeholder);
 		for(Location loc : dropLocations) {
-			boolean spawnFallingBlock = false;
-			for(Entity en : Methods.getNearbyEntities(loc, 40, 40, 40)) {
-				if(en instanceof Player) {
+			if(loc != null) {
+				if(loc.getWorld() != null) {
+					boolean spawnFallingBlock = false;
+					for(Entity en : Methods.getNearbyEntities(loc, 40, 40, 40)) {
+						if(en instanceof Player) {
 					spawnFallingBlock = true;
 				}
 			}
@@ -746,6 +751,8 @@ public class CrazyEnvoy {
 				addSpawnedLocation(loc.clone());
 				if(tier.getSignalFlareToggle()) {
 					startSignalFlare(loc.clone(), tier);
+						}
+					}
 				}
 			}
 		}
@@ -880,17 +887,19 @@ public class CrazyEnvoy {
 		}
 		List<Location> notFound = new ArrayList<>();
 		for(Location spawnedLocation : spawnedLocations) {
-			if(crateTypes.contains(spawnedLocation.getBlock().getType())) {
-				spawnedLocation.getBlock().setType(Material.AIR);
-				//				System.out.println("[CrazyEnvoy]: Removed the old crate at location " + getStringFromLocation(spawnedLocation));
+			if(spawnedLocation != null) {
+				if(crateTypes.contains(spawnedLocation.getBlock().getType())) {
+					spawnedLocation.getBlock().setType(Material.AIR);
+					//				System.out.println("[CrazyEnvoy]: Removed the old crate at location " + getStringFromLocation(spawnedLocation));
 			}else {
 				notFound.add(spawnedLocation);
 			}
 			stopSignalFlare(spawnedLocation);
 			if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
 				HolographicSupport.removeAllHolograms();
-			}else if(Support.CMI.isPluginLoaded()) {
-				CMISupport.removeAllHolograms();
+				}else if(Support.CMI.isPluginLoaded()) {
+					CMISupport.removeAllHolograms();
+				}
 			}
 			
 		}
@@ -1045,10 +1054,12 @@ public class CrazyEnvoy {
 		int bottomBlockX = (loc.getBlockX() > loc2.getBlockX() ? loc2.getBlockX() : loc.getBlockX());
 		int topBlockZ = (loc.getBlockZ() < loc2.getBlockZ() ? loc2.getBlockZ() : loc.getBlockZ());
 		int bottomBlockZ = (loc.getBlockZ() > loc2.getBlockZ() ? loc2.getBlockZ() : loc.getBlockZ());
-		for(int x = bottomBlockX; x <= topBlockX; x++) {
-			for(int z = bottomBlockZ; z <= topBlockZ; z++) {
-				if(loc.getWorld().getBlockAt(x, 255, z) != null) {
-					locs.add(loc.getWorld().getBlockAt(x, 255, z).getLocation());
+		if(loc.getWorld() != null) {
+			for(int x = bottomBlockX; x <= topBlockX; x++) {
+				for(int z = bottomBlockZ; z <= topBlockZ; z++) {
+					if(loc.getWorld().getBlockAt(x, 255, z) != null) {
+						locs.add(loc.getWorld().getBlockAt(x, 255, z).getLocation());
+					}
 				}
 			}
 		}
