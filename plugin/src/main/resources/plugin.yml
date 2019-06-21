@@ -1,4 +1,4 @@
-name: ${project.artifactId}
+name: CrazyEnvoy
 author: BadBones69
 main: me.badbones69.crazyenvoy.Main
 version: ${project.version}
