@@ -15,7 +15,7 @@ public class Flare {
 		String id = config.getString("Settings.Flares.Item");
 		String name = config.getString("Settings.Flares.Name");
 		List<String> lore = config.getStringList("Settings.Flares.Lore");
-		return new ItemBuilder().setMaterial(id).setName(name).setLore(lore).build();
+		return new ItemBuilder().setMaterial(id).setAmount(amount).setName(name).setLore(lore).build();
 	}
 	
 	public static Boolean isFlare(ItemStack item) {
