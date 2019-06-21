@@ -10,6 +10,7 @@ public class Prize {
 	
 	private String prizeID;
 	private Integer chance;
+	private Boolean dropItems;
 	private List<String> messages;
 	private List<String> commands;
 	private List<ItemStack> items;
@@ -17,6 +18,7 @@ public class Prize {
 	public Prize(String prizeID) {
 		this.prizeID = prizeID;
 		this.chance = 100;
+		this.dropItems = false;
 		this.messages = new ArrayList<>();
 		this.commands = new ArrayList<>();
 		this.items = new ArrayList<>();
@@ -44,6 +46,23 @@ public class Prize {
 	 */
 	public Prize setChance(Integer chance) {
 		this.chance = chance;
+		return this;
+	}
+	
+	/**
+	 * Check if the items from Items: drop to the floor or go into the player's inventory.
+	 * @return True if drops to the ground and false if goes into their inventory.
+	 */
+	public Boolean getDropItems() {
+		return dropItems;
+	}
+	
+	/**
+	 * Make the items from the Items: option either drop on the ground or go into their inventory.
+	 * @param dropItems The option to drop items on the floor or into their inventory.
+	 */
+	public Prize setDropItems(Boolean dropItems) {
+		this.dropItems = dropItems;
 		return this;
 	}
 	

@@ -35,18 +35,21 @@ Settings:
 Prizes: #The prizes that can be won.
   '1': #Prize number
     Chance: 10 #The chance that it will be won.
+    Drop-Items: false #Drop all items in the Items: option on the ground instead of into their inventory.
     Messages: #The message that will be sent to the player if won.
       - '&7You have just won &a$1,000&7.'
     Commands: #The commands that will be run when this prize is won.
       - 'eco give %Player% 1000'
   '2':
     Chance: 75
+    Drop-Items: false
     Messages:
       - '&7You have just won &616 Gold Apples&7.'
     Items:
       - 'Item:322, Amount:16, Name:&dJuicy Golden Apple, Lore:&7I am a yummy apple,&7Make sure to savor my flavor.'
   '3':
     Chance: 40
+    Drop-Items: false
     Messages:
       - '&7You have just had a great Harvest.'
     Items:

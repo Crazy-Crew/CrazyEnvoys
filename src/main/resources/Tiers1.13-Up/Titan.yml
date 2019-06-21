@@ -41,12 +41,14 @@ Prizes:
       - 'eco give %Player% 1000000'
   '2':
     Chance: 25
+    Drop-Items: false
     Messages:
       - '&7Congratulations you have just won a &4Titan &7sword.'
     Items:
       - 'Item:DIAMOND_SWORD, Amount:1, Name:&4Titan Sword, Sharpness:5, Unbreaking:3, Knockback:2, Fire_Aspect:2, Looting:3'
   '3':
     Chance: 10
+    Drop-Items: false
     Messages:
       - '&7Congratulations you have just won a &4Titan &7armor set.'
     Items:

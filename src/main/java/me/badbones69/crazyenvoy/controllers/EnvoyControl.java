@@ -96,10 +96,14 @@ public class EnvoyControl implements Listener {
 							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName()));
 						}
 						for(ItemStack item : prize.getItems()) {
-							if(Methods.isInvFull(player)) {
+							if(prize.getDropItems()) {
 								e.getClickedBlock().getWorld().dropItem(loc, item);
 							}else {
-								player.getInventory().addItem(item);
+								if(Methods.isInvFull(player)) {
+									e.getClickedBlock().getWorld().dropItem(loc, item);
+								}else {
+									player.getInventory().addItem(item);
+								}
 							}
 						}
 						player.updateInventory();

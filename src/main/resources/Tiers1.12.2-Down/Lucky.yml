@@ -41,12 +41,14 @@ Prizes:
       - 'eco give %Player% 10000'
   '2':
     Chance: 25
+    Drop-Items: false
     Messages:
       - '&7Congratulations you have just won a &eLucky &7sword.'
     Items:
       - 'Item:276, Amount:1, Name:&eLucky Sword, Sharpness:2, Unbreaking:1, Knockback:1, Fire_Aspect:1, Looting:1'
   '3':
     Chance: 10
+    Drop-Items: false
     Messages:
       - '&7Congratulations you have just won a &eLucky &7armor set.'
     Items:

@@ -148,11 +148,13 @@ public class CrazyEnvoy {
 				tier.addSignalFlareColor(Methods.getColor(color));
 			}
 			for(String prizeID : file.getConfigurationSection("Prizes").getKeys(false)) {
-				Integer chance = file.getInt("Prizes." + prizeID + ".Chance");
-				List<String> commands = file.getStringList("Prizes." + prizeID + ".Commands");
-				List<String> messages = file.getStringList("Prizes." + prizeID + ".Messages");
+				String path = "Prizes." + prizeID + ".";
+				Integer chance = file.getInt(path + "Chance");
+				List<String> commands = file.getStringList(path + "Commands");
+				List<String> messages = file.getStringList(path + "Messages");
+				boolean dropItems = file.getBoolean(path + "Drop-Items");
 				ArrayList<ItemStack> items = new ArrayList<>();
-				for(String line : file.getStringList("Prizes." + prizeID + ".Items")) {
+				for(String line : file.getStringList(path + "Items")) {
 					ArrayList<String> lore = new ArrayList<>();
 					HashMap<Enchantment, Integer> enchs = new HashMap<>();
 					String name = "";
@@ -195,7 +197,7 @@ public class CrazyEnvoy {
 					}
 					items.add(new ItemBuilder().setMaterial(item).setName(name).setAmount(amount).setLore(lore).setEnchantments(enchs).setGlowing(glowing).setUnbreakable(unbreaking).build());
 				}
-				tier.addPrize(new Prize(prizeID).setChance(chance).setItems(items).setCommands(commands).setMessages(messages));
+				tier.addPrize(new Prize(prizeID).setChance(chance).setDropItems(dropItems).setItems(items).setCommands(commands).setMessages(messages));
 			}
 			tiers.add(tier);
 			//Clean up any old spawned crate locations.
@@ -707,51 +709,51 @@ public class CrazyEnvoy {
 					boolean spawnFallingBlock = false;
 					for(Entity en : Methods.getNearbyEntities(loc, 40, 40, 40)) {
 						if(en instanceof Player) {
-					spawnFallingBlock = true;
-				}
-			}
-			if(Files.CONFIG.getFile().contains("Settings.Falling-Block-Toggle")) {
-				if(!Files.CONFIG.getFile().getBoolean("Settings.Falling-Block-Toggle")) {
-					spawnFallingBlock = false;
-				}
-			}
-			if(spawnFallingBlock) {
-				String type = Files.CONFIG.getFile().getString("Settings.Falling-Block");
-				int durrability = 0;
-				if(type.contains(":")) {
-					String[] b = type.split(":");
-					type = b[0];
-					durrability = Integer.parseInt(b[1]);
-				}
-				Material material = Material.matchMaterial(type);
-				if(material == null) {
-					material = Material.BEACON;
-				}
-				int height = Files.CONFIG.getFile().getInt("Settings.Fall-Height");
-				if(!loc.getChunk().isLoaded()) {
-					loc.getChunk().load();
-				}
-				FallingBlock chest = loc.getWorld().spawnFallingBlock(loc.clone().add(.5, height, .5), material, (byte) durrability);
-				fallingBlocks.add(chest);
-			}else {
-				Tier tier = pickRandomTier();
-				if(!loc.getChunk().isLoaded()) {
-					loc.getChunk().load();
-				}
-				loc.getBlock().setType(tier.getPlacedBlockMaterial());
-				if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-					if(tier.isHoloEnabled()) {
-						HolographicSupport.createHologram(loc.clone(), tier);
+							spawnFallingBlock = true;
+						}
 					}
-				}else if(Support.CMI.isPluginLoaded()) {
-					if(tier.isHoloEnabled()) {
-						CMISupport.createHologram(loc.clone(), tier);
+					if(Files.CONFIG.getFile().contains("Settings.Falling-Block-Toggle")) {
+						if(!Files.CONFIG.getFile().getBoolean("Settings.Falling-Block-Toggle")) {
+							spawnFallingBlock = false;
+						}
 					}
-				}
-				addActiveEnvoy(loc.clone(), tier);
-				addSpawnedLocation(loc.clone());
-				if(tier.getSignalFlareToggle()) {
-					startSignalFlare(loc.clone(), tier);
+					if(spawnFallingBlock) {
+						String type = Files.CONFIG.getFile().getString("Settings.Falling-Block");
+						int durrability = 0;
+						if(type.contains(":")) {
+							String[] b = type.split(":");
+							type = b[0];
+							durrability = Integer.parseInt(b[1]);
+						}
+						Material material = Material.matchMaterial(type);
+						if(material == null) {
+							material = Material.BEACON;
+						}
+						int height = Files.CONFIG.getFile().getInt("Settings.Fall-Height");
+						if(!loc.getChunk().isLoaded()) {
+							loc.getChunk().load();
+						}
+						FallingBlock chest = loc.getWorld().spawnFallingBlock(loc.clone().add(.5, height, .5), material, (byte) durrability);
+						fallingBlocks.add(chest);
+					}else {
+						Tier tier = pickRandomTier();
+						if(!loc.getChunk().isLoaded()) {
+							loc.getChunk().load();
+						}
+						loc.getBlock().setType(tier.getPlacedBlockMaterial());
+						if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
+							if(tier.isHoloEnabled()) {
+								HolographicSupport.createHologram(loc.clone(), tier);
+							}
+						}else if(Support.CMI.isPluginLoaded()) {
+							if(tier.isHoloEnabled()) {
+								CMISupport.createHologram(loc.clone(), tier);
+							}
+						}
+						addActiveEnvoy(loc.clone(), tier);
+						addSpawnedLocation(loc.clone());
+						if(tier.getSignalFlareToggle()) {
+							startSignalFlare(loc.clone(), tier);
 						}
 					}
 				}
@@ -892,12 +894,12 @@ public class CrazyEnvoy {
 				if(crateTypes.contains(spawnedLocation.getBlock().getType())) {
 					spawnedLocation.getBlock().setType(Material.AIR);
 					//				System.out.println("[CrazyEnvoy]: Removed the old crate at location " + getStringFromLocation(spawnedLocation));
-			}else {
-				notFound.add(spawnedLocation);
-			}
-			stopSignalFlare(spawnedLocation);
-			if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-				HolographicSupport.removeAllHolograms();
+				}else {
+					notFound.add(spawnedLocation);
+				}
+				stopSignalFlare(spawnedLocation);
+				if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
+					HolographicSupport.removeAllHolograms();
 				}else if(Support.CMI.isPluginLoaded()) {
 					CMISupport.removeAllHolograms();
 				}
