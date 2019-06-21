@@ -34,6 +34,10 @@ public class EnvoyControl implements Listener {
 	private static HashMap<UUID, Calendar> cooldown = new HashMap<>();
 	private CrazyEnvoy envoy = CrazyEnvoy.getInstance();
 	
+	public static void clearCooldowns() {
+		cooldown.clear();
+	}
+	
 	@EventHandler
 	public void onPlayerClick(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
@@ -136,7 +140,6 @@ public class EnvoyControl implements Listener {
 			}
 		}
 	}
-	
 	@EventHandler
 	public void onChestSpawn(EntityChangeBlockEvent e) {
 		if(envoy.isEnvoyActive()) {
@@ -170,7 +173,6 @@ public class EnvoyControl implements Listener {
 			}
 		}
 	}
-	
 	@EventHandler
 	public void onItemSpawn(ItemSpawnEvent e) {
 		if(envoy.isEnvoyActive()) {
@@ -204,11 +206,6 @@ public class EnvoyControl implements Listener {
 			}
 		}
 	}
-	
-	public static void clearCooldowns() {
-		cooldown.clear();
-	}
-	
 	private Calendar getTimeFromString(String time) {
 		Calendar cal = Calendar.getInstance();
 		for(String i : time.split(" ")) {

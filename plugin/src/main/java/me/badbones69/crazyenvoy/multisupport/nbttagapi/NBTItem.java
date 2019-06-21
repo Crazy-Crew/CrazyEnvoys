@@ -10,7 +10,16 @@ public class NBTItem extends NBTCompound {
 		super(null, null);
 		bukkitItem = item.clone();
 	}
-	
+	public static NBTContainer convertItemtoNBT(ItemStack item) {
+		Object itemStack = NBTReflectionUtil.getNMSItemStack(item);
+		if(itemStack != null) {
+			return NBTReflectionUtil.convertNMSItemtoNBTCompound(itemStack);
+		}
+		return null;
+	}
+	public static ItemStack convertNBTtoItem(NBTCompound comp) {
+		return NBTReflectionUtil.getBukkitItemStack(NBTReflectionUtil.convertNBTCompoundtoNMSItem(comp));
+	}
 	protected Object getCompound() {
 		if(bukkitItem != null) {
 			Object itemStack = NBTReflectionUtil.getNMSItemStack(bukkitItem);
@@ -20,29 +29,14 @@ public class NBTItem extends NBTCompound {
 		}
 		return null;
 	}
-	
 	protected void setCompound(Object compound) {
 		bukkitItem = NBTReflectionUtil.getBukkitItemStack(NBTReflectionUtil.setNBTTag(compound, NBTReflectionUtil.getNMSItemStack(bukkitItem)));
 	}
-	
 	public ItemStack getItem() {
 		return bukkitItem;
 	}
-	
 	protected void setItem(ItemStack item) {
 		bukkitItem = item;
-	}
-	
-	public static NBTContainer convertItemtoNBT(ItemStack item) {
-		Object itemStack = NBTReflectionUtil.getNMSItemStack(item);
-		if(itemStack != null) {
-			return NBTReflectionUtil.convertNMSItemtoNBTCompound(itemStack);
-		}
-		return null;
-	}
-	
-	public static ItemStack convertNBTtoItem(NBTCompound comp) {
-		return NBTReflectionUtil.getBukkitItemStack(NBTReflectionUtil.convertNBTCompoundtoNMSItem(comp));
 	}
 	
 }

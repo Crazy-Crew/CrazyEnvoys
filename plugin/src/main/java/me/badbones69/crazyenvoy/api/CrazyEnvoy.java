@@ -391,7 +391,7 @@ public class CrazyEnvoy {
 	
 	/**
 	 *
-	 * @param Loc The location that you want to check.
+	 * @param location The location that you want to check.
 	 */
 	public Boolean isLocation(Location location) {
 		for(Location loc : spawnLocations) {
@@ -479,6 +479,14 @@ public class CrazyEnvoy {
 	
 	/**
 	 *
+	 * @param cal A calendar that has the next time the envoy will happen.
+	 */
+	public void setNextEnvoy(Calendar cal) {
+		nextEnvoy = cal;
+	}
+	
+	/**
+	 *
 	 * @return The time till the next envoy.
 	 */
 	public String getNextEnvoyTime() {
@@ -505,15 +513,6 @@ public class CrazyEnvoy {
 		}
 		return msg;
 	}
-	
-	/**
-	 *
-	 * @param cal A calendar that has the next time the envoy will happen.
-	 */
-	public void setNextEnvoy(Calendar cal) {
-		nextEnvoy = cal;
-	}
-	
 	/**
 	 *
 	 * @return All falling blocks are are currently going.

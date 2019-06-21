@@ -10,12 +10,17 @@ import org.bukkit.event.HandlerList;
  */
 public class UseFlareEvent extends Event implements Cancellable {
 	
+	private static final HandlerList handlers = new HandlerList();
 	private Boolean cancelled;
 	private Player player;
 	
 	public UseFlareEvent(Player player) {
 		this.player = player;
 		this.cancelled = false;
+	}
+	
+	public static HandlerList getHandlerList() {
+		return handlers;
 	}
 	
 	/**
@@ -29,19 +34,11 @@ public class UseFlareEvent extends Event implements Cancellable {
 	public boolean isCancelled() {
 		return cancelled;
 	}
-	
 	@Override
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
 	}
-	
-	private static final HandlerList handlers = new HandlerList();
-	
 	public HandlerList getHandlers() {
-		return handlers;
-	}
-	
-	public static HandlerList getHandlerList() {
 		return handlers;
 	}
 	

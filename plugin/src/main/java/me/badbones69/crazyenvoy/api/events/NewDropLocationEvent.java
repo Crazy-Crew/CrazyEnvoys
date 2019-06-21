@@ -11,6 +11,7 @@ import org.bukkit.event.HandlerList;
  */
 public class NewDropLocationEvent extends Event implements Cancellable {
 	
+	private static final HandlerList handlers = new HandlerList();
 	private Player player;
 	private Location location;
 	private Boolean cancelled;
@@ -21,6 +22,10 @@ public class NewDropLocationEvent extends Event implements Cancellable {
 		this.cancelled = false;
 	}
 	
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+	
 	public Location getLocation() {
 		return location;
 	}
@@ -28,6 +33,7 @@ public class NewDropLocationEvent extends Event implements Cancellable {
 	public Player getPlayer() {
 		return player;
 	}
+	
 	@Override
 	public boolean isCancelled() {
 		return cancelled;
@@ -38,13 +44,7 @@ public class NewDropLocationEvent extends Event implements Cancellable {
 		this.cancelled = cancelled;
 	}
 	
-	private static final HandlerList handlers = new HandlerList();
-	
 	public HandlerList getHandlers() {
-		return handlers;
-	}
-	
-	public static HandlerList getHandlerList() {
 		return handlers;
 	}
 	

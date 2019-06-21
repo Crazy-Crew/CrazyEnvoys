@@ -248,6 +248,13 @@ public class ItemBuilder {
 		}
 		return this;
 	}
+	/**
+	 * Get the entity type of the mob egg.
+	 * @return The EntityType of the mob egg.
+	 */
+	public EntityType getEntityType() {
+		return entityType;
+	}
 	
 	/**
 	 * Sets the type of mob egg.
@@ -258,15 +265,6 @@ public class ItemBuilder {
 		this.entityType = entityType;
 		return this;
 	}
-	
-	/**
-	 * Get the entity type of the mob egg.
-	 * @return The EntityType of the mob egg.
-	 */
-	public EntityType getEntityType() {
-		return entityType;
-	}
-	
 	/**
 	 * Set the placeholders that are in the lore of the item.
 	 * @param placeholders The placeholders that you wish to use.
@@ -338,28 +336,6 @@ public class ItemBuilder {
 	public HashMap<Enchantment, Integer> getEnchantments() {
 		return enchantments;
 	}
-	
-	/**
-	 * Add an enchantment to the item in the builder.
-	 * @param enchantment The enchantment you wish to add.
-	 * @param level The level of the enchantment. This can be unsafe levels.
-	 * @return The ItemBuilder with updated info.
-	 */
-	public ItemBuilder addEnchantments(Enchantment enchantment, Integer level) {
-		this.enchantments.put(enchantment, level);
-		return this;
-	}
-	
-	/**
-	 * Remove an enchantment from the item in the builder.
-	 * @param enchantment The enchantment you wish to remove.
-	 * @return The ItemBuilder with updated info.
-	 */
-	public ItemBuilder removeEnchantments(Enchantment enchantment) {
-		this.enchantments.remove(enchantment);
-		return this;
-	}
-	
 	/**
 	 * Set a list of enchantments that will go onto the item in the builder. These can have unsafe levels.
 	 * It will also override any enchantments used in the "ItemBuilder#addEnchantment()" method.
@@ -373,6 +349,25 @@ public class ItemBuilder {
 		return this;
 	}
 	
+	/**
+	 * Add an enchantment to the item in the builder.
+	 * @param enchantment The enchantment you wish to add.
+	 * @param level The level of the enchantment. This can be unsafe levels.
+	 * @return The ItemBuilder with updated info.
+	 */
+	public ItemBuilder addEnchantments(Enchantment enchantment, Integer level) {
+		this.enchantments.put(enchantment, level);
+		return this;
+	}
+	/**
+	 * Remove an enchantment from the item in the builder.
+	 * @param enchantment The enchantment you wish to remove.
+	 * @return The ItemBuilder with updated info.
+	 */
+	public ItemBuilder removeEnchantments(Enchantment enchantment) {
+		this.enchantments.remove(enchantment);
+		return this;
+	}
 	/**
 	 * Check if the item in the builder is unbreakable.
 	 * @return The ItemBuilder with updated info.

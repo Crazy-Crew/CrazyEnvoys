@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
  */
 public class EnvoyEndEvent extends Event {
 	
+	private static final HandlerList handlers = new HandlerList();
 	private Player player;
 	private EnvoyEndReason reason;
 	
@@ -21,6 +22,10 @@ public class EnvoyEndEvent extends Event {
 		this.player = player;
 	}
 	
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+	
 	/**
 	 * Get the reason the envoy ended.
 	 * @return The reason it has ended.
@@ -28,7 +33,6 @@ public class EnvoyEndEvent extends Event {
 	public EnvoyEndReason getReason() {
 		return reason;
 	}
-	
 	/**
 	 * Get the player that ended the event.
 	 * @return The player that ended it. This can be null if it auto ended.
@@ -36,14 +40,7 @@ public class EnvoyEndEvent extends Event {
 	public Player getPlayer() {
 		return player;
 	}
-	
-	private static final HandlerList handlers = new HandlerList();
-	
 	public HandlerList getHandlers() {
-		return handlers;
-	}
-	
-	public static HandlerList getHandlerList() {
 		return handlers;
 	}
 	

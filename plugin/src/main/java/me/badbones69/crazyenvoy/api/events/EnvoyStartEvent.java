@@ -10,6 +10,7 @@ import org.bukkit.event.HandlerList;
  */
 public class EnvoyStartEvent extends Event implements Cancellable {
 	
+	private static final HandlerList handlers = new HandlerList();
 	private Boolean cancelled;
 	private Player player;
 	private EnvoyStartReason reason;
@@ -23,6 +24,10 @@ public class EnvoyStartEvent extends Event implements Cancellable {
 		this.reason = reason;
 		this.player = player;
 		this.cancelled = false;
+	}
+	
+	public static HandlerList getHandlerList() {
+		return handlers;
 	}
 	
 	/**
@@ -51,13 +56,7 @@ public class EnvoyStartEvent extends Event implements Cancellable {
 		this.cancelled = cancelled;
 	}
 	
-	private static final HandlerList handlers = new HandlerList();
-	
 	public HandlerList getHandlers() {
-		return handlers;
-	}
-	
-	public static HandlerList getHandlerList() {
 		return handlers;
 	}
 	
