@@ -120,7 +120,12 @@ public class Main extends JavaPlugin implements Listener {
 						Messages.NO_PERMISSION.sendMessage(sender);
 						return true;
 					}
-					fileManager.setup(this);
+					if(envoy.isEnvoyActive()) {
+						EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.RELOAD);
+						Bukkit.getPluginManager().callEvent(event);
+						envoy.endEnvoyEvent();
+					}
+					envoy.unload();
 					try {
 						for(CustomFile file : fileManager.getCustomFiles()) {
 							file.reloadFile();
@@ -130,12 +135,6 @@ public class Main extends JavaPlugin implements Listener {
 						Files.MESSAGES.relaodFile();
 					}catch(Exception e) {
 					}
-					if(envoy.isEnvoyActive()) {
-						EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.RELOAD);
-						Bukkit.getPluginManager().callEvent(event);
-						envoy.endEnvoyEvent();
-					}
-					envoy.unload();
 					envoy.load();
 					Messages.RELOADED.sendMessage(sender);
 					return true;

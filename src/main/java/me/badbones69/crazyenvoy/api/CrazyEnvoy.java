@@ -293,6 +293,7 @@ public class CrazyEnvoy {
 			Files.DATA.getFile().set("Center", "World:" + center.getWorld().getName() + ", X:" + center.getBlockX() + ", Y:" + center.getBlockY() + ", Z:" + center.getBlockZ());
 		}catch(Exception e) {
 			System.out.print("[CrazyEnvoy] Error when saving the center location.");
+			e.printStackTrace();
 			
 		}
 		Files.DATA.getFile().set("Locations.Spawns", locs);
@@ -909,7 +910,6 @@ public class CrazyEnvoy {
 			Files.DATA.getFile().set("Locations.Spawned", spawnedLocations);
 			Files.DATA.getFile().set("Next-Clean", nextClean.getTimeInMillis());
 			Files.DATA.saveFile();
-			System.out.println();
 		}else {
 			Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(notFound));
 			Files.DATA.saveFile();
@@ -994,7 +994,10 @@ public class CrazyEnvoy {
 	}
 	
 	private String getStringFromLocation(Location location) {
-		return "World:" + location.getWorld().getName() + ", X:" + location.getBlockX() + ", Y:" + location.getBlockY() + ", Z:" + location.getBlockZ();
+		return "World:" + location.getWorld().getName()
+		+ ", X:" + location.getBlockX()
+		+ ", Y:" + location.getBlockY()
+		+ ", Z:" + location.getBlockZ();
 	}
 	
 	private List<String> getStringsFromLocationList(List<Location> stringList) {
