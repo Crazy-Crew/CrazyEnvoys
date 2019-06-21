@@ -227,7 +227,7 @@ public class Main extends JavaPlugin implements Listener {
 					}
 					int i = 1;
 					HashMap<String, String> ph = new HashMap<>();
-					for(Location loc : envoy.isEnvoyActive() ? envoy.getActiveEnvoys() : envoy.getLocations()) {
+					for(Location loc : envoy.isEnvoyActive() ? envoy.getActiveEnvoys() : envoy.getSpawnLocations()) {
 						ph.put("%id%", i + "");
 						ph.put("%world%", loc.getWorld().getName());
 						ph.put("%x%", loc.getBlockX() + "");

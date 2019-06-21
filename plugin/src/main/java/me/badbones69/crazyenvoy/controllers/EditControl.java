@@ -37,14 +37,14 @@ public class EditControl implements Listener {
 	
 	@SuppressWarnings("deprecation")
 	public static void showFakeBlocks(Player player) {
-		for(Location loc : envoy.getLocations()) {
+		for(Location loc : envoy.getSpawnLocations()) {
 			player.sendBlockChange(loc, Material.BEDROCK, (byte) 0);
 		}
 	}
 	
 	@SuppressWarnings("deprecation")
 	public static void removeFakeBlocks(Player player) {
-		for(Location loc : envoy.getLocations()) {
+		for(Location loc : envoy.getSpawnLocations()) {
 			player.sendBlockChange(loc, loc.getBlock().getType(), loc.getBlock().getData());
 		}
 	}

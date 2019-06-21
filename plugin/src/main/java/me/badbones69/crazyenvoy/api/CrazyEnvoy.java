@@ -45,7 +45,7 @@ public class CrazyEnvoy {
 	private ArrayList<Material> blacklistedBlocks = new ArrayList<>();
 	private ArrayList<UUID> ignoreMessages = new ArrayList<>();
 	private ArrayList<Calendar> warnings = new ArrayList<>();
-	private ArrayList<Location> locations = new ArrayList<>();
+	private ArrayList<Location> spawnLocations = new ArrayList<>();
 	private ArrayList<Location> spawnedLocations = new ArrayList<>();
 	private ArrayList<Entity> fallingBlocks = new ArrayList<>();
 	private Location center;
@@ -69,7 +69,7 @@ public class CrazyEnvoy {
 		if(!envoyActive) {
 			envoyActive = false;
 		}
-		locations.clear();
+		spawnLocations.clear();
 		blacklistedBlocks.clear();
 		worldGuardVersion = Version.getCurrentVersion().isNewer(Version.v1_12_R1) ? new WorldGuard_v7() : new WorldGuard_v6();
 		plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
@@ -77,7 +77,7 @@ public class CrazyEnvoy {
 		FileConfiguration config = Files.CONFIG.getFile();
 		envoyTimeLeft = Calendar.getInstance();
 		for(String l : data.getStringList("Locations.Spawns")) {
-			locations.add(getLocationFromString(l));
+			spawnLocations.add(getLocationFromString(l));
 		}
 		if(Calendar.getInstance().after(getNextEnvoy())) {
 			setEnvoyActive(false);
@@ -277,29 +277,10 @@ public class CrazyEnvoy {
 	 * Run this when you need to save the locations.
 	 */
 	public void unload() {
-		ArrayList<String> locs = new ArrayList<>();
-		for(Location loc : locations) {
-			try {
-				if(loc.getWorld() != null) {
-					locs.add(getStringFromLocation(loc));
-				}
-			}catch(Exception e) {
-				System.out.print("[CrazyEnvoy] Error when saving a crate drop location.");
-				e.printStackTrace();
-			}
-		}
 		deSpawnCrates();
 		Files.DATA.getFile().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
-		try {
-			Files.DATA.getFile().set("Center", "World:" + center.getWorld().getName() + ", X:" + center.getBlockX() + ", Y:" + center.getBlockY() + ", Z:" + center.getBlockZ());
-		}catch(Exception e) {
-			System.out.print("[CrazyEnvoy] Error when saving the center location.");
-			e.printStackTrace();
-			
-		}
-		Files.DATA.getFile().set("Locations.Spawns", locs);
 		Files.DATA.saveFile();
-		locations.clear();
+		spawnLocations.clear();
 		EnvoyControl.clearCooldowns();
 	}
 	
@@ -404,21 +385,35 @@ public class CrazyEnvoy {
 	 *
 	 * @return All the location the chests will spawn.
 	 */
-	public ArrayList<Location> getLocations() {
-		return locations;
+	public ArrayList<Location> getSpawnLocations() {
+		return spawnLocations;
 	}
 	
 	/**
 	 *
 	 * @param Loc The location that you want to check.
 	 */
-	public Boolean isLocation(Location Loc) {
-		for(Location l : locations) {
-			if(l.equals(Loc)) {
+	public Boolean isLocation(Location location) {
+		for(Location loc : spawnLocations) {
+			if(loc.equals(location)) {
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public void saveSpawnLocations() {
+		ArrayList<String> locs = new ArrayList<>();
+		for(Location loc : spawnLocations) {
+			try {
+				if(loc.getWorld() != null) {
+					locs.add(getStringFromLocation(loc));
+				}
+			}catch(Exception e) {
+			}
+		}
+		Files.DATA.getFile().set("Locations.Spawns", locs);
+		Files.DATA.saveFile();
 	}
 	
 	/**
@@ -459,7 +454,8 @@ public class CrazyEnvoy {
 	 * @param loc The location you want to add.
 	 */
 	public void addLocation(Location loc) {
-		locations.add(loc);
+		spawnLocations.add(loc);
+		saveSpawnLocations();
 	}
 	
 	/**
@@ -468,7 +464,8 @@ public class CrazyEnvoy {
 	 */
 	public void removeLocation(Location loc) {
 		if(isLocation(loc)) {
-			locations.remove(loc);
+			spawnLocations.remove(loc);
+			saveSpawnLocations();
 		}
 	}
 	
@@ -650,24 +647,24 @@ public class CrazyEnvoy {
 		}
 		deSpawnCrates();
 		setEnvoyActive(true);
-		int max = getLocations().size();
+		int max = getSpawnLocations().size();
 		if(Files.CONFIG.getFile().getBoolean("Settings.Max-Crate-Toggle")) {
 			max = Files.CONFIG.getFile().getInt("Settings.Max-Crates");
-			if(max > getLocations().size()) {
-				max = getLocations().size();
+			if(max > getSpawnLocations().size()) {
+				max = getSpawnLocations().size();
 			}
 		}
 		ArrayList<Location> dropLocations = new ArrayList<>();
 		if(Files.CONFIG.getFile().getBoolean("Settings.Max-Crate-Toggle")) {
 			for(int i = 0; i < max; ) {
-				Location loc = locations.get(new Random().nextInt(locations.size()));
+				Location loc = spawnLocations.get(new Random().nextInt(spawnLocations.size()));
 				if(!dropLocations.contains(loc)) {
 					dropLocations.add(loc);
 					i++;
 				}
 			}
 		}else {
-			dropLocations.addAll(locations);
+			dropLocations.addAll(spawnLocations);
 		}
 		if(Files.CONFIG.getFile().getBoolean("Settings.Random-Locations")) {
 			dropLocations.clear();
@@ -921,6 +918,10 @@ public class CrazyEnvoy {
 		}
 	}
 	
+	/**
+	 * Add a location to the cleaning list of where crates actually spawned.
+	 * @param location Location the crate spawned at.
+	 */
 	public void addSpawnedLocation(Location location) {
 		if(!getStringsFromLocationList(spawnedLocations).contains(getStringFromLocation(location))) {
 			spawnedLocations.add(location);
