@@ -14,10 +14,7 @@ import me.badbones69.crazyenvoy.api.objects.Tier;
 import me.badbones69.crazyenvoy.controllers.EditControl;
 import me.badbones69.crazyenvoy.controllers.EnvoyControl;
 import me.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
-import me.badbones69.crazyenvoy.multisupport.CMISupport;
-import me.badbones69.crazyenvoy.multisupport.HolographicSupport;
-import me.badbones69.crazyenvoy.multisupport.Support;
-import me.badbones69.crazyenvoy.multisupport.Version;
+import me.badbones69.crazyenvoy.multisupport.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -44,6 +41,7 @@ public class CrazyEnvoy {
 	private Calendar envoyTimeLeft;
 	private Boolean envoyActive = false;
 	private Boolean autoTimer = true;
+	private WorldGuardVersion worldGuardVersion;
 	private ArrayList<Material> blacklistedBlocks = new ArrayList<>();
 	private ArrayList<UUID> ignoreMessages = new ArrayList<>();
 	private ArrayList<Calendar> warnings = new ArrayList<>();
@@ -73,6 +71,7 @@ public class CrazyEnvoy {
 		}
 		locations.clear();
 		blacklistedBlocks.clear();
+		worldGuardVersion = Version.getCurrentVersion().isNewer(Version.v1_12_R1) ? new WorldGuard_v7() : new WorldGuard_v6();
 		plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 		FileConfiguration data = Files.DATA.getFile();
 		FileConfiguration config = Files.CONFIG.getFile();
@@ -395,6 +394,10 @@ public class CrazyEnvoy {
 		}
 		fallingBlocks.clear();
 		activeEnvoys.clear();
+	}
+	
+	public WorldGuardVersion getWorldGuardSupport() {
+		return worldGuardVersion;
 	}
 	
 	/**

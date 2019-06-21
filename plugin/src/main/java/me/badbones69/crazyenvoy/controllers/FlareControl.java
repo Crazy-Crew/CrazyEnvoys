@@ -8,8 +8,6 @@ import me.badbones69.crazyenvoy.api.events.EnvoyStartEvent;
 import me.badbones69.crazyenvoy.api.events.EnvoyStartEvent.EnvoyStartReason;
 import me.badbones69.crazyenvoy.api.objects.Flare;
 import me.badbones69.crazyenvoy.multisupport.Support;
-import me.badbones69.crazyenvoy.multisupport.Version;
-import me.badbones69.crazyenvoy.multisupport.WorldGuardSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -51,10 +49,10 @@ public class FlareControl implements Listener {
 								}
 							}
 							boolean toggle = false;
-							if(Support.WORLD_EDIT.isPluginLoaded() && Support.WORLD_GUARD.isPluginLoaded() && Version.getCurrentVersion().isOlder(Version.v1_13_R2)) {
+							if(Support.WORLD_EDIT.isPluginLoaded() && Support.WORLD_GUARD.isPluginLoaded()) {
 								if(config.getBoolean("Settings.Flares.World-Guard.Toggle")) {
 									for(String r : config.getStringList("Settings.Flares.World-Guard.Regions")) {
-										if(WorldGuardSupport.inRegion(r, player.getLocation())) {
+										if(envoy.getWorldGuardSupport().inRegion(r, player.getLocation())) {
 											toggle = true;
 										}
 									}

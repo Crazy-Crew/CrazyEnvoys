@@ -37,7 +37,7 @@ Messages:
   New-Center: '%prefix%&7You have just set a new center for the random crazyenvoy crates.'
   Not-In-World-Guard-Region: '%prefix%&cYou must be in the WarZone to use a flare.'
   Start-Ignoring-Messages: '%prefix%&7You are now ignoring the collecting messages.'
-  Stop-Ignoring-Messages: '%prefix%&7You now see all the collecting messages.'  
+  Stop-Ignoring-Messages: '%prefix%&7You now see all the collecting messages.'
   Cooldown-Left: '%prefix%&7You still have &6%time% &7till you can collect another crate.'
   Drops-Available: '%prefix%&7List of all available envoys.'
   Drops-Possibilities: '%prefix%&7List of location crazyenvoy''s may spawn at.'
