@@ -32,7 +32,7 @@ public class FlareControl implements Listener {
 			if(flare != null) {
 				if(Flare.isFlare(flare)) {
 					e.setCancelled(true);
-					if(player.hasPermission("crazyenvoy.flare.use")) {
+					if(player.hasPermission("envoy.flare.use")) {
 						if(envoy.isEnvoyActive()) {
 							Messages.ALREADY_STARTED.sendMessage(player);
 						}else {

@@ -51,7 +51,7 @@ public class EnvoyControl implements Listener {
 						}
 					}
 					e.setCancelled(true);
-					if(!player.hasPermission("crazyenvoy.bypass")) {
+					if(!player.hasPermission("envoy.bypass")) {
 						if(Files.CONFIG.getFile().contains("Settings.Crate-Collect-Cooldown")) {
 							if(Files.CONFIG.getFile().getBoolean("Settings.Crate-Collect-Cooldown.Toggle")) {
 								UUID uuid = player.getUniqueId();
