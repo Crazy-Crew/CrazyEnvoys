@@ -12,3 +12,5 @@ src/main/java/META-INF/
 src/\.DS_Store
 
 \.DS_Store
+
+plugin/src/main/lib/
