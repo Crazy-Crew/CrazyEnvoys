@@ -94,7 +94,12 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.1</version>
                 <configuration>
-                    <outputFile>/Users/badbones/Desktop/Minecraft/Server/plugins/CrazyEnvoy[v${project.version}].jar</outputFile>
+                    <artifactSet>
+                        <includes>
+                            <include>me.badbones69:*</include>
+                        </includes>
+                    </artifactSet>
+                    <!--                    <outputFile>/Users/badbones/Desktop/Minecraft/Server/plugins/CrazyEnvoy[v${project.version}].jar</outputFile>-->
                 </configuration>
                 <executions>
                     <execution>
