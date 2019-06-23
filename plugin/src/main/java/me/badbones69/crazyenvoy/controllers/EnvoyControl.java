@@ -45,8 +45,13 @@ public class EnvoyControl implements Listener {
 			if(e.getClickedBlock() != null) {
 				Location loc = e.getClickedBlock().getLocation();
 				if(envoy.isActiveEnvoy(loc)) {
-					if(Version.getCurrentVersion().getVersionInteger() > Version.v1_7_R4.getVersionInteger()) {
+					if(Version.getCurrentVersion().isNewer(Version.v1_7_R4)) {
 						if(player.getGameMode() == GameMode.valueOf("SPECTATOR")) {
+							return;
+						}
+					}
+					if(player.getGameMode() == GameMode.CREATIVE) {
+						if(!player.hasPermission("envoy.gamemode-bypass")) {
 							return;
 						}
 					}
