@@ -6,6 +6,7 @@ import org.bukkit.plugin.Plugin;
 public enum Support {
 	
 	HOLOGRAPHIC_DISPLAYS("HolographicDisplays"),
+	HOLOGRAMS("Holograms"),
 	PLACEHOLDER_API("PlaceholderAPI"),
 	MVDW_PLACEHOLDER_API("MVdWPlaceholderAPI"),
 	WORLD_GUARD("WorldGuard"),

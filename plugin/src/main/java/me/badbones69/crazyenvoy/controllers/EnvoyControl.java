@@ -9,10 +9,7 @@ import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
 import me.badbones69.crazyenvoy.api.objects.ItemBuilder;
 import me.badbones69.crazyenvoy.api.objects.Prize;
 import me.badbones69.crazyenvoy.api.objects.Tier;
-import me.badbones69.crazyenvoy.multisupport.CMISupport;
-import me.badbones69.crazyenvoy.multisupport.HolographicSupport;
-import me.badbones69.crazyenvoy.multisupport.Support;
-import me.badbones69.crazyenvoy.multisupport.Version;
+import me.badbones69.crazyenvoy.multisupport.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -78,12 +75,13 @@ public class EnvoyControl implements Listener {
 						Methods.fireWork(loc.clone().add(.5, 0, .5), tier.getFireworkColors());
 					}
 					e.getClickedBlock().setType(Material.AIR);
+					Location spawnLocation = loc.clone().add(.5, tier.getHoloHight(), .5);
 					if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-						double hight = tier.getHoloHight();
-						HolographicSupport.removeHologram(loc.clone().add(.5, hight, .5));
+						HolographicSupport.removeHologram(spawnLocation);
+					}else if(Support.HOLOGRAMS.isPluginLoaded()) {
+						HologramsSupport.removeHologram(spawnLocation);
 					}else if(Support.CMI.isPluginLoaded()) {
-						double hight = tier.getHoloHight();
-						CMISupport.removeHologram(loc.clone().add(.5, hight, .5));
+						CMISupport.removeHologram(spawnLocation);
 					}
 					envoy.stopSignalFlare(e.getClickedBlock().getLocation());
 					envoy.removeActiveEnvoy(loc);
@@ -158,12 +156,12 @@ public class EnvoyControl implements Listener {
 							loc.add(0, 1, 0);
 						}
 						loc.getBlock().setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
-						if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-							if(tier.isHoloEnabled()) {
+						if(tier.isHoloEnabled()) {
+							if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
 								HolographicSupport.createHologram(loc.getBlock().getLocation(), tier);
-							}
-						}else if(Support.CMI.isPluginLoaded()) {
-							if(tier.isHoloEnabled()) {
+							}else if(Support.HOLOGRAMS.isPluginLoaded()) {
+								HologramsSupport.createHologram(loc.getBlock().getLocation(), tier);
+							}else if(Support.CMI.isPluginLoaded()) {
 								CMISupport.createHologram(loc.getBlock().getLocation(), tier);
 							}
 						}
@@ -191,12 +189,12 @@ public class EnvoyControl implements Listener {
 							loc.add(0, 1, 0);
 						}
 						loc.getBlock().setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
-						if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-							if(tier.isHoloEnabled()) {
+						if(tier.isHoloEnabled()) {
+							if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
 								HolographicSupport.createHologram(loc.getBlock().getLocation(), tier);
-							}
-						}else if(Support.CMI.isPluginLoaded()) {
-							if(tier.isHoloEnabled()) {
+							}else if(Support.HOLOGRAMS.isPluginLoaded()) {
+								HologramsSupport.createHologram(loc.getBlock().getLocation(), tier);
+							}else if(Support.CMI.isPluginLoaded()) {
 								CMISupport.createHologram(loc.getBlock().getLocation(), tier);
 							}
 						}
@@ -211,6 +209,7 @@ public class EnvoyControl implements Listener {
 			}
 		}
 	}
+	
 	private Calendar getTimeFromString(String time) {
 		Calendar cal = Calendar.getInstance();
 		for(String i : time.split(" ")) {
@@ -268,22 +267,14 @@ public class EnvoyControl implements Listener {
 	
 	private ArrayList<Prize> pickPrizesByChance(Tier tier) {
 		ArrayList<Prize> prizes = new ArrayList<>();
-		for(; prizes.size() == 0; ) {
-			for(Prize prize : tier.getPrizes()) {
-				if(Methods.isSuccessful(prize.getChance(), 100)) {
-					prizes.add(prize);
-				}
-			}
-		}
-		ArrayList<Prize> finlePrizes = new ArrayList<>();
 		int max = tier.getBulkToggle() ? tier.getBulkMax() : 1;
-		for(int i = 0; finlePrizes.size() < max && i < 500; i++) {
-			Prize prize = prizes.get(new Random().nextInt(prizes.size()));
-			if(!finlePrizes.contains(prize)) {
-				finlePrizes.add(prize);
+		for(int i = 0; prizes.size() < max && i < 500; i++) {
+			Prize prize = tier.getPrizes().get(new Random().nextInt(tier.getPrizes().size()));
+			if(!prizes.contains(prize)) {
+				prizes.add(prize);
 			}
 		}
-		return finlePrizes;
+		return prizes;
 	}
 	
 	private Tier pickRandomTier() {

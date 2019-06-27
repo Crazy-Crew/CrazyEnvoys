@@ -372,6 +372,9 @@ public class CrazyEnvoy {
 		if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
 			HolographicSupport.removeAllHolograms();
 		}
+		if(Support.HOLOGRAMS.isPluginLoaded()) {
+			HologramsSupport.removeAllHolograms();
+		}
 		if(Support.CMI.isPluginLoaded()) {
 			CMISupport.removeAllHolograms();
 		}
@@ -742,12 +745,12 @@ public class CrazyEnvoy {
 							loc.getChunk().load();
 						}
 						loc.getBlock().setType(tier.getPlacedBlockMaterial());
-						if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-							if(tier.isHoloEnabled()) {
+						if(tier.isHoloEnabled()) {
+							if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
 								HolographicSupport.createHologram(loc.clone(), tier);
-							}
-						}else if(Support.CMI.isPluginLoaded()) {
-							if(tier.isHoloEnabled()) {
+							}else if(Support.HOLOGRAMS.isPluginLoaded()) {
+								HologramsSupport.createHologram(loc.clone(), tier);
+							}else if(Support.CMI.isPluginLoaded()) {
 								CMISupport.createHologram(loc.clone(), tier);
 							}
 						}
@@ -901,6 +904,8 @@ public class CrazyEnvoy {
 				stopSignalFlare(spawnedLocation);
 				if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
 					HolographicSupport.removeAllHolograms();
+				}else if(Support.HOLOGRAMS.isPluginLoaded()) {
+					HologramsSupport.removeAllHolograms();
 				}else if(Support.CMI.isPluginLoaded()) {
 					CMISupport.removeAllHolograms();
 				}
