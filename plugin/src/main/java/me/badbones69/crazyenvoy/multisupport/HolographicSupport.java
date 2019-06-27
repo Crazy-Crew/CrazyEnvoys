@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class HolographicSupport {
 	
 	private static CrazyEnvoy envoy = CrazyEnvoy.getInstance();
-	private static HashMap<Location, Hologram> holos = new HashMap<>();
+	private static HashMap<Location, Hologram> holograms = new HashMap<>();
 	
 	public static void registerPlaceHolders() {
 		HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{crazyenvoy_cooldown}", 1, () -> {
@@ -40,28 +40,28 @@ public class HolographicSupport {
 		}
 	}
 	
-	public static void createHologram(Location loc, Tier tier) {
+	public static void createHologram(Location location, Tier tier) {
 		double hight = tier.getHoloHight();
-		Hologram hologram = HologramsAPI.createHologram(envoy.getPlugin(), loc.add(.5, hight, .5));
+		Hologram hologram = HologramsAPI.createHologram(envoy.getPlugin(), location.add(.5, hight, .5));
 		for(String line : tier.getHoloMessage()) {
 			hologram.appendTextLine(Methods.color(line));
 		}
-		holos.put(loc, hologram);
+		holograms.put(location, hologram);
 	}
 	
-	public static void removeHologram(Location loc) {
-		if(holos.containsKey(loc)) {
-			Hologram hologram = holos.get(loc);
-			holos.remove(loc);
+	public static void removeHologram(Location location) {
+		if(holograms.containsKey(location)) {
+			Hologram hologram = holograms.get(location);
+			holograms.remove(location);
 			hologram.delete();
 		}
 	}
 	
 	public static void removeAllHolograms() {
-		for(Location loc : holos.keySet()) {
-			holos.get(loc).delete();
+		for(Location loc : holograms.keySet()) {
+			holograms.get(loc).delete();
 		}
-		holos.clear();
+		holograms.clear();
 	}
 	
 }
