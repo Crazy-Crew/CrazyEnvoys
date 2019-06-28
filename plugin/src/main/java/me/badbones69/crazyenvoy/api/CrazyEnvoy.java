@@ -71,7 +71,6 @@ public class CrazyEnvoy {
 		}
 		spawnLocations.clear();
 		blacklistedBlocks.clear();
-		worldGuardVersion = Version.getCurrentVersion().isNewer(Version.v1_12_R1) ? new WorldGuard_v7() : new WorldGuard_v6();
 		plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 		FileConfiguration data = Files.DATA.getFile();
 		FileConfiguration config = Files.CONFIG.getFile();
@@ -270,6 +269,9 @@ public class CrazyEnvoy {
 				blacklistedBlocks.add(Material.matchMaterial("STAINED_GLASS_PANE"));
 				blacklistedBlocks.add(Material.matchMaterial("STONE_SLAB2"));
 			}
+		}
+		if(Support.WORLD_GUARD.isPluginLoaded() && Support.WORLD_EDIT.isPluginLoaded()) {
+			worldGuardVersion = Version.getCurrentVersion().isNewer(Version.v1_12_R1) ? new WorldGuard_v7() : new WorldGuard_v6();
 		}
 	}
 	

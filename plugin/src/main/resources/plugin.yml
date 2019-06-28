@@ -4,7 +4,7 @@ main: me.badbones69.crazyenvoy.Main
 version: ${project.version}
 api-version: 1.13
 description: A crazy crazyenvoy plugin.
-softdepend: [HolographicDisplays, PlaceholderAPI, MVdWPlaceholderAPI, Multiverse-Core, MultiWorld]
+softdepend: [HolographicDisplays, Holograms, PlaceholderAPI, MVdWPlaceholderAPI, Multiverse-Core, MultiWorld, WorldEdit, WorldGuard]
 commands:
   envoy:
     description: Shows the next time till the next crazyenvoy.
