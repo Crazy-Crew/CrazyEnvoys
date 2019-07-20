@@ -4,7 +4,7 @@ Settings:
   Falling-Block-Toggle: true #Toggle if it spawns a falling block or if the crates just appear.
   Falling-Block: '138' #The block that will be falling.
   Fall-Height: 15 #How high the falling blocks spawn.
-  Max-Crate-Toggle: false #If ture then only a specified amount of crates will spawn and if false then all crates will spawn.
+  Max-Crate-Toggle: false #If true then only a specified amount of crates will spawn and if false then all crates will spawn.
   Max-Crates: 20 #The max amount of crates that will spawn.
   Random-Locations: false #If true you will need to make sure to set the center location.
   Max-Radius: 300 #The maximum distance the crates will fall from the center.
