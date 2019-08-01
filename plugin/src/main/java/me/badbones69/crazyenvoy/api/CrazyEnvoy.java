@@ -852,6 +852,8 @@ public class CrazyEnvoy {
 	 */
 	public void setCenter(Location loc) {
 		center = loc;
+		Files.DATA.getFile().set("Center", getStringFromLocation(center));
+		Files.DATA.saveFile();
 	}
 	
 	/**
