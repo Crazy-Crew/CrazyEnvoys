@@ -313,18 +313,23 @@ public class CrazyEnvoy {
 					next.clear(Calendar.MILLISECOND);
 					if(next.compareTo(cal) <= 0) {
 						if(!isEnvoyActive()) {
-							if(Files.CONFIG.getFile().contains("Settings.Minimum-Players-Toggle") && Files.CONFIG.getFile().contains("Settings.Minimum-Players")) {
-								if(Files.CONFIG.getFile().getBoolean("Settings.Minimum-Players-Toggle")) {
-									int online = Bukkit.getServer().getOnlinePlayers().size();
-									if(online < Files.CONFIG.getFile().getInt("Settings.Minimum-Players")) {
-										HashMap<String, String> placeholder = new HashMap<>();
-										placeholder.put("%amount%", online + "");
-										placeholder.put("%Amount%", online + "");
-										Messages.NOT_ENOUGH_PLAYERS.broadcastMessage(false, placeholder);
-										setNextEnvoy(getEnvoyCooldown());
-										resetWarnings();
-										return;
-									}
+							if(Files.CONFIG.getFile().getBoolean("Settings.Minimum-Players-Toggle")) {
+								int online = Bukkit.getServer().getOnlinePlayers().size();
+								if(online < Files.CONFIG.getFile().getInt("Settings.Minimum-Players")) {
+									HashMap<String, String> placeholder = new HashMap<>();
+									placeholder.put("%amount%", online + "");
+									placeholder.put("%Amount%", online + "");
+									Messages.NOT_ENOUGH_PLAYERS.broadcastMessage(false, placeholder);
+									setNextEnvoy(getEnvoyCooldown());
+									resetWarnings();
+									return;
+								}
+							}
+							if(Files.CONFIG.getFile().getBoolean("Settings.Random-Locations")) {
+								if(center.getWorld() == null) {
+									System.out.println("[CrazyEnvoy] The envoy center's world can't be found and so envoy has been canceled.");
+									setNextEnvoy(getEnvoyCooldown());
+									resetWarnings();
 								}
 							}
 							EnvoyStartEvent event = new EnvoyStartEvent(autoTimer ? EnvoyStartReason.AUTO_TIMER : EnvoyStartReason.SPECIFIED_TIME);
@@ -518,6 +523,7 @@ public class CrazyEnvoy {
 		}
 		return msg;
 	}
+	
 	/**
 	 *
 	 * @return All falling blocks are are currently going.
@@ -714,6 +720,7 @@ public class CrazyEnvoy {
 					for(Entity en : Methods.getNearbyEntities(loc, 40, 40, 40)) {
 						if(en instanceof Player) {
 							spawnFallingBlock = true;
+							break;
 						}
 					}
 					if(Files.CONFIG.getFile().contains("Settings.Falling-Block-Toggle")) {
@@ -1067,10 +1074,10 @@ public class CrazyEnvoy {
 		loc.add(-radius, 0, -radius);
 		loc2.add(radius, 0, radius);
 		ArrayList<Location> locs = new ArrayList<>();
-		int topBlockX = (loc.getBlockX() < loc2.getBlockX() ? loc2.getBlockX() : loc.getBlockX());
-		int bottomBlockX = (loc.getBlockX() > loc2.getBlockX() ? loc2.getBlockX() : loc.getBlockX());
-		int topBlockZ = (loc.getBlockZ() < loc2.getBlockZ() ? loc2.getBlockZ() : loc.getBlockZ());
-		int bottomBlockZ = (loc.getBlockZ() > loc2.getBlockZ() ? loc2.getBlockZ() : loc.getBlockZ());
+		int topBlockX = (Math.max(loc.getBlockX(), loc2.getBlockX()));
+		int bottomBlockX = (Math.min(loc.getBlockX(), loc2.getBlockX()));
+		int topBlockZ = (Math.max(loc.getBlockZ(), loc2.getBlockZ()));
+		int bottomBlockZ = (Math.min(loc.getBlockZ(), loc2.getBlockZ()));
 		if(loc.getWorld() != null) {
 			for(int x = bottomBlockX; x <= topBlockX; x++) {
 				for(int z = bottomBlockZ; z <= topBlockZ; z++) {
