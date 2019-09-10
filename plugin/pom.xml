@@ -78,8 +78,7 @@
             <groupId>com.Zrips.CMI</groupId>
             <artifactId>CMI</artifactId>
             <version>8.0.4.5</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/lib/CMI.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
