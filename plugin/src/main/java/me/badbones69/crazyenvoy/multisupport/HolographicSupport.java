@@ -42,6 +42,8 @@ public class HolographicSupport {
 	
 	public static void createHologram(Location location, Tier tier) {
 		double hight = tier.getHoloHight();
+		location.setX(location.getBlockX());
+		location.setZ(location.getBlockZ());
 		Hologram hologram = HologramsAPI.createHologram(envoy.getPlugin(), location.add(.5, hight, .5));
 		for(String line : tier.getHoloMessage()) {
 			hologram.appendTextLine(Methods.color(line));

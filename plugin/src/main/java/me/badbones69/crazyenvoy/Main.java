@@ -13,8 +13,8 @@ import me.badbones69.crazyenvoy.api.objects.Flare;
 import me.badbones69.crazyenvoy.controllers.*;
 import me.badbones69.crazyenvoy.multisupport.*;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -227,12 +227,12 @@ public class Main extends JavaPlugin implements Listener {
 					}
 					int i = 1;
 					HashMap<String, String> ph = new HashMap<>();
-					for(Location loc : envoy.isEnvoyActive() ? envoy.getActiveEnvoys() : envoy.getSpawnLocations()) {
+					for(Block block : envoy.isEnvoyActive() ? envoy.getActiveEnvoys() : envoy.getSpawnLocations()) {
 						ph.put("%id%", i + "");
-						ph.put("%world%", loc.getWorld().getName());
-						ph.put("%x%", loc.getBlockX() + "");
-						ph.put("%y%", loc.getBlockY() + "");
-						ph.put("%z%", loc.getBlockZ() + "");
+						ph.put("%world%", block.getWorld().getName());
+						ph.put("%x%", block.getX() + "");
+						ph.put("%y%", block.getY() + "");
+						ph.put("%z%", block.getZ() + "");
 						locs.add(Messages.DROPS_FORMAT.getMessage(ph));
 						i++;
 						ph.clear();

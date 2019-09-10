@@ -41,7 +41,7 @@ public class EnvoyControl implements Listener {
 		if(envoy.isEnvoyActive()) {
 			if(e.getClickedBlock() != null) {
 				Location loc = e.getClickedBlock().getLocation();
-				if(envoy.isActiveEnvoy(loc)) {
+				if(envoy.isActiveEnvoy(e.getClickedBlock())) {
 					if(Version.getCurrentVersion().isNewer(Version.v1_7_R4)) {
 						if(player.getGameMode() == GameMode.valueOf("SPECTATOR")) {
 							return;
@@ -70,7 +70,7 @@ public class EnvoyControl implements Listener {
 							}
 						}
 					}
-					Tier tier = envoy.getTier(loc);
+					Tier tier = envoy.getTier(e.getClickedBlock());
 					if(tier.getFireworkToggle()) {
 						Methods.fireWork(loc.clone().add(.5, 0, .5), tier.getFireworkColors());
 					}
@@ -84,7 +84,7 @@ public class EnvoyControl implements Listener {
 						CMISupport.removeHologram(spawnLocation);
 					}
 					envoy.stopSignalFlare(e.getClickedBlock().getLocation());
-					envoy.removeActiveEnvoy(loc);
+					envoy.removeActiveEnvoy(loc.getBlock());
 					ArrayList<Prize> prizes;
 					if(tier.getPrizes().size() == 0) {
 						Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
@@ -143,6 +143,7 @@ public class EnvoyControl implements Listener {
 			}
 		}
 	}
+	
 	@EventHandler
 	public void onChestSpawn(EntityChangeBlockEvent e) {
 		if(envoy.isEnvoyActive()) {
@@ -166,8 +167,8 @@ public class EnvoyControl implements Listener {
 							}
 						}
 						envoy.removeFallingBlock(e.getEntity());
-						envoy.addActiveEnvoy(loc.getBlock().getLocation(), tier);
-						envoy.addSpawnedLocation(loc.getBlock().getLocation());
+						envoy.addActiveEnvoy(loc.getBlock(), tier);
+						envoy.addSpawnedLocation(loc.getBlock());
 						if(tier.getSignalFlareToggle()) {
 							envoy.startSignalFlare(loc.getBlock().getLocation(), tier);
 						}
@@ -176,6 +177,7 @@ public class EnvoyControl implements Listener {
 			}
 		}
 	}
+	
 	@EventHandler
 	public void onItemSpawn(ItemSpawnEvent e) {
 		if(envoy.isEnvoyActive()) {
@@ -199,8 +201,8 @@ public class EnvoyControl implements Listener {
 							}
 						}
 						envoy.removeFallingBlock(en);
-						envoy.addActiveEnvoy(loc.getBlock().getLocation(), tier);
-						envoy.addSpawnedLocation(loc.getBlock().getLocation());
+						envoy.addActiveEnvoy(loc.getBlock(), tier);
+						envoy.addSpawnedLocation(loc.getBlock());
 						if(tier.getSignalFlareToggle()) {
 							envoy.startSignalFlare(loc.getBlock().getLocation(), tier);
 						}

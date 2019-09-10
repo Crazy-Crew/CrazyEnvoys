@@ -16,6 +16,7 @@ import me.badbones69.crazyenvoy.controllers.EnvoyControl;
 import me.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
 import me.badbones69.crazyenvoy.multisupport.*;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -45,11 +46,12 @@ public class CrazyEnvoy {
 	private ArrayList<Material> blacklistedBlocks = new ArrayList<>();
 	private ArrayList<UUID> ignoreMessages = new ArrayList<>();
 	private ArrayList<Calendar> warnings = new ArrayList<>();
-	private ArrayList<Location> spawnLocations = new ArrayList<>();
-	private ArrayList<Location> spawnedLocations = new ArrayList<>();
+	private ArrayList<Block> spawnLocations = new ArrayList<>();
+	private ArrayList<Block> spawnedLocations = new ArrayList<>();
 	private ArrayList<Entity> fallingBlocks = new ArrayList<>();
 	private Location center;
-	private HashMap<Location, Tier> activeEnvoys = new HashMap<>();
+	private String centerString;
+	private HashMap<Block, Tier> activeEnvoys = new HashMap<>();
 	private HashMap<Location, BukkitTask> activeSignals = new HashMap<>();
 	private List<Tier> tiers = new ArrayList<>();
 	private Plugin plugin;
@@ -76,13 +78,14 @@ public class CrazyEnvoy {
 		FileConfiguration config = Files.CONFIG.getFile();
 		envoyTimeLeft = Calendar.getInstance();
 		for(String l : data.getStringList("Locations.Spawns")) {
-			spawnLocations.add(getLocationFromString(l));
+			spawnLocations.add(getLocationFromString(l).getBlock());
 		}
 		if(Calendar.getInstance().after(getNextEnvoy())) {
 			setEnvoyActive(false);
 		}
 		if(Files.DATA.getFile().contains("Center")) {
 			center = getLocationFromString(Files.DATA.getFile().getString("Center"));
+			centerString = Files.DATA.getFile().getString("Center");
 		}else {
 			center = Bukkit.getWorlds().get(0).getSpawnLocation();
 		}
@@ -328,8 +331,10 @@ public class CrazyEnvoy {
 							if(Files.CONFIG.getFile().getBoolean("Settings.Random-Locations")) {
 								if(center.getWorld() == null) {
 									System.out.println("[CrazyEnvoy] The envoy center's world can't be found and so envoy has been canceled.");
+									System.out.println("Center String: " + centerString);
 									setNextEnvoy(getEnvoyCooldown());
 									resetWarnings();
+									return;
 								}
 							}
 							EnvoyStartEvent event = new EnvoyStartEvent(autoTimer ? EnvoyStartReason.AUTO_TIMER : EnvoyStartReason.SPECIFIED_TIME);
@@ -346,11 +351,11 @@ public class CrazyEnvoy {
 	
 	/**
 	 *
-	 * @param loc The location you want the tier from.
+	 * @param block The location you want the tier from.
 	 * @return The tier that location is.
 	 */
-	public Tier getTier(Location loc) {
-		return activeEnvoys.get(loc);
+	public Tier getTier(Block block) {
+		return activeEnvoys.get(block);
 	}
 	
 	/**
@@ -367,9 +372,9 @@ public class CrazyEnvoy {
 	public void deSpawnCrates() {
 		envoyActive = false;
 		cleanLocations();
-		for(Location loc : getActiveEnvoys()) {
-			loc.getBlock().setType(Material.AIR);
-			stopSignalFlare(loc);
+		for(Block block : getActiveEnvoys()) {
+			block.setType(Material.AIR);
+			stopSignalFlare(block.getLocation());
 		}
 		for(Entity en : fallingBlocks) {
 			en.remove();
@@ -395,7 +400,7 @@ public class CrazyEnvoy {
 	 *
 	 * @return All the location the chests will spawn.
 	 */
-	public ArrayList<Location> getSpawnLocations() {
+	public ArrayList<Block> getSpawnLocations() {
 		return spawnLocations;
 	}
 	
@@ -404,8 +409,8 @@ public class CrazyEnvoy {
 	 * @param location The location that you want to check.
 	 */
 	public Boolean isLocation(Location location) {
-		for(Location loc : spawnLocations) {
-			if(loc.equals(location)) {
+		for(Block block : spawnLocations) {
+			if(block.getLocation().equals(location)) {
 				return true;
 			}
 		}
@@ -414,10 +419,10 @@ public class CrazyEnvoy {
 	
 	public void saveSpawnLocations() {
 		ArrayList<String> locs = new ArrayList<>();
-		for(Location loc : spawnLocations) {
+		for(Block block : spawnLocations) {
 			try {
-				if(loc.getWorld() != null) {
-					locs.add(getStringFromLocation(loc));
+				if(block.getWorld() != null) {
+					locs.add(getStringFromLocation(block.getLocation()));
 				}
 			}catch(Exception e) {
 			}
@@ -430,51 +435,51 @@ public class CrazyEnvoy {
 	 *
 	 * @return All the active envoys that are active.
 	 */
-	public Set<Location> getActiveEnvoys() {
+	public Set<Block> getActiveEnvoys() {
 		return activeEnvoys.keySet();
 	}
 	
 	/**
 	 *
-	 * @param loc The location your are checking.
+	 * @param block The location your are checking.
 	 * @return Turn if it is and false if not.
 	 */
-	public Boolean isActiveEnvoy(Location loc) {
-		return activeEnvoys.containsKey(loc);
+	public Boolean isActiveEnvoy(Block block) {
+		return activeEnvoys.containsKey(block);
 	}
 	
 	/**
 	 *
-	 * @param loc The location you wish to add.
+	 * @param block The location you wish to add.
 	 */
-	public void addActiveEnvoy(Location loc, Tier tier) {
-		activeEnvoys.put(loc, tier);
+	public void addActiveEnvoy(Block block, Tier tier) {
+		activeEnvoys.put(block, tier);
 	}
 	
 	/**
 	 *
-	 * @param loc The location you wish to remove.
+	 * @param block The location you wish to remove.
 	 */
-	public void removeActiveEnvoy(Location loc) {
-		activeEnvoys.remove(loc);
+	public void removeActiveEnvoy(Block block) {
+		activeEnvoys.remove(block);
 	}
 	
 	/**
 	 *
-	 * @param loc The location you want to add.
+	 * @param block The location you want to add.
 	 */
-	public void addLocation(Location loc) {
-		spawnLocations.add(loc);
+	public void addLocation(Block block) {
+		spawnLocations.add(block);
 		saveSpawnLocations();
 	}
 	
 	/**
 	 *
-	 * @param loc The location you want to remove.
+	 * @param block The location you want to remove.
 	 */
-	public void removeLocation(Location loc) {
-		if(isLocation(loc)) {
-			spawnLocations.remove(loc);
+	public void removeLocation(Block block) {
+		if(isLocation(block.getLocation())) {
+			spawnLocations.remove(block);
 			saveSpawnLocations();
 		}
 	}
@@ -645,6 +650,13 @@ public class CrazyEnvoy {
 	 */
 	@SuppressWarnings("deprecation")
 	public void startEnvoyEvent() {
+		if(Files.CONFIG.getFile().getBoolean("Settings.Random-Locations")) {
+			if(center.getWorld() == null) {
+				setNextEnvoy(getEnvoyCooldown());
+				resetWarnings();
+				return;
+			}
+		}
 		for(Player player : EditControl.getEditors()) {
 			EditControl.removeFakeBlocks(player);
 			player.getInventory().removeItem(new ItemStack(Material.BEDROCK, 1));
@@ -664,12 +676,12 @@ public class CrazyEnvoy {
 				max = getSpawnLocations().size();
 			}
 		}
-		ArrayList<Location> dropLocations = new ArrayList<>();
+		ArrayList<Block> dropLocations = new ArrayList<>();
 		if(Files.CONFIG.getFile().getBoolean("Settings.Max-Crate-Toggle")) {
 			for(int i = 0; i < max; ) {
-				Location loc = spawnLocations.get(new Random().nextInt(spawnLocations.size()));
-				if(!dropLocations.contains(loc)) {
-					dropLocations.add(loc);
+				Block block = spawnLocations.get(new Random().nextInt(spawnLocations.size()));
+				if(!dropLocations.contains(block)) {
+					dropLocations.add(block);
 					i++;
 				}
 			}
@@ -705,7 +717,7 @@ public class CrazyEnvoy {
 				blacklistedBlocks.contains(loc.getBlock().getType())) {
 					continue;
 				}
-				dropLocations.add(loc.add(0, 1, 0));
+				dropLocations.add(loc.add(0, 1, 0).getBlock());
 				i++;
 			}
 		}
@@ -713,11 +725,11 @@ public class CrazyEnvoy {
 		placeholder.put("%amount%", max + "");
 		placeholder.put("%Amount%", max + "");
 		Messages.STARTED.broadcastMessage(false, placeholder);
-		for(Location loc : dropLocations) {
-			if(loc != null) {
-				if(loc.getWorld() != null) {
+		for(Block block : dropLocations) {
+			if(block != null) {
+				if(block.getWorld() != null) {
 					boolean spawnFallingBlock = false;
-					for(Entity en : Methods.getNearbyEntities(loc, 40, 40, 40)) {
+					for(Entity en : Methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
 						if(en instanceof Player) {
 							spawnFallingBlock = true;
 							break;
@@ -741,30 +753,30 @@ public class CrazyEnvoy {
 							material = Material.BEACON;
 						}
 						int height = Files.CONFIG.getFile().getInt("Settings.Fall-Height");
-						if(!loc.getChunk().isLoaded()) {
-							loc.getChunk().load();
+						if(!block.getChunk().isLoaded()) {
+							block.getChunk().load();
 						}
-						FallingBlock chest = loc.getWorld().spawnFallingBlock(loc.clone().add(.5, height, .5), material, (byte) durrability);
+						FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, height, .5), material, (byte) durrability);
 						fallingBlocks.add(chest);
 					}else {
 						Tier tier = pickRandomTier();
-						if(!loc.getChunk().isLoaded()) {
-							loc.getChunk().load();
+						if(!block.getChunk().isLoaded()) {
+							block.getChunk().load();
 						}
-						loc.getBlock().setType(tier.getPlacedBlockMaterial());
+						block.setType(tier.getPlacedBlockMaterial());
 						if(tier.isHoloEnabled()) {
 							if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-								HolographicSupport.createHologram(loc.clone(), tier);
+								HolographicSupport.createHologram(block.getLocation(), tier);
 							}else if(Support.HOLOGRAMS.isPluginLoaded()) {
-								HologramsSupport.createHologram(loc.clone(), tier);
+								HologramsSupport.createHologram(block.getLocation(), tier);
 							}else if(Support.CMI.isPluginLoaded()) {
-								CMISupport.createHologram(loc.clone(), tier);
+								CMISupport.createHologram(block.getLocation(), tier);
 							}
 						}
-						addActiveEnvoy(loc.clone(), tier);
-						addSpawnedLocation(loc.clone());
+						addActiveEnvoy(block, tier);
+						addSpawnedLocation(block);
 						if(tier.getSignalFlareToggle()) {
-							startSignalFlare(loc.clone(), tier);
+							startSignalFlare(block.getLocation(), tier);
 						}
 					}
 				}
@@ -859,6 +871,7 @@ public class CrazyEnvoy {
 	 */
 	public void setCenter(Location loc) {
 		center = loc;
+		centerString = getStringFromLocation(center);
 		Files.DATA.getFile().set("Center", getStringFromLocation(center));
 		Files.DATA.saveFile();
 	}
@@ -901,16 +914,16 @@ public class CrazyEnvoy {
 		for(Tier tier : getTiers()) {
 			crateTypes.add(tier.getPlacedBlockMaterial());
 		}
-		List<Location> notFound = new ArrayList<>();
-		for(Location spawnedLocation : spawnedLocations) {
+		List<Block> notFound = new ArrayList<>();
+		for(Block spawnedLocation : spawnedLocations) {
 			if(spawnedLocation != null) {
-				if(crateTypes.contains(spawnedLocation.getBlock().getType())) {
-					spawnedLocation.getBlock().setType(Material.AIR);
+				if(crateTypes.contains(spawnedLocation.getType())) {
+					spawnedLocation.setType(Material.AIR);
 					//				System.out.println("[CrazyEnvoy]: Removed the old crate at location " + getStringFromLocation(spawnedLocation));
 				}else {
 					notFound.add(spawnedLocation);
 				}
-				stopSignalFlare(spawnedLocation);
+				stopSignalFlare(spawnedLocation.getLocation());
 				if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
 					HolographicSupport.removeAllHolograms();
 				}else if(Support.HOLOGRAMS.isPluginLoaded()) {
@@ -935,17 +948,17 @@ public class CrazyEnvoy {
 	
 	/**
 	 * Add a location to the cleaning list of where crates actually spawned.
-	 * @param location Location the crate spawned at.
+	 * @param block block the crate spawned at.
 	 */
-	public void addSpawnedLocation(Location location) {
-		if(!getStringsFromLocationList(spawnedLocations).contains(getStringFromLocation(location))) {
-			spawnedLocations.add(location);
+	public void addSpawnedLocation(Block block) {
+		if(!getStringsFromLocationList(spawnedLocations).contains(getStringFromLocation(block.getLocation()))) {
+			spawnedLocations.add(block);
 			Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(spawnedLocations));
 			Files.DATA.saveFile();
 		}
 	}
 	
-	public ArrayList<Location> getSpawnedLocations() {
+	public ArrayList<Block> getSpawnedLocations() {
 		return spawnedLocations;
 	}
 	
@@ -1021,10 +1034,10 @@ public class CrazyEnvoy {
 		+ ", Z:" + location.getBlockZ();
 	}
 	
-	private List<String> getStringsFromLocationList(List<Location> stringList) {
+	private List<String> getStringsFromLocationList(List<Block> stringList) {
 		ArrayList<String> strings = new ArrayList<>();
-		for(Location location : stringList) {
-			strings.add(getStringFromLocation(location));
+		for(Block block : stringList) {
+			strings.add(getStringFromLocation(block.getLocation()));
 		}
 		return strings;
 	}
@@ -1051,10 +1064,10 @@ public class CrazyEnvoy {
 		return new Location(w, x, y, z);
 	}
 	
-	private List<Location> getLocationsFromStringList(List<String> locationsList) {
-		ArrayList<Location> locations = new ArrayList<>();
+	private List<Block> getLocationsFromStringList(List<String> locationsList) {
+		ArrayList<Block> locations = new ArrayList<>();
 		for(String location : locationsList) {
-			locations.add(getLocationFromString(location));
+			locations.add(getLocationFromString(location).getBlock());
 		}
 		return locations;
 	}

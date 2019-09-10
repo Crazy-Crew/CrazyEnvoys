@@ -5,6 +5,7 @@ import me.badbones69.crazyenvoy.api.CrazyEnvoy;
 import me.badbones69.crazyenvoy.api.enums.Messages;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,15 +38,15 @@ public class EditControl implements Listener {
 	
 	@SuppressWarnings("deprecation")
 	public static void showFakeBlocks(Player player) {
-		for(Location loc : envoy.getSpawnLocations()) {
-			player.sendBlockChange(loc, Material.BEDROCK, (byte) 0);
+		for(Block block : envoy.getSpawnLocations()) {
+			player.sendBlockChange(block.getLocation(), Material.BEDROCK, (byte) 0);
 		}
 	}
 	
 	@SuppressWarnings("deprecation")
 	public static void removeFakeBlocks(Player player) {
-		for(Location loc : envoy.getSpawnLocations()) {
-			player.sendBlockChange(loc, loc.getBlock().getType(), loc.getBlock().getData());
+		for(Block block : envoy.getSpawnLocations()) {
+			player.sendBlockChange(block.getLocation(), block.getType(), block.getData());
 		}
 	}
 	
@@ -56,7 +57,7 @@ public class EditControl implements Listener {
 		if(isEditor(player)) {
 			e.setCancelled(true);
 			if(Methods.getItemInHand(player).getType() == Material.BEDROCK) {
-				envoy.addLocation(e.getBlock().getLocation());
+				envoy.addLocation(e.getBlock());
 				Messages.ADD_LOCATION.sendMessage(player);
 				new BukkitRunnable() {
 					@Override
@@ -78,7 +79,7 @@ public class EditControl implements Listener {
 			Location loc = e.getBlock().getLocation();
 			if(envoy.isLocation(loc)) {
 				e.getBlock().getState().update();
-				envoy.removeLocation(loc);
+				envoy.removeLocation(loc.getBlock());
 				Messages.REMOVE_LOCATION.sendMessage(player);
 			}
 		}
