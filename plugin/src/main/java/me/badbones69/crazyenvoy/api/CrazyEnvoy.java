@@ -78,7 +78,11 @@ public class CrazyEnvoy {
 		FileConfiguration config = Files.CONFIG.getFile();
 		envoyTimeLeft = Calendar.getInstance();
 		for(String l : data.getStringList("Locations.Spawns")) {
-			spawnLocations.add(getLocationFromString(l).getBlock());
+			try {
+				spawnLocations.add(getLocationFromString(l).getBlock());
+			}catch(Exception ignore) {
+				//Error when trying to get location and so it was skipped.
+			}
 		}
 		if(Calendar.getInstance().after(getNextEnvoy())) {
 			setEnvoyActive(false);
