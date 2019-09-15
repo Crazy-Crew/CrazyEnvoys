@@ -208,8 +208,8 @@ public class ItemBuilder {
 	 */
 	public String getUpdatedName() {
 		String newName = name;
-		for(String placeholder : lorePlaceholders.keySet()) {
-			newName = newName.replace(placeholder, lorePlaceholders.get(placeholder));
+		for(String placeholder : namePlaceholders.keySet()) {
+			newName = newName.replace(placeholder, namePlaceholders.get(placeholder));
 		}
 		return newName;
 	}
@@ -248,6 +248,7 @@ public class ItemBuilder {
 		}
 		return this;
 	}
+	
 	/**
 	 * Get the entity type of the mob egg.
 	 * @return The EntityType of the mob egg.
@@ -265,6 +266,7 @@ public class ItemBuilder {
 		this.entityType = entityType;
 		return this;
 	}
+	
 	/**
 	 * Set the placeholders that are in the lore of the item.
 	 * @param placeholders The placeholders that you wish to use.
@@ -336,6 +338,7 @@ public class ItemBuilder {
 	public HashMap<Enchantment, Integer> getEnchantments() {
 		return enchantments;
 	}
+	
 	/**
 	 * Set a list of enchantments that will go onto the item in the builder. These can have unsafe levels.
 	 * It will also override any enchantments used in the "ItemBuilder#addEnchantment()" method.
@@ -359,6 +362,7 @@ public class ItemBuilder {
 		this.enchantments.put(enchantment, level);
 		return this;
 	}
+	
 	/**
 	 * Remove an enchantment from the item in the builder.
 	 * @param enchantment The enchantment you wish to remove.
@@ -368,6 +372,7 @@ public class ItemBuilder {
 		this.enchantments.remove(enchantment);
 		return this;
 	}
+	
 	/**
 	 * Check if the item in the builder is unbreakable.
 	 * @return The ItemBuilder with updated info.
