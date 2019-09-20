@@ -124,7 +124,7 @@ public class ItemBuilder {
 	}
 	
 	/**
-	 * Get the metadata(Item Durrability) of the builder.
+	 * Get the metadata(Item Durability) of the builder.
 	 * @return The metadata as a short.
 	 */
 	public Short getMetaData() {
@@ -173,7 +173,7 @@ public class ItemBuilder {
 	
 	/**
 	 * Set the placeholders for the name of the item.
-	 * @param placeholders The palceholders that will be used.
+	 * @param placeholders The placeholders that will be used.
 	 * @return The ItemBuilder with updated info.
 	 */
 	public ItemBuilder setNamePlaceholders(HashMap<String, String> placeholders) {
@@ -428,7 +428,11 @@ public class ItemBuilder {
 		}
 		if(Version.getCurrentVersion().isOlder(Version.v1_13_R2)) {// 1.12.2 down
 			if(material == Material.matchMaterial("MONSTER_EGG")) {
-				nbt.addCompound("EntityTag").setString("id", "minecraft:" + entityType.name());
+				if(entityType != null) {
+					nbt.addCompound("EntityTag").setString("id", "minecraft:" + entityType.name());
+				}else {
+					nbt.addCompound("EntityTag").setString("id", "minecraft:CREEPER");
+				}
 			}
 		}
 		return nbt.getItem();
