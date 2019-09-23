@@ -77,13 +77,16 @@ public class CrazyEnvoy {
 		FileConfiguration data = Files.DATA.getFile();
 		FileConfiguration config = Files.CONFIG.getFile();
 		envoyTimeLeft = Calendar.getInstance();
-		for(String l : data.getStringList("Locations.Spawns")) {
+		List<String> failedLocations = new ArrayList<>();
+		for(String location : data.getStringList("Locations.Spawns")) {
 			try {
-				spawnLocations.add(getLocationFromString(l).getBlock());
+				spawnLocations.add(getLocationFromString(location).getBlock());
 			}catch(Exception ignore) {
 				//Error when trying to get location and so it was skipped.
+				failedLocations.add(location);
 			}
 		}
+		if(fileManager.isLogging() && !failedLocations.isEmpty()) System.out.println("[CrazyEnvoy] Failed to load " + failedLocations.size() + " locations and will reattempt in 10s.");
 		if(Calendar.getInstance().after(getNextEnvoy())) {
 			setEnvoyActive(false);
 		}
@@ -279,6 +282,27 @@ public class CrazyEnvoy {
 		}
 		if(Support.WORLD_GUARD.isPluginLoaded() && Support.WORLD_EDIT.isPluginLoaded()) {
 			worldGuardVersion = Version.getCurrentVersion().isNewer(Version.v1_12_R1) ? new WorldGuard_v7() : new WorldGuard_v6();
+		}
+		if(!failedLocations.isEmpty()) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					if(fileManager.isLogging()) System.out.println("[CrazyEnvoy] Attempting to fix " + failedLocations.size() + " locations that failed.");
+					int failed = 0;
+					int fixed = 0;
+					for(String location : failedLocations) {
+						try {
+							spawnLocations.add(getLocationFromString(location).getBlock());
+							fixed++;
+						}catch(Exception ignore) {
+							//Error when trying to get location and so it was skipped.
+							failed++;
+						}
+					}
+					if(fileManager.isLogging() && fixed > 0) System.out.println("[CrazyEnvoy] Was able to fix " + fixed + " locations that failed.");
+					if(fileManager.isLogging() && failed > 0) System.out.println("[CrazyEnvoy] Failed to fix " + failed + " locations and will not reattempt.");
+				}
+			}.runTaskLater(plugin, 200);
 		}
 	}
 	
