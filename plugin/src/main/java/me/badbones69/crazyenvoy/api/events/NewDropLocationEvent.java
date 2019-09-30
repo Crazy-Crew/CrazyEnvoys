@@ -14,7 +14,7 @@ public class NewDropLocationEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private Player player;
 	private Location location;
-	private Boolean cancelled;
+	private boolean cancelled;
 	
 	public NewDropLocationEvent(Player player, Location location) {
 		this.player = player;

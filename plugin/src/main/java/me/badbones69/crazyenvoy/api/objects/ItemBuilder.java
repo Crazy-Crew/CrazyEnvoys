@@ -598,7 +598,7 @@ public class ItemBuilder {
 	 * The amount of the item stack in the builder.
 	 * @return The amount that is set in the builder.
 	 */
-	public Integer getAmount() {
+	public int getAmount() {
 		return amount;
 	}
 	
@@ -607,7 +607,7 @@ public class ItemBuilder {
 	 * @param amount The amount that is in the item stack.
 	 * @return The ItemBuilder with updated info.
 	 */
-	public ItemBuilder setAmount(Integer amount) {
+	public ItemBuilder setAmount(int amount) {
 		this.amount = amount;
 		return this;
 	}

@@ -14,19 +14,19 @@ public class Tier {
 	
 	private String name;
 	private CustomFile file;
-	private Integer spawnChance;
-	private Boolean useChance;
+	private int spawnChance;
+	private boolean useChance;
 	private Material placedBlockMaterial;
 	private Short placedBlockMetaData;
-	private Boolean bulkToggle;
-	private Boolean bulkRandom;
-	private Integer bulkMax;
-	private Boolean holoToggle;
+	private boolean bulkToggle;
+	private boolean bulkRandom;
+	private int bulkMax;
+	private boolean holoToggle;
 	private Double holoHight;
 	private List<String> holoMessage;
-	private Boolean fireworkToggle;
+	private boolean fireworkToggle;
 	private List<Color> fireworkColors;
-	private Boolean signalFlareToggle;
+	private boolean signalFlareToggle;
 	private String signalFlareTimer;
 	private List<Color> signalFlareColors;
 	private List<Prize> prizes;
@@ -77,7 +77,7 @@ public class Tier {
 	/**
 	 * Get the chance of the crate spawning.
 	 */
-	public Integer getSpawnChance() {
+	public int getSpawnChance() {
 		return spawnChance;
 	}
 	
@@ -85,7 +85,7 @@ public class Tier {
 	 * Set the chance that the crate will spawn in the event.
 	 * @param spawnChance The new chance the crate will spawn.
 	 */
-	public Tier setSpawnChance(Integer spawnChance) {
+	public Tier setSpawnChance(int spawnChance) {
 		this.spawnChance = spawnChance;
 		return this;
 	}
@@ -93,7 +93,7 @@ public class Tier {
 	/**
 	 * Check to see if this tier uses a chance system for the prizes.
 	 */
-	public Boolean getUseChance() {
+	public boolean getUseChance() {
 		return useChance;
 	}
 	
@@ -101,7 +101,7 @@ public class Tier {
 	 * Set if the tier uses a chance system for the prizes.
 	 * @param useChance True if it uses a chance system and false if not.
 	 */
-	public Tier setUseChance(Boolean useChance) {
+	public Tier setUseChance(boolean useChance) {
 		this.useChance = useChance;
 		return this;
 	}
@@ -150,7 +150,7 @@ public class Tier {
 	/**
 	 * Check to see if the bulk prizes option is on.
 	 */
-	public Boolean getBulkToggle() {
+	public boolean getBulkToggle() {
 		return bulkToggle;
 	}
 	
@@ -158,7 +158,7 @@ public class Tier {
 	 * Set if the bulk prize option is on.
 	 * @param bulkToggle True if it can give multiple prizes and false if not.
 	 */
-	public Tier setBulkToggle(Boolean bulkToggle) {
+	public Tier setBulkToggle(boolean bulkToggle) {
 		this.bulkToggle = bulkToggle;
 		return this;
 	}
@@ -167,7 +167,7 @@ public class Tier {
 	 * Check if it picks a random amount of prizes.
 	 * True if it picks from 1-max. False if it picks the max amount of prizes.
 	 */
-	public Boolean getBulkRandom() {
+	public boolean getBulkRandom() {
 		return bulkRandom;
 	}
 	
@@ -175,7 +175,7 @@ public class Tier {
 	 * Set if it picks a random amount of prizes from 1-max.
 	 * @param bulkRandom True if it picks from 1-max and false if it picks the max amount of prizes.
 	 */
-	public Tier setBulkRandom(Boolean bulkRandom) {
+	public Tier setBulkRandom(boolean bulkRandom) {
 		this.bulkRandom = bulkRandom;
 		return this;
 	}
@@ -183,7 +183,7 @@ public class Tier {
 	/**
 	 * Get the max amount of prizes a bulk can have.
 	 */
-	public Integer getBulkMax() {
+	public int getBulkMax() {
 		return bulkMax;
 	}
 	
@@ -191,7 +191,7 @@ public class Tier {
 	 * Set the max amount of prizes a bulk can have.
 	 * @param bulkMax The max amount of prizes.
 	 */
-	public Tier setBulkMax(Integer bulkMax) {
+	public Tier setBulkMax(int bulkMax) {
 		this.bulkMax = bulkMax;
 		return this;
 	}
@@ -199,7 +199,7 @@ public class Tier {
 	/**
 	 * Check to see if holograms are on for the tier crate.
 	 */
-	public Boolean isHoloEnabled() {
+	public boolean isHoloEnabled() {
 		return holoToggle;
 	}
 	
@@ -207,7 +207,7 @@ public class Tier {
 	 * Set if the tier uses holograms.
 	 * @param holoToggle True if it does and false if not.
 	 */
-	public Tier setHoloToggle(Boolean holoToggle) {
+	public Tier setHoloToggle(boolean holoToggle) {
 		this.holoToggle = holoToggle;
 		return this;
 	}
@@ -250,7 +250,7 @@ public class Tier {
 	/**
 	 * Check if the tier crate shoots a firework when claimed.
 	 */
-	public Boolean getFireworkToggle() {
+	public boolean getFireworkToggle() {
 		return fireworkToggle;
 	}
 	
@@ -258,7 +258,7 @@ public class Tier {
 	 * Set if the tier crate shoots a firework when claimed.
 	 * @param fireworkToggle True if it does and false if not.
 	 */
-	public Tier setFireworkToggle(Boolean fireworkToggle) {
+	public Tier setFireworkToggle(boolean fireworkToggle) {
 		this.fireworkToggle = fireworkToggle;
 		return this;
 	}
@@ -291,7 +291,7 @@ public class Tier {
 	/**
 	 * Check to see if the tier crate shoots signal fireworks for players to see where it is.
 	 */
-	public Boolean getSignalFlareToggle() {
+	public boolean getSignalFlareToggle() {
 		return signalFlareToggle;
 	}
 	
@@ -299,7 +299,7 @@ public class Tier {
 	 * Set if the tier crates shoot fireworks in the air.
 	 * @param signalFlareToggle True if it does and false if not.
 	 */
-	public Tier setSignalFlareToggle(Boolean signalFlareToggle) {
+	public Tier setSignalFlareToggle(boolean signalFlareToggle) {
 		this.signalFlareToggle = signalFlareToggle;
 		return this;
 	}

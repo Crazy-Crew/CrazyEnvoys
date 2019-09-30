@@ -17,7 +17,7 @@ public enum Version {
 	
 	public static Version currentVersion;
 	private static Version latest;
-	private Integer versionInteger;
+	private int versionInteger;
 	
 	private Version(int versionInteger) {
 		this.versionInteger = versionInteger;
@@ -69,7 +69,7 @@ public enum Version {
 	 *
 	 * @return The server's minecraft version as an integer.
 	 */
-	public Integer getVersionInteger() {
+	public int getVersionInteger() {
 		return this.versionInteger;
 	}
 	
@@ -78,7 +78,7 @@ public enum Version {
 	 * @param version The version you are checking.
 	 * @return -1 if older, 0 if the same, and 1 if newer.
 	 */
-	public Integer comparedTo(Version version) {
+	public int comparedTo(Version version) {
 		int resault = -1;
 		int current = this.getVersionInteger();
 		int check = version.getVersionInteger();
@@ -97,7 +97,7 @@ public enum Version {
 	 * @param version The version you are checking.
 	 * @return True if newer then the checked version and false if the same or older.
 	 */
-	public Boolean isNewer(Version version) {
+	public boolean isNewer(Version version) {
 		return this.versionInteger > version.versionInteger || this.versionInteger == -2;
 	}
 	
@@ -106,8 +106,8 @@ public enum Version {
 	 * @param version The version you are checking.
 	 * @return True if both the current and checked version is the same and false if otherwise.
 	 */
-	public Boolean isSame(Version version) {
-		return this.versionInteger.equals(version.versionInteger);
+	public boolean isSame(Version version) {
+		return this.versionInteger == version.versionInteger;
 	}
 	
 	/**
@@ -115,7 +115,7 @@ public enum Version {
 	 * @param version The version you are checking.
 	 * @return True if older then the checked version and false if the same or newer.
 	 */
-	public Boolean isOlder(Version version) {
+	public boolean isOlder(Version version) {
 		return this.versionInteger < version.versionInteger || this.versionInteger == -1;
 	}
 	

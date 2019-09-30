@@ -6,20 +6,32 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-
 public class Flare {
 	
-	public static ItemStack getFlare(int amount) {
+	private static ItemBuilder flare;
+	
+	public static void load() {
 		FileConfiguration config = Files.CONFIG.getFile();
-		String id = config.getString("Settings.Flares.Item");
-		String name = config.getString("Settings.Flares.Name");
-		List<String> lore = config.getStringList("Settings.Flares.Lore");
-		return new ItemBuilder().setMaterial(id).setAmount(amount).setName(name).setLore(lore).build();
+		flare = new ItemBuilder()
+		.setMaterial(config.getString("Settings.Flares.Item"))
+		.setName(config.getString("Settings.Flares.Name"))
+		.setLore(config.getStringList("Settings.Flares.Lore"));
 	}
 	
-	public static Boolean isFlare(ItemStack item) {
-		return getFlare(1).isSimilar(item);
+	public static ItemStack getFlare() {
+		return getFlare(1);
+	}
+	
+	public static ItemStack getFlare(int amount) {
+		return flare.setAmount(amount).build();
+	}
+	
+	public static boolean isFlare(ItemStack item) {
+		return getFlare().isSimilar(item);
+	}
+	
+	public static void giveFlare(Player player) {
+		giveFlare(player, 1);
 	}
 	
 	public static void giveFlare(Player player, int amount) {
@@ -30,13 +42,8 @@ public class Flare {
 		}
 	}
 	
-	public static void takeFlare(Player player, ItemStack flare) {
-		if(flare.getAmount() <= 1) {
-			player.getInventory().removeItem(flare);
-		}
-		if(flare.getAmount() > 1) {
-			flare.setAmount(flare.getAmount() - 1);
-		}
+	public static void takeFlare(Player player) {
+		player.getInventory().removeItem(getFlare());
 	}
 	
 }

@@ -3,6 +3,7 @@ package me.badbones69.crazyenvoy.api.enums;
 import me.badbones69.crazyenvoy.Methods;
 import me.badbones69.crazyenvoy.api.CrazyEnvoy;
 import me.badbones69.crazyenvoy.api.FileManager.Files;
+import me.badbones69.crazyenvoy.api.objects.EnvoySettings;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,11 +51,13 @@ public enum Messages {
 	STOP_IGNORING_MESSAGES("Stop-Ignoring-Messages"),
 	START_IGNORING_MESSAGES("Start-Ignoring-Messages"),
 	KICKED_FROM_EDITOR_MODE("Kicked-From-Editor-Mode"),
-	NOT_IN_WORLD_GUARD_REGION("Not-In-World-Guard-Region");
+	NOT_IN_WORLD_GUARD_REGION("Not-In-World-Guard-Region"),
+	NO_SPAWN_LOCATIONS_FOUND("No-Spawn-Locations-Found", "%prefix%&cNo spawn locations were found and so the event has been cancelled and the cooldown has been reset.");
 	
 	private String path;
 	private String defaultMessage;
 	private CrazyEnvoy envoy = CrazyEnvoy.getInstance();
+	private EnvoySettings envoySettings = EnvoySettings.getInstance();
 	
 	private Messages(String path) {
 		this.path = "Messages." + path;
@@ -104,7 +107,7 @@ public enum Messages {
 		return msgs;
 	}
 	
-	public Boolean isList() {
+	public boolean isList() {
 		return !Files.MESSAGES.getFile().getStringList(path).isEmpty();
 	}
 	
@@ -189,53 +192,53 @@ public enum Messages {
 		}
 	}
 	
-	public void broadcastMessage(Boolean ignore, HashMap<String, String> placeholder) {
-		if(Files.CONFIG.getFile().getBoolean("Settings.World-Messages.Toggle")) {
-			for(Player p : Bukkit.getOnlinePlayers()) {
-				for(String w : Files.CONFIG.getFile().getStringList("Settings.World-Messages.Worlds")) {
-					if(p.getWorld().getName().equalsIgnoreCase(w)) {
+	public void broadcastMessage(boolean ignore, HashMap<String, String> placeholder) {
+		if(envoySettings.isWorldMessagesEnabled()) {
+			for(Player player : Bukkit.getOnlinePlayers()) {
+				for(String world : envoySettings.getWorldMessagesWorlds()) {
+					if(player.getWorld().getName().equalsIgnoreCase(world)) {
 						if(ignore) {
-							if(!envoy.isIgnoringMessages(p.getUniqueId())) {
-								sendMessage(p, placeholder);
+							if(!envoy.isIgnoringMessages(player.getUniqueId())) {
+								sendMessage(player, placeholder);
 							}
 						}else {
-							sendMessage(p, placeholder);
+							sendMessage(player, placeholder);
 						}
 					}
 				}
 			}
 		}else {
-			for(Player p : Bukkit.getOnlinePlayers()) {
+			for(Player player : Bukkit.getOnlinePlayers()) {
 				if(ignore) {
-					if(!envoy.isIgnoringMessages(p.getUniqueId())) {
-						sendMessage(p, placeholder);
+					if(!envoy.isIgnoringMessages(player.getUniqueId())) {
+						sendMessage(player, placeholder);
 					}
 				}else {
-					sendMessage(p, placeholder);
+					sendMessage(player, placeholder);
 				}
 			}
 		}
 		if(isList()) {
-			for(String msg : getMessages()) {
+			for(String message : getMessages()) {
 				if(placeholder != null) {
 					for(String ph : placeholder.keySet()) {
-						if(msg.contains(ph)) {
-							msg = msg.replaceAll(ph, placeholder.get(ph));
+						if(message.contains(ph)) {
+							message = message.replaceAll(ph, placeholder.get(ph));
 						}
 					}
 				}
-				Bukkit.getLogger().log(Level.INFO, msg);
+				Bukkit.getLogger().log(Level.INFO, message);
 			}
 		}else {
-			String msg = getMessage();
+			String message = getMessage();
 			if(placeholder != null) {
 				for(String ph : placeholder.keySet()) {
-					if(msg.contains(ph)) {
-						msg = msg.replaceAll(ph, placeholder.get(ph));
+					if(message.contains(ph)) {
+						message = message.replaceAll(ph, placeholder.get(ph));
 					}
 				}
 			}
-			Bukkit.getLogger().log(Level.INFO, msg);
+			Bukkit.getLogger().log(Level.INFO, message);
 		}
 	}
 	

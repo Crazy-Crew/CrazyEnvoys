@@ -9,8 +9,8 @@ import java.util.List;
 public class Prize {
 	
 	private String prizeID;
-	private Integer chance;
-	private Boolean dropItems;
+	private int chance;
+	private boolean dropItems;
 	private List<String> messages;
 	private List<String> commands;
 	private List<ItemStack> items;
@@ -38,7 +38,7 @@ public class Prize {
 	 * Get the chance of the prize being won.
 	 * @return The chance as an integer.
 	 */
-	public Integer getChance() {
+	public int getChance() {
 		return chance;
 	}
 	
@@ -46,7 +46,7 @@ public class Prize {
 	 * Set the chance of the prize being picked out of 100.
 	 * @param chance The new chance of the prize out of 100.
 	 */
-	public Prize setChance(Integer chance) {
+	public Prize setChance(int chance) {
 		this.chance = chance;
 		return this;
 	}
@@ -55,7 +55,7 @@ public class Prize {
 	 * Check if the items from Items: drop to the floor or go into the player's inventory.
 	 * @return True if drops to the ground and false if goes into their inventory.
 	 */
-	public Boolean getDropItems() {
+	public boolean getDropItems() {
 		return dropItems;
 	}
 	
@@ -63,7 +63,7 @@ public class Prize {
 	 * Make the items from the Items: option either drop on the ground or go into their inventory.
 	 * @param dropItems The option to drop items on the floor or into their inventory.
 	 */
-	public Prize setDropItems(Boolean dropItems) {
+	public Prize setDropItems(boolean dropItems) {
 		this.dropItems = dropItems;
 		return this;
 	}

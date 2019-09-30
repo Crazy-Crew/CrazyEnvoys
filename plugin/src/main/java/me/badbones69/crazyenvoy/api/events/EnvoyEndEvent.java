@@ -33,6 +33,7 @@ public class EnvoyEndEvent extends Event {
 	public EnvoyEndReason getReason() {
 		return reason;
 	}
+	
 	/**
 	 * Get the player that ended the event.
 	 * @return The player that ended it. This can be null if it auto ended.
@@ -40,6 +41,7 @@ public class EnvoyEndEvent extends Event {
 	public Player getPlayer() {
 		return player;
 	}
+	
 	public HandlerList getHandlers() {
 		return handlers;
 	}
@@ -62,6 +64,10 @@ public class EnvoyEndEvent extends Event {
 		 * Ended because all the crates were collected by the players.
 		 */
 		ALL_CRATES_COLLECTED("All-Crates-Collected"),
+		/**
+		 * Ends because no spawn locations for the crates were found.
+		 */
+		NO_LOCATIONS_FOUND("No-Locations-Found"),
 		/**
 		 * If the plugin reloads it ends the current envoy.
 		 */

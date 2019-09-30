@@ -2,14 +2,13 @@ package me.badbones69.crazyenvoy.controllers;
 
 import me.badbones69.crazyenvoy.Methods;
 import me.badbones69.crazyenvoy.api.CrazyEnvoy;
-import me.badbones69.crazyenvoy.api.FileManager.Files;
 import me.badbones69.crazyenvoy.api.enums.Messages;
 import me.badbones69.crazyenvoy.api.events.EnvoyStartEvent;
 import me.badbones69.crazyenvoy.api.events.EnvoyStartEvent.EnvoyStartReason;
+import me.badbones69.crazyenvoy.api.objects.EnvoySettings;
 import me.badbones69.crazyenvoy.api.objects.Flare;
 import me.badbones69.crazyenvoy.multisupport.Support;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,11 +21,11 @@ import java.util.HashMap;
 public class FlareControl implements Listener {
 	
 	private CrazyEnvoy envoy = CrazyEnvoy.getInstance();
+	private EnvoySettings envoySettings = EnvoySettings.getInstance();
 	
 	@EventHandler
 	public void onFlareActivate(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
-		FileConfiguration config = Files.CONFIG.getFile();
 		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			ItemStack flare = Methods.getItemInHand(player);
 			if(flare != null) {
@@ -37,9 +36,9 @@ public class FlareControl implements Listener {
 							Messages.ALREADY_STARTED.sendMessage(player);
 						}else {
 							int online = Bukkit.getServer().getOnlinePlayers().size();
-							if(config.getBoolean("Settings.Minimum-Players-Toggle")) {
-								if(config.getBoolean("Settings.Minimum-Flare-Toggle")) {
-									if(online < config.getInt("Settings.Minimum-Players")) {
+							if(envoySettings.isMinPlayersEnabled()) {
+								if(envoySettings.isMinFlareEnabled()) {
+									if(online < envoySettings.getMinPlayers()) {
 										HashMap<String, String> placeholder = new HashMap<>();
 										placeholder.put("%amount%", online + "");
 										placeholder.put("%Amount%", online + "");
@@ -50,9 +49,9 @@ public class FlareControl implements Listener {
 							}
 							boolean toggle = false;
 							if(Support.WORLD_EDIT.isPluginLoaded() && Support.WORLD_GUARD.isPluginLoaded()) {
-								if(config.getBoolean("Settings.Flares.World-Guard.Toggle")) {
-									for(String r : config.getStringList("Settings.Flares.World-Guard.Regions")) {
-										if(envoy.getWorldGuardSupport().inRegion(r, player.getLocation())) {
+								if(envoySettings.isWorldMessagesEnabled()) {
+									for(String region : envoySettings.getFlaresRegions()) {
+										if(envoy.getWorldGuardSupport().inRegion(region, player.getLocation())) {
 											toggle = true;
 										}
 									}
@@ -69,9 +68,10 @@ public class FlareControl implements Listener {
 							EnvoyStartEvent event = new EnvoyStartEvent(EnvoyStartReason.FLARE);
 							Bukkit.getPluginManager().callEvent(event);
 							if(!event.isCancelled()) {
-								Messages.USED_FLARE.sendMessage(player);
-								Flare.takeFlare(player, flare);
-								envoy.startEnvoyEvent();
+								if(envoy.startEnvoyEvent()) {
+									Messages.USED_FLARE.sendMessage(player);
+									Flare.takeFlare(player);
+								}
 							}
 						}
 					}else {

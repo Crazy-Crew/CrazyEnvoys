@@ -8,9 +8,7 @@ import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent;
 import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
 import me.badbones69.crazyenvoy.api.events.EnvoyStartEvent;
 import me.badbones69.crazyenvoy.api.events.EnvoyStartEvent.EnvoyStartReason;
-import me.badbones69.crazyenvoy.api.objects.ItemBuilder;
-import me.badbones69.crazyenvoy.api.objects.Prize;
-import me.badbones69.crazyenvoy.api.objects.Tier;
+import me.badbones69.crazyenvoy.api.objects.*;
 import me.badbones69.crazyenvoy.controllers.EditControl;
 import me.badbones69.crazyenvoy.controllers.EnvoyControl;
 import me.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
@@ -34,20 +32,22 @@ public class CrazyEnvoy {
 	
 	private static CrazyEnvoy instance = new CrazyEnvoy();
 	private FileManager fileManager = FileManager.getInstance();
+	private boolean isLogging = fileManager.isLogging();
+	private EnvoySettings envoySettings = EnvoySettings.getInstance();
 	private BukkitTask runTimeTask;
 	private BukkitTask coolDownTask;
 	private Calendar nextEnvoy;
 	private Calendar nextClean;
 	private Calendar envoyTimeLeft;
-	private Boolean envoyActive = false;
-	private Boolean autoTimer = true;
+	private boolean envoyActive = false;
+	private boolean autoTimer = true;
 	private WorldGuardVersion worldGuardVersion;
-	private ArrayList<Material> blacklistedBlocks = new ArrayList<>();
-	private ArrayList<UUID> ignoreMessages = new ArrayList<>();
-	private ArrayList<Calendar> warnings = new ArrayList<>();
-	private ArrayList<Block> spawnLocations = new ArrayList<>();
-	private ArrayList<Block> spawnedLocations = new ArrayList<>();
-	private ArrayList<Entity> fallingBlocks = new ArrayList<>();
+	private List<Material> blacklistedBlocks = new ArrayList<>();
+	private List<UUID> ignoreMessages = new ArrayList<>();
+	private List<Calendar> warnings = new ArrayList<>();
+	private List<Block> spawnLocations = new ArrayList<>();
+	private List<Block> spawnedLocations = new ArrayList<>();
+	private List<Entity> fallingBlocks = new ArrayList<>();
 	private Location center;
 	private String centerString;
 	private HashMap<Block, Tier> activeEnvoys = new HashMap<>();
@@ -72,9 +72,9 @@ public class CrazyEnvoy {
 		}
 		spawnLocations.clear();
 		blacklistedBlocks.clear();
+		envoySettings.loadSettings();
 		plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
 		FileConfiguration data = Files.DATA.getFile();
-		FileConfiguration config = Files.CONFIG.getFile();
 		envoyTimeLeft = Calendar.getInstance();
 		List<String> failedLocations = new ArrayList<>();
 		for(String location : data.getStringList("Locations.Spawns")) {
@@ -89,15 +89,15 @@ public class CrazyEnvoy {
 		if(Calendar.getInstance().after(getNextEnvoy())) {
 			setEnvoyActive(false);
 		}
-		if(Files.DATA.getFile().contains("Center")) {
-			center = getLocationFromString(Files.DATA.getFile().getString("Center"));
-			centerString = Files.DATA.getFile().getString("Center");
+		if(data.contains("Center")) {
+			center = getLocationFromString(data.getString("Center"));
+			centerString = data.getString("Center");
 		}else {
 			center = Bukkit.getWorlds().get(0).getSpawnLocation();
 		}
-		if(config.getBoolean("Settings.Envoy-Timer-Toggle")) {
+		if(envoySettings.isEnvoyRunTimerEnabled()) {
 			Calendar cal = Calendar.getInstance();
-			if(config.getBoolean("Settings.Envoy-Cooldown-Toggle")) {
+			if(envoySettings.isEnvoyCooldownEnabled()) {
 				autoTimer = true;
 				cal.setTimeInMillis(data.getLong("Next-Envoy"));
 				if(Calendar.getInstance().after(cal)) {
@@ -105,7 +105,7 @@ public class CrazyEnvoy {
 				}
 			}else {
 				autoTimer = false;
-				String time = config.getString("Settings.Envoy-Time");
+				String time = envoySettings.getEnvoyClockTime();
 				int hour = Integer.parseInt(time.split(" ")[0].split(":")[0]);
 				int min = Integer.parseInt(time.split(" ")[0].split(":")[1]);
 				int c = Calendar.AM;
@@ -156,7 +156,7 @@ public class CrazyEnvoy {
 			}
 			for(String prizeID : file.getConfigurationSection("Prizes").getKeys(false)) {
 				String path = "Prizes." + prizeID + ".";
-				Integer chance = file.getInt(path + "Chance");
+				int chance = file.getInt(path + "Chance");
 				List<String> commands = file.getStringList(path + "Commands");
 				List<String> messages = file.getStringList(path + "Messages");
 				boolean dropItems = file.getBoolean(path + "Drop-Items");
@@ -260,6 +260,7 @@ public class CrazyEnvoy {
 				}
 			}.runTaskLater(plugin, 200);
 		}
+		Flare.load();
 	}
 	
 	/**
@@ -300,9 +301,9 @@ public class CrazyEnvoy {
 					next.clear(Calendar.MILLISECOND);
 					if(next.compareTo(cal) <= 0) {
 						if(!isEnvoyActive()) {
-							if(Files.CONFIG.getFile().getBoolean("Settings.Minimum-Players-Toggle")) {
+							if(envoySettings.isMinPlayersEnabled()) {
 								int online = Bukkit.getServer().getOnlinePlayers().size();
-								if(online < Files.CONFIG.getFile().getInt("Settings.Minimum-Players")) {
+								if(online < envoySettings.getMinPlayers()) {
 									HashMap<String, String> placeholder = new HashMap<>();
 									placeholder.put("%amount%", online + "");
 									placeholder.put("%Amount%", online + "");
@@ -312,7 +313,7 @@ public class CrazyEnvoy {
 									return;
 								}
 							}
-							if(Files.CONFIG.getFile().getBoolean("Settings.Random-Locations")) {
+							if(envoySettings.isRandomLocationsEnabled()) {
 								if(center.getWorld() == null) {
 									System.out.println("[CrazyEnvoy] The envoy center's world can't be found and so envoy has been canceled.");
 									System.out.println("Center String: " + centerString);
@@ -346,7 +347,7 @@ public class CrazyEnvoy {
 	 *
 	 * @return True if the envoy event is currently happening and false if not.
 	 */
-	public Boolean isEnvoyActive() {
+	public boolean isEnvoyActive() {
 		return envoyActive;
 	}
 	
@@ -384,7 +385,7 @@ public class CrazyEnvoy {
 	 *
 	 * @return All the location the chests will spawn.
 	 */
-	public ArrayList<Block> getSpawnLocations() {
+	public List<Block> getSpawnLocations() {
 		return spawnLocations;
 	}
 	
@@ -392,7 +393,7 @@ public class CrazyEnvoy {
 	 *
 	 * @param location The location that you want to check.
 	 */
-	public Boolean isLocation(Location location) {
+	public boolean isLocation(Location location) {
 		for(Block block : spawnLocations) {
 			if(block.getLocation().equals(location)) {
 				return true;
@@ -428,7 +429,7 @@ public class CrazyEnvoy {
 	 * @param block The location your are checking.
 	 * @return Turn if it is and false if not.
 	 */
-	public Boolean isActiveEnvoy(Block block) {
+	public boolean isActiveEnvoy(Block block) {
 		return activeEnvoys.containsKey(block);
 	}
 	
@@ -492,32 +493,32 @@ public class CrazyEnvoy {
 		Calendar cal = getNextEnvoy();
 		Calendar C = Calendar.getInstance();
 		int total = ((int) (cal.getTimeInMillis() / 1000) - (int) (C.getTimeInMillis() / 1000));
-		int D = 0;
-		int H = 0;
-		int M = 0;
-		int S = 0;
-		for(; total > 86400; total -= 86400, D++) ;
-		for(; total > 3600; total -= 3600, H++) ;
-		for(; total >= 60; total -= 60, M++) ;
-		S += total;
-		String msg = "";
-		if(D > 0) msg += D + "d, ";
-		if(D > 0 || H > 0) msg += H + "h, ";
-		if(D > 0 || H > 0 || M > 0) msg += M + "m, ";
-		if(D > 0 || H > 0 || M > 0 || S > 0) msg += S + "s, ";
-		if(msg.length() < 2) {
-			msg = Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going");
+		int day = 0;
+		int hour = 0;
+		int minute = 0;
+		int second = 0;
+		for(; total > 86400; total -= 86400, day++) ;
+		for(; total > 3600; total -= 3600, hour++) ;
+		for(; total >= 60; total -= 60, minute++) ;
+		second += total;
+		String message = "";
+		if(day > 0) message += day + "d, ";
+		if(day > 0 || hour > 0) message += hour + "h, ";
+		if(day > 0 || hour > 0 || minute > 0) message += minute + "m, ";
+		if(day > 0 || hour > 0 || minute > 0 || second > 0) message += second + "s, ";
+		if(message.length() < 2) {
+			message = Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going");
 		}else {
-			msg = msg.substring(0, msg.length() - 2);
+			message = message.substring(0, message.length() - 2);
 		}
-		return msg;
+		return message;
 	}
 	
 	/**
 	 *
 	 * @return All falling blocks are are currently going.
 	 */
-	public ArrayList<Entity> getFallingBlocks() {
+	public List<Entity> getFallingBlocks() {
 		return fallingBlocks;
 	}
 	
@@ -534,9 +535,7 @@ public class CrazyEnvoy {
 	 */
 	public void resetWarnings() {
 		warnings.clear();
-		for(String time : Files.CONFIG.getFile().getStringList("Settings.Envoy-Warnings")) {
-			addWarning(makeWarning(time));
-		}
+		envoySettings.getEnvoyWarnings().forEach(time -> addWarning(makeWarning(time)));
 	}
 	
 	/**
@@ -551,7 +550,7 @@ public class CrazyEnvoy {
 	 *
 	 * @return All the current warnings.
 	 */
-	public ArrayList<Calendar> getWarnings() {
+	public List<Calendar> getWarnings() {
 		return warnings;
 	}
 	
@@ -564,17 +563,14 @@ public class CrazyEnvoy {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(getNextEnvoy().getTimeInMillis());
 		for(String i : time.split(" ")) {
-			if(i.contains("D") || i.contains("d")) {
-				cal.add(Calendar.DATE, -Integer.parseInt(i.replaceAll("D", "").replaceAll("d", "")));
-			}
-			if(i.contains("H") || i.contains("h")) {
-				cal.add(Calendar.HOUR, -Integer.parseInt(i.replaceAll("H", "").replaceAll("h", "")));
-			}
-			if(i.contains("M") || i.contains("m")) {
-				cal.add(Calendar.MINUTE, -Integer.parseInt(i.replaceAll("M", "").replaceAll("m", "")));
-			}
-			if(i.contains("S") || i.contains("s")) {
-				cal.add(Calendar.SECOND, -Integer.parseInt(i.replaceAll("S", "").replaceAll("s", "")));
+			if(i.contains("d")) {
+				cal.add(Calendar.DATE, -Integer.parseInt(i.replaceAll("d", "")));
+			}else if(i.contains("h")) {
+				cal.add(Calendar.HOUR, -Integer.parseInt(i.replaceAll("h", "")));
+			}else if(i.contains("m")) {
+				cal.add(Calendar.MINUTE, -Integer.parseInt(i.replaceAll("m", "")));
+			}else if(i.contains("s")) {
+				cal.add(Calendar.SECOND, -Integer.parseInt(i.replaceAll("s", "")));
 			}
 		}
 		return cal;
@@ -582,31 +578,31 @@ public class CrazyEnvoy {
 	
 	/**
 	 *
-	 * @return The time left in the current envoy evnet.
+	 * @return The time left in the current envoy event.
 	 */
 	public String getEnvoyRunTimeLeft() {
 		Calendar cal = envoyTimeLeft;
 		Calendar C = Calendar.getInstance();
 		int total = ((int) (cal.getTimeInMillis() / 1000) - (int) (C.getTimeInMillis() / 1000));
-		int D = 0;
-		int H = 0;
-		int M = 0;
-		int S = 0;
-		for(; total > 86400; total -= 86400, D++) ;
-		for(; total > 3600; total -= 3600, H++) ;
-		for(; total >= 60; total -= 60, M++) ;
-		S += total;
-		String msg = "";
-		if(D > 0) msg += D + "d, ";
-		if(D > 0 || H > 0) msg += H + "h, ";
-		if(D > 0 || H > 0 || M > 0) msg += M + "m, ";
-		if(D > 0 || H > 0 || M > 0 || S > 0) msg += S + "s, ";
-		if(msg.length() < 2) {
-			msg = Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
+		int day = 0;
+		int hour = 0;
+		int minute = 0;
+		int second = 0;
+		for(; total > 86400; total -= 86400, day++) ;
+		for(; total > 3600; total -= 3600, hour++) ;
+		for(; total >= 60; total -= 60, minute++) ;
+		second += total;
+		String message = "";
+		if(day > 0) message += day + "d, ";
+		if(day > 0 || hour > 0) message += hour + "h, ";
+		if(day > 0 || hour > 0 || minute > 0) message += minute + "m, ";
+		if(day > 0 || hour > 0 || minute > 0 || second > 0) message += second + "s, ";
+		if(message.length() < 2) {
+			message = Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
 		}else {
-			msg = msg.substring(0, msg.length() - 2);
+			message = message.substring(0, message.length() - 2);
 		}
-		return msg;
+		return message;
 	}
 	
 	/**
@@ -629,17 +625,59 @@ public class CrazyEnvoy {
 		}
 	}
 	
+	public List<Block> generateSpawnLocations() {
+		List<Block> dropLocations = new ArrayList<>();
+		int maxSpawns = envoySettings.isMaxCrateEnabled() ? envoySettings.getMaxCrates() : envoySettings.isRandomLocationsEnabled() ? envoySettings.getMaxCrates() : spawnedLocations.size();
+		Random random = new Random();
+		if(envoySettings.isRandomLocationsEnabled()) {
+			List<Block> minimumRadiusBlocks = getBlocks(center.clone(), envoySettings.getMinRadius());
+			for(int stop = 0; dropLocations.size() < maxSpawns; stop++) {
+				int maxRadius = envoySettings.getMaxRadius();
+				Location location = center.clone();
+				location.add(-(maxRadius / 2) + random.nextInt(maxRadius), 0, -(maxRadius / 2) + random.nextInt(maxRadius));
+				location = location.getWorld().getHighestBlockAt(location).getLocation();
+				if(!location.getChunk().isLoaded()) {
+					if(!location.getChunk().load()) {
+						continue;
+					}
+				}
+				if(location.getBlockY() <= 0 ||
+				minimumRadiusBlocks.contains(location.getBlock()) || minimumRadiusBlocks.contains(location.clone().add(0, 1, 0).getBlock()) ||
+				dropLocations.contains(location.getBlock()) || dropLocations.contains(location.clone().add(0, 1, 0).getBlock()) ||
+				blacklistedBlocks.contains(location.getBlock().getType())) {
+					continue;
+				}
+				dropLocations.add(location.clone().add(0, 1, 0).getBlock());
+			}
+		}else {
+			if(envoySettings.isMaxCrateEnabled()) {
+				for(int i = 0; i < maxSpawns; ) {
+					Block block = spawnLocations.get(random.nextInt(spawnLocations.size()));
+					if(!dropLocations.contains(block)) {
+						dropLocations.add(block);
+						i++;
+					}
+				}
+			}else {
+				dropLocations.addAll(spawnLocations);
+			}
+		}
+		return dropLocations;
+	}
+	
 	/**
 	 * Starts the envoy event.
+	 * @return true if the event started successfully and false if it had an issue.
 	 */
-	@SuppressWarnings("deprecation")
-	public void startEnvoyEvent() {
-		if(Files.CONFIG.getFile().getBoolean("Settings.Random-Locations")) {
-			if(center.getWorld() == null) {
-				setNextEnvoy(getEnvoyCooldown());
-				resetWarnings();
-				return;
-			}
+	public boolean startEnvoyEvent() {
+		List<Block> dropLocations = generateSpawnLocations();
+		if(dropLocations.isEmpty() || (envoySettings.isRandomLocationsEnabled() && center.getWorld() == null)) {
+			setNextEnvoy(getEnvoyCooldown());
+			resetWarnings();
+			EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.NO_LOCATIONS_FOUND);
+			Bukkit.getPluginManager().callEvent(event);
+			Messages.NO_SPAWN_LOCATIONS_FOUND.broadcastMessage(false, null);
+			return false;
 		}
 		for(Player player : EditControl.getEditors()) {
 			EditControl.removeFakeBlocks(player);
@@ -649,62 +687,11 @@ public class CrazyEnvoy {
 		EditControl.getEditors().clear();
 		if(tiers.size() == 0) {
 			Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder" + " to allow it to remake the default tier files."));
-			return;
+			return false;
 		}
 		deSpawnCrates();
 		setEnvoyActive(true);
-		int max = getSpawnLocations().size();
-		if(Files.CONFIG.getFile().getBoolean("Settings.Max-Crate-Toggle")) {
-			max = Files.CONFIG.getFile().getInt("Settings.Max-Crates");
-			if(max > getSpawnLocations().size()) {
-				max = getSpawnLocations().size();
-			}
-		}
-		ArrayList<Block> dropLocations = new ArrayList<>();
-		if(Files.CONFIG.getFile().getBoolean("Settings.Max-Crate-Toggle")) {
-			for(int i = 0; i < max; ) {
-				Block block = spawnLocations.get(new Random().nextInt(spawnLocations.size()));
-				if(!dropLocations.contains(block)) {
-					dropLocations.add(block);
-					i++;
-				}
-			}
-		}else {
-			dropLocations.addAll(spawnLocations);
-		}
-		if(Files.CONFIG.getFile().getBoolean("Settings.Random-Locations")) {
-			dropLocations.clear();
-			max = Files.CONFIG.getFile().getInt("Settings.Max-Crates");
-			ArrayList<Location> min = getBlocks(center.clone(), Files.CONFIG.getFile().getInt("Settings.Min-Radius"));
-			int stop = 0;
-			for(int i = 0; i < max && stop < 2000; stop++) {
-				int m = Files.CONFIG.getFile().getInt("Settings.Max-Radius");
-				Location loc = center.clone();
-				loc.add(-(m / 2) + new Random().nextInt(m), 0, -(m / 2) + new Random().nextInt(m));
-				loc.setY(255);
-				if(!loc.getChunk().isLoaded()) {
-					loc.getChunk().load();
-				}
-				for(; loc.getBlock().getType() == Material.AIR && loc.getBlockY() >= 0; ) {
-					if(loc.getBlockY() <= 0) {
-						break;
-					}
-					loc.add(0, -1, 0);
-				}
-				if(loc.getBlockY() <= 0) {
-					continue;
-				}
-				Location check = loc.clone();
-				check.setY(255);
-				if(min.contains(check) ||
-				dropLocations.contains(loc.clone().add(0, 1, 0)) ||
-				blacklistedBlocks.contains(loc.getBlock().getType())) {
-					continue;
-				}
-				dropLocations.add(loc.add(0, 1, 0).getBlock());
-				i++;
-			}
-		}
+		int max = dropLocations.size();
 		HashMap<String, String> placeholder = new HashMap<>();
 		placeholder.put("%amount%", max + "");
 		placeholder.put("%Amount%", max + "");
@@ -713,34 +700,20 @@ public class CrazyEnvoy {
 			if(block != null) {
 				if(block.getWorld() != null) {
 					boolean spawnFallingBlock = false;
-					for(Entity en : Methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
-						if(en instanceof Player) {
+					for(Entity entity : Methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
+						if(entity instanceof Player) {
 							spawnFallingBlock = true;
 							break;
 						}
 					}
-					if(Files.CONFIG.getFile().contains("Settings.Falling-Block-Toggle")) {
-						if(!Files.CONFIG.getFile().getBoolean("Settings.Falling-Block-Toggle")) {
-							spawnFallingBlock = false;
-						}
+					if(!envoySettings.isFallingBlocksEnabled()) {
+						spawnFallingBlock = false;
 					}
 					if(spawnFallingBlock) {
-						String type = Files.CONFIG.getFile().getString("Settings.Falling-Block");
-						int durrability = 0;
-						if(type.contains(":")) {
-							String[] b = type.split(":");
-							type = b[0];
-							durrability = Integer.parseInt(b[1]);
-						}
-						Material material = Material.matchMaterial(type);
-						if(material == null) {
-							material = Material.BEACON;
-						}
-						int height = Files.CONFIG.getFile().getInt("Settings.Fall-Height");
 						if(!block.getChunk().isLoaded()) {
 							block.getChunk().load();
 						}
-						FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, height, .5), material, (byte) durrability);
+						FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, envoySettings.getFallingHeight(), .5), envoySettings.getFallingBlockMaterial(), (byte) envoySettings.getFallingBlockDurability());
 						fallingBlocks.add(chest);
 					}else {
 						Tier tier = pickRandomTier();
@@ -774,8 +747,9 @@ public class CrazyEnvoy {
 				Messages.ENDED.broadcastMessage(false, null);
 				endEnvoyEvent();
 			}
-		}.runTaskLater(plugin, getTimeSeconds(Files.CONFIG.getFile().getString("Settings.Envoy-Run-Time")) * 20);
+		}.runTaskLater(plugin, getTimeSeconds(envoySettings.getEnvoyRunTimer()) * 20);
 		envoyTimeLeft = getEnvoyRunTimeCalendar();
+		return true;
 	}
 	
 	/**
@@ -785,7 +759,7 @@ public class CrazyEnvoy {
 		deSpawnCrates();
 		setEnvoyActive(false);
 		cancelEnvoyRunTime();
-		if(Files.CONFIG.getFile().getBoolean("Settings.Envoy-Timer-Toggle")) {
+		if(envoySettings.isEnvoyRunTimerEnabled()) {
 			setNextEnvoy(getEnvoyCooldown());
 			resetWarnings();
 		}
@@ -942,35 +916,31 @@ public class CrazyEnvoy {
 		}
 	}
 	
-	public ArrayList<Block> getSpawnedLocations() {
+	public List<Block> getSpawnedLocations() {
 		return spawnedLocations;
 	}
 	
-	private void setEnvoyActive(Boolean toggle) {
+	private void setEnvoyActive(boolean toggle) {
 		envoyActive = toggle;
 	}
 	
 	private Calendar getEnvoyCooldown() {
 		Calendar cal = Calendar.getInstance();
-		FileConfiguration config = Files.CONFIG.getFile();
-		if(config.getBoolean("Settings.Envoy-Cooldown-Toggle")) {
-			String time = config.getString("Settings.Envoy-Cooldown");
+		if(envoySettings.isEnvoyCooldownEnabled()) {
+			String time = envoySettings.getEnvoyCooldown();
 			for(String i : time.split(" ")) {
-				if(i.contains("D") || i.contains("d")) {
-					cal.add(Calendar.DATE, Integer.parseInt(i.replaceAll("D", "").replaceAll("d", "")));
-				}
-				if(i.contains("H") || i.contains("h")) {
-					cal.add(Calendar.HOUR, Integer.parseInt(i.replaceAll("H", "").replaceAll("h", "")));
-				}
-				if(i.contains("M") || i.contains("m")) {
-					cal.add(Calendar.MINUTE, Integer.parseInt(i.replaceAll("M", "").replaceAll("m", "")));
-				}
-				if(i.contains("S") || i.contains("s")) {
-					cal.add(Calendar.SECOND, Integer.parseInt(i.replaceAll("S", "").replaceAll("s", "")));
+				if(i.contains("d")) {
+					cal.add(Calendar.DATE, Integer.parseInt(i.replaceAll("d", "")));
+				}else if(i.contains("h")) {
+					cal.add(Calendar.HOUR, Integer.parseInt(i.replaceAll("h", "")));
+				}else if(i.contains("m")) {
+					cal.add(Calendar.MINUTE, Integer.parseInt(i.replaceAll("m", "")));
+				}else if(i.contains("s")) {
+					cal.add(Calendar.SECOND, Integer.parseInt(i.replaceAll("s", "")));
 				}
 			}
 		}else {
-			String time = config.getString("Settings.Envoy-Time");
+			String time = envoySettings.getEnvoyClockTime();
 			int hour = Integer.parseInt(time.split(" ")[0].split(":")[0]);
 			int min = Integer.parseInt(time.split(" ")[0].split(":")[1]);
 			int c = Calendar.AM;
@@ -993,18 +963,15 @@ public class CrazyEnvoy {
 	
 	private Calendar getEnvoyRunTimeCalendar() {
 		Calendar cal = Calendar.getInstance();
-		String time = Files.CONFIG.getFile().getString("Settings.Envoy-Run-Time").toLowerCase();
+		String time = envoySettings.getEnvoyRunTimer().toLowerCase();
 		for(String i : time.split(" ")) {
 			if(i.contains("d")) {
 				cal.add(Calendar.DATE, Integer.parseInt(i.replaceAll("d", "")));
-			}
-			if(i.contains("h")) {
+			}else if(i.contains("h")) {
 				cal.add(Calendar.HOUR, Integer.parseInt(i.replaceAll("h", "")));
-			}
-			if(i.contains("m")) {
+			}else if(i.contains("m")) {
 				cal.add(Calendar.MINUTE, Integer.parseInt(i.replaceAll("m", "")));
-			}
-			if(i.contains("s")) {
+			}else if(i.contains("s")) {
 				cal.add(Calendar.SECOND, Integer.parseInt(i.replaceAll("s", "")));
 			}
 		}
@@ -1034,14 +1001,11 @@ public class CrazyEnvoy {
 		for(String i : locationString.toLowerCase().split(", ")) {
 			if(i.startsWith("world:")) {
 				w = Bukkit.getWorld(i.replaceAll("world:", ""));
-			}
-			if(i.startsWith("x:")) {
+			}else if(i.startsWith("x:")) {
 				x = Integer.parseInt(i.replaceAll("x:", ""));
-			}
-			if(i.startsWith("y:")) {
+			}else if(i.startsWith("y:")) {
 				y = Integer.parseInt(i.replaceAll("y:", ""));
-			}
-			if(i.startsWith("z:")) {
+			}else if(i.startsWith("z:")) {
 				z = Integer.parseInt(i.replaceAll("z:", ""));
 			}
 		}
@@ -1066,41 +1030,36 @@ public class CrazyEnvoy {
 		FireworkDamageAPI.addFirework(firework);
 	}
 	
-	private ArrayList<Location> getBlocks(Location loc, int radius) {
-		Location loc2 = loc.clone();
-		loc.add(-radius, 0, -radius);
-		loc2.add(radius, 0, radius);
-		ArrayList<Location> locs = new ArrayList<>();
-		int topBlockX = (Math.max(loc.getBlockX(), loc2.getBlockX()));
-		int bottomBlockX = (Math.min(loc.getBlockX(), loc2.getBlockX()));
-		int topBlockZ = (Math.max(loc.getBlockZ(), loc2.getBlockZ()));
-		int bottomBlockZ = (Math.min(loc.getBlockZ(), loc2.getBlockZ()));
-		if(loc.getWorld() != null) {
+	private List<Block> getBlocks(Location location, int radius) {
+		Location locations2 = location.clone();
+		location.add(-radius, 0, -radius);
+		locations2.add(radius, 0, radius);
+		List<Block> locations = new ArrayList<>();
+		int topBlockX = (Math.max(location.getBlockX(), locations2.getBlockX()));
+		int bottomBlockX = (Math.min(location.getBlockX(), locations2.getBlockX()));
+		int topBlockZ = (Math.max(location.getBlockZ(), locations2.getBlockZ()));
+		int bottomBlockZ = (Math.min(location.getBlockZ(), locations2.getBlockZ()));
+		if(location.getWorld() != null) {
 			for(int x = bottomBlockX; x <= topBlockX; x++) {
 				for(int z = bottomBlockZ; z <= topBlockZ; z++) {
-					if(loc.getWorld().getBlockAt(x, 255, z) != null) {
-						locs.add(loc.getWorld().getBlockAt(x, 255, z).getLocation());
-					}
+					locations.add(location.getWorld().getHighestBlockAt(x, z));
 				}
 			}
 		}
-		return locs;
+		return locations;
 	}
 	
-	private Integer getTimeSeconds(String time) {
+	private int getTimeSeconds(String time) {
 		int seconds = 0;
 		for(String i : time.split(" ")) {
-			if(i.contains("D") || i.contains("d")) {
-				seconds += Integer.parseInt(i.replaceAll("D", "").replaceAll("d", "")) * 86400;
-			}
-			if(i.contains("H") || i.contains("h")) {
-				seconds += Integer.parseInt(i.replaceAll("H", "").replaceAll("h", "")) * 3600;
-			}
-			if(i.contains("M") || i.contains("m")) {
-				seconds += Integer.parseInt(i.replaceAll("M", "").replaceAll("m", "")) * 60;
-			}
-			if(i.contains("S") || i.contains("s")) {
-				seconds += Integer.parseInt(i.replaceAll("S", "").replaceAll("s", ""));
+			if(i.contains("d")) {
+				seconds += Integer.parseInt(i.replaceAll("d", "")) * 86400;
+			}else if(i.contains("h")) {
+				seconds += Integer.parseInt(i.replaceAll("h", "")) * 3600;
+			}else if(i.contains("m")) {
+				seconds += Integer.parseInt(i.replaceAll("m", "")) * 60;
+			}else if(i.contains("s")) {
+				seconds += Integer.parseInt(i.replaceAll("s", ""));
 			}
 		}
 		return seconds;

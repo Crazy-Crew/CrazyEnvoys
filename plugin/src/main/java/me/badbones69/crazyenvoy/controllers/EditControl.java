@@ -32,7 +32,7 @@ public class EditControl implements Listener {
 		editors.remove(player);
 	}
 	
-	public static Boolean isEditor(Player player) {
+	public static boolean isEditor(Player player) {
 		return editors.contains(player);
 	}
 	

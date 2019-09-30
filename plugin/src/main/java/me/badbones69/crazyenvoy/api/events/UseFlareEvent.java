@@ -11,7 +11,7 @@ import org.bukkit.event.HandlerList;
 public class UseFlareEvent extends Event implements Cancellable {
 	
 	private static final HandlerList handlers = new HandlerList();
-	private Boolean cancelled;
+	private boolean cancelled;
 	private Player player;
 	
 	public UseFlareEvent(Player player) {

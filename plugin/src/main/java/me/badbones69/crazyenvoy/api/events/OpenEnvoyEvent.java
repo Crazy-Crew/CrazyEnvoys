@@ -14,7 +14,7 @@ import org.bukkit.event.HandlerList;
 public class OpenEnvoyEvent extends Event implements Cancellable {
 	
 	private static final HandlerList handlers = new HandlerList();
-	private Boolean cancelled;
+	private boolean cancelled;
 	private Location location;
 	private Player player;
 	private Tier tier;

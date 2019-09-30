@@ -133,6 +133,7 @@ public class Main extends JavaPlugin implements Listener {
 						Files.CONFIG.relaodFile();
 						Files.DATA.relaodFile();
 						Files.MESSAGES.relaodFile();
+						fileManager.setup(this);
 					}catch(Exception e) {
 					}
 					envoy.load();
@@ -282,8 +283,9 @@ public class Main extends JavaPlugin implements Listener {
 						}
 						Bukkit.getPluginManager().callEvent(event);
 						if(!event.isCancelled()) {
-							envoy.startEnvoyEvent();
-							Messages.FORCE_START.sendMessage(sender);
+							if(envoy.startEnvoyEvent()) {
+								Messages.FORCE_START.sendMessage(sender);
+							}
 						}
 					}
 					return true;

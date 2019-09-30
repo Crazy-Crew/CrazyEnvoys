@@ -2,10 +2,10 @@ package me.badbones69.crazyenvoy.controllers;
 
 import me.badbones69.crazyenvoy.Methods;
 import me.badbones69.crazyenvoy.api.CrazyEnvoy;
-import me.badbones69.crazyenvoy.api.FileManager.Files;
 import me.badbones69.crazyenvoy.api.enums.Messages;
 import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent;
 import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
+import me.badbones69.crazyenvoy.api.objects.EnvoySettings;
 import me.badbones69.crazyenvoy.api.objects.ItemBuilder;
 import me.badbones69.crazyenvoy.api.objects.Prize;
 import me.badbones69.crazyenvoy.api.objects.Tier;
@@ -30,6 +30,7 @@ public class EnvoyControl implements Listener {
 	
 	private static HashMap<UUID, Calendar> cooldown = new HashMap<>();
 	private CrazyEnvoy envoy = CrazyEnvoy.getInstance();
+	private EnvoySettings envoySettings = EnvoySettings.getInstance();
 	
 	public static void clearCooldowns() {
 		cooldown.clear();
@@ -54,20 +55,18 @@ public class EnvoyControl implements Listener {
 					}
 					e.setCancelled(true);
 					if(!player.hasPermission("envoy.bypass")) {
-						if(Files.CONFIG.getFile().contains("Settings.Crate-Collect-Cooldown")) {
-							if(Files.CONFIG.getFile().getBoolean("Settings.Crate-Collect-Cooldown.Toggle")) {
-								UUID uuid = player.getUniqueId();
-								if(cooldown.containsKey(uuid)) {
-									if(Calendar.getInstance().before(cooldown.get(uuid))) {
-										HashMap<String, String> placeholder = new HashMap<>();
-										placeholder.put("%time%", getTimeLeft(cooldown.get(uuid)));
-										placeholder.put("%Time%", getTimeLeft(cooldown.get(uuid)));
-										Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
-										return;
-									}
+						if(envoySettings.isCrateCooldownEnabled()) {
+							UUID uuid = player.getUniqueId();
+							if(cooldown.containsKey(uuid)) {
+								if(Calendar.getInstance().before(cooldown.get(uuid))) {
+									HashMap<String, String> placeholder = new HashMap<>();
+									placeholder.put("%time%", getTimeLeft(cooldown.get(uuid)));
+									placeholder.put("%Time%", getTimeLeft(cooldown.get(uuid)));
+									Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
+									return;
 								}
-								cooldown.put(uuid, getTimeFromString(Files.CONFIG.getFile().getString("Settings.Crate-Collect-Cooldown.Time")));
 							}
+							cooldown.put(uuid, getTimeFromString(envoySettings.getCrateCooldownTimer()));
 						}
 					}
 					Tier tier = envoy.getTier(e.getClickedBlock());
@@ -116,16 +115,7 @@ public class EnvoyControl implements Listener {
 						player.updateInventory();
 					}
 					if(envoy.getActiveEnvoys().size() >= 1) {
-						if(Files.CONFIG.getFile().contains("Settings.Broadcast-Crate-Pick-Up")) {
-							if(Files.CONFIG.getFile().getBoolean("Settings.Broadcast-Crate-Pick-Up")) {
-								HashMap<String, String> placeholder = new HashMap<>();
-								placeholder.put("%player%", player.getName());
-								placeholder.put("%Player%", player.getName());
-								placeholder.put("%amount%", envoy.getActiveEnvoys().size() + "");
-								placeholder.put("%Amount%", envoy.getActiveEnvoys().size() + "");
-								Messages.LEFT.broadcastMessage(true, placeholder);
-							}
-						}else {
+						if(envoySettings.isPickupBroadcastEnabled()) {
 							HashMap<String, String> placeholder = new HashMap<>();
 							placeholder.put("%player%", player.getName());
 							placeholder.put("%Player%", player.getName());
@@ -234,25 +224,25 @@ public class EnvoyControl implements Listener {
 	private String getTimeLeft(Calendar timeTill) {
 		Calendar C = Calendar.getInstance();
 		int total = ((int) (timeTill.getTimeInMillis() / 1000) - (int) (C.getTimeInMillis() / 1000));
-		int D = 0;
-		int H = 0;
-		int M = 0;
-		int S = 0;
-		for(; total > 86400; total -= 86400, D++) ;
-		for(; total > 3600; total -= 3600, H++) ;
-		for(; total >= 60; total -= 60, M++) ;
-		S += total;
-		String msg = "";
-		if(D > 0) msg += D + "d, ";
-		if(D > 0 || H > 0) msg += H + "h, ";
-		if(D > 0 || H > 0 || M > 0) msg += M + "m, ";
-		if(D > 0 || H > 0 || M > 0 || S > 0) msg += S + "s, ";
-		if(msg.length() < 2) {
-			msg = "0s";
+		int day = 0;
+		int hour = 0;
+		int minute = 0;
+		int second = 0;
+		for(; total > 86400; total -= 86400, day++) ;
+		for(; total > 3600; total -= 3600, hour++) ;
+		for(; total >= 60; total -= 60, minute++) ;
+		second += total;
+		String message = "";
+		if(day > 0) message += day + "d, ";
+		if(day > 0 || hour > 0) message += hour + "h, ";
+		if(day > 0 || hour > 0 || minute > 0) message += minute + "m, ";
+		if(day > 0 || hour > 0 || minute > 0 || second > 0) message += second + "s, ";
+		if(message.length() < 2) {
+			message = "0s";
 		}else {
-			msg = msg.substring(0, msg.length() - 2);
+			message = message.substring(0, message.length() - 2);
 		}
-		return msg;
+		return message;
 	}
 	
 	private ArrayList<Prize> pickRandomPrizes(Tier tier) {
