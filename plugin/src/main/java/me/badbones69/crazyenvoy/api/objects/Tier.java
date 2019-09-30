@@ -73,6 +73,7 @@ public class Tier {
 	public CustomFile getFile() {
 		return file;
 	}
+	
 	/**
 	 * Get the chance of the crate spawning.
 	 */
@@ -132,8 +133,17 @@ public class Tier {
 	 * Set the meta data of the block that acts as the crate.
 	 * @param placedBlockMetaData The meta data as a Short.
 	 */
-	public Tier setPlacedBlockMetaData(Short placedBlockMetaData) {
+	public Tier setPlacedBlockMetaData(short placedBlockMetaData) {
 		this.placedBlockMetaData = placedBlockMetaData;
+		return this;
+	}
+	
+	/**
+	 * Set the meta data of the block that acts as the crate.
+	 * @param placedBlockMetaData The meta data as a Short.
+	 */
+	public Tier setPlacedBlockMetaData(int placedBlockMetaData) {
+		this.placedBlockMetaData = (short) placedBlockMetaData;
 		return this;
 	}
 	

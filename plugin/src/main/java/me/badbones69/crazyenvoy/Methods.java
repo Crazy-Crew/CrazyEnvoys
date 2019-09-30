@@ -5,7 +5,6 @@ import me.badbones69.crazyenvoy.api.FileManager.Files;
 import me.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
 import me.badbones69.crazyenvoy.multisupport.Version;
 import org.bukkit.*;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
@@ -19,7 +18,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -86,27 +84,53 @@ public class Methods {
 	}
 	
 	private static void detonate(final Firework f) {
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(envoy.getPlugin(), f::detonate, 2);
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(envoy.getPlugin(), f :: detonate, 2);
 	}
 	
 	public static Color getColor(String color) {
-		if(color.equalsIgnoreCase("AQUA")) return Color.AQUA;
-		if(color.equalsIgnoreCase("BLACK")) return Color.BLACK;
-		if(color.equalsIgnoreCase("BLUE")) return Color.BLUE;
-		if(color.equalsIgnoreCase("FUCHSIA")) return Color.FUCHSIA;
-		if(color.equalsIgnoreCase("GRAY")) return Color.GRAY;
-		if(color.equalsIgnoreCase("GREEN")) return Color.GREEN;
-		if(color.equalsIgnoreCase("LIME")) return Color.LIME;
-		if(color.equalsIgnoreCase("MAROON")) return Color.MAROON;
-		if(color.equalsIgnoreCase("NAVY")) return Color.NAVY;
-		if(color.equalsIgnoreCase("OLIVE")) return Color.OLIVE;
-		if(color.equalsIgnoreCase("ORANGE")) return Color.ORANGE;
-		if(color.equalsIgnoreCase("PURPLE")) return Color.PURPLE;
-		if(color.equalsIgnoreCase("RED")) return Color.RED;
-		if(color.equalsIgnoreCase("SILVER")) return Color.SILVER;
-		if(color.equalsIgnoreCase("TEAL")) return Color.TEAL;
-		if(color.equalsIgnoreCase("WHITE")) return Color.WHITE;
-		if(color.equalsIgnoreCase("YELLOW")) return Color.YELLOW;
+		if(color != null) {
+			switch(color.toUpperCase()) {
+				case "AQUA":
+					return Color.AQUA;
+				case "BLACK":
+					return Color.BLACK;
+				case "BLUE":
+					return Color.BLUE;
+				case "FUCHSIA":
+					return Color.FUCHSIA;
+				case "GRAY":
+					return Color.GRAY;
+				case "GREEN":
+					return Color.GREEN;
+				case "LIME":
+					return Color.LIME;
+				case "MAROON":
+					return Color.MAROON;
+				case "NAVY":
+					return Color.NAVY;
+				case "OLIVE":
+					return Color.OLIVE;
+				case "ORANGE":
+					return Color.ORANGE;
+				case "PURPLE":
+					return Color.PURPLE;
+				case "RED":
+					return Color.RED;
+				case "SILVER":
+					return Color.SILVER;
+				case "TEAL":
+					return Color.TEAL;
+				case "WHITE":
+					return Color.WHITE;
+				case "YELLOW":
+					return Color.YELLOW;
+			}
+			try {
+				String[] rgb = color.split(",");
+				return Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
+			}catch(Exception ignore) {
+			}
+		}
 		return Color.WHITE;
 	}
 	
@@ -175,43 +199,6 @@ public class Methods {
 			}
 		}catch(Exception e) {
 		}
-	}
-	
-	public static String getEnchantmentName(Enchantment en) {
-		HashMap<String, String> enchants = new HashMap<>();
-		enchants.put("ARROW_DAMAGE", "Power");
-		enchants.put("ARROW_FIRE", "Flame");
-		enchants.put("ARROW_INFINITE", "Infinity");
-		enchants.put("ARROW_KNOCKBACK", "Punch");
-		enchants.put("DAMAGE_ALL", "Sharpness");
-		enchants.put("DAMAGE_ARTHROPODS", "Bane_Of_Arthropods");
-		enchants.put("DAMAGE_UNDEAD", "Smite");
-		enchants.put("DEPTH_STRIDER", "Depth_Strider");
-		enchants.put("DIG_SPEED", "Efficiency");
-		enchants.put("DURABILITY", "Unbreaking");
-		enchants.put("FIRE_ASPECT", "Fire_Aspect");
-		enchants.put("KNOCKBACK", "KnockBack");
-		enchants.put("LOOT_BONUS_BLOCKS", "Fortune");
-		enchants.put("LOOT_BONUS_MOBS", "Looting");
-		enchants.put("LUCK", "Luck_Of_The_Sea");
-		enchants.put("LURE", "Lure");
-		enchants.put("OXYGEN", "Respiration");
-		enchants.put("PROTECTION_ENVIRONMENTAL", "Protection");
-		enchants.put("PROTECTION_EXPLOSIONS", "Blast_Protection");
-		enchants.put("PROTECTION_FALL", "Feather_Falling");
-		enchants.put("PROTECTION_FIRE", "Fire_Protection");
-		enchants.put("PROTECTION_PROJECTILE", "Projectile_Protection");
-		enchants.put("SILK_TOUCH", "Silk_Touch");
-		enchants.put("THORNS", "Thorns");
-		enchants.put("WATER_WORKER", "Aqua_Affinity");
-		enchants.put("BINDING_CURSE", "Curse_Of_Binding");
-		enchants.put("MENDING", "Mending");
-		enchants.put("FROST_WALKER", "Frost_Walker");
-		enchants.put("VANISHING_CURSE", "Curse_Of_Vanishing");
-		if(enchants.get(en.getName()) == null) {
-			return "None Found";
-		}
-		return enchants.get(en.getName());
 	}
 	
 	@SuppressWarnings("deprecation")

@@ -14,6 +14,7 @@ public class Prize {
 	private List<String> messages;
 	private List<String> commands;
 	private List<ItemStack> items;
+	private List<ItemBuilder> itemBuilders;
 	
 	public Prize(String prizeID) {
 		this.prizeID = prizeID;
@@ -22,6 +23,7 @@ public class Prize {
 		this.messages = new ArrayList<>();
 		this.commands = new ArrayList<>();
 		this.items = new ArrayList<>();
+		this.itemBuilders = new ArrayList<>();
 	}
 	
 	/**
@@ -116,6 +118,16 @@ public class Prize {
 	 */
 	public Prize setItems(List<ItemStack> items) {
 		this.items = items;
+		return this;
+	}
+	
+	public List<ItemBuilder> getItemBuilders() {
+		return itemBuilders;
+	}
+	
+	public Prize setItemBuilders(List<ItemBuilder> itemBuilders) {
+		this.itemBuilders = itemBuilders;
+		itemBuilders.forEach(itemBuilder -> items.add(itemBuilder.build()));
 		return this;
 	}
 	

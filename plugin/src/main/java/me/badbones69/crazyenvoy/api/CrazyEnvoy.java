@@ -18,7 +18,6 @@ import me.badbones69.crazyenvoy.multisupport.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
@@ -145,7 +144,7 @@ public class CrazyEnvoy {
 			tier.setHoloMessage(file.getStringList("Settings.Hologram"));
 			ItemBuilder placedBlock = new ItemBuilder().setMaterial(file.getString("Settings.Placed-Block"));
 			tier.setPlacedBlockMaterial(placedBlock.getMaterial());
-			tier.setPlacedBlockMetaData(placedBlock.getMetaData());
+			tier.setPlacedBlockMetaData(placedBlock.getDamage());
 			tier.setFireworkToggle(file.getBoolean("Settings.Firework-Toggle"));
 			for(String color : file.getStringList("Settings.Firework-Colors")) {
 				tier.addFireworkColor(Methods.getColor(color));
@@ -161,51 +160,8 @@ public class CrazyEnvoy {
 				List<String> commands = file.getStringList(path + "Commands");
 				List<String> messages = file.getStringList(path + "Messages");
 				boolean dropItems = file.getBoolean(path + "Drop-Items");
-				ArrayList<ItemStack> items = new ArrayList<>();
-				for(String line : file.getStringList(path + "Items")) {
-					ArrayList<String> lore = new ArrayList<>();
-					HashMap<Enchantment, Integer> enchs = new HashMap<>();
-					String name = "";
-					int amount = 1;
-					String item = "Stone";
-					boolean glowing = false;
-					boolean unbreaking = false;
-					for(String i : line.split(", ")) {
-						if(i.startsWith("Item:")) {
-							i = i.replaceAll("Item:", "");
-							item = i;
-						}else if(i.startsWith("Amount:")) {
-							i = i.replaceAll("Amount:", "");
-							amount = Integer.parseInt(i);
-						}else if(i.startsWith("Name:")) {
-							i = i.replaceAll("Name:", "");
-							name = Methods.color(i);
-						}else if(i.startsWith("Lore:")) {
-							i = i.replaceAll("Lore:", "");
-							for(String L : i.split(",")) {
-								L = Methods.color(L);
-								lore.add(L);
-							}
-						}else if(i.startsWith("Glowing:")) {
-							i = i.replaceAll("Glowing:", "");
-							glowing = Boolean.parseBoolean(i);
-						}else if(i.startsWith("Unbreakable-Item:")) {
-							if(i.replaceAll("Unbreakable-Item:", "").equalsIgnoreCase("true")) {
-								unbreaking = true;
-							}
-						}else {
-							for(Enchantment enc : Enchantment.values()) {
-								if(i.startsWith(enc.getName() + ":") || i.startsWith(Methods.getEnchantmentName(enc) + ":")) {
-									String[] breakdown = i.split(":");
-									int lvl = Integer.parseInt(breakdown[1]);
-									enchs.put(enc, lvl);
-								}
-							}
-						}
-					}
-					items.add(new ItemBuilder().setMaterial(item).setName(name).setAmount(amount).setLore(lore).setEnchantments(enchs).setGlowing(glowing).setUnbreakable(unbreaking).build());
-				}
-				tier.addPrize(new Prize(prizeID).setChance(chance).setDropItems(dropItems).setItems(items).setCommands(commands).setMessages(messages));
+				List<ItemBuilder> items = ItemBuilder.convertStringList(file.getStringList(path + "Items"));
+				tier.addPrize(new Prize(prizeID).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
 			}
 			tiers.add(tier);
 			//Clean up any old spawned crate locations.
