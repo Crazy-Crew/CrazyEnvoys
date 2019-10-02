@@ -16,6 +16,10 @@
         <module>worldguard-v7</module>
     </modules>
 
+    <properties>
+        <build.number>-SNAPSHOT</build.number>
+    </properties>
+
     <repositories>
         <repository>
             <id>spigot-repo</id>
