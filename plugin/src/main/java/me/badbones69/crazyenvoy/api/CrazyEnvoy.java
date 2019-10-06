@@ -647,7 +647,7 @@ public class CrazyEnvoy {
 				blacklistedBlocks.contains(location.getBlock().getType())) {
 					continue;
 				}
-				dropLocations.add(location.clone().add(0, 1, 0).getBlock());
+				dropLocations.add(location.getBlock());
 			}
 		}else {
 			if(envoySettings.isMaxCrateEnabled()) {
