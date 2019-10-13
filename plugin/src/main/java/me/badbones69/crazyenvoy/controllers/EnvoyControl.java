@@ -9,11 +9,11 @@ import me.badbones69.crazyenvoy.api.objects.EnvoySettings;
 import me.badbones69.crazyenvoy.api.objects.ItemBuilder;
 import me.badbones69.crazyenvoy.api.objects.Prize;
 import me.badbones69.crazyenvoy.api.objects.Tier;
-import me.badbones69.crazyenvoy.multisupport.*;
+import me.badbones69.crazyenvoy.multisupport.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
@@ -41,7 +41,7 @@ public class EnvoyControl implements Listener {
 		Player player = e.getPlayer();
 		if(envoy.isEnvoyActive()) {
 			if(e.getClickedBlock() != null) {
-				Location loc = e.getClickedBlock().getLocation();
+				Block block = e.getClickedBlock();
 				if(envoy.isActiveEnvoy(e.getClickedBlock())) {
 					if(Version.getCurrentVersion().isNewer(Version.v1_7_R4)) {
 						if(player.getGameMode() == GameMode.valueOf("SPECTATOR")) {
@@ -71,19 +71,14 @@ public class EnvoyControl implements Listener {
 					}
 					Tier tier = envoy.getTier(e.getClickedBlock());
 					if(tier.getFireworkToggle()) {
-						Methods.fireWork(loc.clone().add(.5, 0, .5), tier.getFireworkColors());
+						Methods.fireWork(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
 					}
 					e.getClickedBlock().setType(Material.AIR);
-					Location spawnLocation = loc.clone().add(.5, tier.getHoloHight(), .5);
-					if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-						HolographicSupport.removeHologram(spawnLocation);
-					}else if(Support.HOLOGRAMS.isPluginLoaded()) {
-						HologramsSupport.removeHologram(spawnLocation);
-					}else if(Support.CMI.isPluginLoaded()) {
-						CMISupport.removeHologram(spawnLocation);
+					if(envoy.hasHologramPlugin()) {
+						envoy.getHologramController().removeHologram(e.getClickedBlock());
 					}
 					envoy.stopSignalFlare(e.getClickedBlock().getLocation());
-					envoy.removeActiveEnvoy(loc.getBlock());
+					envoy.removeActiveEnvoy(block);
 					ArrayList<Prize> prizes;
 					if(tier.getPrizes().size() == 0) {
 						Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
@@ -103,10 +98,10 @@ public class EnvoyControl implements Listener {
 						}
 						for(ItemStack item : prize.getItems()) {
 							if(prize.getDropItems()) {
-								e.getClickedBlock().getWorld().dropItem(loc, item);
+								e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
 							}else {
 								if(Methods.isInvFull(player)) {
-									e.getClickedBlock().getWorld().dropItem(loc, item);
+									e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
 								}else {
 									player.getInventory().addItem(item);
 								}
@@ -140,27 +135,23 @@ public class EnvoyControl implements Listener {
 			if(e.getEntity() instanceof FallingBlock) {
 				if(!envoy.getFallingBlocks().isEmpty()) {
 					if(envoy.getFallingBlocks().contains(e.getEntity())) {
-						Location loc = e.getBlock().getLocation();
+						Block block = e.getBlock();
 						e.setCancelled(true);
 						Tier tier = pickRandomTier();
-						if(loc.getBlock().getType() != Material.AIR) {
-							loc.add(0, 1, 0);
-						}
-						loc.getBlock().setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
+//						if(block.getType() != Material.AIR) {
+//							block = block.getLocation().add(0, 1, 0).getBlock();
+//						}
+						block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
 						if(tier.isHoloEnabled()) {
-							if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-								HolographicSupport.createHologram(loc.getBlock().getLocation(), tier);
-							}else if(Support.HOLOGRAMS.isPluginLoaded()) {
-								HologramsSupport.createHologram(loc.getBlock().getLocation(), tier);
-							}else if(Support.CMI.isPluginLoaded()) {
-								CMISupport.createHologram(loc.getBlock().getLocation(), tier);
+							if(envoy.hasHologramPlugin()) {
+								envoy.getHologramController().createHologram(block, tier);
 							}
 						}
 						envoy.removeFallingBlock(e.getEntity());
-						envoy.addActiveEnvoy(loc.getBlock(), tier);
-						envoy.addSpawnedLocation(loc.getBlock());
+						envoy.addActiveEnvoy(block, tier);
+						envoy.addSpawnedLocation(block);
 						if(tier.getSignalFlareToggle()) {
-							envoy.startSignalFlare(loc.getBlock().getLocation(), tier);
+							envoy.startSignalFlare(block.getLocation(), tier);
 						}
 					}
 				}
@@ -174,27 +165,23 @@ public class EnvoyControl implements Listener {
 			for(Entity en : e.getEntity().getNearbyEntities(0, 0, 0)) {
 				if(!envoy.getFallingBlocks().isEmpty()) {
 					if(envoy.getFallingBlocks().contains(en)) {
+						Block block = e.getLocation().getBlock();
 						e.setCancelled(true);
 						Tier tier = pickRandomTier();
-						Location loc = en.getLocation();
-						if(loc.getBlock().getType() != Material.AIR) {
-							loc.add(0, 1, 0);
+						if(block.getType() != Material.AIR) {
+							block = block.getLocation().add(0, 1, 0).getBlock();
 						}
-						loc.getBlock().setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
+						block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
 						if(tier.isHoloEnabled()) {
-							if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-								HolographicSupport.createHologram(loc.getBlock().getLocation(), tier);
-							}else if(Support.HOLOGRAMS.isPluginLoaded()) {
-								HologramsSupport.createHologram(loc.getBlock().getLocation(), tier);
-							}else if(Support.CMI.isPluginLoaded()) {
-								CMISupport.createHologram(loc.getBlock().getLocation(), tier);
+							if(envoy.hasHologramPlugin()) {
+								envoy.getHologramController().createHologram(block, tier);
 							}
 						}
 						envoy.removeFallingBlock(en);
-						envoy.addActiveEnvoy(loc.getBlock(), tier);
-						envoy.addSpawnedLocation(loc.getBlock());
+						envoy.addActiveEnvoy(block, tier);
+						envoy.addSpawnedLocation(block);
 						if(tier.getSignalFlareToggle()) {
-							envoy.startSignalFlare(loc.getBlock().getLocation(), tier);
+							envoy.startSignalFlare(block.getLocation(), tier);
 						}
 					}
 				}

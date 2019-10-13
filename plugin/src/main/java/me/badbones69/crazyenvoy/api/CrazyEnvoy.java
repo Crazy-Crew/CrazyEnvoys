@@ -8,11 +8,15 @@ import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent;
 import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
 import me.badbones69.crazyenvoy.api.events.EnvoyStartEvent;
 import me.badbones69.crazyenvoy.api.events.EnvoyStartEvent.EnvoyStartReason;
+import me.badbones69.crazyenvoy.api.interfaces.HologramController;
 import me.badbones69.crazyenvoy.api.objects.*;
 import me.badbones69.crazyenvoy.controllers.EditControl;
 import me.badbones69.crazyenvoy.controllers.EnvoyControl;
 import me.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
 import me.badbones69.crazyenvoy.multisupport.*;
+import me.badbones69.crazyenvoy.multisupport.holograms.CMISupport;
+import me.badbones69.crazyenvoy.multisupport.holograms.HologramsSupport;
+import me.badbones69.crazyenvoy.multisupport.holograms.HolographicSupport;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,6 +46,7 @@ public class CrazyEnvoy {
 	private boolean envoyActive = false;
 	private boolean autoTimer = true;
 	private WorldGuardVersion worldGuardVersion;
+	private HologramController hologramController;
 	private List<Material> blacklistedBlocks = new ArrayList<>();
 	private List<UUID> ignoreMessages = new ArrayList<>();
 	private List<Calendar> warnings = new ArrayList<>();
@@ -239,6 +244,18 @@ public class CrazyEnvoy {
 		if(Support.WORLD_GUARD.isPluginLoaded() && Support.WORLD_EDIT.isPluginLoaded()) {
 			worldGuardVersion = Version.getCurrentVersion().isNewer(Version.v1_12_R1) ? new WorldGuard_v7() : new WorldGuard_v6();
 		}
+		if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
+			hologramController = new HolographicSupport();
+		}else if(Support.HOLOGRAMS.isPluginLoaded()) {
+			hologramController = new HologramsSupport();
+		}else if(Support.CMI.isPluginLoaded()) {
+			hologramController = new CMISupport();
+		}
+		if(hologramController != null) {
+			if(fileManager.isLogging()) System.out.println("[CrazyEnvoy] Loaded " + hologramController.getPluginName() + " hologram hook.");
+		}else {
+			if(fileManager.isLogging()) System.out.println("[CrazyEnvoy] No supported hologram plugin was found.");
+		}
 		if(!failedLocations.isEmpty()) {
 			new BukkitRunnable() {
 				@Override
@@ -361,17 +378,9 @@ public class CrazyEnvoy {
 			block.setType(Material.AIR);
 			stopSignalFlare(block.getLocation());
 		}
-		for(Entity en : fallingBlocks) {
-			en.remove();
-		}
-		if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-			HolographicSupport.removeAllHolograms();
-		}
-		if(Support.HOLOGRAMS.isPluginLoaded()) {
-			HologramsSupport.removeAllHolograms();
-		}
-		if(Support.CMI.isPluginLoaded()) {
-			CMISupport.removeAllHolograms();
+		fallingBlocks.forEach(Entity :: remove);
+		if(hasHologramPlugin()) {
+			hologramController.removeAllHolograms();
 		}
 		fallingBlocks.clear();
 		activeEnvoys.clear();
@@ -379,6 +388,14 @@ public class CrazyEnvoy {
 	
 	public WorldGuardVersion getWorldGuardSupport() {
 		return worldGuardVersion;
+	}
+	
+	public HologramController getHologramController() {
+		return hologramController;
+	}
+	
+	public boolean hasHologramPlugin() {
+		return hologramController != null;
 	}
 	
 	/**
@@ -722,12 +739,8 @@ public class CrazyEnvoy {
 						}
 						block.setType(tier.getPlacedBlockMaterial());
 						if(tier.isHoloEnabled()) {
-							if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-								HolographicSupport.createHologram(block.getLocation(), tier);
-							}else if(Support.HOLOGRAMS.isPluginLoaded()) {
-								HologramsSupport.createHologram(block.getLocation(), tier);
-							}else if(Support.CMI.isPluginLoaded()) {
-								CMISupport.createHologram(block.getLocation(), tier);
+							if(hasHologramPlugin()) {
+								hologramController.createHologram(block, tier);
 							}
 						}
 						addActiveEnvoy(block, tier);
@@ -882,15 +895,10 @@ public class CrazyEnvoy {
 					notFound.add(spawnedLocation);
 				}
 				stopSignalFlare(spawnedLocation.getLocation());
-				if(Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-					HolographicSupport.removeAllHolograms();
-				}else if(Support.HOLOGRAMS.isPluginLoaded()) {
-					HologramsSupport.removeAllHolograms();
-				}else if(Support.CMI.isPluginLoaded()) {
-					CMISupport.removeAllHolograms();
+				if(hasHologramPlugin()) {
+					hologramController.removeAllHolograms();
 				}
 			}
-			
 		}
 		spawnedLocations.clear();
 		if(Calendar.getInstance().after(nextClean)) {
