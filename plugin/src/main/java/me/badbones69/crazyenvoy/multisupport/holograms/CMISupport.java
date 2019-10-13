@@ -22,7 +22,6 @@ public class CMISupport implements HologramController {
 		CMIHologram hologram = new CMIHologram(new Random().nextInt() + "", block.getLocation().add(.5, tier.getHoloHight(), .5));
 		hologram.setLines(tier.getHoloMessage());
 		hologram.update();
-		hologram.refresh();
 		hologramManager.addHologram(hologram);
 		holos.put(block, hologram);
 	}
