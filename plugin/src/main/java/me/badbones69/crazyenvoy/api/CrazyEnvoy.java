@@ -647,9 +647,9 @@ public class CrazyEnvoy {
 		int maxSpawns = envoySettings.isMaxCrateEnabled() ? envoySettings.getMaxCrates() : envoySettings.isRandomLocationsEnabled() ? envoySettings.getMaxCrates() : spawnedLocations.size();
 		Random random = new Random();
 		if(envoySettings.isRandomLocationsEnabled()) {
-			if(center == null) {//Check to make sure the center exist and if not try to load it again.
+			if(center.getWorld() == null) {//Check to make sure the center exist and if not try to load it again.
 				center = getLocationFromString(centerString);
-				if(center == null) {//If center still doesn't exist then it cancels the event.
+				if(center.getWorld() == null) {//If center still doesn't exist then it cancels the event.
 					System.out.println("[CrazyEnvoy] Center was not found. String: \"" + centerString + "\'");
 					return new ArrayList<>();
 				}
