@@ -2,6 +2,7 @@ package me.badbones69.crazyenvoy;
 
 import me.badbones69.crazyenvoy.api.CrazyEnvoy;
 import me.badbones69.crazyenvoy.api.FileManager;
+import me.badbones69.crazyenvoy.api.commands.EnvoyCommand;
 import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent;
 import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
 import me.badbones69.crazyenvoy.controllers.*;
@@ -56,6 +57,7 @@ public class Main extends JavaPlugin implements Listener {
 		if(Support.MVDW_PLACEHOLDER_API.isPluginLoaded()) {
 			MVdWPlaceholderAPISupport.registerPlaceholders(this);
 		}
+		getCommand("envoy").setExecutor(new EnvoyCommand());
 	}
 	
 	@Override
