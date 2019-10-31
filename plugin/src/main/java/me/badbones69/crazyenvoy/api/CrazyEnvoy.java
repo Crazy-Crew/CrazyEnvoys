@@ -95,8 +95,8 @@ public class CrazyEnvoy {
 			setEnvoyActive(false);
 		}
 		if(data.contains("Center")) {
-			center = getLocationFromString(data.getString("Center"));
 			centerString = data.getString("Center");
+			center = getLocationFromString(centerString);
 		}else {
 			center = Bukkit.getWorlds().get(0).getSpawnLocation();
 		}
@@ -647,6 +647,13 @@ public class CrazyEnvoy {
 		int maxSpawns = envoySettings.isMaxCrateEnabled() ? envoySettings.getMaxCrates() : envoySettings.isRandomLocationsEnabled() ? envoySettings.getMaxCrates() : spawnedLocations.size();
 		Random random = new Random();
 		if(envoySettings.isRandomLocationsEnabled()) {
+			if(center == null) {//Check to make sure the center exist and if not try to load it again.
+				center = getLocationFromString(centerString);
+				if(center == null) {//If center still doesn't exist then it cancels the event.
+					System.out.println("[CrazyEnvoy] Center was not found. String: \"" + centerString + "\'");
+					return new ArrayList<>();
+				}
+			}
 			List<Block> minimumRadiusBlocks = getBlocks(center.clone(), envoySettings.getMinRadius());
 			for(int stop = 0; dropLocations.size() < maxSpawns; stop++) {
 				int maxRadius = envoySettings.getMaxRadius();
