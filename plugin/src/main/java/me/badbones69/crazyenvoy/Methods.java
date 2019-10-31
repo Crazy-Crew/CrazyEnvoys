@@ -37,6 +37,10 @@ public class Methods {
 		return color(Files.CONFIG.getFile().getString("Settings.Prefix"));
 	}
 	
+	public static String getPrefix(String message) {
+		return color(Files.CONFIG.getFile().getString("Settings.Prefix") + message);
+	}
+	
 	@SuppressWarnings("deprecation")
 	public static ItemStack getItemInHand(Player player) {
 		if(Version.getCurrentVersion().getVersionInteger() >= Version.v1_9_R1.getVersionInteger()) {

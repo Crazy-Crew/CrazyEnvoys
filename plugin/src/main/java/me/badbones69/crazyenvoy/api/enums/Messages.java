@@ -6,9 +6,9 @@ import me.badbones69.crazyenvoy.api.FileManager.Files;
 import me.badbones69.crazyenvoy.api.objects.EnvoySettings;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -16,180 +16,170 @@ import java.util.logging.Level;
 
 public enum Messages {
 	
-	LEFT("Left"),
-	ENDED("Ended"),
-	WARNING("Warning"),
-	STARTED("Started"),
-	ON_GOING("On-Going"),
-	RELOADED("Reloaded"),
-	TIME_LEFT("Time-Left"),
-	USED_FLARE("Used-Flare"),
-	GIVE_FLARE("Give-Flare"),
-	NEW_CENTER("New-Center"),
-	NOT_ONLINE("Not-Online"),
-	NOT_RUNNING("Not-Running"),
-	NOT_STARTED("Not-Started"),
-	GIVEN_FLARE("Given-Flare"),
-	FORCE_START("Force-Start"),
-	FORCE_ENDED("Force-Ended"),
+	LEFT("Left", "%prefix%&6%player% &7has gotten a crate. There are now &6%amount% &7left to find."),
+	ENDED("Ended", "%prefix%&cThe crazyenvoy event has ended. Thanks for playing and please come back for the next one."),
+	WARNING("Warning", "%prefix%&c[&4ALERT&c] &7There is an crazyenvoy event happening in &6%time%&7."),
+	STARTED("Started", "%prefix%&7An crazyenvoy event has just started. &6%amount% &7crates have spawned around spawn for 5m."),
+	ON_GOING("Hologram-Placeholders.On-Going", "On Going"),
+	RELOADED("Reloaded", "%prefix%&7You have just reloaded all the files."),
+	TIME_LEFT("Time-Left", "%prefix%&7The current crazyenvoy has &6%time%&7 left."),
+	USED_FLARE("Used-Flare", "%prefix%&7You have just started an crazyenvoy event with a flare."),
+	GIVE_FLARE("Give-Flare", "%prefix%&7You have just given &6%player% %amount% &7flares."),
+	NEW_CENTER("New-Center", "%prefix%&7You have just set a new center for the random crazyenvoy crates."),
+	NOT_ONLINE("Not-Online", "%prefix%&cThat player is not online at this time."),
+	NOT_RUNNING("Hologram-Placeholders.Not-Running", "Not Running"),
+	NOT_STARTED("Not-Started", "%prefix%&cThere is no crazyenvoy event going on at this time."),
+	GIVEN_FLARE("Given-Flare", "%prefix%&7You have been given &6%amount% &7flares."),
+	FORCE_START("Force-Start", "%prefix%&7You have just started the crazyenvoy."),
+	FORCE_ENDED("Force-Ended", "%prefix%&cYou have just ended the crazyenvoy."),
 	DROPS_PAGE("Drops-Page", "%prefix%&7Use /envoy drops [page] to see more."),
 	DROPS_FORMAT("Drops-Format", "&7[&6%id%&7]: %world%, %x%, %y%, %z%"),
 	DROPS_AVAILABLE("Drops-Available", "%prefix%&7List of all available envoys."),
 	DROPS_POSSIBILITIES("Drops-Possibilities", "%prefix%&7List of location envoy's may spawn at."),
-	PLAYERS_ONLY("Players-Only"),
-	NOT_A_NUMBER("Not-A-Number"),
-	ADD_LOCATION("Add-Location"),
-	COOLDOWN_LEFT("Cooldown-Left"),
-	NO_PERMISSION("No-Permission"),
-	TIME_TILL_EVENT("Time-Till-Event"),
-	CANT_USE_FLARES("Cant-Use-Flares"),
-	REMOVE_LOCATION("Remove-Location"),
-	ALREADY_STARTED("Already-Started"),
-	ENTER_EDITOR_MODE("Enter-Editor-Mode"),
-	LEAVE_EDITOR_MODE("Leave-Editor-Mode"),
-	NOT_ENOUGH_PLAYERS("Not-Enough-Players"),
-	STOP_IGNORING_MESSAGES("Stop-Ignoring-Messages"),
-	START_IGNORING_MESSAGES("Start-Ignoring-Messages"),
-	KICKED_FROM_EDITOR_MODE("Kicked-From-Editor-Mode"),
-	NOT_IN_WORLD_GUARD_REGION("Not-In-World-Guard-Region"),
-	NO_SPAWN_LOCATIONS_FOUND("No-Spawn-Locations-Found", "%prefix%&cNo spawn locations were found and so the event has been cancelled and the cooldown has been reset.");
+	PLAYERS_ONLY("Players-Only", "%prefix%&cOnly players can use that command."),
+	NOT_A_NUMBER("Not-A-Number", "%prefix%&cThat is not a number."),
+	ADD_LOCATION("Add-Location", "%prefix%&7You have just added a spawn location."),
+	COOLDOWN_LEFT("Cooldown-Left", "%prefix%&7You still have &6%time% &7till you can collect another crate."),
+	NO_PERMISSION("No-Permission", "%prefix%&cYou do not have permission to use that command."),
+	TIME_TILL_EVENT("Time-Till-Event", "%prefix%&7The next crazyenvoy will start in &6%time%&7."),
+	CANT_USE_FLARES("Cant-Use-Flares", "%prefix%&cYou do not have permission to use flares."),
+	REMOVE_LOCATION("Remove-Location", "%prefix%&cYou have just removed a spawn location."),
+	ALREADY_STARTED("Already-Started", "%prefix%&cThere is already an crazyenvoy event running. Please stop it to start a new one."),
+	ENTER_EDITOR_MODE("Enter-Editor-Mode", "%prefix%&7You are now in editor mode."),
+	LEAVE_EDITOR_MODE("Leave-Editor-Mode", "%prefix%&7You have now left editor mode."),
+	NOT_ENOUGH_PLAYERS("Not-Enough-Players", "%prefix%&7Not enough players are online to start the crazyenvoy event. Only &6%amount% &7players are online."),
+	STOP_IGNORING_MESSAGES("Stop-Ignoring-Messages", "%prefix%&7You now see all the collecting messages."),
+	START_IGNORING_MESSAGES("Start-Ignoring-Messages", "%prefix%&7You are now ignoring the collecting messages."),
+	KICKED_FROM_EDITOR_MODE("Kicked-From-Editor-Mode", "%prefix%&cSorry but an crazyenvoy is active. Please stop it or wait till it's over."),
+	NOT_IN_WORLD_GUARD_REGION("Not-In-World-Guard-Region", "%prefix%&cYou must be in the WarZone to use a flare."),
+	NO_SPAWN_LOCATIONS_FOUND("No-Spawn-Locations-Found", "%prefix%&cNo spawn locations were found and so the event has been cancelled and the cooldown has been reset."),
+	HELP("Help", Arrays.asList(
+	"&6/envoy help &7- Shows the envoy help menu.",
+	"&6/envoy reload &7- Reloads all the config files.",
+	"&6/envoy time &7- Shows the time till the envoy starts or ends.",
+	"&6/envoy drops [page] &7- Shows all current crate locations.",
+	"&6/envoy ignore &7- Shuts up the envoy collecting message.",
+	"&6/envoy flare [amount] [player] &7- Give a player a flare to call an envoy event.",
+	"&6/envoy edit &7- Edit the crate locations with bedrock.",
+	"&6/envoy start &7- Force starts the envoy.",
+	"&6/envoy stop &7- Force stops the envoy.",
+	"&6/envoy center &7- Set the center of the random crate drops."));
 	
 	private String path;
 	private String defaultMessage;
+	private List<String> defaultListMessage;
 	private CrazyEnvoy envoy = CrazyEnvoy.getInstance();
 	private EnvoySettings envoySettings = EnvoySettings.getInstance();
 	
-	private Messages(String path) {
-		this.path = "Messages." + path;
-	}
-	
 	private Messages(String path, String defaultMessage) {
-		this.path = "Messages." + path;
+		this.path = path;
 		this.defaultMessage = defaultMessage;
 	}
 	
+	private Messages(String path, List<String> defaultListMessage) {
+		this.path = path;
+		this.defaultListMessage = defaultListMessage;
+	}
+	
+	public static String convertList(List<String> list) {
+		String message = "";
+		for(String line : list) {
+			message += Methods.color(line) + "\n";
+		}
+		return message;
+	}
+	
+	public static void addMissingMessages() {
+		FileConfiguration messages = Files.MESSAGES.getFile();
+		boolean saveFile = false;
+		for(Messages message : values()) {
+			if(!messages.contains("Messages." + message.getPath())) {
+				saveFile = true;
+				if(message.getDefaultMessage() != null) {
+					messages.set("Messages." + message.getPath(), message.getDefaultMessage());
+				}else {
+					messages.set("Messages." + message.getPath(), message.getDefaultListMessage());
+				}
+			}
+		}
+		if(saveFile) {
+			Files.MESSAGES.saveFile();
+		}
+	}
+	
 	public String getMessage() {
-		return Methods.color(Files.MESSAGES.getFile().contains(path) ? Files.MESSAGES.getFile().getString(path).replaceAll("%prefix%", Methods.getPrefix()) : defaultMessage.replaceAll("%prefix%", Methods.getPrefix()));
+		return getMessage(true);
 	}
 	
-	public List<String> getMessages() {
-		List<String> msgs = new ArrayList<>();
-		for(String msg : Files.MESSAGES.getFile().contains(path) ? Files.MESSAGES.getFile().getStringList(path) : Arrays.asList(defaultMessage)) {
-			msgs.add(Methods.color(msg.replaceAll("%prefix%", Methods.getPrefix())));
-		}
-		return msgs;
+	public String getMessage(String placeholder, String replacement) {
+		HashMap<String, String> placeholders = new HashMap<>();
+		placeholders.put(placeholder, replacement);
+		return getMessage(placeholders, true);
 	}
 	
-	public String getMessage(HashMap<String, String> placeholder) {
-		String msg = getMessage();
-		if(placeholder != null) {
-			for(String ph : placeholder.keySet()) {
-				if(msg.contains(ph)) {
-					msg = msg.replaceAll(ph, placeholder.get(ph));
-				}
+	public String getMessage(HashMap<String, String> placeholders) {
+		return getMessage(placeholders, true);
+	}
+	
+	public String getMessageNoPrefix() {
+		return getMessage(false);
+	}
+	
+	public String getMessageNoPrefix(String placeholder, String replacement) {
+		HashMap<String, String> placeholders = new HashMap<>();
+		placeholders.put(placeholder, replacement);
+		return getMessage(placeholders, false);
+	}
+	
+	public String getMessageNoPrefix(HashMap<String, String> placeholders) {
+		return getMessage(placeholders, false);
+	}
+	
+	private String getMessage(boolean prefix) {
+		return getMessage(new HashMap<>(), prefix);
+	}
+	
+	private String getMessage(HashMap<String, String> placeholders, boolean prefix) {
+		String message;
+		boolean isList = isList();
+		boolean exists = exists();
+		if(isList) {
+			if(exists) {
+				message = Methods.color(convertList(Files.MESSAGES.getFile().getStringList("Messages." + path)));
+			}else {
+				message = Methods.color(convertList(getDefaultListMessage()));
+			}
+		}else {
+			if(exists) {
+				message = Methods.color(Files.MESSAGES.getFile().getString("Messages." + path));
+			}else {
+				message = Methods.color(getDefaultMessage());
 			}
 		}
-		return msg;
-	}
-	
-	public List<String> getMessages(HashMap<String, String> placeholder) {
-		List<String> msgs = new ArrayList<>();
-		for(String msg : getMessages()) {
-			if(placeholder != null) {
-				for(String ph : placeholder.keySet()) {
-					if(msg.contains(ph)) {
-						msg = msg.replaceAll(ph, placeholder.get(ph));
-					}
-				}
-			}
-			msgs.add(msg);
+		if(prefix && !isList) {//If the message needs a prefix.
+			placeholders.put("%Prefix%", Methods.getPrefix());
 		}
-		return msgs;
-	}
-	
-	public boolean isList() {
-		return !Files.MESSAGES.getFile().getStringList(path).isEmpty();
+		for(String placeholder : placeholders.keySet()) {
+			message = message.replaceAll(placeholder, placeholders.get(placeholder))
+			.replaceAll(placeholder.toLowerCase(), placeholders.get(placeholder));
+		}
+		return Methods.color(message);
 	}
 	
 	public void sendMessage(Player player) {
-		if(isList()) {
-			for(String msg : getMessages()) {
-				player.sendMessage(msg);
-			}
-		}else {
-			String msg = getMessage();
-			if(!msg.isEmpty()) {
-				player.sendMessage(msg);
-			}
-		}
-	}
-	
-	public void sendMessage(CommandSender sender) {
-		if(isList()) {
-			for(String msg : getMessages()) {
-				sender.sendMessage(msg);
-			}
-		}else {
-			String msg = getMessage();
-			if(!msg.isEmpty()) {
-				sender.sendMessage(msg);
-			}
-			
-		}
+		sendMessage(player, new HashMap<>());
 	}
 	
 	public void sendMessage(Player player, HashMap<String, String> placeholder) {
-		if(isList()) {
-			for(String msg : getMessages()) {
-				if(placeholder != null) {
-					for(String ph : placeholder.keySet()) {
-						if(msg.contains(ph)) {
-							msg = msg.replaceAll(ph, placeholder.get(ph));
-						}
-					}
-				}
-				player.sendMessage(msg);
-			}
-		}else {
-			String msg = getMessage();
-			if(placeholder != null) {
-				for(String ph : placeholder.keySet()) {
-					if(msg.contains(ph)) {
-						msg = msg.replaceAll(ph, placeholder.get(ph));
-					}
-				}
-			}
-			if(!msg.isEmpty()) {
-				player.sendMessage(msg);
-			}
-		}
+		player.sendMessage(getMessage(placeholder));
+	}
+	
+	public void sendMessage(CommandSender sender) {
+		sendMessage(sender, new HashMap<>());
 	}
 	
 	public void sendMessage(CommandSender sender, HashMap<String, String> placeholder) {
-		if(isList()) {
-			for(String msg : getMessages()) {
-				if(placeholder != null) {
-					for(String ph : placeholder.keySet()) {
-						if(msg.contains(ph)) {
-							msg = msg.replaceAll(ph, placeholder.get(ph));
-						}
-					}
-				}
-				sender.sendMessage(msg);
-			}
-		}else {
-			String msg = getMessage();
-			if(placeholder != null) {
-				for(String ph : placeholder.keySet()) {
-					if(msg.contains(ph)) {
-						msg = msg.replaceAll(ph, placeholder.get(ph));
-					}
-				}
-			}
-			if(!msg.isEmpty()) {
-				sender.sendMessage(msg);
-			}
-		}
+		sender.sendMessage(getMessage(placeholder));
 	}
 	
 	public void broadcastMessage(boolean ignore, HashMap<String, String> placeholder) {
@@ -218,28 +208,31 @@ public enum Messages {
 				}
 			}
 		}
-		if(isList()) {
-			for(String message : getMessages()) {
-				if(placeholder != null) {
-					for(String ph : placeholder.keySet()) {
-						if(message.contains(ph)) {
-							message = message.replaceAll(ph, placeholder.get(ph));
-						}
-					}
-				}
-				Bukkit.getLogger().log(Level.INFO, message);
-			}
+		Bukkit.getLogger().log(Level.INFO, getMessage(placeholder));
+	}
+	
+	private boolean exists() {
+		return Files.MESSAGES.getFile().contains("Messages." + path);
+	}
+	
+	private boolean isList() {
+		if(Files.MESSAGES.getFile().contains("Messages." + path)) {
+			return !Files.MESSAGES.getFile().getStringList("Messages." + path).isEmpty();
 		}else {
-			String message = getMessage();
-			if(placeholder != null) {
-				for(String ph : placeholder.keySet()) {
-					if(message.contains(ph)) {
-						message = message.replaceAll(ph, placeholder.get(ph));
-					}
-				}
-			}
-			Bukkit.getLogger().log(Level.INFO, message);
+			return defaultMessage == null;
 		}
+	}
+	
+	private String getPath() {
+		return path;
+	}
+	
+	private String getDefaultMessage() {
+		return defaultMessage;
+	}
+	
+	private List<String> getDefaultListMessage() {
+		return defaultListMessage;
 	}
 	
 }
