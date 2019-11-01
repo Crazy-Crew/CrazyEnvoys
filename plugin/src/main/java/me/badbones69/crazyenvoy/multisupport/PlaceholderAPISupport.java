@@ -23,7 +23,7 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 				return envoy.isEnvoyActive() ? Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going") : envoy.getNextEnvoyTime();
 			case "time_left":
 				return envoy.isEnvoyActive() ? envoy.getEnvoyRunTimeLeft() : Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
-			case "creates_left":
+			case "crates_left":
 				return String.valueOf(envoy.getActiveEnvoys().size());
 			default:
 				return "";
