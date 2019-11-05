@@ -41,16 +41,7 @@ public class EnvoyCommand implements CommandExecutor {
 			switch(args[0].toLowerCase()) {
 				case "help":
 					if(hasPermission(sender, "help")) {
-						sender.sendMessage(Methods.color("&6/Envoy help &7- Shows the envoy help menu."));
-						sender.sendMessage(Methods.color("&6/Envoy reload &7- Reloads all the config files."));
-						sender.sendMessage(Methods.color("&6/Envoy time &7- Shows the time till the envoy starts or ends."));
-						sender.sendMessage(Methods.color("&6/Envoy drops [page] &7- Shows all current crate locations."));
-						sender.sendMessage(Methods.color("&6/Envoy ignore &7- Shuts up the envoy collecting message."));
-						sender.sendMessage(Methods.color("&6/Envoy flare [amount] [player] &7- Give a player a flare to call an envoy event."));
-						sender.sendMessage(Methods.color("&6/Envoy edit &7- Edit the crate locations with bedrock."));
-						sender.sendMessage(Methods.color("&6/Envoy start &7- Force starts the envoy."));
-						sender.sendMessage(Methods.color("&6/Envoy stop &7- Force stops the envoy."));
-						sender.sendMessage(Methods.color("&6/Envoy center &7- Set the center of the random crate drops."));
+						Messages.HELP.sendMessage(sender);
 					}else {
 						Messages.NO_PERMISSION.sendMessage(sender);
 					}
