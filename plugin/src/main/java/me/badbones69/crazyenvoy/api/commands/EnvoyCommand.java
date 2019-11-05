@@ -45,7 +45,7 @@ public class EnvoyCommand implements CommandExecutor {
 					}else {
 						Messages.NO_PERMISSION.sendMessage(sender);
 					}
-					break;
+					return true;
 				case "reload":
 					if(hasPermission(sender, "reload")) {
 						if(envoy.isEnvoyActive()) {
@@ -63,7 +63,7 @@ public class EnvoyCommand implements CommandExecutor {
 					}else {
 						Messages.NO_PERMISSION.sendMessage(sender);
 					}
-					break;
+					return true;
 				case "ignore":
 				case "stfu":
 					if(hasPermission(sender, "ignore")) {
@@ -83,7 +83,7 @@ public class EnvoyCommand implements CommandExecutor {
 					}else {
 						Messages.NO_PERMISSION.sendMessage(sender);
 					}
-					break;
+					return true;
 				case "center":
 					if(hasPermission(sender, "center")) {
 						envoy.setCenter(((Player) sender).getLocation());
@@ -91,7 +91,7 @@ public class EnvoyCommand implements CommandExecutor {
 					}else {
 						Messages.NO_PERMISSION.sendMessage(sender);
 					}
-					break;
+					return true;
 				case "flare":// /Envoy Flare [Amount] [Player]
 					if(hasPermission(sender, "flare.give")) {
 						int amount = 1;
@@ -132,7 +132,7 @@ public class EnvoyCommand implements CommandExecutor {
 					}else {
 						Messages.NO_PERMISSION.sendMessage(sender);
 					}
-					break;
+					return true;
 				case "drops":
 				case "drop":
 					if(hasPermission(sender, "drops")) {
@@ -172,7 +172,7 @@ public class EnvoyCommand implements CommandExecutor {
 					}else {
 						Messages.NO_PERMISSION.sendMessage(sender);
 					}
-					break;
+					return true;
 				case "time":
 					if(hasPermission(sender, "time")) {
 						HashMap<String, String> placeholder = new HashMap<>();
@@ -187,7 +187,7 @@ public class EnvoyCommand implements CommandExecutor {
 					}else {
 						Messages.NO_PERMISSION.sendMessage(sender);
 					}
-					break;
+					return true;
 				case "start":
 				case "begin":
 					if(hasPermission(sender, "start")) {
@@ -210,7 +210,7 @@ public class EnvoyCommand implements CommandExecutor {
 					}else {
 						Messages.NO_PERMISSION.sendMessage(sender);
 					}
-					break;
+					return true;
 				case "stop":
 				case "end":
 					if(hasPermission(sender, "stop")) {
@@ -231,7 +231,7 @@ public class EnvoyCommand implements CommandExecutor {
 					}else {
 						Messages.NO_PERMISSION.sendMessage(sender);
 					}
-					break;
+					return true;
 				case "edit":
 					if(hasPermission(sender, "edit")) {
 						if(envoy.isEnvoyActive()) {
@@ -253,7 +253,7 @@ public class EnvoyCommand implements CommandExecutor {
 					}else {
 						Messages.NO_PERMISSION.sendMessage(sender);
 					}
-					break;
+					return true;
 			}
 			sender.sendMessage(Methods.getPrefix() + Methods.color("&cPlease do /envoy help for more information."));
 			return true;
