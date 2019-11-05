@@ -182,6 +182,10 @@ public enum Messages {
 		sender.sendMessage(getMessage(placeholder));
 	}
 	
+	public void broadcastMessage(boolean ignore) {
+		broadcastMessage(ignore, new HashMap<>());
+	}
+	
 	public void broadcastMessage(boolean ignore, HashMap<String, String> placeholder) {
 		if(envoySettings.isWorldMessagesEnabled()) {
 			for(Player player : Bukkit.getOnlinePlayers()) {

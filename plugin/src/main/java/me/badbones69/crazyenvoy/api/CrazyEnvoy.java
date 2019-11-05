@@ -704,7 +704,7 @@ public class CrazyEnvoy {
 			resetWarnings();
 			EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.NO_LOCATIONS_FOUND);
 			Bukkit.getPluginManager().callEvent(event);
-			Messages.NO_SPAWN_LOCATIONS_FOUND.broadcastMessage(false, null);
+			Messages.NO_SPAWN_LOCATIONS_FOUND.broadcastMessage(false);
 			return false;
 		}
 		for(Player player : EditControl.getEditors()) {
@@ -768,7 +768,7 @@ public class CrazyEnvoy {
 			public void run() {
 				EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.OUT_OF_TIME);
 				Bukkit.getPluginManager().callEvent(event);
-				Messages.ENDED.broadcastMessage(false, null);
+				Messages.ENDED.broadcastMessage(false);
 				endEnvoyEvent();
 			}
 		}.runTaskLater(plugin, getTimeSeconds(envoySettings.getEnvoyRunTimer()) * 20);

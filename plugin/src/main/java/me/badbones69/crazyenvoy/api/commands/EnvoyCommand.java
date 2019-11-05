@@ -232,7 +232,7 @@ public class EnvoyCommand implements CommandExecutor {
 							}
 							Bukkit.getPluginManager().callEvent(event);
 							envoy.endEnvoyEvent();
-							Messages.ENDED.broadcastMessage(false, null);
+							Messages.ENDED.broadcastMessage(false);
 							Messages.FORCE_ENDED.sendMessage(sender);
 						}else {
 							Messages.NOT_STARTED.sendMessage(sender);

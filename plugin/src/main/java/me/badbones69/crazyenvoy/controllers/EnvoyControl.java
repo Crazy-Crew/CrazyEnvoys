@@ -122,7 +122,7 @@ public class EnvoyControl implements Listener {
 						EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.ALL_CRATES_COLLECTED);
 						Bukkit.getPluginManager().callEvent(event);
 						envoy.endEnvoyEvent();
-						Messages.ENDED.broadcastMessage(false, null);
+						Messages.ENDED.broadcastMessage(false);
 					}
 				}
 			}
