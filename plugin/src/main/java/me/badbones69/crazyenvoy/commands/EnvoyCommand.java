@@ -1,4 +1,4 @@
-package me.badbones69.crazyenvoy.api.commands;
+package me.badbones69.crazyenvoy.commands;
 
 import me.badbones69.crazyenvoy.Methods;
 import me.badbones69.crazyenvoy.api.CrazyEnvoy;
