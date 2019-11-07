@@ -1,6 +1,7 @@
 package me.badbones69.crazyenvoy.multisupport.holograms;
 
 import com.Zrips.CMI.CMI;
+import com.Zrips.CMI.Containers.CMILocation;
 import com.Zrips.CMI.Modules.Holograms.CMIHologram;
 import com.Zrips.CMI.Modules.Holograms.HologramManager;
 import me.badbones69.crazyenvoy.api.CrazyEnvoy;
@@ -19,7 +20,7 @@ public class CMISupport implements HologramController {
 	private HologramManager hologramManager = new HologramManager((CMI) Support.CMI.getPlugin());
 	
 	public void createHologram(Block block, Tier tier) {
-		CMIHologram hologram = new CMIHologram(new Random().nextInt() + "", block.getLocation().add(.5, tier.getHoloHight(), .5));
+		CMIHologram hologram = new CMIHologram(new Random().nextInt() + "", new CMILocation(block.getLocation().add(.5, tier.getHoloHight(), .5)));
 		hologram.setLines(tier.getHoloMessage());
 		hologram.update();
 		hologramManager.addHologram(hologram);
