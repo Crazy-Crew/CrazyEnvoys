@@ -541,10 +541,10 @@ public class CrazyEnvoy {
 	
 	/**
 	 *
-	 * @param en Remove a falling block from the list.
+	 * @param entity Remove a falling block from the list.
 	 */
-	public void removeFallingBlock(Entity en) {
-		fallingBlocks.remove(en);
+	public void removeFallingBlock(Entity entity) {
+		fallingBlocks.remove(entity);
 	}
 	
 	/**

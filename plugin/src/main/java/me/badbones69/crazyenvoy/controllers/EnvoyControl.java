@@ -132,7 +132,8 @@ public class EnvoyControl implements Listener {
 	@EventHandler
 	public void onChestSpawn(EntityChangeBlockEvent e) {
 		if(envoy.isEnvoyActive()) {
-			if(e.getEntity() instanceof FallingBlock) {
+			Entity entity = e.getEntity();
+			if(entity instanceof FallingBlock) {
 				if(!envoy.getFallingBlocks().isEmpty()) {
 					if(envoy.getFallingBlocks().containsKey(entity)) {
 						Block block = envoy.getFallingBlocks().get(entity);
@@ -144,7 +145,7 @@ public class EnvoyControl implements Listener {
 								envoy.getHologramController().createHologram(block, tier);
 							}
 						}
-						envoy.removeFallingBlock(e.getEntity());
+						envoy.removeFallingBlock(entity);
 						envoy.addActiveEnvoy(block, tier);
 						envoy.addSpawnedLocation(block);
 						if(tier.getSignalFlareToggle()) {
@@ -159,7 +160,7 @@ public class EnvoyControl implements Listener {
 	@EventHandler
 	public void onItemSpawn(ItemSpawnEvent e) {
 		if(envoy.isEnvoyActive()) {
-			for(Entity en : e.getEntity().getNearbyEntities(0, 0, 0)) {
+			for(Entity entity : e.getEntity().getNearbyEntities(0, 0, 0)) {
 				if(!envoy.getFallingBlocks().isEmpty()) {
 					if(envoy.getFallingBlocks().containsKey(entity)) {
 						Block block = envoy.getFallingBlocks().get(entity);
@@ -174,7 +175,7 @@ public class EnvoyControl implements Listener {
 								envoy.getHologramController().createHologram(block, tier);
 							}
 						}
-						envoy.removeFallingBlock(en);
+						envoy.removeFallingBlock(entity);
 						envoy.addActiveEnvoy(block, tier);
 						envoy.addSpawnedLocation(block);
 						if(tier.getSignalFlareToggle()) {
