@@ -134,13 +134,10 @@ public class EnvoyControl implements Listener {
 		if(envoy.isEnvoyActive()) {
 			if(e.getEntity() instanceof FallingBlock) {
 				if(!envoy.getFallingBlocks().isEmpty()) {
-					if(envoy.getFallingBlocks().contains(e.getEntity())) {
-						Block block = e.getBlock();
+					if(envoy.getFallingBlocks().containsKey(entity)) {
+						Block block = envoy.getFallingBlocks().get(entity);
 						e.setCancelled(true);
 						Tier tier = pickRandomTier();
-//						if(block.getType() != Material.AIR) {
-//							block = block.getLocation().add(0, 1, 0).getBlock();
-//						}
 						block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
 						if(tier.isHoloEnabled()) {
 							if(envoy.hasHologramPlugin()) {
@@ -164,8 +161,8 @@ public class EnvoyControl implements Listener {
 		if(envoy.isEnvoyActive()) {
 			for(Entity en : e.getEntity().getNearbyEntities(0, 0, 0)) {
 				if(!envoy.getFallingBlocks().isEmpty()) {
-					if(envoy.getFallingBlocks().contains(en)) {
-						Block block = e.getLocation().getBlock();
+					if(envoy.getFallingBlocks().containsKey(entity)) {
+						Block block = envoy.getFallingBlocks().get(entity);
 						e.setCancelled(true);
 						Tier tier = pickRandomTier();
 						if(block.getType() != Material.AIR) {

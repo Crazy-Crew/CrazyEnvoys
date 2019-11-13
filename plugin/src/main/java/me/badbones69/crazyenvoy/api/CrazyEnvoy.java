@@ -52,7 +52,7 @@ public class CrazyEnvoy {
 	private List<Calendar> warnings = new ArrayList<>();
 	private List<Block> spawnLocations = new ArrayList<>();
 	private List<Block> spawnedLocations = new ArrayList<>();
-	private List<Entity> fallingBlocks = new ArrayList<>();
+	private HashMap<Entity, Block> fallingBlocks = new HashMap<>();
 	private Location center;
 	private String centerString;
 	private HashMap<Block, Tier> activeEnvoys = new HashMap<>();
@@ -378,7 +378,7 @@ public class CrazyEnvoy {
 			block.setType(Material.AIR);
 			stopSignalFlare(block.getLocation());
 		}
-		fallingBlocks.forEach(Entity :: remove);
+		fallingBlocks.keySet().forEach(Entity :: remove);
 		if(hasHologramPlugin()) {
 			hologramController.removeAllHolograms();
 		}
@@ -535,7 +535,7 @@ public class CrazyEnvoy {
 	 *
 	 * @return All falling blocks are are currently going.
 	 */
-	public List<Entity> getFallingBlocks() {
+	public HashMap<Entity, Block> getFallingBlocks() {
 		return fallingBlocks;
 	}
 	
@@ -742,7 +742,7 @@ public class CrazyEnvoy {
 							block.getChunk().load();
 						}
 						FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, envoySettings.getFallingHeight(), .5), envoySettings.getFallingBlockMaterial(), (byte) envoySettings.getFallingBlockDurability());
-						fallingBlocks.add(chest);
+						fallingBlocks.put(chest, block);
 					}else {
 						Tier tier = pickRandomTier();
 						if(!block.getChunk().isLoaded()) {
