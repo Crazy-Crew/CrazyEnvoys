@@ -41,7 +41,6 @@ public class CrazyEnvoy {
 	private BukkitTask runTimeTask;
 	private BukkitTask coolDownTask;
 	private Calendar nextEnvoy;
-	private Calendar nextClean;
 	private Calendar envoyTimeLeft;
 	private boolean envoyActive = false;
 	private boolean autoTimer = true;
@@ -169,18 +168,6 @@ public class CrazyEnvoy {
 				tier.addPrize(new Prize(prizeID).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
 			}
 			tiers.add(tier);
-			//Clean up any old spawned crate locations.
-			if(data.contains("Locations.Spawned")) {
-				spawnedLocations.addAll(getLocationsFromStringList(data.getStringList("Locations.Spawned")));
-			}
-			nextClean = Calendar.getInstance();
-			if(data.contains("Next-Clean")) {
-				nextClean.setTimeInMillis(data.getLong("Next-Clean"));
-			}else {
-				nextClean.add(Calendar.DATE, 1);
-				data.set("Next-Clean", nextClean.getTimeInMillis());
-				Files.DATA.saveFile();
-			}
 			cleanLocations();
 			//Loading the blacklisted blocks.
 			if(Version.getCurrentVersion().isNewer(Version.v1_12_R1)) {
@@ -420,16 +407,16 @@ public class CrazyEnvoy {
 	}
 	
 	public void saveSpawnLocations() {
-		ArrayList<String> locs = new ArrayList<>();
+		ArrayList<String> locations = new ArrayList<>();
 		for(Block block : spawnLocations) {
 			try {
 				if(block.getWorld() != null) {
-					locs.add(getStringFromLocation(block.getLocation()));
+					locations.add(getStringFromLocation(block.getLocation()));
 				}
 			}catch(Exception e) {
 			}
 		}
-		Files.DATA.getFile().set("Locations.Spawns", locs);
+		Files.DATA.getFile().set("Locations.Spawns", locations);
 		Files.DATA.saveFile();
 	}
 	
@@ -677,6 +664,8 @@ public class CrazyEnvoy {
 				}
 				dropLocations.add(location.getBlock());
 			}
+			Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(dropLocations));
+			Files.DATA.saveFile();
 		}else {
 			if(envoySettings.isMaxCrateEnabled()) {
 				for(int i = 0; i < maxSpawns; ) {
@@ -891,20 +880,17 @@ public class CrazyEnvoy {
 		return plugin;
 	}
 	
+	/**
+	 * Used to clean all spawn locations and set them back to air.
+	 */
 	public void cleanLocations() {
-		ArrayList<Material> crateTypes = new ArrayList<>();
-		for(Tier tier : getTiers()) {
-			crateTypes.add(tier.getPlacedBlockMaterial());
+		List<Block> locations = new ArrayList<>(spawnedLocations);
+		if(envoySettings.isRandomLocationsEnabled()) {
+			locations.addAll(getLocationsFromStringList(Files.DATA.getFile().getStringList("Locations.Spawned")));
 		}
-		List<Block> notFound = new ArrayList<>();
-		for(Block spawnedLocation : spawnedLocations) {
+		for(Block spawnedLocation : locations) {
 			if(spawnedLocation != null) {
-				if(crateTypes.contains(spawnedLocation.getType())) {
-					spawnedLocation.setType(Material.AIR);
-					//				System.out.println("[CrazyEnvoy]: Removed the old crate at location " + getStringFromLocation(spawnedLocation));
-				}else {
-					notFound.add(spawnedLocation);
-				}
+				spawnedLocation.setType(Material.AIR);
 				stopSignalFlare(spawnedLocation.getLocation());
 				if(hasHologramPlugin()) {
 					hologramController.removeAllHolograms();
@@ -912,15 +898,8 @@ public class CrazyEnvoy {
 			}
 		}
 		spawnedLocations.clear();
-		if(Calendar.getInstance().after(nextClean)) {
-			nextClean.add(Calendar.DATE, 1);
-			Files.DATA.getFile().set("Locations.Spawned", spawnedLocations);
-			Files.DATA.getFile().set("Next-Clean", nextClean.getTimeInMillis());
-			Files.DATA.saveFile();
-		}else {
-			Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(notFound));
-			Files.DATA.saveFile();
-		}
+		Files.DATA.getFile().set("Locations.Spawned", new ArrayList<>());
+		Files.DATA.saveFile();
 	}
 	
 	/**
@@ -928,10 +907,8 @@ public class CrazyEnvoy {
 	 * @param block block the crate spawned at.
 	 */
 	public void addSpawnedLocation(Block block) {
-		if(!getStringsFromLocationList(spawnedLocations).contains(getStringFromLocation(block.getLocation()))) {
+		if(!spawnedLocations.contains(block)) {
 			spawnedLocations.add(block);
-			Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(spawnedLocations));
-			Files.DATA.saveFile();
 		}
 	}
 	
