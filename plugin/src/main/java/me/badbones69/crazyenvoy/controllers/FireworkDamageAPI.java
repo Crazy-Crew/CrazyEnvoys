@@ -1,5 +1,6 @@
 package me.badbones69.crazyenvoy.controllers;
 
+import me.badbones69.crazyenvoy.multisupport.Version;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -33,7 +34,9 @@ public class FireworkDamageAPI implements Listener {
 	 * @param firework The firework you want to add.
 	 */
 	public static void addFirework(Entity firework) {
-		fireworks.add(firework);
+		if(Version.getCurrentVersion().isNewer(Version.v1_10_R1)) {
+			fireworks.add(firework);
+		}
 	}
 	
 	/**

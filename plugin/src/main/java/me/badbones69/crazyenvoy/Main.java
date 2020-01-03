@@ -44,7 +44,7 @@ public class Main extends JavaPlugin implements Listener {
 		pm.registerEvents(new EnvoyControl(), this);
 		pm.registerEvents(new FlareControl(), this);
 		try {
-			if(Version.getCurrentVersion().getVersionInteger() >= Version.v1_11_R1.getVersionInteger()) {
+			if(Version.getCurrentVersion().isNewer(Version.v1_10_R1)) {
 				pm.registerEvents(new FireworkDamageAPI(this), this);
 			}
 		}catch(Exception e) {
