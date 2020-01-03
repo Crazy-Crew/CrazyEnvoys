@@ -14,37 +14,37 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class CMISupport implements HologramController {
-	
-	private CrazyEnvoy envoy = CrazyEnvoy.getInstance();
-	private HashMap<Block, CMIHologram> holos = new HashMap<>();
-	private HologramManager hologramManager = new HologramManager((CMI) Support.CMI.getPlugin());
-	
-	public void createHologram(Block block, Tier tier) {
-		CMIHologram hologram = new CMIHologram(new Random().nextInt() + "", new CMILocation(block.getLocation().add(.5, tier.getHoloHight(), .5)));
-		hologram.setLines(tier.getHoloMessage());
-		hologram.update();
-		hologramManager.addHologram(hologram);
-		holos.put(block, hologram);
-	}
-	
-	public void removeHologram(Block block) {
-		if(holos.containsKey(block)) {
-			hologramManager.hideHoloForAllPlayers(holos.get(block));
-			hologramManager.removeHolo(holos.get(block));
-			holos.remove(block);
-		}
-	}
-	
-	public void removeAllHolograms() {
-		for(Block block : holos.keySet()) {
-			hologramManager.hideHoloForAllPlayers(holos.get(block));
-			hologramManager.removeHolo(holos.get(block));
-		}
-		holos.clear();
-	}
-	
-	public String getPluginName() {
-		return "CMI";
-	}
-	
+    
+    private CrazyEnvoy envoy = CrazyEnvoy.getInstance();
+    private HashMap<Block, CMIHologram> holos = new HashMap<>();
+    private HologramManager hologramManager = new HologramManager((CMI) Support.CMI.getPlugin());
+    
+    public void createHologram(Block block, Tier tier) {
+        CMIHologram hologram = new CMIHologram(new Random().nextInt() + "", new CMILocation(block.getLocation().add(.5, tier.getHoloHight(), .5)));
+        hologram.setLines(tier.getHoloMessage());
+        hologram.update();
+        hologramManager.addHologram(hologram);
+        holos.put(block, hologram);
+    }
+    
+    public void removeHologram(Block block) {
+        if (holos.containsKey(block)) {
+            hologramManager.hideHoloForAllPlayers(holos.get(block));
+            hologramManager.removeHolo(holos.get(block));
+            holos.remove(block);
+        }
+    }
+    
+    public void removeAllHolograms() {
+        for (Block block : holos.keySet()) {
+            hologramManager.hideHoloForAllPlayers(holos.get(block));
+            hologramManager.removeHolo(holos.get(block));
+        }
+        holos.clear();
+    }
+    
+    public String getPluginName() {
+        return "CMI";
+    }
+    
 }

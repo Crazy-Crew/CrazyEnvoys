@@ -7,43 +7,43 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Flare {
-	
-	private static ItemBuilder flare;
-	
-	public static void load() {
-		FileConfiguration config = Files.CONFIG.getFile();
-		flare = new ItemBuilder()
-		.setMaterial(config.getString("Settings.Flares.Item"))
-		.setName(config.getString("Settings.Flares.Name"))
-		.setLore(config.getStringList("Settings.Flares.Lore"));
-	}
-	
-	public static ItemStack getFlare() {
-		return getFlare(1);
-	}
-	
-	public static ItemStack getFlare(int amount) {
-		return flare.setAmount(amount).build();
-	}
-	
-	public static boolean isFlare(ItemStack item) {
-		return getFlare().isSimilar(item);
-	}
-	
-	public static void giveFlare(Player player) {
-		giveFlare(player, 1);
-	}
-	
-	public static void giveFlare(Player player, int amount) {
-		if(Methods.isInvFull(player)) {
-			player.getWorld().dropItem(player.getLocation(), getFlare(amount));
-		}else {
-			player.getInventory().addItem(getFlare(amount));
-		}
-	}
-	
-	public static void takeFlare(Player player) {
-		player.getInventory().removeItem(getFlare());
-	}
-	
+    
+    private static ItemBuilder flare;
+    
+    public static void load() {
+        FileConfiguration config = Files.CONFIG.getFile();
+        flare = new ItemBuilder()
+        .setMaterial(config.getString("Settings.Flares.Item"))
+        .setName(config.getString("Settings.Flares.Name"))
+        .setLore(config.getStringList("Settings.Flares.Lore"));
+    }
+    
+    public static ItemStack getFlare() {
+        return getFlare(1);
+    }
+    
+    public static ItemStack getFlare(int amount) {
+        return flare.setAmount(amount).build();
+    }
+    
+    public static boolean isFlare(ItemStack item) {
+        return getFlare().isSimilar(item);
+    }
+    
+    public static void giveFlare(Player player) {
+        giveFlare(player, 1);
+    }
+    
+    public static void giveFlare(Player player, int amount) {
+        if (Methods.isInvFull(player)) {
+            player.getWorld().dropItem(player.getLocation(), getFlare(amount));
+        } else {
+            player.getInventory().addItem(getFlare(amount));
+        }
+    }
+    
+    public static void takeFlare(Player player) {
+        player.getInventory().removeItem(getFlare());
+    }
+    
 }
