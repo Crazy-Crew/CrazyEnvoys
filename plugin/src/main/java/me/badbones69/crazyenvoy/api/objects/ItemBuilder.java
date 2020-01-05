@@ -293,6 +293,7 @@ public class ItemBuilder {
                 this.isHead = true;
                 break;
             case "POTION":
+            case "SPLASH_POTION":
                 this.isPotion = true;
                 break;
             case "LEATHER_HELMET":
