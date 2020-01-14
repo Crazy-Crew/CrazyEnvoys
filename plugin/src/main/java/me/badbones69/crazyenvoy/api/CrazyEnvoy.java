@@ -642,9 +642,9 @@ public class CrazyEnvoy {
                 center = getLocationFromString(centerString);
                 if (center.getWorld() == null) {//If center still doesn't exist then it cancels the event.
                     System.out.println("[CrazyEnvoy] Debug Start");
-                    System.out.println("[CrazyEnvoy] Center String: \"" + centerString + "\'");
-                    System.out.println("[CrazyEnvoy] Location Object: \"" + center.toString() + "\'");
-                    System.out.println("[CrazyEnvoy] World Exist: \"" + (center.getWorld() != null) + "\'");
+                    System.out.println("[CrazyEnvoy] Center String: \"" + centerString + "'");
+                    System.out.println("[CrazyEnvoy] Location Object: \"" + center.toString() + "'");
+                    System.out.println("[CrazyEnvoy] World Exist: \"" + (center.getWorld() != null) + "'");
                     System.out.println("[CrazyEnvoy] Debug End");
                     return new ArrayList<>();
                 }
