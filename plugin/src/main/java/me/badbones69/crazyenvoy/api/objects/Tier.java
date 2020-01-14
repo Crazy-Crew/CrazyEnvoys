@@ -55,8 +55,6 @@ public class Tier {
         signalFlareColors = new ArrayList<>();
         prizes = new ArrayList<>();
         holoMessage.addAll(Arrays.asList("&7&l(&6&l!&7&l) Envoy Crate"));
-        fireworkColors.addAll(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
-        signalFlareColors.addAll(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
     }
     
     /**
