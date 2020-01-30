@@ -891,6 +891,8 @@ public class CrazyEnvoy {
         List<Block> locations = new ArrayList<>(spawnedLocations);
         if (envoySettings.isRandomLocationsEnabled()) {
             locations.addAll(getLocationsFromStringList(Files.DATA.getFile().getStringList("Locations.Spawned")));
+        } else {
+            locations.addAll(spawnLocations);
         }
         for (Block spawnedLocation : locations) {
             if (spawnedLocation != null) {
