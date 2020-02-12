@@ -130,6 +130,7 @@ public class SkullCreator {
      * @param base64 The base64 string containing the texture
      * @return The head with a custom texture
      */
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public static ItemStack itemWithBase64(ItemStack item, String base64) {
         notNull(item, "item");
         notNull(base64, "base64");
@@ -221,6 +222,7 @@ public class SkullCreator {
         }
     }
     
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     private static ItemStack getPlayerSkullItem() {
         if (newerApi()) {
             return new ItemStack(Material.valueOf("PLAYER_HEAD"));

@@ -1,7 +1,6 @@
 package me.badbones69.crazyenvoy.api.objects;
 
 import me.badbones69.crazyenvoy.Methods;
-import me.badbones69.crazyenvoy.api.CrazyEnvoy;
 import me.badbones69.crazyenvoy.multisupport.SkullCreator;
 import me.badbones69.crazyenvoy.multisupport.Version;
 import me.badbones69.crazyenvoy.multisupport.nbttagapi.NBTItem;
@@ -21,10 +20,8 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 /**
@@ -36,11 +33,9 @@ import java.util.stream.Collectors;
  * @author BadBones69
  *
  */
-public class ItemBuilder {
+public class ItemBuilder implements Cloneable {
     
-    private static CrazyEnvoy envoy = CrazyEnvoy.getInstance();
-    private static Version version = Version.getCurrentVersion();
-    private static boolean useNewMaterial = version.isNewer(Version.v1_12_R1);
+    private static boolean useNewMaterial = Version.isNewer(Version.v1_12_R1);
     private Material material;
     private int damage;
     private String name;
@@ -50,13 +45,14 @@ public class ItemBuilder {
     private boolean isHash;
     private boolean isURL;
     private boolean isHead;
-    private HashMap<Enchantment, Integer> enchantments;
+    private Map<Enchantment, Integer> enchantments;
     private boolean unbreakable;
     private boolean hideItemFlags;
     private boolean glowing;
     private ItemStack referenceItem;
     private boolean isMobEgg;
     private EntityType entityType;
+    private boolean isTippedArrow;
     private PotionType potionType;
     private Color potionColor;
     private boolean isPotion;
@@ -67,8 +63,8 @@ public class ItemBuilder {
     private boolean isShield;
     private int customModelData;
     private boolean useCustomModelData;
-    private HashMap<String, String> namePlaceholders;
-    private HashMap<String, String> lorePlaceholders;
+    private Map<String, String> namePlaceholders;
+    private Map<String, String> lorePlaceholders;
     private List<ItemFlag> itemFlags;
     
     /**
@@ -89,6 +85,7 @@ public class ItemBuilder {
         this.hideItemFlags = false;
         this.glowing = false;
         this.entityType = EntityType.BAT;
+        this.isTippedArrow = false;
         this.potionType = null;
         this.potionColor = null;
         this.isPotion = false;
@@ -110,6 +107,7 @@ public class ItemBuilder {
      * @param item The ItemStack you wish to convert into an ItemBuilder.
      * @return The ItemStack as an ItemBuilder with all the info from the item.
      */
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public static ItemBuilder convertItemStack(ItemStack item) {
         ItemBuilder itemBuilder = new ItemBuilder()
         .setReferenceItem(item)
@@ -124,9 +122,9 @@ public class ItemBuilder {
             if (nbt.hasKey("Unbreakable")) {
                 itemBuilder.setUnbreakable(nbt.getBoolean("Unbreakable"));
             }
-            if (version.isNewer(Version.v1_12_R1)) {
-                if (itemMeta instanceof org.bukkit.inventory.meta.Damageable) {
-                    itemBuilder.setDamage(((org.bukkit.inventory.meta.Damageable) itemMeta).getDamage());
+            if (useNewMaterial) {
+                if (itemMeta instanceof Damageable) {
+                    itemBuilder.setDamage(((Damageable) itemMeta).getDamage());
                 }
             } else {
                 itemBuilder.setDamage(item.getDurability());
@@ -139,63 +137,71 @@ public class ItemBuilder {
         return convertString(itemString, null);
     }
     
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public static ItemBuilder convertString(String itemString, String placeHolder) {
         ItemBuilder itemBuilder = new ItemBuilder();
         try {
-            options:
-            for (String option : itemString.split(", ")) {
-                if (option.startsWith("Item:")) {
-                    itemBuilder.setMaterial(option.replaceAll("Item:", ""));
-                } else if (option.startsWith("Name:")) {
-                    itemBuilder.setName(option.replaceAll("Name:", ""));
-                } else if (option.startsWith("Amount:")) {
-                    try {
-                        itemBuilder.setAmount(Integer.parseInt(option.replaceAll("Amount:", "")));
-                    } catch (NumberFormatException e) {
-                        itemBuilder.setAmount(1);
-                    }
-                } else if (option.startsWith("Lore:")) {
-                    itemBuilder.setLore(Arrays.asList(option.replaceAll("Lore:", "").split(",")));
-                } else if (option.startsWith("Player:")) {
-                    itemBuilder.setPlayer(option.replaceAll("Player:", ""));
-                } else if (option.startsWith("Unbreakable-Item:")) {
-                    if (option.replaceAll("Unbreakable-Item:", "").equalsIgnoreCase("true")) {
-                        itemBuilder.setUnbreakable(true);
-                    }
-                } else {
-                    String[] split = option.split(":");
-                    String argument1 = split[0];
-                    Enchantment enchantment = getEnchantment(argument1);
-                    if (enchantment != null && enchantment.getName() != null) {
+            for (String optionString : itemString.split(", ")) {
+                String option = optionString.split(":")[0];
+                String value = optionString.replace(option + ":", "").replace(option, "");
+                switch (option.toLowerCase()) {
+                    case "item":
+                        itemBuilder.setMaterial(value);
+                        break;
+                    case "name":
+                        itemBuilder.setName(value);
+                        break;
+                    case "amount":
                         try {
-                            itemBuilder.addEnchantments(enchantment, Integer.parseInt(split[1]));
-                        } catch (Exception e) {
-                            itemBuilder.addEnchantments(enchantment, 1);
+                            itemBuilder.setAmount(Integer.parseInt(value));
+                        } catch (NumberFormatException e) {
+                            itemBuilder.setAmount(1);
                         }
-                        continue;
-                    }
-                    for (ItemFlag itemFlag : ItemFlag.values()) {
-                        if (itemFlag.name().equalsIgnoreCase(option)) {
-                            itemBuilder.addItemFlag(itemFlag);
-                            continue options;
+                        break;
+                    case "lore":
+                        itemBuilder.setLore(Arrays.asList(value.split(",")));
+                        break;
+                    case "player":
+                        itemBuilder.setPlayer(value);
+                        break;
+                    case "unbreakable-item":
+                        if (value.isEmpty() || value.equalsIgnoreCase("true")) {
+                            itemBuilder.setUnbreakable(true);
                         }
-                    }
-                    try {
-                        for (PatternType pattern : PatternType.values()) {
-                            if (argument1.equalsIgnoreCase(pattern.name()) || argument1.equalsIgnoreCase(pattern.getIdentifier())) {
-                                DyeColor color = getDyeColor(split[1]);
-                                if (color != null) {
-                                    itemBuilder.addPattern(new Pattern(color, pattern));
-                                }
+                        break;
+                    default:
+                        Enchantment enchantment = getEnchantment(option);
+                        if (enchantment != null) {
+                            try {
+                                itemBuilder.addEnchantments(enchantment, Integer.parseInt(value));
+                            } catch (NumberFormatException e) {
+                                itemBuilder.addEnchantments(enchantment, 1);
+                            }
+                            break;
+                        }
+                        for (ItemFlag itemFlag : ItemFlag.values()) {
+                            if (itemFlag.name().equalsIgnoreCase(option)) {
+                                itemBuilder.addItemFlag(itemFlag);
                                 break;
                             }
                         }
-                    } catch (Exception e) {
-                    }
+                        try {
+                            for (PatternType pattern : PatternType.values()) {
+                                if (option.equalsIgnoreCase(pattern.name()) || value.equalsIgnoreCase(pattern.getIdentifier())) {
+                                    DyeColor color = getDyeColor(value);
+                                    if (color != null) {
+                                        itemBuilder.addPattern(new Pattern(color, pattern));
+                                    }
+                                    break;
+                                }
+                            }
+                        } catch (Exception ignored) {
+                        }
+                        break;
                 }
             }
         } catch (Exception e) {
-            itemBuilder.setMaterial("RED_TERRACOTTA", "STAINED_CLAY:14").setName("&c&lERROR").setLore(Arrays.asList("&cThere is an error", "&cFor the reward: &c" + (placeHolder != null ? placeHolder : "")));
+            itemBuilder.setMaterial("RED_TERRACOTTA", "STAINED_CLAY:14").setName("&c&lERROR").setLore(Arrays.asList("&cThere is an error", "&cFor : &c" + (placeHolder != null ? placeHolder : "")));
             e.printStackTrace();
         }
         return itemBuilder;
@@ -218,16 +224,6 @@ public class ItemBuilder {
     }
     
     /**
-     * Set the type of item and its metadata in the builder.
-     * @param newMaterial The 1.13+ string must be in this form: %Material% or %Material%:%MetaData%
-     * @param oldMaterial The 1.12.2- string must be in this form: %Material% or %Material%:%MetaData%
-     * @return The ItemBuilder with updated info.
-     */
-    public ItemBuilder setMaterial(String newMaterial, String oldMaterial) {
-        return setMaterial(useNewMaterial ? newMaterial : oldMaterial);
-    }
-    
-    /**
      * Set the type of item the builder is set to.
      * @param material The material you wish to set.
      * @return The ItemBuilder with updated info.
@@ -240,57 +236,67 @@ public class ItemBuilder {
     
     /**
      * Set the type of item and its metadata in the builder.
-     * @param material The string must be in this form: %Material% or %Material%:%MetaData%
+     * @param materialString The string must be in this form: %Material% or %Material%:%MetaData%
      * @return The ItemBuilder with updated info.
      */
-    public ItemBuilder setMaterial(String material) {
-        String metaData = "";
-        if (material.contains(":")) {// Sets the durability or another value option.
-            String[] b = material.split(":");
-            material = b[0];
-            metaData = b[1];
-            if (metaData.contains("#")) {// <ID>:<Durability>#<CustomModelData>
-                String modelData = metaData.split("#")[1];
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
+    public ItemBuilder setMaterial(String materialString) {
+        String metaDataString = "";
+        if (materialString.contains(":")) {// Sets the durability or another value option.
+            String[] split = materialString.split(":");
+            materialString = split[0];
+            metaDataString = split[1];
+            if (metaDataString.contains("#")) {// <ID>:<Durability>#<CustomModelData>
+                String modelData = metaDataString.split("#")[1];
                 if (Methods.isInt(modelData)) {//Value is a number.
                     this.useCustomModelData = true;
                     this.customModelData = Integer.parseInt(modelData);
                 }
             }
-            metaData = metaData.replace("#" + customModelData, "");
-            if (Methods.isInt(metaData)) {//Value is durability.
-                this.damage = Integer.parseInt(metaData);
+            metaDataString = metaDataString.replace("#" + customModelData, "");
+            if (Methods.isInt(metaDataString)) {//Value is durability.
+                this.damage = Integer.parseInt(metaDataString);
             } else {//Value is something else.
-                this.potionType = getPotionType(PotionEffectType.getByName(metaData));
-                this.potionColor = getColor(metaData);
-                this.armorColor = getColor(metaData);
+                for (String option : split) {
+                    if (potionType == null) {
+                        this.potionType = getPotionType(PotionEffectType.getByName(option));
+                    }
+                    if (potionColor == null) {
+                        this.potionColor = getColor(option);
+                    }
+                    if (armorColor == null) {
+                        this.armorColor = getColor(option);
+                    }
+                }
             }
-        } else if (material.contains("#")) {
-            String[] b = material.split("#");
-            material = b[0];
+        } else if (materialString.contains("#")) {
+            String[] b = materialString.split("#");
+            materialString = b[0];
             if (Methods.isInt(b[1])) {//Value is a number.
                 this.useCustomModelData = true;
                 this.customModelData = Integer.parseInt(b[1]);
             }
         }
-        Material m = Material.matchMaterial(material);
-        if (m != null) {// Sets the material.
-            this.material = m;
+        Material material = Material.matchMaterial(materialString);
+        if (material != null) {// Sets the material.
+            this.material = material;
             //1.9-1.12.2
-            if (version.isNewer(Version.v1_8_R3) && version.isOlder(Version.v1_13_R2)) {
-                if (m == Material.matchMaterial("MONSTER_EGG")) {
-                    try {
-                        this.entityType = EntityType.fromId(damage) != null ? EntityType.fromId(damage) : EntityType.valueOf(metaData);
-                    } catch (Exception ignore) {
-                    }
-                    this.damage = 0;
-                    this.isMobEgg = true;
+            if (Version.isNewer(Version.v1_8_R3) && Version.isOlder(Version.v1_13_R2) && material == Material.matchMaterial("MONSTER_EGG")) {
+                try {
+                    this.entityType = EntityType.fromId(damage) != null ? EntityType.fromId(damage) : EntityType.valueOf(metaDataString);
+                } catch (Exception ignore) {
                 }
+                this.damage = 0;
+                this.isMobEgg = true;
             }
         }
         switch (this.material.name()) {
             case "PLAYER_HEAD":
             case "SKULL_ITEM":
                 this.isHead = true;
+                break;
+            case "TIPPED_ARROW":
+                this.isTippedArrow = true;
                 break;
             case "POTION":
             case "SPLASH_POTION":
@@ -314,6 +320,16 @@ public class ItemBuilder {
             this.isBanner = true;
         }
         return this;
+    }
+    
+    /**
+     * Set the type of item and its metadata in the builder.
+     * @param newMaterial The 1.13+ string must be in this form: %Material% or %Material%:%MetaData%
+     * @param oldMaterial The 1.12.2- string must be in this form: %Material% or %Material%:%MetaData%
+     * @return The ItemBuilder with updated info.
+     */
+    public ItemBuilder setMaterial(String newMaterial, String oldMaterial) {
+        return setMaterial(useNewMaterial ? newMaterial : oldMaterial);
     }
     
     /**
@@ -358,7 +374,7 @@ public class ItemBuilder {
      * @param placeholders The placeholders that will be used.
      * @return The ItemBuilder with updated info.
      */
-    public ItemBuilder setNamePlaceholders(HashMap<String, String> placeholders) {
+    public ItemBuilder setNamePlaceholders(Map<String, String> placeholders) {
         this.namePlaceholders = placeholders;
         return this;
     }
@@ -390,8 +406,8 @@ public class ItemBuilder {
      */
     public String getUpdatedName() {
         String newName = name;
-        for (String placeholder : namePlaceholders.keySet()) {
-            newName = newName.replace(placeholder, namePlaceholders.get(placeholder));
+        for (Entry<String, String> placeholder : namePlaceholders.entrySet()) {
+            newName = newName.replace(placeholder.getKey(), placeholder.getValue()).replace(placeholder.getKey().toLowerCase(), placeholder.getValue());
         }
         return newName;
     }
@@ -436,7 +452,7 @@ public class ItemBuilder {
      * @param placeholders The placeholders that you wish to use.
      * @return The ItemBuilder with updated info.
      */
-    public ItemBuilder setLorePlaceholders(HashMap<String, String> placeholders) {
+    public ItemBuilder setLorePlaceholders(Map<String, String> placeholders) {
         this.lorePlaceholders = placeholders;
         return this;
     }
@@ -449,6 +465,17 @@ public class ItemBuilder {
      */
     public ItemBuilder addLorePlaceholder(String placeholder, String argument) {
         this.lorePlaceholders.put(placeholder, argument);
+        return this;
+    }
+    
+    /**
+     * Add a placeholder to the lore of the item.
+     * @param placeholder The placeholder you wish to replace.
+     * @param argument The argument that will replace the placeholder.
+     * @return The ItemBuilder with updated info.
+     */
+    public ItemBuilder addLorePlaceholder(String placeholder, int argument) {
+        this.lorePlaceholders.put(placeholder, argument + "");
         return this;
     }
     
@@ -469,8 +496,8 @@ public class ItemBuilder {
     public List<String> getUpdatedLore() {
         List<String> newLore = new ArrayList<>();
         for (String i : lore) {
-            for (String placeholder : lorePlaceholders.keySet()) {
-                i = i.replace(placeholder, lorePlaceholders.get(placeholder)).replace(placeholder.toLowerCase(), lorePlaceholders.get(placeholder));
+            for (Entry<String, String> placeholder : lorePlaceholders.entrySet()) {
+                i = i.replace(placeholder.getKey(), placeholder.getValue()).replace(placeholder.getKey().toLowerCase(), placeholder.getValue());
             }
             newLore.add(i);
         }
@@ -493,6 +520,10 @@ public class ItemBuilder {
     public ItemBuilder setEntityType(EntityType entityType) {
         this.entityType = entityType;
         return this;
+    }
+    
+    public boolean isTippedArrow() {
+        return isTippedArrow;
     }
     
     /**
@@ -559,7 +590,7 @@ public class ItemBuilder {
                     break;
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return this;
     }
@@ -663,7 +694,7 @@ public class ItemBuilder {
      * Get the enchantments that are on the item in the builder.
      * @return The enchantments that are on the item in the builder.
      */
-    public HashMap<Enchantment, Integer> getEnchantments() {
+    public Map<Enchantment, Integer> getEnchantments() {
         return enchantments;
     }
     
@@ -673,7 +704,7 @@ public class ItemBuilder {
      * @param enchantments A list of enchantments that will go onto the item in the builder.
      * @return The ItemBuilder with updated info.
      */
-    public ItemBuilder setEnchantments(HashMap<Enchantment, Integer> enchantments) {
+    public ItemBuilder setEnchantments(Map<Enchantment, Integer> enchantments) {
         if (enchantments != null) {
             this.enchantments = enchantments;
         }
@@ -686,7 +717,7 @@ public class ItemBuilder {
      * @param level The level of the enchantment. This can be unsafe levels.
      * @return The ItemBuilder with updated info.
      */
-    public ItemBuilder addEnchantments(Enchantment enchantment, Integer level) {
+    public ItemBuilder addEnchantments(Enchantment enchantment, int level) {
         this.enchantments.put(enchantment, level);
         return this;
     }
@@ -762,7 +793,7 @@ public class ItemBuilder {
     public ItemBuilder addItemFlag(String flagString) {
         try {
             addItemFlag(ItemFlag.valueOf(flagString.toUpperCase()));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return this;
     }
@@ -774,7 +805,7 @@ public class ItemBuilder {
                 if (itemFlag != null) {
                     addItemFlag(itemFlag);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         return this;
@@ -796,38 +827,37 @@ public class ItemBuilder {
      * Builder the item from all the information that was given to the builder.
      * @return The result of all the info that was given to the builder as an ItemStack.
      */
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public ItemStack build() {
         ItemStack item = referenceItem != null ? referenceItem : new ItemStack(material, amount);
         if (item.getType() != Material.AIR) {
-            if (isHead) {//Has to go 1st due to it removing all data when finished.
-                if (isHash) {//Sauce: https://github.com/deanveloper/SkullCreator
-                    if (isURL) {
-                        SkullCreator.itemWithUrl(item, player);
-                    } else {
-                        SkullCreator.itemWithBase64(item, player);
-                    }
+            //Has to go 1st due to it removing all data when finished.
+            //Sauce: https://github.com/deanveloper/SkullCreator
+            if (isHead && isHash) {
+                if (isURL) {
+                    SkullCreator.itemWithUrl(item, player);
+                } else {
+                    SkullCreator.itemWithBase64(item, player);
                 }
             }
             ItemMeta itemMeta = item.getItemMeta();
             itemMeta.setDisplayName(getUpdatedName());
             itemMeta.setLore(getUpdatedLore());
-            if (version.isSame(Version.v1_8_R3)) {
-                if (isHead && !isHash && player != null && !player.equals("")) {
-                    SkullMeta skullMeta = (SkullMeta) itemMeta;
-                    skullMeta.setOwner(player);
-                }
+            if (Version.isSame(Version.v1_8_R3) && isHead && !isHash && player != null && !player.equals("")) {
+                SkullMeta skullMeta = (SkullMeta) itemMeta;
+                skullMeta.setOwner(player);
             }
-            if (version.isNewer(Version.v1_10_R1)) {
+            if (Version.isNewer(Version.v1_10_R1)) {
                 itemMeta.setUnbreakable(unbreakable);
             }
-            if (version.isNewer(Version.v1_12_R1)) {
-                if (itemMeta instanceof org.bukkit.inventory.meta.Damageable) {
-                    ((org.bukkit.inventory.meta.Damageable) itemMeta).setDamage(damage);
+            if (Version.isNewer(Version.v1_12_R1)) {
+                if (itemMeta instanceof Damageable) {
+                    ((Damageable) itemMeta).setDamage(damage);
                 }
             } else {
                 item.setDurability((short) damage);
             }
-            if (isPotion && (potionType != null || potionColor != null)) {
+            if ((isTippedArrow || isPotion) && (potionType != null || potionColor != null)) {
                 PotionMeta potionMeta = (PotionMeta) itemMeta;
                 if (potionType != null) {
                     potionMeta.setBasePotionData(new PotionData(potionType));
@@ -860,26 +890,33 @@ public class ItemBuilder {
             item.addUnsafeEnchantments(enchantments);
             addGlow(item);
             NBTItem nbt = new NBTItem(item);
-            if (isHead) {
-                if (!isHash && player != null && !player.equals("") && version.isNewer(Version.v1_8_R3)) {
-                    nbt.setString("SkullOwner", player);
-                }
+            if (isHead && !isHash && player != null && !player.equals("") && Version.isNewer(Version.v1_8_R3)) {
+                nbt.setString("SkullOwner", player);
             }
-            if (isMobEgg) {
-                if (entityType != null) {
-                    nbt.addCompound("EntityTag").setString("id", "minecraft:" + entityType.name());
-                }
+            if (isMobEgg && entityType != null) {
+                nbt.addCompound("EntityTag").setString("id", "minecraft:" + entityType.name());
             }
-            if (version.isOlder(Version.v1_11_R1)) {
-                if (unbreakable) {
-                    nbt.setBoolean("Unbreakable", true);
-                    nbt.setInteger("HideFlags", 4);
-                }
+            if (unbreakable && Version.isOlder(Version.v1_11_R1)) {
+                nbt.setBoolean("Unbreakable", true);
+                nbt.setInteger("HideFlags", 4);
             }
             return nbt.getItem();
         } else {
             return item;
         }
+    }
+    
+    /**
+     * Get a clone of the object.
+     * @return a new cloned object.
+     */
+    public ItemBuilder clone() {
+        try {
+            return (ItemBuilder) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return new ItemBuilder();
     }
     
     /**
@@ -897,13 +934,11 @@ public class ItemBuilder {
     }
     
     private ItemStack hideFlags(ItemStack item) {
-        if (hideItemFlags) {
-            if (item != null && item.hasItemMeta()) {
-                ItemMeta itemMeta = item.getItemMeta();
-                itemMeta.addItemFlags(ItemFlag.values());
-                item.setItemMeta(itemMeta);
-                return item;
-            }
+        if (hideItemFlags && item != null && item.hasItemMeta()) {
+            ItemMeta itemMeta = item.getItemMeta();
+            itemMeta.addItemFlags(ItemFlag.values());
+            item.setItemMeta(itemMeta);
+            return item;
         }
         return item;
     }
@@ -912,14 +947,12 @@ public class ItemBuilder {
         if (glowing) {
             try {
                 if (item != null) {
-                    if (item.hasItemMeta()) {
-                        if (item.getItemMeta().hasEnchants()) {
-                            return item;
-                        }
+                    if (item.hasItemMeta() && item.getItemMeta().hasEnchants()) {
+                        return item;
                     }
                     item.addUnsafeEnchantment(Enchantment.LUCK, 1);
                     ItemMeta meta = item.getItemMeta();
-                    meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
+                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     item.setItemMeta(meta);
                 }
                 return item;
@@ -1027,15 +1060,14 @@ public class ItemBuilder {
         return null;
     }
     
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     private static Enchantment getEnchantment(String enchantmentName) {
         enchantmentName = stripEnchantmentName(enchantmentName);
         for (Enchantment enchantment : Enchantment.values()) {
             try {
                 //MC 1.13+ has the correct names.
-                if (version.isNewer(Version.v1_12_R1)) {
-                    if (stripEnchantmentName(enchantment.getKey().getKey()).equalsIgnoreCase(enchantmentName)) {
-                        return enchantment;
-                    }
+                if (Version.isNewer(Version.v1_12_R1) || stripEnchantmentName(enchantment.getKey().getKey()).equalsIgnoreCase(enchantmentName)) {
+                    return enchantment;
                 }
                 HashMap<String, String> enchantments = getEnchantmentList();
                 if (stripEnchantmentName(enchantment.getName()).equalsIgnoreCase(enchantmentName) || (enchantments.get(enchantment.getName()) != null &&

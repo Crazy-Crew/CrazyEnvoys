@@ -28,7 +28,7 @@ public class Main extends JavaPlugin implements Listener {
     
     @Override
     public void onEnable() {
-        String homeFolder = Version.getCurrentVersion().isNewer(Version.v1_12_R1) ? "/Tiers1.13-Up" : "/Tiers1.12.2-Down";
+        String homeFolder = Version.isNewer(Version.v1_12_R1) ? "/Tiers1.13-Up" : "/Tiers1.12.2-Down";
         fileManager.logInfo(true)
         .registerCustomFilesFolder("/Tiers")
         .registerDefaultGenerateFiles("Basic.yml", "/Tiers", homeFolder)
@@ -44,7 +44,7 @@ public class Main extends JavaPlugin implements Listener {
         pm.registerEvents(new EnvoyControl(), this);
         pm.registerEvents(new FlareControl(), this);
         try {
-            if (Version.getCurrentVersion().isNewer(Version.v1_10_R1)) {
+            if (Version.isNewer(Version.v1_10_R1)) {
                 pm.registerEvents(new FireworkDamageAPI(this), this);
             }
         } catch (Exception e) {

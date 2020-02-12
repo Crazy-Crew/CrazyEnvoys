@@ -14,13 +14,14 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EditControl implements Listener {
     
     private static ArrayList<Player> editors = new ArrayList<>();
     private static CrazyEnvoy envoy = CrazyEnvoy.getInstance();
     
-    public static ArrayList<Player> getEditors() {
+    public static List<Player> getEditors() {
         return editors;
     }
     
@@ -36,21 +37,21 @@ public class EditControl implements Listener {
         return editors.contains(player);
     }
     
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public static void showFakeBlocks(Player player) {
         for (Block block : envoy.getSpawnLocations()) {
             player.sendBlockChange(block.getLocation(), Material.BEDROCK, (byte) 0);
         }
     }
     
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public static void removeFakeBlocks(Player player) {
         for (Block block : envoy.getSpawnLocations()) {
             player.sendBlockChange(block.getLocation(), block.getType(), block.getData());
         }
     }
     
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     @EventHandler
     public void onBlockPlace(final BlockPlaceEvent e) {
         final Player player = e.getPlayer();

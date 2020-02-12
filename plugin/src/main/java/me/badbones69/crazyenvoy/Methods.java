@@ -24,6 +24,7 @@ import java.util.Random;
 public class Methods {
     
     private static CrazyEnvoy envoy = CrazyEnvoy.getInstance();
+    private static Random random = new Random();
     
     public static String color(String msg) {
         return ChatColor.translateAlternateColorCodes('&', msg);
@@ -41,9 +42,9 @@ public class Methods {
         return color(Files.CONFIG.getFile().getString("Settings.Prefix") + message);
     }
     
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public static ItemStack getItemInHand(Player player) {
-        if (Version.getCurrentVersion().getVersionInteger() >= Version.v1_9_R1.getVersionInteger()) {
+        if (Version.isNewer(Version.v1_8_R3)) {
             return player.getInventory().getItemInMainHand();
         } else {
             return player.getItemInHand();
@@ -151,7 +152,7 @@ public class Methods {
                 locations.add(list.get(index));
             }
         }
-        for (; locations.size() == 0; page--) {
+        for (; locations.isEmpty(); page--) {
             if (page <= 0) {
                 break;
             }
@@ -170,8 +171,7 @@ public class Methods {
         if (max <= min || max <= 0) {
             return true;
         }
-        Random number = new Random();
-        int chance = 1 + number.nextInt(max);
+        int chance = 1 + random.nextInt(max);
         return chance >= 1 && chance <= min;
     }
     
@@ -182,7 +182,7 @@ public class Methods {
             c.setRequestMethod("POST");
             c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes(StandardCharsets.UTF_8));
             String oldVersion = envoy.getPlugin().getDescription().getVersion();
-            String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replaceAll("[a-zA-Z ]", "");
+            String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replace("[a-zA-Z ]", "");
             if (!newVersion.equals(oldVersion)) {
                 Bukkit.getConsoleSender().sendMessage(getPrefix() + color("&cYour server is running &7v" + oldVersion + "&c and the newest is &7v" + newVersion + "&c."));
             }
@@ -197,7 +197,7 @@ public class Methods {
             c.setRequestMethod("POST");
             c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes(StandardCharsets.UTF_8));
             String oldVersion = envoy.getPlugin().getDescription().getVersion();
-            String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replaceAll("[a-zA-Z ]", "");
+            String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replace("[a-zA-Z ]", "");
             if (!newVersion.equals(oldVersion)) {
                 player.sendMessage(getPrefix() + color("&cYour server is running &7v" + oldVersion + "&c and the newest is &7v" + newVersion + "&c."));
             }
@@ -205,7 +205,7 @@ public class Methods {
         }
     }
     
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public static List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
         List<Entity> out = new ArrayList<>();
         if (loc.getWorld() != null) {

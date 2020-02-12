@@ -60,7 +60,7 @@ public class FileManager {
                     String fileLocation = file.getFileLocation();
                     //Switch between 1.12.2- and 1.13+ config version.
                     if (file == Files.CONFIG) {
-                        if (Version.getCurrentVersion().isOlder(Version.v1_13_R2)) {
+                        if (Version.isOlder(Version.v1_13_R2)) {
                             fileLocation = "Config1.12.2-Down.yml";
                         } else {
                             fileLocation = "Config1.13-Up.yml";

@@ -28,55 +28,47 @@ public class FlareControl implements Listener {
         Player player = e.getPlayer();
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             ItemStack flare = Methods.getItemInHand(player);
-            if (flare != null) {
-                if (Flare.isFlare(flare)) {
-                    e.setCancelled(true);
-                    if (player.hasPermission("envoy.flare.use")) {
-                        if (envoy.isEnvoyActive()) {
-                            Messages.ALREADY_STARTED.sendMessage(player);
-                        } else {
-                            int online = Bukkit.getServer().getOnlinePlayers().size();
-                            if (envoySettings.isMinPlayersEnabled()) {
-                                if (envoySettings.isMinFlareEnabled()) {
-                                    if (online < envoySettings.getMinPlayers()) {
-                                        HashMap<String, String> placeholder = new HashMap<>();
-                                        placeholder.put("%amount%", online + "");
-                                        placeholder.put("%Amount%", online + "");
-                                        Messages.NOT_ENOUGH_PLAYERS.sendMessage(player, placeholder);
-                                        return;
+            if (flare != null && Flare.isFlare(flare)) {
+                e.setCancelled(true);
+                if (player.hasPermission("envoy.flare.use")) {
+                    if (envoy.isEnvoyActive()) {
+                        Messages.ALREADY_STARTED.sendMessage(player);
+                    } else {
+                        int online = Bukkit.getServer().getOnlinePlayers().size();
+                        if (envoySettings.isMinPlayersEnabled() && envoySettings.isMinFlareEnabled() && online < envoySettings.getMinPlayers()) {
+                            HashMap<String, String> placeholder = new HashMap<>();
+                            placeholder.put("%amount%", online + "");
+                            placeholder.put("%Amount%", online + "");
+                            Messages.NOT_ENOUGH_PLAYERS.sendMessage(player, placeholder);
+                            return;
+                        }
+                        boolean toggle = false;
+                        if (Support.WORLD_EDIT.isPluginLoaded() && Support.WORLD_GUARD.isPluginLoaded()) {
+                            if (envoySettings.isWorldMessagesEnabled()) {
+                                for (String region : envoySettings.getFlaresRegions()) {
+                                    if (envoy.getWorldGuardSupport().inRegion(region, player.getLocation())) {
+                                        toggle = true;
                                     }
-                                }
-                            }
-                            boolean toggle = false;
-                            if (Support.WORLD_EDIT.isPluginLoaded() && Support.WORLD_GUARD.isPluginLoaded()) {
-                                if (envoySettings.isWorldMessagesEnabled()) {
-                                    for (String region : envoySettings.getFlaresRegions()) {
-                                        if (envoy.getWorldGuardSupport().inRegion(region, player.getLocation())) {
-                                            toggle = true;
-                                        }
-                                    }
-                                } else {
-                                    toggle = true;
                                 }
                             } else {
                                 toggle = true;
                             }
-                            if (!toggle) {
-                                Messages.NOT_IN_WORLD_GUARD_REGION.sendMessage(player);
-                                return;
-                            }
-                            EnvoyStartEvent event = new EnvoyStartEvent(EnvoyStartReason.FLARE);
-                            Bukkit.getPluginManager().callEvent(event);
-                            if (!event.isCancelled()) {
-                                if (envoy.startEnvoyEvent()) {
-                                    Messages.USED_FLARE.sendMessage(player);
-                                    Flare.takeFlare(player);
-                                }
-                            }
+                        } else {
+                            toggle = true;
                         }
-                    } else {
-                        Messages.CANT_USE_FLARES.sendMessage(player);
+                        if (!toggle) {
+                            Messages.NOT_IN_WORLD_GUARD_REGION.sendMessage(player);
+                            return;
+                        }
+                        EnvoyStartEvent event = new EnvoyStartEvent(EnvoyStartReason.FLARE);
+                        Bukkit.getPluginManager().callEvent(event);
+                        if (!event.isCancelled() && envoy.startEnvoyEvent()) {
+                            Messages.USED_FLARE.sendMessage(player);
+                            Flare.takeFlare(player);
+                        }
                     }
+                } else {
+                    Messages.CANT_USE_FLARES.sendMessage(player);
                 }
             }
         }

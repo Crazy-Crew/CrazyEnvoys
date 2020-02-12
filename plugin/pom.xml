@@ -57,6 +57,20 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.10.3</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bstats-bukkit</artifactId>
+                    <groupId>org.bstats</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gson</artifactId>
+                    <groupId>com.google.code.gson</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jsonmessage</artifactId>
+                    <groupId>me.rayzr522</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>be.maximvdw</groupId>

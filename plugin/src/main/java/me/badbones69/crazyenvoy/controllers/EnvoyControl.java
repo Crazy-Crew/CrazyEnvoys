@@ -9,13 +9,11 @@ import me.badbones69.crazyenvoy.api.objects.EnvoySettings;
 import me.badbones69.crazyenvoy.api.objects.ItemBuilder;
 import me.badbones69.crazyenvoy.api.objects.Prize;
 import me.badbones69.crazyenvoy.api.objects.Tier;
-import me.badbones69.crazyenvoy.multisupport.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,6 +29,7 @@ public class EnvoyControl implements Listener {
     private static HashMap<UUID, Calendar> cooldown = new HashMap<>();
     private CrazyEnvoy envoy = CrazyEnvoy.getInstance();
     private EnvoySettings envoySettings = EnvoySettings.getInstance();
+    private Random random = new Random();
     
     public static void clearCooldowns() {
         cooldown.clear();
@@ -39,91 +38,76 @@ public class EnvoyControl implements Listener {
     @EventHandler
     public void onPlayerClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if (envoy.isEnvoyActive()) {
-            if (e.getClickedBlock() != null) {
-                Block block = e.getClickedBlock();
-                if (envoy.isActiveEnvoy(e.getClickedBlock())) {
-                    if (Version.getCurrentVersion().isNewer(Version.v1_7_R4)) {
-                        if (player.getGameMode() == GameMode.valueOf("SPECTATOR")) {
-                            return;
-                        }
-                    }
-                    if (player.getGameMode() == GameMode.CREATIVE) {
-                        if (!player.hasPermission("envoy.gamemode-bypass")) {
-                            return;
-                        }
-                    }
-                    e.setCancelled(true);
-                    if (!player.hasPermission("envoy.bypass")) {
-                        if (envoySettings.isCrateCooldownEnabled()) {
-                            UUID uuid = player.getUniqueId();
-                            if (cooldown.containsKey(uuid)) {
-                                if (Calendar.getInstance().before(cooldown.get(uuid))) {
-                                    HashMap<String, String> placeholder = new HashMap<>();
-                                    placeholder.put("%time%", getTimeLeft(cooldown.get(uuid)));
-                                    placeholder.put("%Time%", getTimeLeft(cooldown.get(uuid)));
-                                    Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
-                                    return;
-                                }
-                            }
-                            cooldown.put(uuid, getTimeFromString(envoySettings.getCrateCooldownTimer()));
-                        }
-                    }
-                    Tier tier = envoy.getTier(e.getClickedBlock());
-                    if (tier.getFireworkToggle()) {
-                        Methods.fireWork(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
-                    }
-                    e.getClickedBlock().setType(Material.AIR);
-                    if (envoy.hasHologramPlugin()) {
-                        envoy.getHologramController().removeHologram(e.getClickedBlock());
-                    }
-                    envoy.stopSignalFlare(e.getClickedBlock().getLocation());
-                    envoy.removeActiveEnvoy(block);
-                    ArrayList<Prize> prizes;
-                    if (tier.getPrizes().size() == 0) {
-                        Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+        if (e.getClickedBlock() != null && envoy.isEnvoyActive()) {
+            Block block = e.getClickedBlock();
+            if (envoy.isActiveEnvoy(e.getClickedBlock())) {
+                if (player.getGameMode() == GameMode.valueOf("SPECTATOR")) {
+                    return;
+                }
+                if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission("envoy.gamemode-bypass")) {
+                    return;
+                }
+                e.setCancelled(true);
+                if (!player.hasPermission("envoy.bypass") && envoySettings.isCrateCooldownEnabled()) {
+                    UUID uuid = player.getUniqueId();
+                    if (cooldown.containsKey(uuid) && Calendar.getInstance().before(cooldown.get(uuid))) {
+                        HashMap<String, String> placeholder = new HashMap<>();
+                        placeholder.put("%time%", getTimeLeft(cooldown.get(uuid)));
+                        placeholder.put("%Time%", getTimeLeft(cooldown.get(uuid)));
+                        Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
                         return;
                     }
-                    if (tier.getUseChance()) {
-                        prizes = pickPrizesByChance(tier);
-                    } else {
-                        prizes = pickRandomPrizes(tier);
+                    cooldown.put(uuid, getTimeFromString(envoySettings.getCrateCooldownTimer()));
+                }
+                Tier tier = envoy.getTier(e.getClickedBlock());
+                if (tier.getFireworkToggle()) {
+                    Methods.fireWork(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
+                }
+                e.getClickedBlock().setType(Material.AIR);
+                if (envoy.hasHologramPlugin()) {
+                    envoy.getHologramController().removeHologram(e.getClickedBlock());
+                }
+                envoy.stopSignalFlare(e.getClickedBlock().getLocation());
+                envoy.removeActiveEnvoy(block);
+                if (tier.getPrizes().isEmpty()) {
+                    Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+                    return;
+                }
+                List<Prize> prizes = tier.getUseChance() ? pickPrizesByChance(tier) : pickRandomPrizes(tier);
+                for (Prize prize : prizes) {
+                    for (String msg : prize.getMessages()) {
+                        player.sendMessage(Methods.color(msg));
                     }
-                    for (Prize prize : prizes) {
-                        for (String msg : prize.getMessages()) {
-                            player.sendMessage(Methods.color(msg));
-                        }
-                        for (String cmd : prize.getCommands()) {
-                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%Player%", player.getName()).replaceAll("%player%", player.getName()));
-                        }
-                        for (ItemStack item : prize.getItems()) {
-                            if (prize.getDropItems()) {
+                    for (String cmd : prize.getCommands()) {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%Player%", player.getName()).replace("%player%", player.getName()));
+                    }
+                    for (ItemStack item : prize.getItems()) {
+                        if (prize.getDropItems()) {
+                            e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
+                        } else {
+                            if (Methods.isInvFull(player)) {
                                 e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                             } else {
-                                if (Methods.isInvFull(player)) {
-                                    e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
-                                } else {
-                                    player.getInventory().addItem(item);
-                                }
+                                player.getInventory().addItem(item);
                             }
                         }
-                        player.updateInventory();
                     }
-                    if (envoy.getActiveEnvoys().size() >= 1) {
-                        if (envoySettings.isPickupBroadcastEnabled()) {
-                            HashMap<String, String> placeholder = new HashMap<>();
-                            placeholder.put("%player%", player.getName());
-                            placeholder.put("%Player%", player.getName());
-                            placeholder.put("%amount%", envoy.getActiveEnvoys().size() + "");
-                            placeholder.put("%Amount%", envoy.getActiveEnvoys().size() + "");
-                            Messages.LEFT.broadcastMessage(true, placeholder);
-                        }
-                    } else {
-                        EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.ALL_CRATES_COLLECTED);
-                        Bukkit.getPluginManager().callEvent(event);
-                        envoy.endEnvoyEvent();
-                        Messages.ENDED.broadcastMessage(false);
+                    player.updateInventory();
+                }
+                if (!envoy.getActiveEnvoys().isEmpty()) {
+                    if (envoySettings.isPickupBroadcastEnabled()) {
+                        HashMap<String, String> placeholder = new HashMap<>();
+                        placeholder.put("%player%", player.getName());
+                        placeholder.put("%Player%", player.getName());
+                        placeholder.put("%amount%", envoy.getActiveEnvoys().size() + "");
+                        placeholder.put("%Amount%", envoy.getActiveEnvoys().size() + "");
+                        Messages.LEFT.broadcastMessage(true, placeholder);
                     }
+                } else {
+                    EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.ALL_CRATES_COLLECTED);
+                    Bukkit.getPluginManager().callEvent(event);
+                    envoy.endEnvoyEvent();
+                    Messages.ENDED.broadcastMessage(false);
                 }
             }
         }
@@ -133,25 +117,19 @@ public class EnvoyControl implements Listener {
     public void onChestSpawn(EntityChangeBlockEvent e) {
         if (envoy.isEnvoyActive()) {
             Entity entity = e.getEntity();
-            if (entity instanceof FallingBlock) {
-                if (!envoy.getFallingBlocks().isEmpty()) {
-                    if (envoy.getFallingBlocks().containsKey(entity)) {
-                        Block block = envoy.getFallingBlocks().get(entity);
-                        e.setCancelled(true);
-                        Tier tier = pickRandomTier();
-                        block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
-                        if (tier.isHoloEnabled()) {
-                            if (envoy.hasHologramPlugin()) {
-                                envoy.getHologramController().createHologram(block, tier);
-                            }
-                        }
-                        envoy.removeFallingBlock(entity);
-                        envoy.addActiveEnvoy(block, tier);
-                        envoy.addSpawnedLocation(block);
-                        if (tier.getSignalFlareToggle()) {
-                            envoy.startSignalFlare(block.getLocation(), tier);
-                        }
-                    }
+            if (envoy.getFallingBlocks().containsKey(entity)) {
+                Block block = envoy.getFallingBlocks().get(entity);
+                e.setCancelled(true);
+                Tier tier = pickRandomTier();
+                block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
+                if (tier.isHoloEnabled() && envoy.hasHologramPlugin()) {
+                    envoy.getHologramController().createHologram(block, tier);
+                }
+                envoy.removeFallingBlock(entity);
+                envoy.addActiveEnvoy(block, tier);
+                envoy.addSpawnedLocation(block);
+                if (tier.getSignalFlareToggle()) {
+                    envoy.startSignalFlare(block.getLocation(), tier);
                 }
             }
         }
@@ -161,26 +139,22 @@ public class EnvoyControl implements Listener {
     public void onItemSpawn(ItemSpawnEvent e) {
         if (envoy.isEnvoyActive()) {
             for (Entity entity : e.getEntity().getNearbyEntities(0, 0, 0)) {
-                if (!envoy.getFallingBlocks().isEmpty()) {
-                    if (envoy.getFallingBlocks().containsKey(entity)) {
-                        Block block = envoy.getFallingBlocks().get(entity);
-                        e.setCancelled(true);
-                        Tier tier = pickRandomTier();
-                        if (block.getType() != Material.AIR) {
-                            block = block.getLocation().add(0, 1, 0).getBlock();
-                        }
-                        block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
-                        if (tier.isHoloEnabled()) {
-                            if (envoy.hasHologramPlugin()) {
-                                envoy.getHologramController().createHologram(block, tier);
-                            }
-                        }
-                        envoy.removeFallingBlock(entity);
-                        envoy.addActiveEnvoy(block, tier);
-                        envoy.addSpawnedLocation(block);
-                        if (tier.getSignalFlareToggle()) {
-                            envoy.startSignalFlare(block.getLocation(), tier);
-                        }
+                if (envoy.getFallingBlocks().containsKey(entity)) {
+                    Block block = envoy.getFallingBlocks().get(entity);
+                    e.setCancelled(true);
+                    Tier tier = pickRandomTier();
+                    if (block.getType() != Material.AIR) {
+                        block = block.getLocation().add(0, 1, 0).getBlock();
+                    }
+                    block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
+                    if (tier.isHoloEnabled() && envoy.hasHologramPlugin()) {
+                        envoy.getHologramController().createHologram(block, tier);
+                    }
+                    envoy.removeFallingBlock(entity);
+                    envoy.addActiveEnvoy(block, tier);
+                    envoy.addSpawnedLocation(block);
+                    if (tier.getSignalFlareToggle()) {
+                        envoy.startSignalFlare(block.getLocation(), tier);
                     }
                 }
             }
@@ -191,24 +165,24 @@ public class EnvoyControl implements Listener {
         Calendar cal = Calendar.getInstance();
         for (String i : time.split(" ")) {
             if (i.contains("D") || i.contains("d")) {
-                cal.add(Calendar.DATE, Integer.parseInt(i.replaceAll("D", "").replaceAll("d", "")));
+                cal.add(Calendar.DATE, Integer.parseInt(i.replace("D", "").replace("d", "")));
             }
             if (i.contains("H") || i.contains("h")) {
-                cal.add(Calendar.HOUR, Integer.parseInt(i.replaceAll("H", "").replaceAll("h", "")));
+                cal.add(Calendar.HOUR, Integer.parseInt(i.replace("H", "").replace("h", "")));
             }
             if (i.contains("M") || i.contains("m")) {
-                cal.add(Calendar.MINUTE, Integer.parseInt(i.replaceAll("M", "").replaceAll("m", "")));
+                cal.add(Calendar.MINUTE, Integer.parseInt(i.replace("M", "").replace("m", "")));
             }
             if (i.contains("S") || i.contains("s")) {
-                cal.add(Calendar.SECOND, Integer.parseInt(i.replaceAll("S", "").replaceAll("s", "")));
+                cal.add(Calendar.SECOND, Integer.parseInt(i.replace("S", "").replace("s", "")));
             }
         }
         return cal;
     }
     
     private String getTimeLeft(Calendar timeTill) {
-        Calendar C = Calendar.getInstance();
-        int total = ((int) (timeTill.getTimeInMillis() / 1000) - (int) (C.getTimeInMillis() / 1000));
+        Calendar rightNow = Calendar.getInstance();
+        int total = ((int) (timeTill.getTimeInMillis() / 1000) - (int) (rightNow.getTimeInMillis() / 1000));
         int day = 0;
         int hour = 0;
         int minute = 0;
@@ -230,11 +204,11 @@ public class EnvoyControl implements Listener {
         return message;
     }
     
-    private ArrayList<Prize> pickRandomPrizes(Tier tier) {
+    private List<Prize> pickRandomPrizes(Tier tier) {
         ArrayList<Prize> prizes = new ArrayList<>();
         int max = tier.getBulkToggle() ? tier.getBulkMax() : 1;
         for (int i = 0; prizes.size() < max && i < 500; i++) {
-            Prize prize = tier.getPrizes().get(new Random().nextInt(tier.getPrizes().size()));
+            Prize prize = tier.getPrizes().get(random.nextInt(tier.getPrizes().size()));
             if (!prizes.contains(prize)) {
                 prizes.add(prize);
             }
@@ -242,14 +216,14 @@ public class EnvoyControl implements Listener {
         return prizes;
     }
     
-    private ArrayList<Prize> pickPrizesByChance(Tier tier) {
+    private List<Prize> pickPrizesByChance(Tier tier) {
         ArrayList<Prize> prizes = new ArrayList<>();
         int maxBulk = tier.getBulkToggle() ? tier.getBulkMax() : 1;
         for (int i = 0; prizes.size() < maxBulk && i < 500; i++) {
             for (Prize prize : tier.getPrizes()) {
                 if (!prizes.contains(prize) && Methods.isSuccessful(prize.getChance(), 100)) {
-                        prizes.add(prize);
-                    }
+                    prizes.add(prize);
+                }
                 if (prizes.size() == maxBulk) {
                     break;
                 }
@@ -263,14 +237,14 @@ public class EnvoyControl implements Listener {
             return envoy.getTiers().get(0);
         }
         ArrayList<Tier> tiers = new ArrayList<>();
-        for (; tiers.size() == 0; ) {
+        while (tiers.isEmpty()) {
             for (Tier tier : envoy.getTiers()) {
                 if (Methods.isSuccessful(tier.getSpawnChance(), 100)) {
                     tiers.add(tier);
                 }
             }
         }
-        return tiers.get(new Random().nextInt(tiers.size()));
+        return tiers.get(random.nextInt(tiers.size()));
     }
     
 }

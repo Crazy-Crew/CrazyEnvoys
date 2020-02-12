@@ -58,6 +58,7 @@ public class CrazyEnvoy {
     private HashMap<Location, BukkitTask> activeSignals = new HashMap<>();
     private List<Tier> tiers = new ArrayList<>();
     private Plugin plugin;
+    private Random random = new Random();
     
     /**
      * Get the instance of the envoy plugin.
@@ -174,7 +175,7 @@ public class CrazyEnvoy {
             tiers.add(tier);
             cleanLocations();
             //Loading the blacklisted blocks.
-            if (Version.getCurrentVersion().isNewer(Version.v1_12_R1)) {
+            if (Version.isNewer(Version.v1_12_R1)) {
                 blacklistedBlocks.add(Material.WATER);
                 blacklistedBlocks.add(Material.LILY_PAD);
                 blacklistedBlocks.add(Material.LAVA);
@@ -233,7 +234,7 @@ public class CrazyEnvoy {
             }
         }
         if (Support.WORLD_GUARD.isPluginLoaded() && Support.WORLD_EDIT.isPluginLoaded()) {
-            worldGuardVersion = Version.getCurrentVersion().isNewer(Version.v1_12_R1) ? new WorldGuard_v7() : new WorldGuard_v6();
+            worldGuardVersion = Version.isNewer(Version.v1_12_R1) ? new WorldGuard_v7() : new WorldGuard_v6();
         }
         if (Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
             hologramController = new HolographicSupport();
@@ -307,34 +308,30 @@ public class CrazyEnvoy {
                     Calendar next = Calendar.getInstance();
                     next.setTimeInMillis(getNextEnvoy().getTimeInMillis());
                     next.clear(Calendar.MILLISECOND);
-                    if (next.compareTo(cal) <= 0) {
-                        if (!isEnvoyActive()) {
-                            if (envoySettings.isMinPlayersEnabled()) {
-                                int online = Bukkit.getServer().getOnlinePlayers().size();
-                                if (online < envoySettings.getMinPlayers()) {
-                                    HashMap<String, String> placeholder = new HashMap<>();
-                                    placeholder.put("%amount%", online + "");
-                                    placeholder.put("%Amount%", online + "");
-                                    Messages.NOT_ENOUGH_PLAYERS.broadcastMessage(false, placeholder);
-                                    setNextEnvoy(getEnvoyCooldown());
-                                    resetWarnings();
-                                    return;
-                                }
+                    if (next.compareTo(cal) <= 0 && !isEnvoyActive()) {
+                        if (envoySettings.isMinPlayersEnabled()) {
+                            int online = Bukkit.getServer().getOnlinePlayers().size();
+                            if (online < envoySettings.getMinPlayers()) {
+                                HashMap<String, String> placeholder = new HashMap<>();
+                                placeholder.put("%amount%", online + "");
+                                placeholder.put("%Amount%", online + "");
+                                Messages.NOT_ENOUGH_PLAYERS.broadcastMessage(false, placeholder);
+                                setNextEnvoy(getEnvoyCooldown());
+                                resetWarnings();
+                                return;
                             }
-                            if (envoySettings.isRandomLocationsEnabled()) {
-                                if (center.getWorld() == null) {
-                                    System.out.println("[CrazyEnvoy] The envoy center's world can't be found and so envoy has been canceled.");
-                                    System.out.println("Center String: " + centerString);
-                                    setNextEnvoy(getEnvoyCooldown());
-                                    resetWarnings();
-                                    return;
-                                }
-                            }
-                            EnvoyStartEvent event = new EnvoyStartEvent(autoTimer ? EnvoyStartReason.AUTO_TIMER : EnvoyStartReason.SPECIFIED_TIME);
-                            Bukkit.getPluginManager().callEvent(event);
-                            if (!event.isCancelled()) {
-                                startEnvoyEvent();
-                            }
+                        }
+                        if (envoySettings.isRandomLocationsEnabled() && center.getWorld() == null) {
+                            System.out.println("[CrazyEnvoy] The envoy center's world can't be found and so envoy has been canceled.");
+                            System.out.println("Center String: " + centerString);
+                            setNextEnvoy(getEnvoyCooldown());
+                            resetWarnings();
+                            return;
+                        }
+                        EnvoyStartEvent event = new EnvoyStartEvent(autoTimer ? EnvoyStartReason.AUTO_TIMER : EnvoyStartReason.SPECIFIED_TIME);
+                        Bukkit.getPluginManager().callEvent(event);
+                        if (!event.isCancelled()) {
+                            startEnvoyEvent();
                         }
                     }
                 }
@@ -414,9 +411,7 @@ public class CrazyEnvoy {
         ArrayList<String> locations = new ArrayList<>();
         for (Block block : spawnLocations) {
             try {
-                if (block.getWorld() != null) {
-                    locations.add(getStringFromLocation(block.getLocation()));
-                }
+                locations.add(getStringFromLocation(block.getLocation()));
             } catch (Exception e) {
             }
         }
@@ -499,8 +494,7 @@ public class CrazyEnvoy {
      */
     public String getNextEnvoyTime() {
         Calendar cal = getNextEnvoy();
-        Calendar C = Calendar.getInstance();
-        int total = ((int) (cal.getTimeInMillis() / 1000) - (int) (C.getTimeInMillis() / 1000));
+        int total = ((int) (cal.getTimeInMillis() / 1000) - (int) (Calendar.getInstance().getTimeInMillis() / 1000));
         int day = 0;
         int hour = 0;
         int minute = 0;
@@ -526,7 +520,7 @@ public class CrazyEnvoy {
      *
      * @return All falling blocks are are currently going.
      */
-    public HashMap<Entity, Block> getFallingBlocks() {
+    public Map<Entity, Block> getFallingBlocks() {
         return fallingBlocks;
     }
     
@@ -572,13 +566,13 @@ public class CrazyEnvoy {
         cal.setTimeInMillis(getNextEnvoy().getTimeInMillis());
         for (String i : time.split(" ")) {
             if (i.contains("d")) {
-                cal.add(Calendar.DATE, -Integer.parseInt(i.replaceAll("d", "")));
+                cal.add(Calendar.DATE, -Integer.parseInt(i.replace("d", "")));
             } else if (i.contains("h")) {
-                cal.add(Calendar.HOUR, -Integer.parseInt(i.replaceAll("h", "")));
+                cal.add(Calendar.HOUR, -Integer.parseInt(i.replace("h", "")));
             } else if (i.contains("m")) {
-                cal.add(Calendar.MINUTE, -Integer.parseInt(i.replaceAll("m", "")));
+                cal.add(Calendar.MINUTE, -Integer.parseInt(i.replace("m", "")));
             } else if (i.contains("s")) {
-                cal.add(Calendar.SECOND, -Integer.parseInt(i.replaceAll("s", "")));
+                cal.add(Calendar.SECOND, -Integer.parseInt(i.replace("s", "")));
             }
         }
         return cal;
@@ -590,8 +584,7 @@ public class CrazyEnvoy {
      */
     public String getEnvoyRunTimeLeft() {
         Calendar cal = envoyTimeLeft;
-        Calendar C = Calendar.getInstance();
-        int total = ((int) (cal.getTimeInMillis() / 1000) - (int) (C.getTimeInMillis() / 1000));
+        int total = ((int) (cal.getTimeInMillis() / 1000) - (int) (Calendar.getInstance().getTimeInMillis() / 1000));
         int day = 0;
         int hour = 0;
         int minute = 0;
@@ -635,8 +628,12 @@ public class CrazyEnvoy {
     
     public List<Block> generateSpawnLocations() {
         List<Block> dropLocations = new ArrayList<>();
-        int maxSpawns = envoySettings.isMaxCrateEnabled() ? envoySettings.getMaxCrates() : envoySettings.isRandomLocationsEnabled() ? envoySettings.getMaxCrates() : spawnedLocations.size();
-        Random random = new Random();
+        int maxSpawns;
+        if (envoySettings.isMaxCrateEnabled()) {
+            maxSpawns = envoySettings.getMaxCrates();
+        } else {
+            maxSpawns = envoySettings.isRandomLocationsEnabled() ? envoySettings.getMaxCrates() : spawnedLocations.size();
+        }
         if (envoySettings.isRandomLocationsEnabled()) {
             if (center.getWorld() == null) {//Check to make sure the center exist and if not try to load it again.
                 center = getLocationFromString(centerString);
@@ -650,15 +647,13 @@ public class CrazyEnvoy {
                 }
             }
             List<Block> minimumRadiusBlocks = getBlocks(center.clone(), envoySettings.getMinRadius());
-            for (int stop = 0; dropLocations.size() < maxSpawns; stop++) {
+            while (dropLocations.size() < maxSpawns) {
                 int maxRadius = envoySettings.getMaxRadius();
                 Location location = center.clone();
                 location.add(-(maxRadius / 2) + random.nextInt(maxRadius), 0, -(maxRadius / 2) + random.nextInt(maxRadius));
                 location = location.getWorld().getHighestBlockAt(location).getLocation();
-                if (!location.getChunk().isLoaded()) {
-                    if (!location.getChunk().load()) {
-                        continue;
-                    }
+                if (!location.getChunk().isLoaded() && !location.getChunk().load()) {
+                    continue;
                 }
                 if (location.getBlockY() <= 0 ||
                 minimumRadiusBlocks.contains(location.getBlock()) || minimumRadiusBlocks.contains(location.clone().add(0, 1, 0).getBlock()) ||
@@ -672,11 +667,10 @@ public class CrazyEnvoy {
             Files.DATA.saveFile();
         } else {
             if (envoySettings.isMaxCrateEnabled()) {
-                for (int i = 0; i < maxSpawns; ) {
+                while (dropLocations.size() < maxSpawns) {
                     Block block = spawnLocations.get(random.nextInt(spawnLocations.size()));
                     if (!dropLocations.contains(block)) {
                         dropLocations.add(block);
-                        i++;
                     }
                 }
             } else {
@@ -690,6 +684,7 @@ public class CrazyEnvoy {
      * Starts the envoy event.
      * @return true if the event started successfully and false if it had an issue.
      */
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public boolean startEnvoyEvent() {
         List<Block> dropLocations = generateSpawnLocations();
         if (dropLocations.isEmpty() || (envoySettings.isRandomLocationsEnabled() && center.getWorld() == null)) {
@@ -706,7 +701,7 @@ public class CrazyEnvoy {
             Messages.KICKED_FROM_EDITOR_MODE.sendMessage(player);
         }
         EditControl.getEditors().clear();
-        if (tiers.size() == 0) {
+        if (tiers.isEmpty()) {
             Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder" + " to allow it to remake the default tier files."));
             return false;
         }
@@ -718,40 +713,36 @@ public class CrazyEnvoy {
         placeholder.put("%Amount%", max + "");
         Messages.STARTED.broadcastMessage(false, placeholder);
         for (Block block : dropLocations) {
-            if (block != null) {
-                if (block.getWorld() != null) {
-                    boolean spawnFallingBlock = false;
-                    for (Entity entity : Methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
-                        if (entity instanceof Player) {
-                            spawnFallingBlock = true;
-                            break;
-                        }
+            if (block != null && block.getWorld() != null) {
+                boolean spawnFallingBlock = false;
+                for (Entity entity : Methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
+                    if (entity instanceof Player) {
+                        spawnFallingBlock = true;
+                        break;
                     }
-                    if (!envoySettings.isFallingBlocksEnabled()) {
-                        spawnFallingBlock = false;
+                }
+                if (!envoySettings.isFallingBlocksEnabled()) {
+                    spawnFallingBlock = false;
+                }
+                if (spawnFallingBlock) {
+                    if (!block.getChunk().isLoaded()) {
+                        block.getChunk().load();
                     }
-                    if (spawnFallingBlock) {
-                        if (!block.getChunk().isLoaded()) {
-                            block.getChunk().load();
-                        }
-                        FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, envoySettings.getFallingHeight(), .5), envoySettings.getFallingBlockMaterial(), (byte) envoySettings.getFallingBlockDurability());
-                        fallingBlocks.put(chest, block);
-                    } else {
-                        Tier tier = pickRandomTier();
-                        if (!block.getChunk().isLoaded()) {
-                            block.getChunk().load();
-                        }
-                        block.setType(tier.getPlacedBlockMaterial());
-                        if (tier.isHoloEnabled()) {
-                            if (hasHologramPlugin()) {
-                                hologramController.createHologram(block, tier);
-                            }
-                        }
-                        addActiveEnvoy(block, tier);
-                        addSpawnedLocation(block);
-                        if (tier.getSignalFlareToggle()) {
-                            startSignalFlare(block.getLocation(), tier);
-                        }
+                    FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, envoySettings.getFallingHeight(), .5), envoySettings.getFallingBlockMaterial(), (byte) envoySettings.getFallingBlockDurability());
+                    fallingBlocks.put(chest, block);
+                } else {
+                    Tier tier = pickRandomTier();
+                    if (!block.getChunk().isLoaded()) {
+                        block.getChunk().load();
+                    }
+                    block.setType(tier.getPlacedBlockMaterial());
+                    if (tier.isHoloEnabled() && hasHologramPlugin()) {
+                        hologramController.createHologram(block, tier);
+                    }
+                    addActiveEnvoy(block, tier);
+                    addSpawnedLocation(block);
+                    if (tier.getSignalFlareToggle()) {
+                        startSignalFlare(block.getLocation(), tier);
                     }
                 }
             }
@@ -932,13 +923,13 @@ public class CrazyEnvoy {
             String time = envoySettings.getEnvoyCooldown();
             for (String i : time.split(" ")) {
                 if (i.contains("d")) {
-                    cal.add(Calendar.DATE, Integer.parseInt(i.replaceAll("d", "")));
+                    cal.add(Calendar.DATE, Integer.parseInt(i.replace("d", "")));
                 } else if (i.contains("h")) {
-                    cal.add(Calendar.HOUR, Integer.parseInt(i.replaceAll("h", "")));
+                    cal.add(Calendar.HOUR, Integer.parseInt(i.replace("h", "")));
                 } else if (i.contains("m")) {
-                    cal.add(Calendar.MINUTE, Integer.parseInt(i.replaceAll("m", "")));
+                    cal.add(Calendar.MINUTE, Integer.parseInt(i.replace("m", "")));
                 } else if (i.contains("s")) {
-                    cal.add(Calendar.SECOND, Integer.parseInt(i.replaceAll("s", "")));
+                    cal.add(Calendar.SECOND, Integer.parseInt(i.replace("s", "")));
                 }
             }
         } else {
@@ -968,13 +959,13 @@ public class CrazyEnvoy {
         String time = envoySettings.getEnvoyRunTimer().toLowerCase();
         for (String i : time.split(" ")) {
             if (i.contains("d")) {
-                cal.add(Calendar.DATE, Integer.parseInt(i.replaceAll("d", "")));
+                cal.add(Calendar.DATE, Integer.parseInt(i.replace("d", "")));
             } else if (i.contains("h")) {
-                cal.add(Calendar.HOUR, Integer.parseInt(i.replaceAll("h", "")));
+                cal.add(Calendar.HOUR, Integer.parseInt(i.replace("h", "")));
             } else if (i.contains("m")) {
-                cal.add(Calendar.MINUTE, Integer.parseInt(i.replaceAll("m", "")));
+                cal.add(Calendar.MINUTE, Integer.parseInt(i.replace("m", "")));
             } else if (i.contains("s")) {
-                cal.add(Calendar.SECOND, Integer.parseInt(i.replaceAll("s", "")));
+                cal.add(Calendar.SECOND, Integer.parseInt(i.replace("s", "")));
             }
         }
         return cal;
@@ -1002,13 +993,13 @@ public class CrazyEnvoy {
         int z = 0;
         for (String i : locationString.toLowerCase().split(", ")) {
             if (i.startsWith("world:")) {
-                w = Bukkit.getWorld(i.replaceAll("world:", ""));
+                w = Bukkit.getWorld(i.replace("world:", ""));
             } else if (i.startsWith("x:")) {
-                x = Integer.parseInt(i.replaceAll("x:", ""));
+                x = Integer.parseInt(i.replace("x:", ""));
             } else if (i.startsWith("y:")) {
-                y = Integer.parseInt(i.replaceAll("y:", ""));
+                y = Integer.parseInt(i.replace("y:", ""));
             } else if (i.startsWith("z:")) {
-                z = Integer.parseInt(i.replaceAll("z:", ""));
+                z = Integer.parseInt(i.replace("z:", ""));
             }
         }
         return new Location(w, x, y, z);
@@ -1055,13 +1046,13 @@ public class CrazyEnvoy {
         int seconds = 0;
         for (String i : time.split(" ")) {
             if (i.contains("d")) {
-                seconds += Integer.parseInt(i.replaceAll("d", "")) * 86400;
+                seconds += Integer.parseInt(i.replace("d", "")) * 86400;
             } else if (i.contains("h")) {
-                seconds += Integer.parseInt(i.replaceAll("h", "")) * 3600;
+                seconds += Integer.parseInt(i.replace("h", "")) * 3600;
             } else if (i.contains("m")) {
-                seconds += Integer.parseInt(i.replaceAll("m", "")) * 60;
+                seconds += Integer.parseInt(i.replace("m", "")) * 60;
             } else if (i.contains("s")) {
-                seconds += Integer.parseInt(i.replaceAll("s", ""));
+                seconds += Integer.parseInt(i.replace("s", ""));
             }
         }
         return seconds;
@@ -1071,15 +1062,16 @@ public class CrazyEnvoy {
         if (getTiers().size() == 1) {
             return getTiers().get(0);
         }
-        ArrayList<Tier> tiers = new ArrayList<>();
-        for (; tiers.size() == 0; ) {
-            for (Tier tier : this.tiers) {
+        Tier winningTier = null;
+        while (winningTier == null) {
+            for (Tier tier : tiers) {
                 if (Methods.isSuccessful(tier.getSpawnChance(), 100)) {
-                    tiers.add(tier);
+                    winningTier = tier;
+                    break;
                 }
             }
         }
-        return tiers.get(new Random().nextInt(tiers.size()));
+        return winningTier;
     }
     
 }

@@ -8,11 +8,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class Flare {
     
-    private static ItemBuilder flare;
+    private static ItemBuilder flareItemBuilder;
     
     public static void load() {
         FileConfiguration config = Files.CONFIG.getFile();
-        flare = new ItemBuilder()
+        flareItemBuilder = new ItemBuilder()
         .setMaterial(config.getString("Settings.Flares.Item"))
         .setName(config.getString("Settings.Flares.Name"))
         .setLore(config.getStringList("Settings.Flares.Lore"));
@@ -23,7 +23,7 @@ public class Flare {
     }
     
     public static ItemStack getFlare(int amount) {
-        return flare.setAmount(amount).build();
+        return flareItemBuilder.setAmount(amount).build();
     }
     
     public static boolean isFlare(ItemStack item) {

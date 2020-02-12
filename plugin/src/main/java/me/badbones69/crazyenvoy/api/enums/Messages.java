@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 public enum Messages {
@@ -82,11 +84,11 @@ public enum Messages {
     }
     
     public static String convertList(List<String> list) {
-        String message = "";
+        StringBuilder message = new StringBuilder();
         for (String line : list) {
-            message += Methods.color(line) + "\n";
+            message.append(Methods.color(line)).append("\n");
         }
-        return message;
+        return message.toString();
     }
     
     public static void addMissingMessages() {
@@ -112,12 +114,12 @@ public enum Messages {
     }
     
     public String getMessage(String placeholder, String replacement) {
-        HashMap<String, String> placeholders = new HashMap<>();
+        Map<String, String> placeholders = new HashMap<>();
         placeholders.put(placeholder, replacement);
         return getMessage(placeholders, true);
     }
     
-    public String getMessage(HashMap<String, String> placeholders) {
+    public String getMessage(Map<String, String> placeholders) {
         return getMessage(placeholders, true);
     }
     
@@ -126,12 +128,12 @@ public enum Messages {
     }
     
     public String getMessageNoPrefix(String placeholder, String replacement) {
-        HashMap<String, String> placeholders = new HashMap<>();
+        Map<String, String> placeholders = new HashMap<>();
         placeholders.put(placeholder, replacement);
         return getMessage(placeholders, false);
     }
     
-    public String getMessageNoPrefix(HashMap<String, String> placeholders) {
+    public String getMessageNoPrefix(Map<String, String> placeholders) {
         return getMessage(placeholders, false);
     }
     
@@ -139,7 +141,7 @@ public enum Messages {
         return getMessage(new HashMap<>(), prefix);
     }
     
-    private String getMessage(HashMap<String, String> placeholders, boolean prefix) {
+    private String getMessage(Map<String, String> placeholders, boolean prefix) {
         String message;
         boolean isList = isList();
         boolean exists = exists();
@@ -159,9 +161,9 @@ public enum Messages {
         if (prefix && !isList) {//If the message needs a prefix.
             placeholders.put("%Prefix%", Methods.getPrefix());
         }
-        for (String placeholder : placeholders.keySet()) {
-            message = message.replaceAll(placeholder, placeholders.get(placeholder))
-            .replaceAll(placeholder.toLowerCase(), placeholders.get(placeholder));
+        for (Entry<String, String> placeholder : placeholders.entrySet()) {
+            message = message.replace(placeholder.getKey(), placeholder.getValue())
+            .replace(placeholder.getKey().toLowerCase(), placeholder.getValue());
         }
         return Methods.color(message);
     }
@@ -170,7 +172,7 @@ public enum Messages {
         sendMessage(player, new HashMap<>());
     }
     
-    public void sendMessage(Player player, HashMap<String, String> placeholder) {
+    public void sendMessage(Player player, Map<String, String> placeholder) {
         player.sendMessage(getMessage(placeholder));
     }
     
@@ -178,7 +180,7 @@ public enum Messages {
         sendMessage(sender, new HashMap<>());
     }
     
-    public void sendMessage(CommandSender sender, HashMap<String, String> placeholder) {
+    public void sendMessage(CommandSender sender, Map<String, String> placeholder) {
         sender.sendMessage(getMessage(placeholder));
     }
     
@@ -186,7 +188,7 @@ public enum Messages {
         broadcastMessage(ignore, new HashMap<>());
     }
     
-    public void broadcastMessage(boolean ignore, HashMap<String, String> placeholder) {
+    public void broadcastMessage(boolean ignore, Map<String, String> placeholder) {
         if (envoySettings.isWorldMessagesEnabled()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 for (String world : envoySettings.getWorldMessagesWorlds()) {

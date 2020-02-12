@@ -36,7 +36,6 @@ public class EnvoyCommand implements CommandExecutor {
                 return true;
             }
             Bukkit.dispatchCommand(sender, "envoy time");
-            return true;
         } else {
             switch (args[0].toLowerCase()) {
                 case "help":
@@ -201,10 +200,8 @@ public class EnvoyCommand implements CommandExecutor {
                                 event = new EnvoyStartEvent(EnvoyStartReason.FORCED_START_CONSOLE);
                             }
                             Bukkit.getPluginManager().callEvent(event);
-                            if (!event.isCancelled()) {
-                                if (envoy.startEnvoyEvent()) {
-                                    Messages.FORCE_START.sendMessage(sender);
-                                }
+                            if (!event.isCancelled() && envoy.startEnvoyEvent()) {
+                                Messages.FORCE_START.sendMessage(sender);
                             }
                         }
                     } else {
@@ -256,8 +253,8 @@ public class EnvoyCommand implements CommandExecutor {
                     return true;
             }
             sender.sendMessage(Methods.getPrefix() + Methods.color("&cPlease do /envoy help for more information."));
-            return true;
         }
+        return true;
     }
     
     private boolean hasPermission(CommandSender sender, String node) {
