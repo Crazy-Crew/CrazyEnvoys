@@ -262,7 +262,7 @@ public class EnvoyCommand implements CommandExecutor {
     
     private boolean hasPermission(CommandSender sender, String node) {
         if (sender instanceof Player) {
-            return sender.hasPermission("envoy." + node) || sender.hasPermission("envoy.bypass");
+            return sender.hasPermission("envoy." + node) || sender.hasPermission("envoy.admin");
         }
         return true;
     }
