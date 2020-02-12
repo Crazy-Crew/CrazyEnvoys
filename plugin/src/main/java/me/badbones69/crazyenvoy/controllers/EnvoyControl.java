@@ -244,11 +244,15 @@ public class EnvoyControl implements Listener {
     
     private ArrayList<Prize> pickPrizesByChance(Tier tier) {
         ArrayList<Prize> prizes = new ArrayList<>();
-        int max = tier.getBulkToggle() ? tier.getBulkMax() : 1;
-        for (int i = 0; prizes.size() < max && i < 500; i++) {
-            Prize prize = tier.getPrizes().get(new Random().nextInt(tier.getPrizes().size()));
-            if (!prizes.contains(prize)) {
-                prizes.add(prize);
+        int maxBulk = tier.getBulkToggle() ? tier.getBulkMax() : 1;
+        for (int i = 0; prizes.size() < maxBulk && i < 500; i++) {
+            for (Prize prize : tier.getPrizes()) {
+                if (!prizes.contains(prize) && Methods.isSuccessful(prize.getChance(), 100)) {
+                        prizes.add(prize);
+                    }
+                if (prizes.size() == maxBulk) {
+                    break;
+                }
             }
         }
         return prizes;
