@@ -651,7 +651,7 @@ public class CrazyEnvoy {
                 int maxRadius = envoySettings.getMaxRadius();
                 Location location = center.clone();
                 location.add(-(maxRadius / 2) + random.nextInt(maxRadius), 0, -(maxRadius / 2) + random.nextInt(maxRadius));
-                location = location.getWorld().getHighestBlockAt(location).getLocation().add(0, 1, 0);
+                location = location.getWorld().getHighestBlockAt(location).getLocation();
                 if (!location.getChunk().isLoaded() && !location.getChunk().load()) {
                     continue;
                 }
