@@ -1066,7 +1066,7 @@ public class ItemBuilder implements Cloneable {
         for (Enchantment enchantment : Enchantment.values()) {
             try {
                 //MC 1.13+ has the correct names.
-                if (Version.isNewer(Version.v1_12_R1) || stripEnchantmentName(enchantment.getKey().getKey()).equalsIgnoreCase(enchantmentName)) {
+                if (Version.isNewer(Version.v1_12_R1) && stripEnchantmentName(enchantment.getKey().getKey()).equalsIgnoreCase(enchantmentName)) {
                     return enchantment;
                 }
                 HashMap<String, String> enchantments = getEnchantmentList();
