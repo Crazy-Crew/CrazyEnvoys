@@ -667,10 +667,14 @@ public class CrazyEnvoy {
             Files.DATA.saveFile();
         } else {
             if (envoySettings.isMaxCrateEnabled()) {
-                while (dropLocations.size() < maxSpawns) {
-                    Block block = spawnLocations.get(random.nextInt(spawnLocations.size()));
-                    if (!dropLocations.contains(block)) {
-                        dropLocations.add(block);
+                if (spawnLocations.size() <= maxSpawns) {
+                    dropLocations.addAll(spawnLocations);
+                } else {
+                    while (dropLocations.size() < maxSpawns) {
+                        Block block = spawnLocations.get(random.nextInt(spawnLocations.size()));
+                        if (!dropLocations.contains(block)) {
+                            dropLocations.add(block);
+                        }
                     }
                 }
             } else {
