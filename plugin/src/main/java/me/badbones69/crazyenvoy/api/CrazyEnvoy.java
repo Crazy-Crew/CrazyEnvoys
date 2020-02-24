@@ -690,6 +690,9 @@ public class CrazyEnvoy {
      */
     @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public boolean startEnvoyEvent() {
+        //Called before locations are generated due to it setting those locations to air and causing
+        //crates to spawn in the ground when not using falling blocks.
+        deSpawnCrates();
         List<Block> dropLocations = generateSpawnLocations();
         if (dropLocations.isEmpty() || (envoySettings.isRandomLocationsEnabled() && center.getWorld() == null)) {
             setNextEnvoy(getEnvoyCooldown());
@@ -709,7 +712,6 @@ public class CrazyEnvoy {
             Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder" + " to allow it to remake the default tier files."));
             return false;
         }
-        deSpawnCrates();
         setEnvoyActive(true);
         int max = dropLocations.size();
         HashMap<String, String> placeholder = new HashMap<>();
@@ -736,6 +738,9 @@ public class CrazyEnvoy {
                     fallingBlocks.put(chest, block);
                 } else {
                     Tier tier = pickRandomTier();
+                    if (block.getType() != Material.AIR) {
+                        block = block.getLocation().add(0, 1, 0).getBlock();
+                    }
                     if (!block.getChunk().isLoaded()) {
                         block.getChunk().load();
                     }
