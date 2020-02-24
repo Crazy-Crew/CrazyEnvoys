@@ -721,13 +721,14 @@ public class CrazyEnvoy {
         for (Block block : dropLocations) {
             if (block != null && block.getWorld() != null) {
                 boolean spawnFallingBlock = false;
-                for (Entity entity : Methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
-                    if (entity instanceof Player) {
-                        spawnFallingBlock = true;
-                        break;
+                if (envoySettings.isFallingBlocksEnabled()) {
+                    for (Entity entity : Methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
+                        if (entity instanceof Player) {
+                            spawnFallingBlock = true;
+                            break;
+                        }
                     }
-                }
-                if (!envoySettings.isFallingBlocksEnabled()) {
+                } else {
                     spawnFallingBlock = false;
                 }
                 if (spawnFallingBlock) {
