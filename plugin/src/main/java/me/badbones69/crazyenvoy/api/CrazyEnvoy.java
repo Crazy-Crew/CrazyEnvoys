@@ -661,7 +661,11 @@ public class CrazyEnvoy {
                 blacklistedBlocks.contains(location.getBlock().getType())) {
                     continue;
                 }
-                dropLocations.add(location.getBlock());
+                Block block = location.getBlock();
+                if (block.getType() != Material.AIR) {
+                    block = block.getLocation().add(0, 1, 0).getBlock();
+                }
+                dropLocations.add(block);
             }
             Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(dropLocations));
             Files.DATA.saveFile();
@@ -739,9 +743,6 @@ public class CrazyEnvoy {
                     fallingBlocks.put(chest, block);
                 } else {
                     Tier tier = pickRandomTier();
-                    if (block.getType() != Material.AIR) {
-                        block = block.getLocation().add(0, 1, 0).getBlock();
-                    }
                     if (!block.getChunk().isLoaded()) {
                         block.getChunk().load();
                     }
