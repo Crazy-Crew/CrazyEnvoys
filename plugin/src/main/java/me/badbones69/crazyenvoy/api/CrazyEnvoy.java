@@ -57,6 +57,7 @@ public class CrazyEnvoy {
     private HashMap<Block, Tier> activeEnvoys = new HashMap<>();
     private HashMap<Location, BukkitTask> activeSignals = new HashMap<>();
     private List<Tier> tiers = new ArrayList<>();
+    private List<Tier> cechedChances = new ArrayList<>();
     private Plugin plugin;
     private Random random = new Random();
     
@@ -77,6 +78,7 @@ public class CrazyEnvoy {
         }
         spawnLocations.clear();
         blacklistedBlocks.clear();
+        cechedChances.clear();
         envoySettings.loadSettings();
         plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
         FileConfiguration data = Files.DATA.getFile();
@@ -136,9 +138,9 @@ public class CrazyEnvoy {
         }
         //================================== Tiers Load ==================================//
         tiers.clear();
-        for (CustomFile customFile : fileManager.getCustomFiles()) {
-            Tier tier = new Tier(customFile.getName());
-            FileConfiguration file = customFile.getFile();
+        for (CustomFile tierFile : fileManager.getCustomFiles()) {
+            Tier tier = new Tier(tierFile.getName());
+            FileConfiguration file = tierFile.getFile();
             tier.setUseChance(file.getBoolean("Settings.Use-Chance"));
             tier.setSpawnChance(file.getInt("Settings.Spawn-Chance"));
             tier.setBulkToggle(file.getBoolean("Settings.Bulk-Prizes.Toggle"));
@@ -758,6 +760,16 @@ public class CrazyEnvoy {
                 }
             }
         }
+        //This is code for testing how the chance system is doing.
+        //Best to set no falling blocks for best testing as its quick and don't need to wait for the blocks to drop to the ground.
+//        Map<Tier, Integer> tierAmount = new HashMap<>();
+//        for (Block block : spawnedLocations) {
+//            Tier tier = getTier(block);
+//            tierAmount.put(tier, tierAmount.getOrDefault(tier, 0) + 1);
+//        }
+//        for (Tier tier : tiers) {
+//            System.out.println(tier.getName() + ": " + (tierAmount.getOrDefault(tier, 0)));
+//        }
         runTimeTask = new BukkitRunnable() {
             @Override
             public void run() {
@@ -1070,19 +1082,14 @@ public class CrazyEnvoy {
     }
     
     private Tier pickRandomTier() {
-        if (getTiers().size() == 1) {
-            return getTiers().get(0);
-        }
-        Tier winningTier = null;
-        while (winningTier == null) {
+        if (cechedChances.isEmpty()) {
             for (Tier tier : tiers) {
-                if (Methods.isSuccessful(tier.getSpawnChance(), 100)) {
-                    winningTier = tier;
-                    break;
+                for (int i = 0; i < tier.getSpawnChance(); i++) {
+                    cechedChances.add(tier);
                 }
             }
         }
-        return winningTier;
+        return cechedChances.get(random.nextInt(cechedChances.size()));
     }
     
 }
