@@ -1,6 +1,7 @@
 package me.badbones69.crazyenvoy.api.events;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -14,11 +15,17 @@ public class NewDropLocationEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private Player player;
     private Location location;
+    private Block block;
     private boolean cancelled;
+    
+    public NewDropLocationEvent(Player player, Block block) {
+        this(player, block.getLocation());
+    }
     
     public NewDropLocationEvent(Player player, Location location) {
         this.player = player;
         this.location = location;
+        this.block = location.getBlock();
         this.cancelled = false;
     }
     
@@ -28,6 +35,10 @@ public class NewDropLocationEvent extends Event implements Cancellable {
     
     public Location getLocation() {
         return location;
+    }
+    
+    public Block getBlock() {
+        return block;
     }
     
     public Player getPlayer() {

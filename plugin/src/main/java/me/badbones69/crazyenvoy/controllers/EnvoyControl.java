@@ -5,6 +5,7 @@ import me.badbones69.crazyenvoy.api.CrazyEnvoy;
 import me.badbones69.crazyenvoy.api.enums.Messages;
 import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent;
 import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
+import me.badbones69.crazyenvoy.api.events.OpenEnvoyEvent;
 import me.badbones69.crazyenvoy.api.objects.EnvoySettings;
 import me.badbones69.crazyenvoy.api.objects.ItemBuilder;
 import me.badbones69.crazyenvoy.api.objects.Prize;
@@ -60,54 +61,58 @@ public class EnvoyControl implements Listener {
                     cooldown.put(uuid, getTimeFromString(envoySettings.getCrateCooldownTimer()));
                 }
                 Tier tier = envoy.getTier(e.getClickedBlock());
-                if (tier.getFireworkToggle()) {
-                    Methods.fireWork(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
-                }
-                e.getClickedBlock().setType(Material.AIR);
-                if (envoy.hasHologramPlugin()) {
-                    envoy.getHologramController().removeHologram(e.getClickedBlock());
-                }
-                envoy.stopSignalFlare(e.getClickedBlock().getLocation());
-                envoy.removeActiveEnvoy(block);
-                if (tier.getPrizes().isEmpty()) {
-                    Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
-                    return;
-                }
                 List<Prize> prizes = tier.getUseChance() ? pickPrizesByChance(tier) : pickRandomPrizes(tier);
-                for (Prize prize : prizes) {
-                    for (String msg : prize.getMessages()) {
-                        player.sendMessage(Methods.color(msg));
+                OpenEnvoyEvent openEnvoyEvent = new OpenEnvoyEvent(player, block, tier, prizes);
+                Bukkit.getPluginManager().callEvent(openEnvoyEvent);
+                if (!openEnvoyEvent.isCancelled()) {
+                    if (tier.getFireworkToggle()) {
+                        Methods.fireWork(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
                     }
-                    for (String cmd : prize.getCommands()) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%Player%", player.getName()).replace("%player%", player.getName()));
+                    e.getClickedBlock().setType(Material.AIR);
+                    if (envoy.hasHologramPlugin()) {
+                        envoy.getHologramController().removeHologram(e.getClickedBlock());
                     }
-                    for (ItemStack item : prize.getItems()) {
-                        if (prize.getDropItems()) {
-                            e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
-                        } else {
-                            if (Methods.isInvFull(player)) {
+                    envoy.stopSignalFlare(e.getClickedBlock().getLocation());
+                    envoy.removeActiveEnvoy(block);
+                    if (tier.getPrizes().isEmpty()) {
+                        Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+                        return;
+                    }
+                    for (Prize prize : openEnvoyEvent.getPrizes()) {
+                        for (String msg : prize.getMessages()) {
+                            player.sendMessage(Methods.color(msg));
+                        }
+                        for (String cmd : prize.getCommands()) {
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%Player%", player.getName()).replace("%player%", player.getName()));
+                        }
+                        for (ItemStack item : prize.getItems()) {
+                            if (prize.getDropItems()) {
                                 e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                             } else {
-                                player.getInventory().addItem(item);
+                                if (Methods.isInvFull(player)) {
+                                    e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
+                                } else {
+                                    player.getInventory().addItem(item);
+                                }
                             }
                         }
+                        player.updateInventory();
                     }
-                    player.updateInventory();
-                }
-                if (!envoy.getActiveEnvoys().isEmpty()) {
-                    if (envoySettings.isPickupBroadcastEnabled()) {
-                        HashMap<String, String> placeholder = new HashMap<>();
-                        placeholder.put("%player%", player.getName());
-                        placeholder.put("%Player%", player.getName());
-                        placeholder.put("%amount%", envoy.getActiveEnvoys().size() + "");
-                        placeholder.put("%Amount%", envoy.getActiveEnvoys().size() + "");
-                        Messages.LEFT.broadcastMessage(true, placeholder);
+                    if (!envoy.getActiveEnvoys().isEmpty()) {
+                        if (envoySettings.isPickupBroadcastEnabled()) {
+                            HashMap<String, String> placeholder = new HashMap<>();
+                            placeholder.put("%player%", player.getName());
+                            placeholder.put("%Player%", player.getName());
+                            placeholder.put("%amount%", envoy.getActiveEnvoys().size() + "");
+                            placeholder.put("%Amount%", envoy.getActiveEnvoys().size() + "");
+                            Messages.LEFT.broadcastMessage(true, placeholder);
+                        }
+                    } else {
+                        EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.ALL_CRATES_COLLECTED);
+                        Bukkit.getPluginManager().callEvent(event);
+                        envoy.endEnvoyEvent();
+                        Messages.ENDED.broadcastMessage(false);
                     }
-                } else {
-                    EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.ALL_CRATES_COLLECTED);
-                    Bukkit.getPluginManager().callEvent(event);
-                    envoy.endEnvoyEvent();
-                    Messages.ENDED.broadcastMessage(false);
                 }
             }
         }
