@@ -164,6 +164,7 @@ public class EnvoyControl implements Listener {
                     if (tier.getSignalFlareToggle()) {
                         envoy.startSignalFlare(block.getLocation(), tier);
                     }
+                    break;
                 }
             }
         }
