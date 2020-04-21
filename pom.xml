@@ -36,8 +36,6 @@
     </distributionManagement>
 
     <build>
-        <defaultGoal>clean package install</defaultGoal>
-        <finalName>${project.name}</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
