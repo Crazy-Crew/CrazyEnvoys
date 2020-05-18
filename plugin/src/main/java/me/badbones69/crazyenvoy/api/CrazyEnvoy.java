@@ -632,7 +632,12 @@ public class CrazyEnvoy {
         List<Block> dropLocations = new ArrayList<>();
         int maxSpawns;
         if (envoySettings.isMaxCrateEnabled()) {
-            maxSpawns = envoySettings.getMaxCrates();
+            if(envoySettings.isRandomAmount()) {
+                // Generates a random number between the min and max settings
+                maxSpawns = this.random.nextInt(envoySettings.getMaxCrates() + 1 - envoySettings.getMinCrates()) + envoySettings.getMinCrates();
+            }else {
+                maxSpawns = envoySettings.getMaxCrates();
+            }
         } else {
             maxSpawns = envoySettings.isRandomLocationsEnabled() ? envoySettings.getMaxCrates() : spawnedLocations.size();
         }
