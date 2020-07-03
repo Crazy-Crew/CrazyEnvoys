@@ -1,9 +1,9 @@
 package me.badbones69.crazyenvoy.api.objects;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.badbones69.crazyenvoy.Methods;
 import me.badbones69.crazyenvoy.multisupport.SkullCreator;
 import me.badbones69.crazyenvoy.multisupport.Version;
-import me.badbones69.crazyenvoy.multisupport.nbttagapi.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
