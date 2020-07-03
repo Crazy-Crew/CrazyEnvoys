@@ -138,7 +138,6 @@
                             <include>me.badbones69:*</include>
                         </includes>
                     </artifactSet>
-                    <outputFile>/Users/badbones/Desktop/Minecraft/Server/plugins/CrazyEnvoy[v${project.version}].jar</outputFile>
                 </configuration>
                 <executions>
                     <execution>
