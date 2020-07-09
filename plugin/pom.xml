@@ -139,11 +139,6 @@
                             <shadedPattern>me.badbones69.crazyenvoy.nbtapi</shadedPattern>
                         </relocation>
                     </relocations>
-                    <artifactSet>
-                        <includes>
-                            <include>me.badbones69:*</include>
-                        </includes>
-                    </artifactSet>
                 </configuration>
                 <executions>
                     <execution>
