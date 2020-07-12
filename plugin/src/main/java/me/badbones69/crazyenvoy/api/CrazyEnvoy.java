@@ -14,7 +14,6 @@ import me.badbones69.crazyenvoy.controllers.EditControl;
 import me.badbones69.crazyenvoy.controllers.EnvoyControl;
 import me.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
 import me.badbones69.crazyenvoy.multisupport.*;
-import me.badbones69.crazyenvoy.multisupport.holograms.CMISupport;
 import me.badbones69.crazyenvoy.multisupport.holograms.HologramsSupport;
 import me.badbones69.crazyenvoy.multisupport.holograms.HolographicSupport;
 import org.bukkit.*;
@@ -242,8 +241,6 @@ public class CrazyEnvoy {
             hologramController = new HolographicSupport();
         } else if (Support.HOLOGRAMS.isPluginLoaded()) {
             hologramController = new HologramsSupport();
-        } else if (Support.CMI.isPluginLoaded()) {
-            hologramController = new CMISupport();
         }
         if (hologramController != null) {
             if (fileManager.isLogging()) System.out.println("[CrazyEnvoy] Loaded " + hologramController.getPluginName() + " hologram hook.");
