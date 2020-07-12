@@ -245,7 +245,21 @@ public class CrazyEnvoy {
         if (hologramController != null) {
             if (fileManager.isLogging()) System.out.println("[CrazyEnvoy] Loaded " + hologramController.getPluginName() + " hologram hook.");
         } else {
-            if (fileManager.isLogging()) System.out.println("[CrazyEnvoy] No supported hologram plugin was found.");
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
+                        hologramController = new HolographicSupport();
+                    } else if (Support.HOLOGRAMS.isPluginLoaded()) {
+                        hologramController = new HologramsSupport();
+                    }
+                    if (hologramController != null) {
+                        if (fileManager.isLogging()) System.out.println("[CrazyEnvoy] Loaded " + hologramController.getPluginName() + " hologram hook.");
+                    } else {
+                        if (fileManager.isLogging()) System.out.println("[CrazyEnvoy] No supported hologram plugin was found.");
+                    }
+                }
+            }.runTaskLater(plugin, 200);
         }
         if (!failedLocations.isEmpty()) {
             new BukkitRunnable() {
