@@ -753,6 +753,8 @@ public class CrazyEnvoy {
                         block.getChunk().load();
                     }
                     FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, envoySettings.getFallingHeight(), .5), envoySettings.getFallingBlockMaterial(), (byte) envoySettings.getFallingBlockDurability());
+                    chest.setDropItem(false);
+                    chest.setHurtEntities(false);
                     fallingBlocks.put(chest, block);
                 } else {
                     Tier tier = pickRandomTier();
