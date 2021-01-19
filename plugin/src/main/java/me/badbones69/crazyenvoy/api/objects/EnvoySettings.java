@@ -15,6 +15,8 @@ public class EnvoySettings {
     private short fallingBlockDurability;
     private int fallingHeight;
     private boolean isMaxCrateEnabled;
+    private boolean randomAmount;
+    private int minCrates;
     private int maxCrates;
     private boolean useRandomLocations;
     private int maxRadius;
@@ -57,6 +59,8 @@ public class EnvoySettings {
         }
         this.fallingHeight = config.getInt(path + "Fall-Height");
         this.isMaxCrateEnabled = config.getBoolean(path + "Max-Crate-Toggle");
+        this.randomAmount = config.getBoolean(path + "Random-Amount", false);
+        this.minCrates = config.getInt(path + "Min-Crates", 1);
         this.maxCrates = config.getInt(path + "Max-Crates");
         this.useRandomLocations = config.getBoolean(path + "Random-Locations");
         this.maxRadius = config.getInt(path + "Max-Radius");
@@ -123,7 +127,15 @@ public class EnvoySettings {
         isMaxCrateEnabled = maxCrateEnabled;
         return this;
     }
-    
+
+    public boolean isRandomAmount() {
+        return this.randomAmount;
+    }
+
+    public int getMinCrates() {
+        return this.minCrates;
+    }
+
     public int getMaxCrates() {
         return maxCrates;
     }
