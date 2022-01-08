@@ -1,17 +1,17 @@
-package me.badbones69.crazyenvoy;
+package com.badbones69.crazyenvoy;
 
-import me.badbones69.crazyenvoy.api.CrazyEnvoy;
-import me.badbones69.crazyenvoy.api.FileManager;
-import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent;
-import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
-import me.badbones69.crazyenvoy.commands.EnvoyCommand;
-import me.badbones69.crazyenvoy.commands.EnvoyTab;
-import me.badbones69.crazyenvoy.controllers.*;
-import me.badbones69.crazyenvoy.multisupport.MVdWPlaceholderAPISupport;
-import me.badbones69.crazyenvoy.multisupport.PlaceholderAPISupport;
-import me.badbones69.crazyenvoy.multisupport.Support;
-import me.badbones69.crazyenvoy.multisupport.Version;
-import me.badbones69.crazyenvoy.multisupport.holograms.HolographicSupport;
+import com.badbones69.crazyenvoy.api.CrazyManager;
+import com.badbones69.crazyenvoy.api.FileManager;
+import com.badbones69.crazyenvoy.api.events.EnvoyEndEvent;
+import com.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
+import com.badbones69.crazyenvoy.commands.EnvoyCommand;
+import com.badbones69.crazyenvoy.commands.EnvoyTab;
+import com.badbones69.crazyenvoy.controllers.*;
+import com.badbones69.crazyenvoy.multisupport.MVdWPlaceholderAPISupport;
+import com.badbones69.crazyenvoy.multisupport.PlaceholderAPISupport;
+import com.badbones69.crazyenvoy.multisupport.Support;
+import com.badbones69.crazyenvoy.multisupport.Version;
+import com.badbones69.crazyenvoy.multisupport.holograms.HolographicSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,10 +21,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Main extends JavaPlugin implements Listener {
+public class CrazyEnvoy extends JavaPlugin implements Listener {
     
     private FileManager fileManager = FileManager.getInstance();
-    private CrazyEnvoy envoy = CrazyEnvoy.getInstance();
+    private CrazyManager envoy = CrazyManager.getInstance();
     
     @Override
     public void onEnable() {

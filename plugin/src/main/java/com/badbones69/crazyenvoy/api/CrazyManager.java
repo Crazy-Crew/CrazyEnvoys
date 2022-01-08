@@ -1,21 +1,22 @@
-package me.badbones69.crazyenvoy.api;
+package com.badbones69.crazyenvoy.api;
 
-import me.badbones69.crazyenvoy.Methods;
-import me.badbones69.crazyenvoy.api.FileManager.CustomFile;
-import me.badbones69.crazyenvoy.api.FileManager.Files;
-import me.badbones69.crazyenvoy.api.enums.Messages;
-import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent;
-import me.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
-import me.badbones69.crazyenvoy.api.events.EnvoyStartEvent;
-import me.badbones69.crazyenvoy.api.events.EnvoyStartEvent.EnvoyStartReason;
-import me.badbones69.crazyenvoy.api.interfaces.HologramController;
-import me.badbones69.crazyenvoy.api.objects.*;
-import me.badbones69.crazyenvoy.controllers.EditControl;
-import me.badbones69.crazyenvoy.controllers.EnvoyControl;
-import me.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
+import com.badbones69.crazyenvoy.Methods;
+import com.badbones69.crazyenvoy.api.FileManager.CustomFile;
+import com.badbones69.crazyenvoy.api.FileManager.Files;
+import com.badbones69.crazyenvoy.api.enums.Messages;
+import com.badbones69.crazyenvoy.api.events.EnvoyEndEvent;
+import com.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
+import com.badbones69.crazyenvoy.api.events.EnvoyStartEvent;
+import com.badbones69.crazyenvoy.api.events.EnvoyStartEvent.EnvoyStartReason;
+import com.badbones69.crazyenvoy.api.interfaces.HologramController;
+import com.badbones69.crazyenvoy.api.objects.*;
+import com.badbones69.crazyenvoy.multisupport.Support;
+import com.badbones69.crazyenvoy.multisupport.Version;
+import com.badbones69.crazyenvoy.controllers.EditControl;
+import com.badbones69.crazyenvoy.controllers.EnvoyControl;
+import com.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
 import me.badbones69.crazyenvoy.multisupport.*;
-import me.badbones69.crazyenvoy.multisupport.holograms.HologramsSupport;
-import me.badbones69.crazyenvoy.multisupport.holograms.HolographicSupport;
+import com.badbones69.crazyenvoy.multisupport.holograms.HolographicSupport;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,9 +32,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
-public class CrazyEnvoy {
+public class CrazyManager {
     
-    private static CrazyEnvoy instance = new CrazyEnvoy();
+    private static CrazyManager instance = new CrazyManager();
     private FileManager fileManager = FileManager.getInstance();
     private boolean isLogging = fileManager.isLogging();
     private EnvoySettings envoySettings = EnvoySettings.getInstance();
@@ -64,7 +65,7 @@ public class CrazyEnvoy {
      * Get the instance of the envoy plugin.
      * @return The instance of the envoy plugin.
      */
-    public static CrazyEnvoy getInstance() {
+    public static CrazyManager getInstance() {
         return instance;
     }
     
