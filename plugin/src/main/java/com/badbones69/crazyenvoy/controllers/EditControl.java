@@ -36,7 +36,7 @@ public class EditControl implements Listener {
     public static boolean isEditor(Player player) {
         return editors.contains(player);
     }
-    
+
     @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public static void showFakeBlocks(Player player) {
         for (Block block : envoy.getSpawnLocations()) {
@@ -60,14 +60,9 @@ public class EditControl implements Listener {
             if (Methods.getItemInHand(player).getType() == Material.BEDROCK) {
                 envoy.addLocation(e.getBlock());
                 Messages.ADD_LOCATION.sendMessage(player);
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        for (Player p : editors) {
-                            p.sendBlockChange(e.getBlock().getLocation(), Material.BEDROCK, (byte) 0);
-                        }
-                    }
-                }.runTaskLater(envoy.getPlugin(), 2);
+                for (Player p : editors) {
+                    p.sendBlockChange(e.getBlock().getLocation(), Material.BEDROCK, (byte) 0);
+                }
             }
         }
     }

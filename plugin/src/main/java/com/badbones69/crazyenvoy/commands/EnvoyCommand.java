@@ -14,6 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,38 +24,43 @@ import java.util.UUID;
 
 public class EnvoyCommand implements CommandExecutor {
     
-    private CrazyManager envoy = CrazyManager.getInstance();
-    private FileManager fileManager = FileManager.getInstance();
+    private final CrazyManager envoy = CrazyManager.getInstance();
+    private final FileManager fileManager = FileManager.getInstance();
     
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLable, String[] args) {
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length <= 0) {
+
             if (!hasPermission(sender, "time")) {
                 Messages.NO_PERMISSION.sendMessage(sender);
                 return true;
             }
-            Bukkit.dispatchCommand(sender, "envoy time");
+
+            CrazyManager.getJavaPlugin().getServer().dispatchCommand(sender, "envoy time");
         } else {
             switch (args[0].toLowerCase()) {
                 case "help":
+
                     if (hasPermission(sender, "help")) {
                         Messages.HELP.sendMessage(sender);
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
+
                     return true;
                 case "reload":
                     if (hasPermission(sender, "reload")) {
                         if (envoy.isEnvoyActive()) {
                             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.RELOAD);
-                            Bukkit.getPluginManager().callEvent(event);
+                            CrazyManager.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                             envoy.endEnvoyEvent();
                         }
+
                         envoy.unload();
                         try {
-                            fileManager.setup(envoy.getPlugin());
-                        } catch (Exception e) {
-                        }
+                            fileManager.setup();
+                        } catch (Exception ignored) {}
+
                         envoy.load();
                         Messages.RELOADED.sendMessage(sender);
                     } else {
@@ -63,7 +69,7 @@ public class EnvoyCommand implements CommandExecutor {
                     return true;
                 case "ignore":
                 case "stfu":
-                    if (hasPermission(sender, "ignore")) {
+                    if (hasPermission(sender, "ignore") && sender != CrazyManager.getJavaPlugin().getServer().getConsoleSender()) {
                         if (sender instanceof Player) {
                             Player player = (Player) sender;
                             UUID uuid = player.getUniqueId();
@@ -83,8 +89,12 @@ public class EnvoyCommand implements CommandExecutor {
                     return true;
                 case "center":
                     if (hasPermission(sender, "center")) {
-                        envoy.setCenter(((Player) sender).getLocation());
-                        Messages.NEW_CENTER.sendMessage(sender);
+                        if (sender != CrazyManager.getJavaPlugin().getServer().getConsoleSender()) {
+                            envoy.setCenter(((Player) sender).getLocation());
+                            Messages.NEW_CENTER.sendMessage(sender);
+                        } else {
+                            CrazyManager.getJavaPlugin().getLogger().info("You must be a player to use this command.");
+                        }
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
@@ -197,7 +207,7 @@ public class EnvoyCommand implements CommandExecutor {
                             } else {
                                 event = new EnvoyStartEvent(EnvoyStartEvent.EnvoyStartReason.FORCED_START_CONSOLE);
                             }
-                            Bukkit.getPluginManager().callEvent(event);
+                            CrazyManager.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                             if (!event.isCancelled() && envoy.startEnvoyEvent()) {
                                 Messages.FORCE_START.sendMessage(sender);
                             }
@@ -216,7 +226,7 @@ public class EnvoyCommand implements CommandExecutor {
                             } else {
                                 event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.FORCED_END_CONSOLE);
                             }
-                            Bukkit.getPluginManager().callEvent(event);
+                            CrazyManager.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                             envoy.endEnvoyEvent();
                             Messages.ENDED.broadcastMessage(false);
                             Messages.FORCE_ENDED.sendMessage(sender);
@@ -256,10 +266,6 @@ public class EnvoyCommand implements CommandExecutor {
     }
     
     private boolean hasPermission(CommandSender sender, String node) {
-        if (sender instanceof Player) {
-            return sender.hasPermission("envoy." + node) || sender.hasPermission("envoy.admin");
-        }
-        return true;
+        return sender.hasPermission("envoy." + node) || sender.hasPermission("envoy.admin");
     }
-    
 }

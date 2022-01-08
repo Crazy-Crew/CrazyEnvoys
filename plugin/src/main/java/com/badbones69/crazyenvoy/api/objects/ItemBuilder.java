@@ -36,11 +36,11 @@ import java.util.stream.Collectors;
  */
 public class ItemBuilder implements Cloneable {
     
-    private static boolean useNewMaterial = Version.isNewer(Version.v1_12_R1);
+    private static final boolean useNewMaterial = Version.isNewer(Version.v1_12_R1);
     private Material material;
     private int damage;
     private String name;
-    private List<String> lore;
+    private final List<String> lore;
     private int amount;
     private String player;
     private boolean isHash;
@@ -138,7 +138,7 @@ public class ItemBuilder implements Cloneable {
         return convertString(itemString, null);
     }
     
-    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
+    @SuppressWarnings({"squid:CallToDeprecatedMethod"})
     public static ItemBuilder convertString(String itemString, String placeHolder) {
         ItemBuilder itemBuilder = new ItemBuilder();
         try {
@@ -196,8 +196,7 @@ public class ItemBuilder implements Cloneable {
                                     break;
                                 }
                             }
-                        } catch (Exception ignored) {
-                        }
+                        } catch (Exception ignored) {}
                         break;
                 }
             }
@@ -365,7 +364,7 @@ public class ItemBuilder implements Cloneable {
      */
     public ItemBuilder setName(String name) {
         if (name != null) {
-            this.name = color(name);
+            this.name = Methods.color(name);
         }
         return this;
     }
@@ -430,7 +429,7 @@ public class ItemBuilder implements Cloneable {
         if (lore != null) {
             this.lore.clear();
             for (String i : lore) {
-                this.lore.add(color(i));
+                this.lore.add(Methods.color(i));
             }
         }
         return this;
@@ -442,9 +441,7 @@ public class ItemBuilder implements Cloneable {
      * @return The ItemBuilder with updated info.
      */
     public ItemBuilder addLore(String lore) {
-        if (lore != null) {
-            this.lore.add(color(lore));
-        }
+        if (lore != null) this.lore.add(Methods.color(lore));
         return this;
     }
     
@@ -591,8 +588,7 @@ public class ItemBuilder implements Cloneable {
                     break;
                 }
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
         return this;
     }
     
@@ -706,9 +702,7 @@ public class ItemBuilder implements Cloneable {
      * @return The ItemBuilder with updated info.
      */
     public ItemBuilder setEnchantments(Map<Enchantment, Integer> enchantments) {
-        if (enchantments != null) {
-            this.enchantments = enchantments;
-        }
+        if (enchantments != null) this.enchantments = enchantments;
         return this;
     }
     
@@ -794,8 +788,7 @@ public class ItemBuilder implements Cloneable {
     public ItemBuilder addItemFlag(String flagString) {
         try {
             addItemFlag(ItemFlag.valueOf(flagString.toUpperCase()));
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
         return this;
     }
     
@@ -803,19 +796,14 @@ public class ItemBuilder implements Cloneable {
         for (String flagString : flagStrings) {
             try {
                 ItemFlag itemFlag = ItemFlag.valueOf(flagString.toUpperCase());
-                if (itemFlag != null) {
-                    addItemFlag(itemFlag);
-                }
-            } catch (Exception ignored) {
-            }
+                if (itemFlag != null) addItemFlag(itemFlag);
+            } catch (Exception ignored) {}
         }
         return this;
     }
     
     public ItemBuilder addItemFlag(ItemFlag itemFlag) {
-        if (itemFlag != null) {
-            itemFlags.add(itemFlag);
-        }
+        if (itemFlag != null) itemFlags.add(itemFlag);
         return this;
     }
     
@@ -930,20 +918,6 @@ public class ItemBuilder implements Cloneable {
         return this;
     }
     
-    private final java.util.regex.Pattern HEX_PATTERN = java.util.regex.Pattern.compile("#[a-fA-F0-9]{6}");
-    
-    private String color(String message) {
-        if (Version.isNewer(Version.v1_15_R1)) {
-            Matcher matcher = HEX_PATTERN.matcher(message);
-            StringBuffer buffer = new StringBuffer();
-            while (matcher.find()) {
-                matcher.appendReplacement(buffer, net.md_5.bungee.api.ChatColor.of(matcher.group()).toString());
-            }
-            return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
-        }
-        return ChatColor.translateAlternateColorCodes('&', message);
-    }
-    
     private ItemStack hideFlags(ItemStack item) {
         if (hideItemFlags && item != null && item.hasItemMeta()) {
             ItemMeta itemMeta = item.getItemMeta();
@@ -1050,8 +1024,7 @@ public class ItemBuilder implements Cloneable {
             try {
                 String[] rgb = color.split(",");
                 return Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
-            } catch (Exception ignore) {
-            }
+            } catch (Exception ignore) {}
         }
         return null;
     }
@@ -1064,8 +1037,7 @@ public class ItemBuilder implements Cloneable {
                 try {
                     String[] rgb = color.split(",");
                     return DyeColor.getByColor(Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2])));
-                } catch (Exception ignore) {
-                }
+                } catch (Exception ignore) {}
             }
         }
         return null;
@@ -1085,8 +1057,7 @@ public class ItemBuilder implements Cloneable {
                 stripEnchantmentName(enchantments.get(enchantment.getName())).equalsIgnoreCase(enchantmentName))) {
                     return enchantment;
                 }
-            } catch (Exception ignore) {//If any null enchantments are found they may cause errors.
-            }
+            } catch (Exception ignore) {}
         }
         return null;
     }
@@ -1133,5 +1104,4 @@ public class ItemBuilder implements Cloneable {
         enchantments.put("LOYALTY", "Loyalty");
         return enchantments;
     }
-    
 }

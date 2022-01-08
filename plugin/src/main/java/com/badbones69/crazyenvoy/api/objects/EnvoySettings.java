@@ -8,7 +8,7 @@ import java.util.List;
 
 public class EnvoySettings {
     
-    private static EnvoySettings instance = new EnvoySettings();
+    private static final EnvoySettings instance = new EnvoySettings();
     
     private boolean isFallingBlocksEnabled;
     private Material fallingBlockMaterial;
@@ -48,15 +48,17 @@ public class EnvoySettings {
         this.isFallingBlocksEnabled = config.getBoolean(path + "Falling-Block-Toggle");
         this.fallingBlockDurability = 15;
         String fallingBlock = config.getString(path + "Falling-Block");
+
         if (fallingBlock.contains(":")) {
             String[] split = fallingBlock.split(":");
             fallingBlock = split[0];
             fallingHeight = Integer.parseInt(split[1]);
         }
+
         this.fallingBlockMaterial = Material.matchMaterial(fallingBlock);
-        if (fallingBlockMaterial == null) {
-            fallingBlockMaterial = Material.BEACON;
-        }
+
+        if (fallingBlockMaterial == null) fallingBlockMaterial = Material.BEACON;
+
         this.fallingHeight = config.getInt(path + "Fall-Height");
         this.isMaxCrateEnabled = config.getBoolean(path + "Max-Crate-Toggle");
         this.randomAmount = config.getBoolean(path + "Random-Amount", false);

@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoy.multisupport;
 
+import com.badbones69.crazyenvoy.api.CrazyManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -12,7 +13,7 @@ public enum Support {
     WORLD_EDIT("WorldEdit"),
     CMI("CMI-Disabled");// Disabled till I can figure out how to make it work.
     
-    private String name;
+    private final String name;
     
     private Support(String name) {
         this.name = name;
@@ -22,13 +23,9 @@ public enum Support {
         return name;
     }
     
-    public Plugin getPlugin() {
-        return Bukkit.getServer().getPluginManager().getPlugin(name);
-    }
-    
     public boolean isPluginLoaded() {
-        if (Bukkit.getServer().getPluginManager().getPlugin(name) != null) {
-            return Bukkit.getPluginManager().getPlugin(name).isEnabled();
+        if (CrazyManager.getJavaPlugin().getServer().getPluginManager().getPlugin(name) != null) {
+            return CrazyManager.getJavaPlugin().isEnabled();
         }
         return false;
     }

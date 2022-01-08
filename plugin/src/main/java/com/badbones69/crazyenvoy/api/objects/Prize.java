@@ -8,10 +8,10 @@ import java.util.List;
 
 public class Prize {
     
-    private String prizeID;
+    private final String prizeID;
     private int chance;
     private boolean dropItems;
-    private List<String> messages;
+    private final List<String> messages;
     private List<String> commands;
     private List<ItemStack> items;
     private List<ItemBuilder> itemBuilders;

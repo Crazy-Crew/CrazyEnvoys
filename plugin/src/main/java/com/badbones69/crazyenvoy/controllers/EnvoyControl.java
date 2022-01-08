@@ -62,7 +62,7 @@ public class EnvoyControl implements Listener {
                 Tier tier = envoy.getTier(e.getClickedBlock());
                 List<Prize> prizes = tier.getUseChance() ? pickPrizesByChance(tier) : pickRandomPrizes(tier);
                 OpenEnvoyEvent openEnvoyEvent = new OpenEnvoyEvent(player, block, tier, prizes);
-                Bukkit.getPluginManager().callEvent(openEnvoyEvent);
+                CrazyManager.getJavaPlugin().getServer().getPluginManager().callEvent(openEnvoyEvent);
                 if (!openEnvoyEvent.isCancelled()) {
                     if (tier.getFireworkToggle()) {
                         Methods.fireWork(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
@@ -74,7 +74,7 @@ public class EnvoyControl implements Listener {
                     envoy.stopSignalFlare(e.getClickedBlock().getLocation());
                     envoy.removeActiveEnvoy(block);
                     if (tier.getPrizes().isEmpty()) {
-                        Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+                        CrazyManager.getJavaPlugin().getServer().broadcastMessage(Methods.getPrefix() + Methods.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
                         return;
                     }
                     for (Prize prize : openEnvoyEvent.getPrizes()) {
@@ -82,7 +82,7 @@ public class EnvoyControl implements Listener {
                             player.sendMessage(Methods.color(msg));
                         }
                         for (String cmd : prize.getCommands()) {
-                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%Player%", player.getName()).replace("%player%", player.getName()));
+                            CrazyManager.getJavaPlugin().getServer().dispatchCommand(CrazyManager.getJavaPlugin().getServer().getConsoleSender(), cmd.replace("%Player%", player.getName()).replace("%player%", player.getName()));
                         }
                         for (ItemStack item : prize.getItems()) {
                             if (prize.getDropItems()) {
@@ -108,7 +108,7 @@ public class EnvoyControl implements Listener {
                         }
                     } else {
                         EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);
-                        Bukkit.getPluginManager().callEvent(event);
+                        CrazyManager.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                         envoy.endEnvoyEvent();
                         Messages.ENDED.broadcastMessage(false);
                     }

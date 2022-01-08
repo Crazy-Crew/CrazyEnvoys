@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoy.api;
 
+import com.badbones69.crazyenvoy.CrazyEnvoy;
 import com.badbones69.crazyenvoy.Methods;
 import com.badbones69.crazyenvoy.api.FileManager.CustomFile;
 import com.badbones69.crazyenvoy.api.FileManager.Files;
@@ -10,12 +11,10 @@ import com.badbones69.crazyenvoy.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoy.api.events.EnvoyStartEvent.EnvoyStartReason;
 import com.badbones69.crazyenvoy.api.interfaces.HologramController;
 import com.badbones69.crazyenvoy.api.objects.*;
-import com.badbones69.crazyenvoy.multisupport.Support;
-import com.badbones69.crazyenvoy.multisupport.Version;
+import com.badbones69.crazyenvoy.multisupport.*;
 import com.badbones69.crazyenvoy.controllers.EditControl;
 import com.badbones69.crazyenvoy.controllers.EnvoyControl;
 import com.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
-import me.badbones69.crazyenvoy.multisupport.*;
 import com.badbones69.crazyenvoy.multisupport.holograms.HolographicSupport;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -26,18 +25,24 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
 public class CrazyManager {
-    
-    private static CrazyManager instance = new CrazyManager();
-    private FileManager fileManager = FileManager.getInstance();
-    private boolean isLogging = fileManager.isLogging();
-    private EnvoySettings envoySettings = EnvoySettings.getInstance();
+
+    public static JavaPlugin getJavaPlugin() {
+        return JavaPlugin.getPlugin(CrazyEnvoy.class);
+    }
+
+    public static CrazyManager getInstance() { return instance; }
+
+    private static final CrazyManager instance = new CrazyManager();
+
+    private final FileManager fileManager = FileManager.getInstance();
+    private final EnvoySettings envoySettings = EnvoySettings.getInstance();
     private BukkitTask runTimeTask;
     private BukkitTask coolDownTask;
     private Calendar nextEnvoy;
@@ -58,50 +63,42 @@ public class CrazyManager {
     private HashMap<Location, BukkitTask> activeSignals = new HashMap<>();
     private List<Tier> tiers = new ArrayList<>();
     private List<Tier> cechedChances = new ArrayList<>();
-    private Plugin plugin;
     private Random random = new Random();
-    
-    /**
-     * Get the instance of the envoy plugin.
-     * @return The instance of the envoy plugin.
-     */
-    public static CrazyManager getInstance() {
-        return instance;
-    }
     
     /**
      * Run this when you need to load the new locations.
      */
     public void load() {
-        if (!envoyActive) {
-            envoyActive = false;
-        }
+        if (!envoyActive) envoyActive = false;
+
         spawnLocations.clear();
         blacklistedBlocks.clear();
         cechedChances.clear();
         envoySettings.loadSettings();
-        plugin = Bukkit.getPluginManager().getPlugin("CrazyEnvoy");
         FileConfiguration data = Files.DATA.getFile();
         envoyTimeLeft = Calendar.getInstance();
+
         List<String> failedLocations = new ArrayList<>();
+
         for (String location : data.getStringList("Locations.Spawns")) {
             try {
                 spawnLocations.add(getLocationFromString(location).getBlock());
             } catch (Exception ignore) {
-                //Error when trying to get location and so it was skipped.
                 failedLocations.add(location);
             }
         }
+
         if (fileManager.isLogging() && !failedLocations.isEmpty()) System.out.println("[CrazyEnvoy] Failed to load " + failedLocations.size() + " locations and will reattempt in 10s.");
-        if (Calendar.getInstance().after(getNextEnvoy())) {
-            setEnvoyActive(false);
-        }
+
+        if (Calendar.getInstance().after(getNextEnvoy())) setEnvoyActive(false);
+
         if (data.contains("Center")) {
             centerString = data.getString("Center");
             center = getLocationFromString(centerString);
         } else {
             center = Bukkit.getWorlds().get(0).getSpawnLocation();
         }
+
         if (envoySettings.isEnvoyRunTimerEnabled()) {
             Calendar cal = Calendar.getInstance();
             if (envoySettings.isEnvoyCooldownEnabled()) {
@@ -126,9 +123,7 @@ public class CrazyManager {
                 cal.set(Calendar.MINUTE, min);
                 cal.set(Calendar.SECOND, 0);
                 cal.set(Calendar.AM_PM, c);
-                if (cal.before(Calendar.getInstance())) {
-                    cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1);
-                }
+                if (cal.before(Calendar.getInstance())) cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1);
             }
             nextEnvoy = cal;
             startEnvoyCountDown();
@@ -138,6 +133,7 @@ public class CrazyManager {
         }
         //================================== Tiers Load ==================================//
         tiers.clear();
+
         for (CustomFile tierFile : fileManager.getCustomFiles()) {
             Tier tier = new Tier(tierFile.getName());
             FileConfiguration file = tierFile.getFile();
@@ -147,24 +143,28 @@ public class CrazyManager {
             tier.setBulkRandom(file.getBoolean("Settings.Bulk-Prizes.Random"));
             tier.setBulkMax(file.getInt("Settings.Bulk-Prizes.Max-Bulk"));
             tier.setHoloToggle(file.getBoolean("Settings.Hologram-Toggle"));
-            tier.setHoloHight(file.getDouble("Settings.Hologram-Height", 1.5));
+            tier.setHoloHeight(file.getDouble("Settings.Hologram-Height", 1.5));
             tier.setHoloMessage(file.getStringList("Settings.Hologram"));
             ItemBuilder placedBlock = new ItemBuilder().setMaterial(file.getString("Settings.Placed-Block"));
             tier.setPlacedBlockMaterial(placedBlock.getMaterial());
             tier.setPlacedBlockMetaData(placedBlock.getDamage());
+
             tier.setFireworkToggle(file.getBoolean("Settings.Firework-Toggle"));
             if (file.getStringList("Settings.Firework-Colors").isEmpty()) {
                 tier.setFireworkColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
             } else {
                 file.getStringList("Settings.Firework-Colors").forEach(color -> tier.addFireworkColor(Methods.getColor(color)));
             }
+
             tier.setSignalFlareToggle(file.getBoolean("Settings.Signal-Flare.Toggle"));
             tier.setSignalFlareTimer(file.getString("Settings.Signal-Flare.Time"));
+
             if (file.getStringList("Settings.Signal-Flare.Colors").isEmpty()) {
                 tier.setSignalFlareColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
             } else {
                 file.getStringList("Settings.Signal-Flare.Colors").forEach(color -> tier.addSignalFlareColor(Methods.getColor(color)));
             }
+
             for (String prizeID : file.getConfigurationSection("Prizes").getKeys(false)) {
                 String path = "Prizes." + prizeID + ".";
                 int chance = file.getInt(path + "Chance");
@@ -174,6 +174,7 @@ public class CrazyManager {
                 List<ItemBuilder> items = ItemBuilder.convertStringList(file.getStringList(path + "Items"));
                 tier.addPrize(new Prize(prizeID).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
             }
+
             tiers.add(tier);
             cleanLocations();
             //Loading the blacklisted blocks.
@@ -235,53 +236,32 @@ public class CrazyManager {
                 blacklistedBlocks.add(Material.matchMaterial("STONE_SLAB2"));
             }
         }
+
         if (Support.WORLD_GUARD.isPluginLoaded() && Support.WORLD_EDIT.isPluginLoaded()) {
             worldGuardVersion = Version.isNewer(Version.v1_12_R1) ? new WorldGuard_v7() : new WorldGuard_v6();
         }
+
         if (Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
             hologramController = new HolographicSupport();
-        } else if (Support.HOLOGRAMS.isPluginLoaded()) {
-            hologramController = new HologramsSupport();
-        }
-        if (hologramController != null) {
-            if (fileManager.isLogging()) System.out.println("[CrazyEnvoy] Loaded " + hologramController.getPluginName() + " hologram hook.");
-        } else {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-                        hologramController = new HolographicSupport();
-                    } else if (Support.HOLOGRAMS.isPluginLoaded()) {
-                        hologramController = new HologramsSupport();
-                    }
-                    if (hologramController != null) {
-                        if (fileManager.isLogging()) System.out.println("[CrazyEnvoy] Loaded " + hologramController.getPluginName() + " hologram hook.");
-                    } else {
-                        if (fileManager.isLogging()) System.out.println("[CrazyEnvoy] No supported hologram plugin was found.");
-                    }
-                }
-            }.runTaskLater(plugin, 200);
-        }
+            getJavaPlugin().getLogger().info("Loaded" + hologramController.getPluginName() + " hologram hook.");
+        } else getJavaPlugin().getLogger().info("No holograms plugin were found.");
+
         if (!failedLocations.isEmpty()) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (fileManager.isLogging()) System.out.println("[CrazyEnvoy] Attempting to fix " + failedLocations.size() + " locations that failed.");
-                    int failed = 0;
-                    int fixed = 0;
-                    for (String location : failedLocations) {
-                        try {
-                            spawnLocations.add(getLocationFromString(location).getBlock());
-                            fixed++;
-                        } catch (Exception ignore) {
-                            //Error when trying to get location and so it was skipped.
-                            failed++;
-                        }
-                    }
-                    if (fileManager.isLogging() && fixed > 0) System.out.println("[CrazyEnvoy] Was able to fix " + fixed + " locations that failed.");
-                    if (fileManager.isLogging() && failed > 0) System.out.println("[CrazyEnvoy] Failed to fix " + failed + " locations and will not reattempt.");
+            if (fileManager.isLogging()) getJavaPlugin().getLogger().info("Attempting to fix " + failedLocations.size() + " locations that failed.");
+            int failed = 0;
+            int fixed = 0;
+
+            for (String location : failedLocations) {
+                try {
+                    spawnLocations.add(getLocationFromString(location).getBlock());
+                    fixed++;
+                } catch (Exception ignore) {
+                    failed++;
                 }
-            }.runTaskLater(plugin, 200);
+            }
+
+            if (fixed > 0) getJavaPlugin().getLogger().info("Was able to fix " + fixed + " locations that failed.");
+            if (failed > 0) getJavaPlugin().getLogger().info("Failed to fix " + failed + " locations and will not reattempt.");
         }
         Flare.load();
     }
@@ -322,9 +302,10 @@ public class CrazyManager {
                     Calendar next = Calendar.getInstance();
                     next.setTimeInMillis(getNextEnvoy().getTimeInMillis());
                     next.clear(Calendar.MILLISECOND);
+
                     if (next.compareTo(cal) <= 0 && !isEnvoyActive()) {
                         if (envoySettings.isMinPlayersEnabled()) {
-                            int online = Bukkit.getServer().getOnlinePlayers().size();
+                            int online = getJavaPlugin().getServer().getOnlinePlayers().size();
                             if (online < envoySettings.getMinPlayers()) {
                                 HashMap<String, String> placeholder = new HashMap<>();
                                 placeholder.put("%amount%", online + "");
@@ -335,22 +316,22 @@ public class CrazyManager {
                                 return;
                             }
                         }
+
                         if (envoySettings.isRandomLocationsEnabled() && center.getWorld() == null) {
-                            System.out.println("[CrazyEnvoy] The envoy center's world can't be found and so envoy has been canceled.");
-                            System.out.println("Center String: " + centerString);
+                            getJavaPlugin().getLogger().info("The envoy center's world can't be found and so envoy has been canceled.");
+                            getJavaPlugin().getLogger().info("Center String: " + centerString);
                             setNextEnvoy(getEnvoyCooldown());
                             resetWarnings();
                             return;
                         }
+
                         EnvoyStartEvent event = new EnvoyStartEvent(autoTimer ? EnvoyStartReason.AUTO_TIMER : EnvoyStartReason.SPECIFIED_TIME);
-                        Bukkit.getPluginManager().callEvent(event);
-                        if (!event.isCancelled()) {
-                            startEnvoyEvent();
-                        }
+                        getJavaPlugin().getServer().getPluginManager().callEvent(event);
+                        if (!event.isCancelled()) startEnvoyEvent();
                     }
                 }
             }
-        }.runTaskTimer(plugin, 20, 20);
+        }.runTaskTimer(getJavaPlugin(), 20, 20);
     }
     
     /**
@@ -376,14 +357,14 @@ public class CrazyManager {
     public void deSpawnCrates() {
         envoyActive = false;
         cleanLocations();
+
         for (Block block : getActiveEnvoys()) {
             block.setType(Material.AIR);
             stopSignalFlare(block.getLocation());
         }
+
         fallingBlocks.keySet().forEach(Entity :: remove);
-        if (hasHologramPlugin()) {
-            hologramController.removeAllHolograms();
-        }
+        if (hasHologramPlugin()) hologramController.removeAllHolograms();
         fallingBlocks.clear();
         activeEnvoys.clear();
     }
@@ -426,8 +407,7 @@ public class CrazyManager {
         for (Block block : spawnLocations) {
             try {
                 locations.add(getStringFromLocation(block.getLocation()));
-            } catch (Exception e) {
-            }
+            } catch (Exception ignored) {}
         }
         Files.DATA.getFile().set("Locations.Spawns", locations);
         Files.DATA.saveFile();
@@ -513,15 +493,16 @@ public class CrazyManager {
         int hour = 0;
         int minute = 0;
         int second = 0;
-        for (; total > 86400; total -= 86400, day++) ;
-        for (; total > 3600; total -= 3600, hour++) ;
-        for (; total >= 60; total -= 60, minute++) ;
+        for (; total > 86400; total -= 86400, day++);
+        for (; total > 3600; total -= 3600, hour++);
+        for (; total >= 60; total -= 60, minute++);
         second += total;
         String message = "";
         if (day > 0) message += day + "d, ";
         if (day > 0 || hour > 0) message += hour + "h, ";
         if (day > 0 || hour > 0 || minute > 0) message += minute + "m, ";
         if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + "s, ";
+
         if (message.length() < 2) {
             message = Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going");
         } else {
@@ -626,8 +607,7 @@ public class CrazyManager {
     public void cancelEnvoyRunTime() {
         try {
             runTimeTask.cancel();
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
     }
     
     /**
@@ -636,8 +616,7 @@ public class CrazyManager {
     public void cancelEnvoyCooldownTime() {
         try {
             coolDownTask.cancel();
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
     }
     
     public List<Block> generateSpawnLocations() {
@@ -655,11 +634,11 @@ public class CrazyManager {
             if (center.getWorld() == null) {//Check to make sure the center exist and if not try to load it again.
                 center = getLocationFromString(centerString);
                 if (center.getWorld() == null) {//If center still doesn't exist then it cancels the event.
-                    System.out.println("[CrazyEnvoy] Debug Start");
-                    System.out.println("[CrazyEnvoy] Center String: \"" + centerString + "'");
-                    System.out.println("[CrazyEnvoy] Location Object: \"" + center.toString() + "'");
-                    System.out.println("[CrazyEnvoy] World Exist: \"" + (center.getWorld() != null) + "'");
-                    System.out.println("[CrazyEnvoy] Debug End");
+                    getJavaPlugin().getLogger().info("Debug Start");
+                    getJavaPlugin().getLogger().info("Center String: \"" + centerString + "'");
+                    getJavaPlugin().getLogger().info("Location Object: \"" + center.toString() + "'");
+                    getJavaPlugin().getLogger().info("World Exist: \"" + (center.getWorld() != null) + "'");
+                    getJavaPlugin().getLogger().info("Debug End");
                     return new ArrayList<>();
                 }
             }
@@ -669,19 +648,16 @@ public class CrazyManager {
                 Location location = center.clone();
                 location.add(-(maxRadius / 2) + random.nextInt(maxRadius), 0, -(maxRadius / 2) + random.nextInt(maxRadius));
                 location = location.getWorld().getHighestBlockAt(location).getLocation();
-                if (!location.getChunk().isLoaded() && !location.getChunk().load()) {
-                    continue;
-                }
+                if (!location.getChunk().isLoaded() && !location.getChunk().load()) continue;
+
                 if (location.getBlockY() <= 0 ||
                 minimumRadiusBlocks.contains(location.getBlock()) || minimumRadiusBlocks.contains(location.clone().add(0, 1, 0).getBlock()) ||
                 dropLocations.contains(location.getBlock()) || dropLocations.contains(location.clone().add(0, 1, 0).getBlock()) ||
-                blacklistedBlocks.contains(location.getBlock().getType())) {
-                    continue;
-                }
+                blacklistedBlocks.contains(location.getBlock().getType())) continue;
+
                 Block block = location.getBlock();
-                if (block.getType() != Material.AIR) {
-                    block = block.getLocation().add(0, 1, 0).getBlock();
-                }
+                if (block.getType() != Material.AIR) block = block.getLocation().add(0, 1, 0).getBlock();
+
                 dropLocations.add(block);
             }
             Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(dropLocations));
@@ -719,18 +695,20 @@ public class CrazyManager {
             setNextEnvoy(getEnvoyCooldown());
             resetWarnings();
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.NO_LOCATIONS_FOUND);
-            Bukkit.getPluginManager().callEvent(event);
+            getJavaPlugin().getServer().getPluginManager().callEvent(event);
             Messages.NO_SPAWN_LOCATIONS_FOUND.broadcastMessage(false);
             return false;
         }
+
         for (Player player : EditControl.getEditors()) {
             EditControl.removeFakeBlocks(player);
             player.getInventory().removeItem(new ItemStack(Material.BEDROCK, 1));
             Messages.KICKED_FROM_EDITOR_MODE.sendMessage(player);
         }
+
         EditControl.getEditors().clear();
         if (tiers.isEmpty()) {
-            Bukkit.broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder" + " to allow it to remake the default tier files."));
+            getJavaPlugin().getServer().broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder" + " to allow it to remake the default tier files."));
             return false;
         }
         setEnvoyActive(true);
@@ -791,11 +769,11 @@ public class CrazyManager {
             @Override
             public void run() {
                 EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.OUT_OF_TIME);
-                Bukkit.getPluginManager().callEvent(event);
+                getJavaPlugin().getServer().getPluginManager().callEvent(event);
                 Messages.ENDED.broadcastMessage(false);
                 endEnvoyEvent();
             }
-        }.runTaskLater(plugin, getTimeSeconds(envoySettings.getEnvoyRunTimer()) * 20);
+        }.runTaskLater(getJavaPlugin(), getTimeSeconds(envoySettings.getEnvoyRunTimer()) * 20L);
         envoyTimeLeft = getEnvoyRunTimeCalendar();
         return true;
     }
@@ -847,7 +825,7 @@ public class CrazyManager {
             public void run() {
                 playSignal(loc.clone().add(.5, 0, .5), tier);
             }
-        }.runTaskTimer(plugin, getTimeSeconds(tier.getSignalFlareTimer()) * 20, getTimeSeconds(tier.getSignalFlareTimer()) * 20);
+        }.runTaskTimer(getJavaPlugin(), getTimeSeconds(tier.getSignalFlareTimer()) * 20L, getTimeSeconds(tier.getSignalFlareTimer()) * 20L);
         activeSignals.put(loc, task);
     }
     
@@ -858,8 +836,7 @@ public class CrazyManager {
     public void stopSignalFlare(Location loc) {
         try {
             activeSignals.get(loc).cancel();
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
         activeSignals.remove(loc);
     }
     
@@ -908,14 +885,6 @@ public class CrazyManager {
     }
     
     /**
-     * Get the Plugin of this plugin.
-     * @return The Plugin object.
-     */
-    public Plugin getPlugin() {
-        return plugin;
-    }
-    
-    /**
      * Used to clean all spawn locations and set them back to air.
      */
     public void cleanLocations() {
@@ -944,9 +913,7 @@ public class CrazyManager {
      * @param block block the crate spawned at.
      */
     public void addSpawnedLocation(Block block) {
-        if (!spawnedLocations.contains(block)) {
-            spawnedLocations.add(block);
-        }
+        if (!spawnedLocations.contains(block)) spawnedLocations.add(block);
     }
     
     public List<Block> getSpawnedLocations() {
@@ -1027,13 +994,13 @@ public class CrazyManager {
     }
     
     private Location getLocationFromString(String locationString) {
-        World w = Bukkit.getWorlds().get(0);
+        World w = getJavaPlugin().getServer().getWorlds().get(0);
         int x = 0;
         int y = 0;
         int z = 0;
         for (String i : locationString.toLowerCase().split(", ")) {
             if (i.startsWith("world:")) {
-                w = Bukkit.getWorld(i.replace("world:", ""));
+                w = getJavaPlugin().getServer().getWorld(i.replace("world:", ""));
             } else if (i.startsWith("x:")) {
                 x = Integer.parseInt(i.replace("x:", ""));
             } else if (i.startsWith("y:")) {
@@ -1108,5 +1075,4 @@ public class CrazyManager {
         }
         return cechedChances.get(random.nextInt(cechedChances.size()));
     }
-    
 }

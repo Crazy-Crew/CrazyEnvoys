@@ -11,7 +11,6 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -24,9 +23,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Methods {
-    
-    private static CrazyManager envoy = CrazyManager.getInstance();
-    private static Random random = new Random();
+
+    private static final Random random = new Random();
     
     public final static Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
     
@@ -73,7 +71,7 @@ public class Methods {
     }
     
     public static boolean isOnline(String name) {
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player player : CrazyManager.getJavaPlugin().getServer().getOnlinePlayers()) {
             if (player.getName().equalsIgnoreCase(name)) {
                 return true;
             }
@@ -82,7 +80,7 @@ public class Methods {
     }
     
     public static Player getPlayer(String name) {
-        return Bukkit.getServer().getPlayer(name);
+        return CrazyManager.getJavaPlugin().getServer().getPlayer(name);
     }
     
     public static boolean isInvFull(Player player) {
@@ -101,7 +99,7 @@ public class Methods {
     }
     
     private static void detonate(final Firework f) {
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(envoy.getPlugin(), f :: detonate, 2);
+        CrazyManager.getJavaPlugin().getServer().getScheduler().scheduleSyncDelayedTask(CrazyManager.getJavaPlugin(), f :: detonate, 2);
     }
     
     public static Color getColor(String color) {
@@ -142,11 +140,11 @@ public class Methods {
                 case "YELLOW":
                     return Color.YELLOW;
             }
+
             try {
                 String[] rgb = color.split(",");
                 return Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
-            } catch (Exception ignore) {
-            }
+            } catch (Exception ignore) {}
         }
         return Color.WHITE;
     }
@@ -184,7 +182,7 @@ public class Methods {
             return true;
         }
         int chance = 1 + random.nextInt(max);
-        return chance >= 1 && chance <= min;
+        return chance <= min;
     }
     
     public static void hasUpdate() {
@@ -193,13 +191,12 @@ public class Methods {
             c.setDoOutput(true);
             c.setRequestMethod("POST");
             c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes(StandardCharsets.UTF_8));
-            String oldVersion = envoy.getPlugin().getDescription().getVersion();
+            String oldVersion = CrazyManager.getJavaPlugin().getDescription().getVersion();
             String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replace("[a-zA-Z ]", "");
             if (!newVersion.equals(oldVersion)) {
                 Bukkit.getConsoleSender().sendMessage(getPrefix() + color("&cYour server is running &7v" + oldVersion + "&c and the newest is &7v" + newVersion + "&c."));
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
     }
     
     public static void hasUpdate(Player player) {
@@ -208,13 +205,12 @@ public class Methods {
             c.setDoOutput(true);
             c.setRequestMethod("POST");
             c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes(StandardCharsets.UTF_8));
-            String oldVersion = envoy.getPlugin().getDescription().getVersion();
+            String oldVersion = CrazyManager.getJavaPlugin().getDescription().getVersion();
             String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replace("[a-zA-Z ]", "");
             if (!newVersion.equals(oldVersion)) {
                 player.sendMessage(getPrefix() + color("&cYour server is running &7v" + oldVersion + "&c and the newest is &7v" + newVersion + "&c."));
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
     }
     
     @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})

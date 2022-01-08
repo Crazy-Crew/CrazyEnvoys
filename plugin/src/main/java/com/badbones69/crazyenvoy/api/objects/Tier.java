@@ -8,6 +8,7 @@ import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Tier {
@@ -22,7 +23,7 @@ public class Tier {
     private boolean bulkRandom;
     private int bulkMax;
     private boolean holoToggle;
-    private Double holoHight;
+    private Double holoHeight;
     private List<String> holoMessage;
     private boolean fireworkToggle;
     private List<Color> fireworkColors;
@@ -46,7 +47,7 @@ public class Tier {
         bulkRandom = true;
         bulkMax = 3;
         holoToggle = true;
-        holoHight = 1.5;
+        holoHeight = 1.5;
         holoMessage = new ArrayList<>();
         fireworkToggle = true;
         fireworkColors = new ArrayList<>();
@@ -54,7 +55,7 @@ public class Tier {
         signalFlareTimer = "15s";
         signalFlareColors = new ArrayList<>();
         prizes = new ArrayList<>();
-        holoMessage.addAll(Arrays.asList("&7&l(&6&l!&7&l) Envoy Crate"));
+        holoMessage.addAll(Collections.singletonList("&7&l(&6&l!&7&l) Envoy Crate"));
     }
     
     /**
@@ -213,16 +214,16 @@ public class Tier {
     /**
      * Get the hieght of the hologram.
      */
-    public Double getHoloHight() {
-        return holoHight;
+    public Double getHoloHeight() {
+        return holoHeight;
     }
     
     /**
      * Set the hight of the hologram.
-     * @param holoHight The hight as a Double.
+     * @param holoHeght The hight as a Double.
      */
-    public Tier setHoloHight(Double holoHight) {
-        this.holoHight = holoHight;
+    public Tier setHoloHeight(Double holoHeght) {
+        this.holoHeight = holoHeght;
         return this;
     }
     

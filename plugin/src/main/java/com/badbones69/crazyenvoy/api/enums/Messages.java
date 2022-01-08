@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoy.api.enums;
 
+import com.badbones69.crazyenvoy.CrazyEnvoy;
 import com.badbones69.crazyenvoy.Methods;
 import com.badbones69.crazyenvoy.api.CrazyManager;
 import com.badbones69.crazyenvoy.api.objects.EnvoySettings;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
+
+import static com.badbones69.crazyenvoy.api.CrazyManager.getJavaPlugin;
 
 public enum Messages {
     
@@ -190,13 +193,11 @@ public enum Messages {
     
     public void broadcastMessage(boolean ignore, Map<String, String> placeholder) {
         if (envoySettings.isWorldMessagesEnabled()) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
+            for (Player player : getJavaPlugin().getServer().getOnlinePlayers()) {
                 for (String world : envoySettings.getWorldMessagesWorlds()) {
                     if (player.getWorld().getName().equalsIgnoreCase(world)) {
                         if (ignore) {
-                            if (!envoy.isIgnoringMessages(player.getUniqueId())) {
-                                sendMessage(player, placeholder);
-                            }
+                            if (!envoy.isIgnoringMessages(player.getUniqueId())) sendMessage(player, placeholder);
                         } else {
                             sendMessage(player, placeholder);
                         }
@@ -204,7 +205,7 @@ public enum Messages {
                 }
             }
         } else {
-            for (Player player : Bukkit.getOnlinePlayers()) {
+            for (Player player : getJavaPlugin().getServer().getOnlinePlayers()) {
                 if (ignore) {
                     if (!envoy.isIgnoringMessages(player.getUniqueId())) {
                         sendMessage(player, placeholder);
@@ -214,9 +215,9 @@ public enum Messages {
                 }
             }
         }
-        Bukkit.getLogger().log(Level.INFO, getMessage(placeholder));
+        getJavaPlugin().getServer().getLogger().log(Level.INFO, getMessage(placeholder));
     }
-    
+
     private boolean exists() {
         return Files.MESSAGES.getFile().contains("Messages." + path);
     }
@@ -240,5 +241,4 @@ public enum Messages {
     private List<String> getDefaultListMessage() {
         return defaultListMessage;
     }
-    
 }

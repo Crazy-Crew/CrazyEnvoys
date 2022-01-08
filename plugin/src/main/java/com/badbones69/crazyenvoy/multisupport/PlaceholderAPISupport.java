@@ -4,16 +4,10 @@ import com.badbones69.crazyenvoy.api.CrazyManager;
 import com.badbones69.crazyenvoy.api.FileManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 public class PlaceholderAPISupport extends PlaceholderExpansion {
     
     private CrazyManager envoy = CrazyManager.getInstance();
-    private Plugin plugin;
-    
-    public PlaceholderAPISupport(Plugin plugin) {
-        this.plugin = plugin;
-    }
     
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
@@ -47,7 +41,6 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
     
     @Override
     public String getVersion() {
-        return plugin.getDescription().getVersion();
+        return CrazyManager.getJavaPlugin().getDescription().getVersion();
     }
-    
 }

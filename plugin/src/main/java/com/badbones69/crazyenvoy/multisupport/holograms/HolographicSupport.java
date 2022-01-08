@@ -17,8 +17,8 @@ public class HolographicSupport implements HologramController {
     private HashMap<Block, Hologram> holograms = new HashMap<>();
     
     public void createHologram(Block block, Tier tier) {
-        double hight = tier.getHoloHight();
-        Hologram hologram = HologramsAPI.createHologram(envoy.getPlugin(), block.getLocation().add(.5, hight, .5));
+        double hight = tier.getHoloHeight();
+        Hologram hologram = HologramsAPI.createHologram(CrazyManager.getJavaPlugin(), block.getLocation().add(.5, hight, .5));
         for (String line : tier.getHoloMessage()) {
             hologram.appendTextLine(Methods.color(line));
         }
@@ -45,28 +45,26 @@ public class HolographicSupport implements HologramController {
     }
     
     public static void registerPlaceHolders() {
-        HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{crazyenvoy_cooldown}", 1, () -> {
+        HologramsAPI.registerPlaceholder(CrazyManager.getJavaPlugin(), "{crazyenvoy_cooldown}", 1, () -> {
             if (envoy.isEnvoyActive()) {
                 return FileManager.Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going");
             } else {
                 return envoy.getNextEnvoyTime();
             }
         });
-        HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{crazyenvoy_time_left}", 1, () -> {
+        HologramsAPI.registerPlaceholder(CrazyManager.getJavaPlugin(), "{crazyenvoy_time_left}", 1, () -> {
             if (envoy.isEnvoyActive()) {
                 return envoy.getEnvoyRunTimeLeft();
             } else {
                 return FileManager.Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
             }
         });
-        HologramsAPI.registerPlaceholder(envoy.getPlugin(), "{crazyenvoy_crates_left}", .5, () -> envoy.getActiveEnvoys().size() + "");
+        HologramsAPI.registerPlaceholder(CrazyManager.getJavaPlugin(), "{crazyenvoy_crates_left}", .5, () -> envoy.getActiveEnvoys().size() + "");
     }
     
     public static void unregisterPlaceHolders() {
         try {
-            HologramsAPI.unregisterPlaceholders(envoy.getPlugin());
-        } catch (Exception e) {
-        }
+            HologramsAPI.unregisterPlaceholders(CrazyManager.getJavaPlugin());
+        } catch (Exception ignored) {}
     }
-    
 }

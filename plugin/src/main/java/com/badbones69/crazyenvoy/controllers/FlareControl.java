@@ -7,7 +7,6 @@ import com.badbones69.crazyenvoy.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoy.api.objects.EnvoySettings;
 import com.badbones69.crazyenvoy.api.objects.Flare;
 import com.badbones69.crazyenvoy.multisupport.Support;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +32,7 @@ public class FlareControl implements Listener {
                     if (envoy.isEnvoyActive()) {
                         Messages.ALREADY_STARTED.sendMessage(player);
                     } else {
-                        int online = Bukkit.getServer().getOnlinePlayers().size();
+                        int online = CrazyManager.getJavaPlugin().getServer().getOnlinePlayers().size();
                         if (envoySettings.isMinPlayersEnabled() && envoySettings.isMinFlareEnabled() && online < envoySettings.getMinPlayers()) {
                             HashMap<String, String> placeholder = new HashMap<>();
                             placeholder.put("%amount%", online + "");
@@ -60,7 +59,7 @@ public class FlareControl implements Listener {
                             return;
                         }
                         EnvoyStartEvent event = new EnvoyStartEvent(EnvoyStartEvent.EnvoyStartReason.FLARE);
-                        Bukkit.getPluginManager().callEvent(event);
+                        CrazyManager.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                         if (!event.isCancelled() && envoy.startEnvoyEvent()) {
                             Messages.USED_FLARE.sendMessage(player);
                             Flare.takeFlare(player);

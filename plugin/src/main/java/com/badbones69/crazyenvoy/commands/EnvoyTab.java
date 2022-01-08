@@ -1,12 +1,10 @@
 package com.badbones69.crazyenvoy.commands;
 
 import com.badbones69.crazyenvoy.api.CrazyManager;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +13,7 @@ public class EnvoyTab implements TabCompleter {
     private CrazyManager envoy = CrazyManager.getInstance();
     
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String commandLable, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String commandLabel, String[] args) {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {// /envoy
             if (hasPermission(sender, "help")) completions.add("help");
@@ -46,7 +44,7 @@ public class EnvoyTab implements TabCompleter {
             return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
         } else if (args.length == 3) {// /envoy arg0 arg1
             if ("flare".equalsIgnoreCase(args[0])) {
-                Bukkit.getOnlinePlayers().forEach(player -> completions.add(player.getName()));
+                CrazyManager.getJavaPlugin().getServer().getOnlinePlayers().forEach(player -> completions.add(player.getName()));
             }
             return StringUtil.copyPartialMatches(args[2], completions, new ArrayList<>());
         }
