@@ -90,7 +90,5 @@ public class EnvoyEndEvent extends Event {
         public String getName() {
             return name;
         }
-        
     }
-    
 }

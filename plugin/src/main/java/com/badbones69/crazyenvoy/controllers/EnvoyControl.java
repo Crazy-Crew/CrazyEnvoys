@@ -254,5 +254,4 @@ public class EnvoyControl implements Listener {
         }
         return tiers.get(random.nextInt(tiers.size()));
     }
-    
 }

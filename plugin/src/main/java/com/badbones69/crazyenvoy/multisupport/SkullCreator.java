@@ -64,7 +64,6 @@ public class SkullCreator {
      */
     public static ItemStack itemFromUuid(UUID id) {
         ItemStack item = getPlayerSkullItem();
-        
         return itemWithUuid(item, id);
     }
     
@@ -82,7 +81,6 @@ public class SkullCreator {
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setOwningPlayer(Bukkit.getOfflinePlayer(id));
         item.setItemMeta(meta);
-        
         return item;
     }
     
@@ -94,7 +92,6 @@ public class SkullCreator {
      */
     public static ItemStack itemFromUrl(String url) {
         ItemStack item = getPlayerSkullItem();
-        
         return itemWithUrl(item, url);
     }
     
@@ -108,7 +105,6 @@ public class SkullCreator {
     public static ItemStack itemWithUrl(ItemStack item, String url) {
         notNull(item, "item");
         notNull(url, "url");
-        
         return itemWithBase64(item, urlToBase64(url));
     }
     
@@ -246,7 +242,6 @@ public class SkullCreator {
     }
     
     private static String urlToBase64(String url) {
-        
         URI actualUrl;
         try {
             actualUrl = new URI(url);
@@ -256,7 +251,6 @@ public class SkullCreator {
         String toEncode = "{\"textures\":{\"SKIN\":{\"url\":\"" + actualUrl.toString() + "\"}}}";
         return Base64.getEncoder().encodeToString(toEncode.getBytes());
     }
-    
 }
 
 /* Format for skull

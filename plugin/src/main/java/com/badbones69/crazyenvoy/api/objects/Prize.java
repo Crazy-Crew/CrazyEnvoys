@@ -130,5 +130,4 @@ public class Prize {
         itemBuilders.forEach(itemBuilder -> items.add(itemBuilder.build()));
         return this;
     }
-    
 }

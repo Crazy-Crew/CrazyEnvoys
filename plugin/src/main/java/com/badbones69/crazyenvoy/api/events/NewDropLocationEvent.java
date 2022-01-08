@@ -58,5 +58,4 @@ public class NewDropLocationEvent extends Event implements Cancellable {
     public HandlerList getHandlers() {
         return handlers;
     }
-    
 }

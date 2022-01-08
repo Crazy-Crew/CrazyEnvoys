@@ -45,5 +45,4 @@ public class Flare {
     public static void takeFlare(Player player) {
         player.getInventory().removeItem(getFlare());
     }
-    
 }

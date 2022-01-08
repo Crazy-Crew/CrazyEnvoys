@@ -1,4 +1,4 @@
-package me.badbones69.crazyenvoy.multisupport;
+package com.badbones69.crazyenvoy.multisupport;
 
 import org.bukkit.Location;
 

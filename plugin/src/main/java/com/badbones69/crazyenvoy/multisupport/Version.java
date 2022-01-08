@@ -66,7 +66,6 @@ public enum Version {
             return v;
         } else {
             return latest;
-
         }
     }
 
@@ -126,5 +125,4 @@ public enum Version {
         if (currentVersion == null) getCurrentVersion();
         return currentVersion.versionInteger < version.versionInteger || currentVersion.versionInteger == -1;
     }
-
 }

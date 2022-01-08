@@ -25,7 +25,6 @@ public class MVdWPlaceholderAPISupport {
                 return FileManager.Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
             }
         });
-        
         PlaceholderAPI.registerPlaceholder(plugin, "crazyenvoy_crates_left", e -> envoy.getActiveEnvoys().size() + "");
     }
 }

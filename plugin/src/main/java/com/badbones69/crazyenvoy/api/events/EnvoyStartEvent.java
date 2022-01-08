@@ -96,7 +96,5 @@ public class EnvoyStartEvent extends Event implements Cancellable {
         public String getName() {
             return name;
         }
-        
     }
-    
 }

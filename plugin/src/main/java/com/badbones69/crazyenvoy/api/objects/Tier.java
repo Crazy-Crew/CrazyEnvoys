@@ -367,5 +367,4 @@ public class Tier {
         prizes.add(prize);
         return this;
     }
-    
 }

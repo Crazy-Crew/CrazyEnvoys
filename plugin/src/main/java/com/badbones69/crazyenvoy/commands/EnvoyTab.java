@@ -56,5 +56,4 @@ public class EnvoyTab implements TabCompleter {
     private boolean hasPermission(CommandSender sender, String node) {
         return sender.hasPermission("envoy." + node) || sender.hasPermission("envoy.bypass");
     }
-    
 }
