@@ -69,7 +69,7 @@ public class EnvoyCommand implements CommandExecutor {
                     return true;
                 case "ignore":
                 case "stfu":
-                    if (hasPermission(sender, "ignore") && sender != CrazyManager.getJavaPlugin().getServer().getConsoleSender()) {
+                    if (hasPermission(sender, "ignore")) {
                         if (sender instanceof Player) {
                             Player player = (Player) sender;
                             UUID uuid = player.getUniqueId();
