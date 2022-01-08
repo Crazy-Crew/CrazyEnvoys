@@ -93,7 +93,7 @@ public class EnvoyCommand implements CommandExecutor {
                             envoy.setCenter(((Player) sender).getLocation());
                             Messages.NEW_CENTER.sendMessage(sender);
                         } else {
-                            CrazyManager.getJavaPlugin().getLogger().info("You must be a player to use this command.");
+                            Messages.PLAYERS_ONLY.sendMessage(sender);
                         }
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
