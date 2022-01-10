@@ -18,6 +18,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 public class CrazyEnvoy extends JavaPlugin implements Listener {
     
     private FileManager fileManager = FileManager.getInstance();
@@ -25,6 +30,12 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
     
     @Override
     public void onEnable() {
+
+        updateDirectory("Tiers", "tiers");
+        updateFiles("Config.yml", "config.yml");
+        updateFiles("Data.yml", "data.yml");
+        updateFiles("Messages.yml", "messages.yml");
+
         String homeFolder = Version.isNewer(Version.v1_12_R1) ? "/tiers1.13-Up" : "/tiers1.12.2-Down";
         fileManager.logInfo(true)
         .registerCustomFilesFolder("/tiers")
@@ -75,5 +86,35 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
             envoy.endEnvoyEvent();
         }
         envoy.unload();
+    }
+
+    public void updateFiles(String oldFileName, String newFileName) {
+        File oldFile = new File((getDataFolder()), oldFileName);
+
+        if (!oldFile.exists()) return;
+
+        getLogger().warning(oldFileName + " has been found.");
+        getLogger().warning("Converting to " + newFileName);
+
+        File newFile = new File((getDataFolder()), newFileName);
+
+        try {
+            Files.copy(oldFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            oldFile.delete();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateDirectory(String oldDirectory, String newDirectory) {
+        File oldFile = new File((getDataFolder()), oldDirectory);
+
+        if (!oldFile.exists()) return;
+
+        getLogger().warning(newDirectory + " directory has been found.");
+        getLogger().warning("Converting " + oldDirectory + " directory to " + newDirectory);
+
+        File newDir = new File(getDataFolder(), newDirectory);
+        oldFile.renameTo(newDir);
     }
 }
