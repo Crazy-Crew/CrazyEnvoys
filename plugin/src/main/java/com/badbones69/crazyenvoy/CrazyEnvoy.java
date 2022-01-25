@@ -21,6 +21,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class CrazyEnvoy extends JavaPlugin implements Listener {
@@ -89,32 +91,36 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
     }
 
     public void updateFiles(String oldFileName, String newFileName) {
-        File oldFile = new File((getDataFolder()), oldFileName);
+        Path oldPath = Paths.get(getDataFolder() + "/" + oldFileName);
 
-        if (!oldFile.exists()) return;
+        if (Files.exists(oldPath)) {
+            getLogger().warning(oldFileName + " has been found.");
+            getLogger().warning("Converting to " + newFileName);
 
-        getLogger().warning(oldFileName + " has been found.");
-        getLogger().warning("Converting to " + newFileName);
-
-        File newFile = new File((getDataFolder()), newFileName);
-
-        try {
-            Files.copy(oldFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            oldFile.delete();
-        } catch (IOException e) {
-            e.printStackTrace();
+            File newFile = new File(getDataFolder(), newFileName);
+            try {
+                Files.copy(oldPath, newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.deleteIfExists(oldPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void updateDirectory(String oldDirectory, String newDirectory) {
-        File oldFile = new File((getDataFolder()), oldDirectory);
+        Path oldPath = Paths.get(getDataFolder() + "/" + oldDirectory);
 
-        if (!oldFile.exists()) return;
+        if (Files.exists(oldPath)) {
+            getLogger().warning(oldDirectory + " directory has been found.");
+            getLogger().warning("Converting " + oldDirectory + " directory to " + newDirectory);
 
-        getLogger().warning(newDirectory + " directory has been found.");
-        getLogger().warning("Converting " + oldDirectory + " directory to " + newDirectory);
-
-        File newDir = new File(getDataFolder(), newDirectory);
-        oldFile.renameTo(newDir);
+            File newDir = new File(getDataFolder(), newDirectory);
+            try {
+                Files.move(oldPath, newDir.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.deleteIfExists(oldPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
