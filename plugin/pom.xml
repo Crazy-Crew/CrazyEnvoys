@@ -18,11 +18,16 @@
         </repository>
         <repository>
             <id>placeholderapi</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
             <id>codemc-repo</id>
             <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>mvdw-software</id>
+            <name>MVdW Public Repositories</name>
+            <url>https://repo.mvdw-software.com/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -74,6 +79,12 @@
 
         <!-- Placeholder Support -->
         <dependency>
+            <groupId>com.sainttx.holograms</groupId>
+            <artifactId>holograms</artifactId>
+            <version>2.13</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.11.1</version>
@@ -118,6 +129,7 @@
                             <shadedPattern>me.badbones69.crazyenvoy.nbtapi</shadedPattern>
                         </relocation>
                     </relocations>
+                    <!--                    <outputFile>/Users/badbones/Desktop/Minecraft/Server/plugins/CrazyEnvoy[v${project.version}].jar</outputFile>-->
                 </configuration>
                 <executions>
                     <execution>

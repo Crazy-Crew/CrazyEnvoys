@@ -1030,6 +1030,7 @@ public class CrazyManager {
         FireworkDamageAPI.addFirework(firework);
     }
     
+    //TODO find a better away of doing this as it causes crashes with big radius.
     private List<Block> getBlocks(Location location, int radius) {
         Location locations2 = location.clone();
         location.add(-radius, 0, -radius);

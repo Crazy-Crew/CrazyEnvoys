@@ -11,10 +11,12 @@
     <artifactId>crazyenvoy-worldguard-v7</artifactId>
 
     <repositories>
+        <!--Spigot-->
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <!--World Edit/Guard-->
         <repository>
             <id>sk89q-repo</id>
             <url>https://maven.enginehub.org/repo/</url>
