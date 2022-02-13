@@ -25,4 +25,5 @@ public class WorldGuard_v7 implements WorldGuardVersion {
         }
         return false;
     }
+    
 }
