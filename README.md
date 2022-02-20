@@ -7,6 +7,11 @@ Source Code for Crazy Envoy
 ## Latest Version:
 [![Latest Version](https://img.shields.io/badge/Latest%20Version-1.3.12-blue)](https://github.com/badbones69/Crazy-Envoy/releases/latest)
 
+## Support:
+https://guilded.gg/badbones
+
+https://discord.com/invite/MCuz8JG/
+
 ## Jenkins: 
 https://jenkins.badbones69.com/job/Crazy-Envoy/
  
