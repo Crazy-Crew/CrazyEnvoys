@@ -26,7 +26,7 @@ https://nexus.badbones69.com/#browse/browse:maven-releases:me%2Fbadbones69%2Fcra
 </repository>
 
 <dependency>
-    <groupId>me.badbones69</groupId>
+    <groupId>com.badbones69</groupId>
     <artifactId>crazyenvoy-plugin</artifactId>
     <version>{Latest Version}</version>
 </dependency>
