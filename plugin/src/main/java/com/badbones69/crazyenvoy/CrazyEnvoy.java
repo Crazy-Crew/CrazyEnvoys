@@ -32,12 +32,12 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
     
     @Override
     public void onEnable() {
-
+        
         updateDirectory("Tiers", "tiers");
         updateFiles("Config.yml", "config.yml");
         updateFiles("Data.yml", "data.yml");
         updateFiles("Messages.yml", "messages.yml");
-
+        
         String homeFolder = Version.isNewer(Version.v1_12_R1) ? "/tiers1.13-Up" : "/tiers1.12.2-Down";
         fileManager.logInfo(true)
         .registerCustomFilesFolder("/tiers")
@@ -45,28 +45,29 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
         .registerDefaultGenerateFiles("Lucky.yml", "/tiers", homeFolder)
         .registerDefaultGenerateFiles("Titan.yml", "/tiers", homeFolder)
         .setup();
-
+        
         envoy.load();
         Methods.hasUpdate();
-
+        
         new Metrics();
-
+        
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(this, this);
         pm.registerEvents(new EditControl(), this);
         pm.registerEvents(new EnvoyControl(), this);
         pm.registerEvents(new FlareControl(), this);
-
+        
         try {
             if (Version.isNewer(Version.v1_10_R1)) {
                 pm.registerEvents(new FireworkDamageAPI(), this);
             }
-        } catch (Exception ignored) {}
-
+        } catch (Exception ignored) {
+        }
+        
         if (Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) HolographicSupport.registerPlaceHolders();
         if (Support.PLACEHOLDER_API.isPluginLoaded()) new PlaceholderAPISupport().register();
         if (Support.MVDW_PLACEHOLDER_API.isPluginLoaded()) MVdWPlaceholderAPISupport.registerPlaceholders(this);
-
+        
         getCommand("envoy").setExecutor(new EnvoyCommand());
         getCommand("envoy").setTabCompleter(new EnvoyTab());
     }
@@ -89,14 +90,14 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
         }
         envoy.unload();
     }
-
+    
     public void updateFiles(String oldFileName, String newFileName) {
         Path oldPath = Paths.get(getDataFolder() + "/" + oldFileName);
-
+        
         if (Files.exists(oldPath)) {
             getLogger().warning(oldFileName + " has been found.");
             getLogger().warning("Converting to " + newFileName);
-
+            
             File newFile = new File(getDataFolder(), newFileName);
             try {
                 Files.copy(oldPath, newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -106,14 +107,14 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
             }
         }
     }
-
+    
     public void updateDirectory(String oldDirectory, String newDirectory) {
         Path oldPath = Paths.get(getDataFolder() + "/" + oldDirectory);
-
+        
         if (Files.exists(oldPath)) {
             getLogger().warning(oldDirectory + " directory has been found.");
             getLogger().warning("Converting " + oldDirectory + " directory to " + newDirectory);
-
+            
             File newDir = new File(getDataFolder(), newDirectory);
             try {
                 Files.move(oldPath, newDir.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -123,4 +124,5 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
             }
         }
     }
+    
 }

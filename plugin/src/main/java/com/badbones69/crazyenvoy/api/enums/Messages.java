@@ -1,11 +1,9 @@
 package com.badbones69.crazyenvoy.api.enums;
 
-import com.badbones69.crazyenvoy.CrazyEnvoy;
 import com.badbones69.crazyenvoy.Methods;
 import com.badbones69.crazyenvoy.api.CrazyManager;
-import com.badbones69.crazyenvoy.api.objects.EnvoySettings;
 import com.badbones69.crazyenvoy.api.FileManager.Files;
-import org.bukkit.Bukkit;
+import com.badbones69.crazyenvoy.api.objects.EnvoySettings;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -217,7 +215,7 @@ public enum Messages {
         }
         getJavaPlugin().getServer().getLogger().log(Level.INFO, getMessage(placeholder));
     }
-
+    
     private boolean exists() {
         return Files.MESSAGES.getFile().contains("Messages." + path);
     }

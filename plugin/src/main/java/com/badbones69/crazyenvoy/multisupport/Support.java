@@ -1,8 +1,6 @@
 package com.badbones69.crazyenvoy.multisupport;
 
 import com.badbones69.crazyenvoy.api.CrazyManager;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 
 public enum Support {
     

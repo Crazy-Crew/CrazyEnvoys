@@ -56,7 +56,7 @@ public class Metrics {
             }
         }
     }
-
+    
     // A list with all custom charts
     private final List<CustomChart> charts = new ArrayList<>();
     // Is bStats enabled on this server?
@@ -96,7 +96,8 @@ public class Metrics {
             ).copyDefaults(true);
             try {
                 config.save(configFile);
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         }
         
         // Load the data
@@ -349,9 +350,11 @@ public class Metrics {
                                 continue; // continue looping since we cannot do any other thing.
                             }
                         }
-                    } catch (NullPointerException | NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {}
+                    } catch (NullPointerException | NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+                    }
                 }
-            } catch (NoSuchFieldException ignored) {}
+            } catch (NoSuchFieldException ignored) {
+            }
         }
         
         data.add("plugins", pluginData);
@@ -572,6 +575,7 @@ public class Metrics {
             data.addProperty("value", value);
             return data;
         }
+        
     }
     
     /**
@@ -616,6 +620,7 @@ public class Metrics {
             data.add("values", values);
             return data;
         }
+        
     }
     
     /**
@@ -653,6 +658,7 @@ public class Metrics {
             data.add("values", values);
             return data;
         }
+        
     }
     
     /**
@@ -701,5 +707,7 @@ public class Metrics {
             data.add("values", values);
             return data;
         }
+        
     }
+    
 }

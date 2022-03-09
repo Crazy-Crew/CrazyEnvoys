@@ -1,10 +1,9 @@
 package com.badbones69.crazyenvoy.api.objects;
 
 import com.badbones69.crazyenvoy.Methods;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import com.badbones69.crazyenvoy.multisupport.SkullCreator;
 import com.badbones69.crazyenvoy.multisupport.Version;
-import org.bukkit.ChatColor;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -22,7 +21,6 @@ import org.bukkit.potion.PotionType;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 /**
@@ -196,7 +194,8 @@ public class ItemBuilder implements Cloneable {
                                     break;
                                 }
                             }
-                        } catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
                         break;
                 }
             }
@@ -588,7 +587,8 @@ public class ItemBuilder implements Cloneable {
                     break;
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return this;
     }
     
@@ -788,7 +788,8 @@ public class ItemBuilder implements Cloneable {
     public ItemBuilder addItemFlag(String flagString) {
         try {
             addItemFlag(ItemFlag.valueOf(flagString.toUpperCase()));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return this;
     }
     
@@ -797,7 +798,8 @@ public class ItemBuilder implements Cloneable {
             try {
                 ItemFlag itemFlag = ItemFlag.valueOf(flagString.toUpperCase());
                 if (itemFlag != null) addItemFlag(itemFlag);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
         return this;
     }
@@ -1024,7 +1026,8 @@ public class ItemBuilder implements Cloneable {
             try {
                 String[] rgb = color.split(",");
                 return Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
         }
         return null;
     }
@@ -1037,7 +1040,8 @@ public class ItemBuilder implements Cloneable {
                 try {
                     String[] rgb = color.split(",");
                     return DyeColor.getByColor(Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2])));
-                } catch (Exception ignore) {}
+                } catch (Exception ignore) {
+                }
             }
         }
         return null;
@@ -1057,7 +1061,8 @@ public class ItemBuilder implements Cloneable {
                 stripEnchantmentName(enchantments.get(enchantment.getName())).equalsIgnoreCase(enchantmentName))) {
                     return enchantment;
                 }
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
         }
         return null;
     }
@@ -1104,4 +1109,5 @@ public class ItemBuilder implements Cloneable {
         enchantments.put("LOYALTY", "Loyalty");
         return enchantments;
     }
+    
 }

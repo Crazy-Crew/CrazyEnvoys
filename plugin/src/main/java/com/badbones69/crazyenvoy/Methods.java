@@ -11,6 +11,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -23,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Methods {
-
+    
     private static final Random random = new Random();
     
     public final static Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
@@ -140,11 +141,12 @@ public class Methods {
                 case "YELLOW":
                     return Color.YELLOW;
             }
-
+            
             try {
                 String[] rgb = color.split(",");
                 return Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
         }
         return Color.WHITE;
     }
@@ -196,7 +198,8 @@ public class Methods {
             if (!newVersion.equals(oldVersion)) {
                 Bukkit.getConsoleSender().sendMessage(getPrefix() + color("&cYour server is running &7v" + oldVersion + "&c and the newest is &7v" + newVersion + "&c."));
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
     
     public static void hasUpdate(Player player) {
@@ -210,7 +213,8 @@ public class Methods {
             if (!newVersion.equals(oldVersion)) {
                 player.sendMessage(getPrefix() + color("&cYour server is running &7v" + oldVersion + "&c and the newest is &7v" + newVersion + "&c."));
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
     
     @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
@@ -223,4 +227,5 @@ public class Methods {
         }
         return out;
     }
+    
 }

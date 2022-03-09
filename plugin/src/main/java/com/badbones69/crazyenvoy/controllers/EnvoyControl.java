@@ -9,7 +9,6 @@ import com.badbones69.crazyenvoy.api.objects.EnvoySettings;
 import com.badbones69.crazyenvoy.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoy.api.objects.Prize;
 import com.badbones69.crazyenvoy.api.objects.Tier;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -254,4 +253,5 @@ public class EnvoyControl implements Listener {
         }
         return tiers.get(random.nextInt(tiers.size()));
     }
+    
 }

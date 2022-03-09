@@ -7,7 +7,6 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -368,4 +367,5 @@ public class Tier {
         prizes.add(prize);
         return this;
     }
+    
 }

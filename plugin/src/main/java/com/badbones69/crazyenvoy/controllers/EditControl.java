@@ -11,7 +11,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,7 @@ public class EditControl implements Listener {
     public static boolean isEditor(Player player) {
         return editors.contains(player);
     }
-
+    
     @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public static void showFakeBlocks(Player player) {
         for (Block block : envoy.getSpawnLocations()) {
@@ -80,4 +79,5 @@ public class EditControl implements Listener {
             }
         }
     }
+    
 }

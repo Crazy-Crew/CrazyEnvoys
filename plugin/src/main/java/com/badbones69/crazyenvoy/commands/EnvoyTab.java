@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,4 +55,5 @@ public class EnvoyTab implements TabCompleter {
     private boolean hasPermission(CommandSender sender, String node) {
         return sender.hasPermission("envoy." + node) || sender.hasPermission("envoy.bypass");
     }
+    
 }

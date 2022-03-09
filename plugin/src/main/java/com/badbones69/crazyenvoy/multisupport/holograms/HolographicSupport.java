@@ -65,6 +65,8 @@ public class HolographicSupport implements HologramController {
     public static void unregisterPlaceHolders() {
         try {
             HologramsAPI.unregisterPlaceholders(CrazyManager.getJavaPlugin());
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
+    
 }

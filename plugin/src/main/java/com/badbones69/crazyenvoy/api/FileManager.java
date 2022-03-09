@@ -3,6 +3,7 @@ package com.badbones69.crazyenvoy.api;
 import com.badbones69.crazyenvoy.multisupport.Version;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -467,5 +468,7 @@ public class FileManager {
             }
             return false;
         }
+        
     }
+    
 }

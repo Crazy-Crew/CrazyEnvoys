@@ -8,13 +8,11 @@ import com.badbones69.crazyenvoy.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoy.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoy.api.objects.Flare;
 import com.badbones69.crazyenvoy.controllers.EditControl;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -30,23 +28,23 @@ public class EnvoyCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length <= 0) {
-
+            
             if (!hasPermission(sender, "time")) {
                 Messages.NO_PERMISSION.sendMessage(sender);
                 return true;
             }
-
+            
             CrazyManager.getJavaPlugin().getServer().dispatchCommand(sender, "envoy time");
         } else {
             switch (args[0].toLowerCase()) {
                 case "help":
-
+                    
                     if (hasPermission(sender, "help")) {
                         Messages.HELP.sendMessage(sender);
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-
+                    
                     return true;
                 case "reload":
                     if (hasPermission(sender, "reload")) {
@@ -55,12 +53,13 @@ public class EnvoyCommand implements CommandExecutor {
                             CrazyManager.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                             envoy.endEnvoyEvent();
                         }
-
+                        
                         envoy.unload();
                         try {
                             fileManager.setup();
-                        } catch (Exception ignored) {}
-
+                        } catch (Exception ignored) {
+                        }
+                        
                         envoy.load();
                         Messages.RELOADED.sendMessage(sender);
                     } else {
@@ -268,4 +267,5 @@ public class EnvoyCommand implements CommandExecutor {
     private boolean hasPermission(CommandSender sender, String node) {
         return sender.hasPermission("envoy." + node) || sender.hasPermission("envoy.admin");
     }
+    
 }

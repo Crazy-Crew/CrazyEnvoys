@@ -48,17 +48,17 @@ public class EnvoySettings {
         this.isFallingBlocksEnabled = config.getBoolean(path + "Falling-Block-Toggle");
         this.fallingBlockDurability = 15;
         String fallingBlock = config.getString(path + "Falling-Block");
-
+        
         if (fallingBlock.contains(":")) {
             String[] split = fallingBlock.split(":");
             fallingBlock = split[0];
             fallingHeight = Integer.parseInt(split[1]);
         }
-
+        
         this.fallingBlockMaterial = Material.matchMaterial(fallingBlock);
-
+        
         if (fallingBlockMaterial == null) fallingBlockMaterial = Material.BEACON;
-
+        
         this.fallingHeight = config.getInt(path + "Fall-Height");
         this.isMaxCrateEnabled = config.getBoolean(path + "Max-Crate-Toggle");
         this.randomAmount = config.getBoolean(path + "Random-Amount", false);
@@ -129,15 +129,15 @@ public class EnvoySettings {
         isMaxCrateEnabled = maxCrateEnabled;
         return this;
     }
-
+    
     public boolean isRandomAmount() {
         return this.randomAmount;
     }
-
+    
     public int getMinCrates() {
         return this.minCrates;
     }
-
+    
     public int getMaxCrates() {
         return maxCrates;
     }
@@ -317,4 +317,5 @@ public class EnvoySettings {
         this.flaresRegions = flaresRegions;
         return this;
     }
+    
 }

@@ -27,4 +27,5 @@ public class MVdWPlaceholderAPISupport {
         });
         PlaceholderAPI.registerPlaceholder(plugin, "crazyenvoy_crates_left", e -> envoy.getActiveEnvoys().size() + "");
     }
+    
 }

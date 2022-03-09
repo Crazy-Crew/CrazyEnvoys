@@ -17,4 +17,5 @@ public class WorldGuard_v6 implements WorldGuardVersion {
         }
         return false;
     }
+    
 }

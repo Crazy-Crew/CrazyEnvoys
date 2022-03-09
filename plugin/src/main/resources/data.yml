@@ -1,5 +1,5 @@
 Next-Envoy: 0000000000000
 Center: 'World:world, X:0, Y:0, Z:0'
 Locations:
-  Spawns: {}
-  Spawned: {}
+  Spawns: { }
+  Spawned: { }

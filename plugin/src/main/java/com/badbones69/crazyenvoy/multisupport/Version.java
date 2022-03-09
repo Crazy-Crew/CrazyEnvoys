@@ -1,10 +1,9 @@
 package com.badbones69.crazyenvoy.multisupport;
 
 import com.badbones69.crazyenvoy.api.CrazyManager;
-import org.bukkit.Bukkit;
 
 public enum Version {
-
+    
     TOO_OLD(-1),
     v1_7_R1(171), v1_7_R2(172), v1_7_R3(173), v1_7_R4(174),
     v1_8_R1(181), v1_8_R2(182), v1_8_R3(183),
@@ -19,15 +18,15 @@ public enum Version {
     v1_17_R1(1171),
     v1_18_R1(1181),
     TOO_NEW(-2);
-
+    
     private static Version currentVersion;
     private static Version latest;
     private int versionInteger;
-
+    
     private Version(int versionInteger) {
         this.versionInteger = versionInteger;
     }
-
+    
     /**
      *
      * @return Get the server's Minecraft version.
@@ -51,7 +50,7 @@ public enum Version {
         }
         return currentVersion;
     }
-
+    
     /**
      * Get the latest version allowed by the Version class.
      * @return The latest version.
@@ -69,7 +68,7 @@ public enum Version {
             return latest;
         }
     }
-
+    
     /**
      *
      * @return The server's minecraft version as an integer.
@@ -77,7 +76,7 @@ public enum Version {
     public int getVersionInteger() {
         return this.versionInteger;
     }
-
+    
     /**
      * This checks if the current version is older, newer, or is the checked version.
      * @param version The version you are checking.
@@ -94,7 +93,7 @@ public enum Version {
         }
         return result;
     }
-
+    
     /**
      * Checks to see if the current version is newer then the checked version.
      * @param version The version you are checking.
@@ -104,7 +103,7 @@ public enum Version {
         if (currentVersion == null) getCurrentVersion();
         return currentVersion.versionInteger > version.versionInteger || currentVersion.versionInteger == -2;
     }
-
+    
     /**
      * Checks to see if the current version is the same as the checked version.
      * @param version The version you are checking.
@@ -114,7 +113,7 @@ public enum Version {
         if (currentVersion == null) getCurrentVersion();
         return currentVersion.versionInteger == version.versionInteger;
     }
-
+    
     /**
      * Checks to see if the current version is older then the checked version.
      * @param version The version you are checking.
