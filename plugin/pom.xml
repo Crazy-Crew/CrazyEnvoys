@@ -109,7 +109,7 @@
     </dependencies>
 
     <build>
-        <finalName>${project.parent.name}[v${project.version}]</finalName>
+        <finalName>${project.parent.name}-[v${project.version}]</finalName>
         <defaultGoal>clean install package</defaultGoal>
         <resources>
             <resource>
