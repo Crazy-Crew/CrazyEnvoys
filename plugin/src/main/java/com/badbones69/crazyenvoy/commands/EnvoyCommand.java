@@ -258,6 +258,24 @@ public class EnvoyCommand implements CommandExecutor {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
                     return true;
+                case "clear":
+                    if (hasPermission(sender, "clear")) {
+                        if (envoy.isEnvoyActive()) {
+                            //Envoy is running so can't clear locations.
+                            //Messages.KICKED_FROM_EDITOR_MODE.sendMessage(sender);
+                        } else {
+                            Player player = (Player) sender;
+                            if (EditControl.isEditor(player)) {
+                                //User is in editor mode and is able to clear all locations.
+                                EditControl.clearEnvoyLocations();
+                            } else {
+                                //User must be in editor mode to clear locations. This is to help prevent accidental clears.
+                            }
+                        }
+                    } else {
+                        Messages.NO_PERMISSION.sendMessage(sender);
+                    }
+                    return true;
             }
             sender.sendMessage(Methods.getPrefix() + Methods.color("&cPlease do /envoy help for more information."));
         }

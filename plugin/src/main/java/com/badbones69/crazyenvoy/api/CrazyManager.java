@@ -468,6 +468,14 @@ public class CrazyManager {
     }
     
     /**
+     * Clear all Envoy locations.
+     */
+    public void clearLocations() {
+        spawnLocations.clear();
+        saveSpawnLocations();
+    }
+    
+    /**
      *
      * @return The next envoy time as a calendar.
      */

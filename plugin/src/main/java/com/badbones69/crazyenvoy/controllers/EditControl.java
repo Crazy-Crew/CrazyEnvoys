@@ -50,6 +50,13 @@ public class EditControl implements Listener {
         }
     }
     
+    /**
+     * Clears all the Envoy locations.
+     */
+    public static void clearEnvoyLocations() {
+        envoy.clearLocations();
+    }
+    
     @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     @EventHandler
     public void onBlockPlace(final BlockPlaceEvent e) {
