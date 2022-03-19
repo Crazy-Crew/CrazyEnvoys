@@ -50,12 +50,15 @@ public enum Messages {
     ALREADY_STARTED("Already-Started", "%prefix%&cThere is already an crazyenvoy event running. Please stop it to start a new one."),
     ENTER_EDITOR_MODE("Enter-Editor-Mode", "%prefix%&7You are now in editor mode."),
     LEAVE_EDITOR_MODE("Leave-Editor-Mode", "%prefix%&7You have now left editor mode."),
+    EDITOR_CLEAR_LOCATIONS("Editor-Clear-Locations", "%prefix%&7You have cleared all the editor spawn locations."),
+    EDITOR_CLEAR_FAILURE("Editor-Clear-Failure", "%prefix%&7You must be in Editor mode to clear the spawn locations."),
     NOT_ENOUGH_PLAYERS("Not-Enough-Players", "%prefix%&7Not enough players are online to start the crazyenvoy event. Only &6%amount% &7players are online."),
     STOP_IGNORING_MESSAGES("Stop-Ignoring-Messages", "%prefix%&7You now see all the collecting messages."),
     START_IGNORING_MESSAGES("Start-Ignoring-Messages", "%prefix%&7You are now ignoring the collecting messages."),
     KICKED_FROM_EDITOR_MODE("Kicked-From-Editor-Mode", "%prefix%&cSorry but an crazyenvoy is active. Please stop it or wait till it's over."),
     NOT_IN_WORLD_GUARD_REGION("Not-In-World-Guard-Region", "%prefix%&cYou must be in the WarZone to use a flare."),
     NO_SPAWN_LOCATIONS_FOUND("No-Spawn-Locations-Found", "%prefix%&cNo spawn locations were found and so the event has been cancelled and the cooldown has been reset."),
+    COMMAND_NOT_FOUND("Command-Not-Found", "%prefix%&cPlease do /envoy help for more information."),
     HELP("Help", Arrays.asList(
     "&6/envoy help &7- Shows the envoy help menu.",
     "&6/envoy reload &7- Reloads all the config files.",
@@ -68,11 +71,11 @@ public enum Messages {
     "&6/envoy stop &7- Force stops the envoy.",
     "&6/envoy center &7- Set the center of the random crate drops."));
     
-    private String path;
+    private final String path;
     private String defaultMessage;
     private List<String> defaultListMessage;
-    private CrazyManager envoy = CrazyManager.getInstance();
-    private EnvoySettings envoySettings = EnvoySettings.getInstance();
+    private final CrazyManager envoy = CrazyManager.getInstance();
+    private final EnvoySettings envoySettings = EnvoySettings.getInstance();
     
     private Messages(String path, String defaultMessage) {
         this.path = path;

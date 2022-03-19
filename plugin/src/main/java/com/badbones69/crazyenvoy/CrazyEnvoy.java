@@ -2,6 +2,7 @@ package com.badbones69.crazyenvoy;
 
 import com.badbones69.crazyenvoy.api.CrazyManager;
 import com.badbones69.crazyenvoy.api.FileManager;
+import com.badbones69.crazyenvoy.api.enums.Messages;
 import com.badbones69.crazyenvoy.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoy.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoy.commands.EnvoyCommand;
@@ -18,13 +19,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-
 public class CrazyEnvoy extends JavaPlugin implements Listener {
     
     private FileManager fileManager = FileManager.getInstance();
@@ -40,6 +34,8 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
         .registerDefaultGenerateFiles("Lucky.yml", "/tiers", homeFolder)
         .registerDefaultGenerateFiles("Titan.yml", "/tiers", homeFolder)
         .setup();
+        
+        Messages.addMissingMessages();
         
         envoy.load();
         Methods.hasUpdate();
@@ -85,4 +81,5 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
         }
         envoy.unload();
     }
+    
 }
