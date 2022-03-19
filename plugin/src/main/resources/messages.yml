@@ -44,6 +44,7 @@ Messages:
   Drops-Page: '%prefix%&7Use /crazyenvoy drops [page] to see more.'
   Drops-Format: '&7[&6%id%&7]: %world%, %x%, %y%, %z%'
   No-Spawn-Locations-Found: '%prefix%&cNo spawn locations were found and so the event has been cancelled and the cooldown has been reset.'
+  Command-Not-Found: '%prefix%&cPlease do /envoy help for more information.'
   Hologram-Placeholders:
     On-Going: 'On Going'
     Not-Running: 'Not Running'

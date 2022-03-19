@@ -56,6 +56,7 @@ public enum Messages {
     KICKED_FROM_EDITOR_MODE("Kicked-From-Editor-Mode", "%prefix%&cSorry but an crazyenvoy is active. Please stop it or wait till it's over."),
     NOT_IN_WORLD_GUARD_REGION("Not-In-World-Guard-Region", "%prefix%&cYou must be in the WarZone to use a flare."),
     NO_SPAWN_LOCATIONS_FOUND("No-Spawn-Locations-Found", "%prefix%&cNo spawn locations were found and so the event has been cancelled and the cooldown has been reset."),
+    COMMAND_NOT_FOUND("Command-Not-Found", "%prefix%&cPlease do /envoy help for more information."),
     HELP("Help", Arrays.asList(
     "&6/envoy help &7- Shows the envoy help menu.",
     "&6/envoy reload &7- Reloads all the config files.",

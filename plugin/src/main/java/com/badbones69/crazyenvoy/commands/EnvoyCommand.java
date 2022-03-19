@@ -277,7 +277,7 @@ public class EnvoyCommand implements CommandExecutor {
                     }
                     return true;
             }
-            sender.sendMessage(Methods.getPrefix() + Methods.color("&cPlease do /envoy help for more information."));
+            Messages.COMMAND_NOT_FOUND.sendMessage(sender);
         }
         return true;
     }
