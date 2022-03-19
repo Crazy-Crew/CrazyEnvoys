@@ -50,6 +50,8 @@ public enum Messages {
     ALREADY_STARTED("Already-Started", "%prefix%&cThere is already an crazyenvoy event running. Please stop it to start a new one."),
     ENTER_EDITOR_MODE("Enter-Editor-Mode", "%prefix%&7You are now in editor mode."),
     LEAVE_EDITOR_MODE("Leave-Editor-Mode", "%prefix%&7You have now left editor mode."),
+    EDITOR_CLEAR_LOCATIONS("Editor-Clear-Locations", "%prefix%&7You have cleared all the editor spawn locations."),
+    EDITOR_CLEAR_FAILURE("Editor-Clear-Failure", "%prefix%&7You must be in Editor mode to clear the spawn locations."),
     NOT_ENOUGH_PLAYERS("Not-Enough-Players", "%prefix%&7Not enough players are online to start the crazyenvoy event. Only &6%amount% &7players are online."),
     STOP_IGNORING_MESSAGES("Stop-Ignoring-Messages", "%prefix%&7You now see all the collecting messages."),
     START_IGNORING_MESSAGES("Start-Ignoring-Messages", "%prefix%&7You are now ignoring the collecting messages."),
