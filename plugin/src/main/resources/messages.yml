@@ -25,6 +25,8 @@ Messages:
   Not-Enough-Players: '%prefix%&7Not enough players are online to start the crazyenvoy event. Only &6%amount% &7players are online.'
   Enter-Editor-Mode: '%prefix%&7You are now in editor mode.'
   Leave-Editor-Mode: '%prefix%&7You have now left editor mode.'
+  Editor-Clear-Locations: '%prefix%&7You have cleared all the editor spawn locations.'
+  Editor-Clear-Failure: '%prefix%&7You must be in Editor mode to clear the spawn locations.'
   Kicked-From-Editor-Mode: '%prefix%&cSorry but an crazyenvoy is active. Please stop it or wait till it''s over.'
   Add-Location: '%prefix%&7You have just added a spawn location.'
   Remove-Location: '%prefix%&cYou have just removed a spawn location.'
