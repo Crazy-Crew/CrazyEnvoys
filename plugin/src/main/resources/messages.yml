@@ -1,6 +1,6 @@
 #Tips
 #1. Make sure to use the %prefix% to add the prefix in front of messages.
-#2. If you wish to use more then one line for a message just go from a line to a list.
+#2. If you wish to use more than one line for a message just go from a line to a list.
 #Examples:
 #  Line:
 #    No-Permission: '%prefix%&cYou do not have permission to use that command.'
