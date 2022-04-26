@@ -5,6 +5,7 @@ import com.badbones69.crazyenvoy.api.CrazyManager;
 public enum Support {
     
     HOLOGRAPHIC_DISPLAYS("HolographicDisplays"),
+    DECENT_HOLOGRAMS("DecentHolograms"),
     PLACEHOLDER_API("PlaceholderAPI"),
     MVDW_PLACEHOLDER_API("MVdWPlaceholderAPI"),
     WORLD_GUARD("WorldGuard"),
@@ -13,7 +14,7 @@ public enum Support {
     
     private final String name;
     
-    private Support(String name) {
+    Support(String name) {
         this.name = name;
     }
     

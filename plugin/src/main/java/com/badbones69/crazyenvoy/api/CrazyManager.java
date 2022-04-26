@@ -15,6 +15,7 @@ import com.badbones69.crazyenvoy.controllers.EditControl;
 import com.badbones69.crazyenvoy.controllers.EnvoyControl;
 import com.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
 import com.badbones69.crazyenvoy.multisupport.*;
+import com.badbones69.crazyenvoy.multisupport.holograms.DecentHolograms;
 import com.badbones69.crazyenvoy.multisupport.holograms.HolographicSupport;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -243,6 +244,9 @@ public class CrazyManager {
         
         if (Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
             hologramController = new HolographicSupport();
+            getJavaPlugin().getLogger().info("Loaded" + hologramController.getPluginName() + " hologram hook.");
+        } else if (Support.DECENT_HOLOGRAMS.isPluginLoaded()) {
+            hologramController = new DecentHolograms();
             getJavaPlugin().getLogger().info("Loaded" + hologramController.getPluginName() + " hologram hook.");
         } else getJavaPlugin().getLogger().info("No holograms plugin were found.");
         
