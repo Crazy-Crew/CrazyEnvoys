@@ -339,7 +339,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param block The location you want the tier from.
      * @return The tier that location is.
      */
@@ -348,7 +347,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @return True if the envoy event is currently happening and false if not.
      */
     public boolean isEnvoyActive() {
@@ -386,7 +384,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @return All the location the chests will spawn.
      */
     public List<Block> getSpawnLocations() {
@@ -394,7 +391,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param location The location that you want to check.
      */
     public boolean isLocation(Location location) {
@@ -419,7 +415,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @return All the active envoys that are active.
      */
     public Set<Block> getActiveEnvoys() {
@@ -427,7 +422,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param block The location your are checking.
      * @return Turn if it is and false if not.
      */
@@ -436,7 +430,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param block The location you wish to add.
      */
     public void addActiveEnvoy(Block block, Tier tier) {
@@ -444,7 +437,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param block The location you wish to remove.
      */
     public void removeActiveEnvoy(Block block) {
@@ -452,7 +444,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param block The location you want to add.
      */
     public void addLocation(Block block) {
@@ -461,7 +452,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param block The location you want to remove.
      */
     public void removeLocation(Block block) {
@@ -480,7 +470,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @return The next envoy time as a calendar.
      */
     public Calendar getNextEnvoy() {
@@ -488,7 +477,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param cal A calendar that has the next time the envoy will happen.
      */
     public void setNextEnvoy(Calendar cal) {
@@ -496,7 +484,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @return The time till the next envoy.
      */
     public String getNextEnvoyTime() {
@@ -525,7 +512,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @return All falling blocks are are currently going.
      */
     public Map<Entity, Block> getFallingBlocks() {
@@ -533,7 +519,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param entity Remove a falling block from the list.
      */
     public void removeFallingBlock(Entity entity) {
@@ -549,7 +534,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param cal When adding a new warning.
      */
     public void addWarning(Calendar cal) {
@@ -557,7 +541,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @return All the current warnings.
      */
     public List<Calendar> getWarnings() {
@@ -565,7 +548,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param time The new time for the warning.
      * @return The new time as a calendar
      */
@@ -587,7 +569,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @return The time left in the current envoy event.
      */
     public String getEnvoyRunTimeLeft() {
@@ -698,6 +679,7 @@ public class CrazyManager {
     
     /**
      * Starts the envoy event.
+     *
      * @return true if the event started successfully and false if it had an issue.
      */
     @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
@@ -809,6 +791,7 @@ public class CrazyManager {
     
     /**
      * Get a list of all the tiers.
+     *
      * @return List of all the tiers.
      */
     public List<Tier> getTiers() {
@@ -817,6 +800,7 @@ public class CrazyManager {
     
     /**
      * Get a tier from its name.
+     *
      * @param tierName The name of the tier.
      * @return Returns a tier or will return null if not tier is found.
      */
@@ -830,7 +814,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param loc The location the signals will be at.
      * @param tier The tier the signal is.
      */
@@ -845,7 +828,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @param loc The location that the signal is stopping.
      */
     public void stopSignalFlare(Location loc) {
@@ -857,7 +839,6 @@ public class CrazyManager {
     }
     
     /**
-     *
      * @return The center location for the random crates.
      */
     public Location getCenter() {
@@ -866,6 +847,7 @@ public class CrazyManager {
     
     /**
      * Sets the center location for the random crates.
+     *
      * @param loc The new center location.
      */
     public void setCenter(Location loc) {
@@ -877,6 +859,7 @@ public class CrazyManager {
     
     /**
      * Check if a player is ignoring the messages.
+     *
      * @param uuid The player's UUID.
      * @return True if they are ignoring them and false if not.
      */
@@ -886,6 +869,7 @@ public class CrazyManager {
     
     /**
      * Make a player ignore the messages.
+     *
      * @param uuid The player's UUID.
      */
     public void addIgnorePlayer(UUID uuid) {
@@ -894,6 +878,7 @@ public class CrazyManager {
     
     /**
      * Make a player stop ignoring the messages.
+     *
      * @param uuid The player's UUID.
      */
     public void removeIgnorePlayer(UUID uuid) {
@@ -926,6 +911,7 @@ public class CrazyManager {
     
     /**
      * Add a location to the cleaning list of where crates actually spawned.
+     *
      * @param block block the crate spawned at.
      */
     public void addSpawnedLocation(Block block) {

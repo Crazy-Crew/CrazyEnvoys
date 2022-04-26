@@ -16,19 +16,18 @@ public enum Version {
     v1_15_R1(1151),
     v1_16_R1(1161), v1_16_R2(1162), v1_16_R3(1163),
     v1_17_R1(1171),
-    v1_18_R1(1181),
+    v1_18_R1(1181), v1_18_R2(1182),
     TOO_NEW(-2);
     
     private static Version currentVersion;
     private static Version latest;
-    private int versionInteger;
+    private final int versionInteger;
     
-    private Version(int versionInteger) {
+    Version(int versionInteger) {
         this.versionInteger = versionInteger;
     }
     
     /**
-     *
      * @return Get the server's Minecraft version.
      */
     public static Version getCurrentVersion() {
@@ -53,6 +52,7 @@ public enum Version {
     
     /**
      * Get the latest version allowed by the Version class.
+     *
      * @return The latest version.
      */
     public static Version getLatestVersion() {
@@ -70,7 +70,6 @@ public enum Version {
     }
     
     /**
-     *
      * @return The server's minecraft version as an integer.
      */
     public int getVersionInteger() {
@@ -79,6 +78,7 @@ public enum Version {
     
     /**
      * This checks if the current version is older, newer, or is the checked version.
+     *
      * @param version The version you are checking.
      * @return -1 if older, 0 if the same, and 1 if newer.
      */
@@ -96,6 +96,7 @@ public enum Version {
     
     /**
      * Checks to see if the current version is newer then the checked version.
+     *
      * @param version The version you are checking.
      * @return True if newer then the checked version and false if the same or older.
      */
@@ -106,6 +107,7 @@ public enum Version {
     
     /**
      * Checks to see if the current version is the same as the checked version.
+     *
      * @param version The version you are checking.
      * @return True if both the current and checked version is the same and false if otherwise.
      */
@@ -116,6 +118,7 @@ public enum Version {
     
     /**
      * Checks to see if the current version is older then the checked version.
+     *
      * @param version The version you are checking.
      * @return True if older then the checked version and false if the same or newer.
      */

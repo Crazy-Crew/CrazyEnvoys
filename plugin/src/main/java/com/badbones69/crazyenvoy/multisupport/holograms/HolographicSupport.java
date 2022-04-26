@@ -19,9 +19,7 @@ public class HolographicSupport implements HologramController {
     public void createHologram(Block block, Tier tier) {
         double hight = tier.getHoloHeight();
         Hologram hologram = HologramsAPI.createHologram(CrazyManager.getJavaPlugin(), block.getLocation().add(.5, hight, .5));
-        for (String line : tier.getHoloMessage()) {
-            hologram.appendTextLine(Methods.color(line));
-        }
+        tier.getHoloMessage().stream().map(Methods :: color).forEach(hologram :: appendTextLine);
         holograms.put(block, hologram);
     }
     
@@ -34,9 +32,7 @@ public class HolographicSupport implements HologramController {
     }
     
     public void removeAllHolograms() {
-        for (Block block : holograms.keySet()) {
-            holograms.get(block).delete();
-        }
+        holograms.keySet().forEach(block -> holograms.get(block).delete());
         holograms.clear();
     }
     
