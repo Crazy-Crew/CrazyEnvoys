@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoy.commands;
 
+import com.badbones69.crazyenvoy.CrazyEnvoy;
 import com.badbones69.crazyenvoy.api.CrazyManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -45,7 +46,7 @@ public class EnvoyTab implements TabCompleter {
             return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
         } else if (args.length == 3) {// /envoy arg0 arg1
             if ("flare".equalsIgnoreCase(args[0])) {
-                CrazyManager.getJavaPlugin().getServer().getOnlinePlayers().forEach(player -> completions.add(player.getName()));
+                CrazyEnvoy.getJavaPlugin().getServer().getOnlinePlayers().forEach(player -> completions.add(player.getName()));
             }
             return StringUtil.copyPartialMatches(args[2], completions, new ArrayList<>());
         }

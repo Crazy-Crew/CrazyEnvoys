@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoy.multisupport;
 
+import com.badbones69.crazyenvoy.CrazyEnvoy;
 import com.badbones69.crazyenvoy.api.CrazyManager;
 import com.badbones69.crazyenvoy.api.FileManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -41,7 +42,7 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
     
     @Override
     public String getVersion() {
-        return CrazyManager.getJavaPlugin().getDescription().getVersion();
+        return CrazyEnvoy.getJavaPlugin().getDescription().getVersion();
     }
     
 }

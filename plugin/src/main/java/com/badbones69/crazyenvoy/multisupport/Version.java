@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoy.multisupport;
 
-import com.badbones69.crazyenvoy.api.CrazyManager;
+import com.badbones69.crazyenvoy.CrazyEnvoy;
 
 public enum Version {
     
@@ -32,7 +32,7 @@ public enum Version {
      */
     public static Version getCurrentVersion() {
         if (currentVersion == null) {
-            String ver = CrazyManager.getJavaPlugin().getServer().getClass().getPackage().getName();
+            String ver = CrazyEnvoy.getJavaPlugin().getServer().getClass().getPackage().getName();
             int v = Integer.parseInt(ver.substring(ver.lastIndexOf('.') + 1).replace("_", "").replace("R", "").replace("v", ""));
             for (Version version : values()) {
                 if (version.getVersionInteger() == v) {

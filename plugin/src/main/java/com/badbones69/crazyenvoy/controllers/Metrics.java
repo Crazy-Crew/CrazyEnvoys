@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoy.controllers;
 
-import com.badbones69.crazyenvoy.api.CrazyManager;
+import com.badbones69.crazyenvoy.CrazyEnvoy;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -64,12 +64,11 @@ public class Metrics {
     
     /**
      * Class constructor.
-     *
      */
     public Metrics() {
         
         // Get the config file
-        File bStatsFolder = new File(CrazyManager.getJavaPlugin().getDataFolder().getParentFile(), "bStats");
+        File bStatsFolder = new File(CrazyEnvoy.getJavaPlugin().getDataFolder().getParentFile(), "bStats");
         File configFile = new File(bStatsFolder, "config.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         
@@ -110,7 +109,7 @@ public class Metrics {
         if (enabled) {
             boolean found = false;
             // Search for all other bStats Metrics classes to see if we are the first one
-            for (Class<?> service : CrazyManager.getJavaPlugin().getServer().getServicesManager().getKnownServices()) {
+            for (Class<?> service : CrazyEnvoy.getJavaPlugin().getServer().getServicesManager().getKnownServices()) {
                 try {
                     service.getField("B_STATS_VERSION"); // Our identifier :)
                     found = true; // We aren't the first
@@ -119,7 +118,7 @@ public class Metrics {
                 }
             }
             // Register our service
-            CrazyManager.getJavaPlugin().getServer().getServicesManager().register(Metrics.class, this, CrazyManager.getJavaPlugin(), ServicePriority.Normal);
+            CrazyEnvoy.getJavaPlugin().getServer().getServicesManager().register(Metrics.class, this, CrazyEnvoy.getJavaPlugin(), ServicePriority.Normal);
             if (!found) {
                 // We are the first!
                 startSubmitting();
@@ -226,13 +225,13 @@ public class Metrics {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (!CrazyManager.getJavaPlugin().isEnabled()) { // Plugin was disabled
+                if (!CrazyEnvoy.getJavaPlugin().isEnabled()) { // Plugin was disabled
                     timer.cancel();
                     return;
                 }
                 // Nevertheless we want our code to run in the Bukkit main thread, so we have to use the Bukkit scheduler
                 // Don't be afraid! The connection to the bStats server is still async, only the stats collection is sync ;)
-                Bukkit.getScheduler().runTask(CrazyManager.getJavaPlugin(), () -> submitData());
+                Bukkit.getScheduler().runTask(CrazyEnvoy.getJavaPlugin(), () -> submitData());
             }
         }, 1000 * 60 * 5, 1000 * 60 * 30);
         // Submit the data every 30 minutes, first time after 5 minutes to give other plugins enough time to start
@@ -249,8 +248,8 @@ public class Metrics {
     public JsonObject getPluginData() {
         JsonObject data = new JsonObject();
         
-        String pluginName = CrazyManager.getJavaPlugin().getDescription().getName();
-        String pluginVersion = CrazyManager.getJavaPlugin().getDescription().getVersion();
+        String pluginName = CrazyEnvoy.getJavaPlugin().getDescription().getName();
+        String pluginVersion = CrazyEnvoy.getJavaPlugin().getDescription().getVersion();
         
         data.addProperty("pluginName", pluginName); // Append the name of the plugin
         data.addProperty("pluginVersion", pluginVersion); // Append the version of the plugin
@@ -281,12 +280,12 @@ public class Metrics {
             // This fixes java.lang.NoSuchMethodError: org.bukkit.Bukkit.getOnlinePlayers()Ljava/util/Collection;
             Method onlinePlayersMethod = Class.forName("org.bukkit.Server").getMethod("getOnlinePlayers");
             playerAmount = onlinePlayersMethod.getReturnType().equals(Collection.class)
-            ? ((Collection<?>) onlinePlayersMethod.invoke(CrazyManager.getJavaPlugin().getServer())).size()
-            : ((Player[]) onlinePlayersMethod.invoke(CrazyManager.getJavaPlugin().getServer())).length;
+            ? ((Collection<?>) onlinePlayersMethod.invoke(CrazyEnvoy.getJavaPlugin().getServer())).size()
+            : ((Player[]) onlinePlayersMethod.invoke(CrazyEnvoy.getJavaPlugin().getServer())).length;
         } catch (Exception e) {
-            playerAmount = CrazyManager.getJavaPlugin().getServer().getOnlinePlayers().size(); // Just use the new method if the Reflection failed
+            playerAmount = CrazyEnvoy.getJavaPlugin().getServer().getOnlinePlayers().size(); // Just use the new method if the Reflection failed
         }
-        int onlineMode = CrazyManager.getJavaPlugin().getServer().getOnlineMode() ? 1 : 0;
+        int onlineMode = CrazyEnvoy.getJavaPlugin().getServer().getOnlineMode() ? 1 : 0;
         String bukkitVersion = Bukkit.getVersion();
         String bukkitName = Bukkit.getName();
         
@@ -323,11 +322,11 @@ public class Metrics {
         
         JsonArray pluginData = new JsonArray();
         // Search for all other bStats Metrics classes to get their plugin data
-        for (Class<?> service : CrazyManager.getJavaPlugin().getServer().getServicesManager().getKnownServices()) {
+        for (Class<?> service : CrazyEnvoy.getJavaPlugin().getServer().getServicesManager().getKnownServices()) {
             try {
                 service.getField("B_STATS_VERSION"); // Our identifier :)
                 
-                for (RegisteredServiceProvider<?> provider : CrazyManager.getJavaPlugin().getServer().getServicesManager().getRegistrations(service)) {
+                for (RegisteredServiceProvider<?> provider : CrazyEnvoy.getJavaPlugin().getServer().getServicesManager().getRegistrations(service)) {
                     try {
                         Object plugin = provider.getService().getMethod("getPluginData").invoke(provider.getProvider());
                         if (plugin instanceof JsonObject) {
@@ -345,7 +344,7 @@ public class Metrics {
                             } catch (ClassNotFoundException e) {
                                 // minecraft version 1.14+
                                 if (logFailedRequests) {
-                                    CrazyManager.getJavaPlugin().getServer().getLogger().log(Level.SEVERE, "Encountered unexpected exception", e);
+                                    CrazyEnvoy.getJavaPlugin().getServer().getLogger().log(Level.SEVERE, "Encountered unexpected exception", e);
                                 }
                                 continue; // continue looping since we cannot do any other thing.
                             }
@@ -365,11 +364,11 @@ public class Metrics {
             public void run() {
                 try {
                     // Send the data
-                    sendData(CrazyManager.getJavaPlugin(), data);
+                    sendData(CrazyEnvoy.getJavaPlugin(), data);
                 } catch (Exception e) {
                     // Something went wrong! :(
                     if (logFailedRequests) {
-                        CrazyManager.getJavaPlugin().getServer().getLogger().log(Level.WARNING, "Could not submit plugin stats of " + CrazyManager.getJavaPlugin().getName(), e);
+                        CrazyEnvoy.getJavaPlugin().getServer().getLogger().log(Level.WARNING, "Could not submit plugin stats of " + CrazyEnvoy.getJavaPlugin().getName(), e);
                     }
                 }
             }
@@ -408,7 +407,7 @@ public class Metrics {
                 chart.add("data", data);
             } catch (Throwable t) {
                 if (logFailedRequests) {
-                    CrazyManager.getJavaPlugin().getLogger().log(Level.WARNING, "Failed to get data for custom chart with id " + chartId, t);
+                    CrazyEnvoy.getJavaPlugin().getLogger().log(Level.WARNING, "Failed to get data for custom chart with id " + chartId, t);
                 }
                 return null;
             }

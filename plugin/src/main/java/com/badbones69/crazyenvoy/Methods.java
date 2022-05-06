@@ -1,6 +1,5 @@
 package com.badbones69.crazyenvoy;
 
-import com.badbones69.crazyenvoy.api.CrazyManager;
 import com.badbones69.crazyenvoy.api.FileManager.Files;
 import com.badbones69.crazyenvoy.api.enums.Messages;
 import com.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
@@ -74,7 +73,7 @@ public class Methods {
     }
     
     public static boolean isOnline(String name) {
-        for (Player player : CrazyManager.getJavaPlugin().getServer().getOnlinePlayers()) {
+        for (Player player : CrazyEnvoy.getJavaPlugin().getServer().getOnlinePlayers()) {
             if (player.getName().equalsIgnoreCase(name)) {
                 return true;
             }
@@ -83,7 +82,7 @@ public class Methods {
     }
     
     public static Player getPlayer(String name) {
-        return CrazyManager.getJavaPlugin().getServer().getPlayer(name);
+        return CrazyEnvoy.getJavaPlugin().getServer().getPlayer(name);
     }
     
     public static boolean isInvFull(Player player) {
@@ -102,7 +101,7 @@ public class Methods {
     }
     
     private static void detonate(final Firework f) {
-        CrazyManager.getJavaPlugin().getServer().getScheduler().scheduleSyncDelayedTask(CrazyManager.getJavaPlugin(), f :: detonate, 2);
+        CrazyEnvoy.getJavaPlugin().getServer().getScheduler().scheduleSyncDelayedTask(CrazyEnvoy.getJavaPlugin(), f :: detonate, 2);
     }
     
     public static Color getColor(String color) {
@@ -195,7 +194,7 @@ public class Methods {
             c.setDoOutput(true);
             c.setRequestMethod("POST");
             c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes(StandardCharsets.UTF_8));
-            String oldVersion = CrazyManager.getJavaPlugin().getDescription().getVersion();
+            String oldVersion = CrazyEnvoy.getJavaPlugin().getDescription().getVersion();
             String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replace("[a-zA-Z ]", "");
             if (!newVersion.equals(oldVersion)) {
                 Bukkit.getConsoleSender().sendMessage(getPrefix() + color("&cYour server is running &7v" + oldVersion + "&c and the newest is &7v" + newVersion + "&c."));
@@ -210,7 +209,7 @@ public class Methods {
             c.setDoOutput(true);
             c.setRequestMethod("POST");
             c.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=32870").getBytes(StandardCharsets.UTF_8));
-            String oldVersion = CrazyManager.getJavaPlugin().getDescription().getVersion();
+            String oldVersion = CrazyEnvoy.getJavaPlugin().getDescription().getVersion();
             String newVersion = new BufferedReader(new InputStreamReader(c.getInputStream())).readLine().replace("[a-zA-Z ]", "");
             if (!newVersion.equals(oldVersion)) {
                 player.sendMessage(getPrefix() + color("&cYour server is running &7v" + oldVersion + "&c and the newest is &7v" + newVersion + "&c."));

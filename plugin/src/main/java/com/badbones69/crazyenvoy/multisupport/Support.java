@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoy.multisupport;
 
-import com.badbones69.crazyenvoy.api.CrazyManager;
+import com.badbones69.crazyenvoy.CrazyEnvoy;
 
 public enum Support {
     
@@ -23,8 +23,8 @@ public enum Support {
     }
     
     public boolean isPluginLoaded() {
-        if (CrazyManager.getJavaPlugin().getServer().getPluginManager().getPlugin(name) != null) {
-            return CrazyManager.getJavaPlugin().isEnabled();
+        if (CrazyEnvoy.getJavaPlugin().getServer().getPluginManager().getPlugin(name) != null) {
+            return CrazyEnvoy.getJavaPlugin().isEnabled();
         }
         return false;
     }

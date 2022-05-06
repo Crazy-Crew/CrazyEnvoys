@@ -32,6 +32,7 @@ public class EnvoyStartEvent extends Event implements Cancellable {
     
     /**
      * Get the reason the envoy event started.
+     *
      * @return The EnvoyStartReason the event started.
      */
     public EnvoyStartReason getReason() {
@@ -40,6 +41,7 @@ public class EnvoyStartEvent extends Event implements Cancellable {
     
     /**
      * Get the player that started the event.
+     *
      * @return The player that started it. This can be null if it auto started.
      */
     public Player getPlayer() {

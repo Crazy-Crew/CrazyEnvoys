@@ -43,6 +43,7 @@ public class OpenEnvoyEvent extends Event implements Cancellable {
     
     /**
      * Get the player that opened an envoy crate.
+     *
      * @return The player that opened the crate.
      */
     public Player getPlayer() {
@@ -51,6 +52,7 @@ public class OpenEnvoyEvent extends Event implements Cancellable {
     
     /**
      * Get the location that the crate was located at.
+     *
      * @return The location the crate was located at.
      */
     public Location getLocation() {
@@ -59,6 +61,7 @@ public class OpenEnvoyEvent extends Event implements Cancellable {
     
     /**
      * Get the block that was claimed.
+     *
      * @return The block that was claimed.
      */
     public Block getBlock() {
@@ -81,6 +84,7 @@ public class OpenEnvoyEvent extends Event implements Cancellable {
     
     /**
      * Set the prize that was won.
+     *
      * @param prizes The new prize that was won.
      */
     public void setPrize(List<Prize> prizes) {

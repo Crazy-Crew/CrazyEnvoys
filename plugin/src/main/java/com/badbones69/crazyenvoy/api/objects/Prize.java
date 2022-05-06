@@ -28,6 +28,7 @@ public class Prize {
     
     /**
      * Get the prizeID of the prize.
+     *
      * @return The prizeID of the prize.
      */
     public String getPrizeID() {
@@ -36,6 +37,7 @@ public class Prize {
     
     /**
      * Get the chance of the prize being won.
+     *
      * @return The chance as an integer.
      */
     public int getChance() {
@@ -44,6 +46,7 @@ public class Prize {
     
     /**
      * Set the chance of the prize being picked out of 100.
+     *
      * @param chance The new chance of the prize out of 100.
      */
     public Prize setChance(int chance) {
@@ -53,6 +56,7 @@ public class Prize {
     
     /**
      * Check if the items from Items: drop to the floor or go into the player's inventory.
+     *
      * @return True if drops to the ground and false if goes into their inventory.
      */
     public boolean getDropItems() {
@@ -61,6 +65,7 @@ public class Prize {
     
     /**
      * Make the items from the Items: option either drop on the ground or go into their inventory.
+     *
      * @param dropItems The option to drop items on the floor or into their inventory.
      */
     public Prize setDropItems(boolean dropItems) {
@@ -70,6 +75,7 @@ public class Prize {
     
     /**
      * Get the messages that are sent to the player when winning.
+     *
      * @return The messages that are sent to the player.
      */
     public List<String> getMessages() {
@@ -78,6 +84,7 @@ public class Prize {
     
     /**
      * Set the messages that the player gets.
+     *
      * @param messages The new messages the player gets. This will auto color code the messages.
      */
     public Prize setMessages(List<String> messages) {
@@ -97,6 +104,7 @@ public class Prize {
     
     /**
      * Set the list of commands the prize will run.
+     *
      * @param commands List of commands to be ran.
      */
     public Prize setCommands(List<String> commands) {
@@ -106,6 +114,7 @@ public class Prize {
     
     /**
      * Get the items that the prize will give.
+     *
      * @return The items that are won in the prize.
      */
     public List<ItemStack> getItems() {
@@ -114,6 +123,7 @@ public class Prize {
     
     /**
      * Set the items that can be found in this prize.
+     *
      * @param items The new items that are won in the prize.
      */
     public Prize setItems(List<ItemStack> items) {

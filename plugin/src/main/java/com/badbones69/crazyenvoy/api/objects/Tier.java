@@ -33,6 +33,7 @@ public class Tier {
     
     /**
      * Create a new tier.
+     *
      * @param name The name of the tier.
      */
     public Tier(String name) {
@@ -59,6 +60,7 @@ public class Tier {
     
     /**
      * Get the name of the tier.
+     *
      * @return The name of the tier.
      */
     public String getName() {
@@ -81,6 +83,7 @@ public class Tier {
     
     /**
      * Set the chance that the crate will spawn in the event.
+     *
      * @param spawnChance The new chance the crate will spawn.
      */
     public Tier setSpawnChance(int spawnChance) {
@@ -97,6 +100,7 @@ public class Tier {
     
     /**
      * Set if the tier uses a chance system for the prizes.
+     *
      * @param useChance True if it uses a chance system and false if not.
      */
     public Tier setUseChance(boolean useChance) {
@@ -113,6 +117,7 @@ public class Tier {
     
     /**
      * Set the material of the block that acts as the crate.
+     *
      * @param placedBlockMaterial Material of the block.
      */
     public Tier setPlacedBlockMaterial(Material placedBlockMaterial) {
@@ -129,6 +134,7 @@ public class Tier {
     
     /**
      * Set the meta data of the block that acts as the crate.
+     *
      * @param placedBlockMetaData The meta data as a Short.
      */
     public Tier setPlacedBlockMetaData(short placedBlockMetaData) {
@@ -138,6 +144,7 @@ public class Tier {
     
     /**
      * Set the meta data of the block that acts as the crate.
+     *
      * @param placedBlockMetaData The meta data as a Short.
      */
     public Tier setPlacedBlockMetaData(int placedBlockMetaData) {
@@ -154,6 +161,7 @@ public class Tier {
     
     /**
      * Set if the bulk prize option is on.
+     *
      * @param bulkToggle True if it can give multiple prizes and false if not.
      */
     public Tier setBulkToggle(boolean bulkToggle) {
@@ -171,6 +179,7 @@ public class Tier {
     
     /**
      * Set if it picks a random amount of prizes from 1-max.
+     *
      * @param bulkRandom True if it picks from 1-max and false if it picks the max amount of prizes.
      */
     public Tier setBulkRandom(boolean bulkRandom) {
@@ -187,6 +196,7 @@ public class Tier {
     
     /**
      * Set the max amount of prizes a bulk can have.
+     *
      * @param bulkMax The max amount of prizes.
      */
     public Tier setBulkMax(int bulkMax) {
@@ -203,6 +213,7 @@ public class Tier {
     
     /**
      * Set if the tier uses holograms.
+     *
      * @param holoToggle True if it does and false if not.
      */
     public Tier setHoloToggle(boolean holoToggle) {
@@ -219,6 +230,7 @@ public class Tier {
     
     /**
      * Set the hight of the hologram.
+     *
      * @param holoHeght The hight as a Double.
      */
     public Tier setHoloHeight(Double holoHeght) {
@@ -235,6 +247,7 @@ public class Tier {
     
     /**
      * Set the message that the hologram displays.
+     *
      * @param holoMessage The message that is displayed. This auto color codes the message.
      */
     public Tier setHoloMessage(List<String> holoMessage) {
@@ -254,6 +267,7 @@ public class Tier {
     
     /**
      * Set if the tier crate shoots a firework when claimed.
+     *
      * @param fireworkToggle True if it does and false if not.
      */
     public Tier setFireworkToggle(boolean fireworkToggle) {
@@ -270,6 +284,7 @@ public class Tier {
     
     /**
      * Set the colors of the firework.
+     *
      * @param fireworkColors List of Colors of the firework.
      */
     public Tier setFireworkColors(List<Color> fireworkColors) {
@@ -279,6 +294,7 @@ public class Tier {
     
     /**
      * Add a color to the firework effects.
+     *
      * @param fireworkColor A color to add to the firework effect.
      */
     public Tier addFireworkColor(Color fireworkColor) {
@@ -295,6 +311,7 @@ public class Tier {
     
     /**
      * Set if the tier crates shoot fireworks in the air.
+     *
      * @param signalFlareToggle True if it does and false if not.
      */
     public Tier setSignalFlareToggle(boolean signalFlareToggle) {
@@ -311,6 +328,7 @@ public class Tier {
     
     /**
      * Set the time for a flare to be shot off.
+     *
      * @param signalFlareTimer The time untill a flare is shot off. Examples: "15s", "1m, 10s", "15m"
      */
     public Tier setSignalFlareTimer(String signalFlareTimer) {
@@ -327,6 +345,7 @@ public class Tier {
     
     /**
      * Set the colors the flare will display.
+     *
      * @param signalFlareColors List of colors the firework will be.
      */
     public Tier setSignalFlareColors(List<Color> signalFlareColors) {
@@ -336,6 +355,7 @@ public class Tier {
     
     /**
      * Add a color to the signal flare firework effect.
+     *
      * @param signalFlareColors The color added to the firework effect.
      */
     public Tier addSignalFlareColor(Color signalFlareColors) {
@@ -352,6 +372,7 @@ public class Tier {
     
     /**
      * Set the list of prizes the tier has.
+     *
      * @param prizes List of prizes.
      */
     public Tier setPrizes(List<Prize> prizes) {
@@ -361,6 +382,7 @@ public class Tier {
     
     /**
      * Add a prize to the tier.
+     *
      * @param prize A new prize that is added to the list of prizes.
      */
     public Tier addPrize(Prize prize) {

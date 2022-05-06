@@ -25,6 +25,7 @@ public class UseFlareEvent extends Event implements Cancellable {
     
     /**
      * Get the player that called the envoy event.
+     *
      * @return The player that used the flare.
      */
     public Player getPlayer() {

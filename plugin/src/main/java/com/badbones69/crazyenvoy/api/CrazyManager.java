@@ -26,17 +26,12 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
 public class CrazyManager {
-    
-    public static JavaPlugin getJavaPlugin() {
-        return JavaPlugin.getPlugin(CrazyEnvoy.class);
-    }
     
     public static CrazyManager getInstance() {return instance;}
     
@@ -244,14 +239,14 @@ public class CrazyManager {
         
         if (Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
             hologramController = new HolographicSupport();
-            getJavaPlugin().getLogger().info("Loaded" + hologramController.getPluginName() + " hologram hook.");
+            CrazyEnvoy.getJavaPlugin().getLogger().info("Loaded" + hologramController.getPluginName() + " hologram hook.");
         } else if (Support.DECENT_HOLOGRAMS.isPluginLoaded()) {
             hologramController = new DecentHolograms();
-            getJavaPlugin().getLogger().info("Loaded" + hologramController.getPluginName() + " hologram hook.");
-        } else getJavaPlugin().getLogger().info("No holograms plugin were found.");
+            CrazyEnvoy.getJavaPlugin().getLogger().info("Loaded" + hologramController.getPluginName() + " hologram hook.");
+        } else CrazyEnvoy.getJavaPlugin().getLogger().info("No holograms plugin were found.");
         
         if (!failedLocations.isEmpty()) {
-            if (fileManager.isLogging()) getJavaPlugin().getLogger().info("Attempting to fix " + failedLocations.size() + " locations that failed.");
+            if (fileManager.isLogging()) CrazyEnvoy.getJavaPlugin().getLogger().info("Attempting to fix " + failedLocations.size() + " locations that failed.");
             int failed = 0;
             int fixed = 0;
             
@@ -264,8 +259,8 @@ public class CrazyManager {
                 }
             }
             
-            if (fixed > 0) getJavaPlugin().getLogger().info("Was able to fix " + fixed + " locations that failed.");
-            if (failed > 0) getJavaPlugin().getLogger().info("Failed to fix " + failed + " locations and will not reattempt.");
+            if (fixed > 0) CrazyEnvoy.getJavaPlugin().getLogger().info("Was able to fix " + fixed + " locations that failed.");
+            if (failed > 0) CrazyEnvoy.getJavaPlugin().getLogger().info("Failed to fix " + failed + " locations and will not reattempt.");
         }
         Flare.load();
     }
@@ -309,7 +304,7 @@ public class CrazyManager {
                     
                     if (next.compareTo(cal) <= 0 && !isEnvoyActive()) {
                         if (envoySettings.isMinPlayersEnabled()) {
-                            int online = getJavaPlugin().getServer().getOnlinePlayers().size();
+                            int online = CrazyEnvoy.getJavaPlugin().getServer().getOnlinePlayers().size();
                             if (online < envoySettings.getMinPlayers()) {
                                 HashMap<String, String> placeholder = new HashMap<>();
                                 placeholder.put("%amount%", online + "");
@@ -322,20 +317,20 @@ public class CrazyManager {
                         }
                         
                         if (envoySettings.isRandomLocationsEnabled() && center.getWorld() == null) {
-                            getJavaPlugin().getLogger().info("The envoy center's world can't be found and so envoy has been canceled.");
-                            getJavaPlugin().getLogger().info("Center String: " + centerString);
+                            CrazyEnvoy.getJavaPlugin().getLogger().info("The envoy center's world can't be found and so envoy has been canceled.");
+                            CrazyEnvoy.getJavaPlugin().getLogger().info("Center String: " + centerString);
                             setNextEnvoy(getEnvoyCooldown());
                             resetWarnings();
                             return;
                         }
                         
                         EnvoyStartEvent event = new EnvoyStartEvent(autoTimer ? EnvoyStartReason.AUTO_TIMER : EnvoyStartReason.SPECIFIED_TIME);
-                        getJavaPlugin().getServer().getPluginManager().callEvent(event);
+                        CrazyEnvoy.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                         if (!event.isCancelled()) startEnvoyEvent();
                     }
                 }
             }
-        }.runTaskTimer(getJavaPlugin(), 20, 20);
+        }.runTaskTimer(CrazyEnvoy.getJavaPlugin(), 20, 20);
     }
     
     /**
@@ -600,11 +595,11 @@ public class CrazyManager {
             if (center.getWorld() == null) {//Check to make sure the center exist and if not try to load it again.
                 center = getLocationFromString(centerString);
                 if (center.getWorld() == null) {//If center still doesn't exist then it cancels the event.
-                    getJavaPlugin().getLogger().info("Debug Start");
-                    getJavaPlugin().getLogger().info("Center String: \"" + centerString + "'");
-                    getJavaPlugin().getLogger().info("Location Object: \"" + center.toString() + "'");
-                    getJavaPlugin().getLogger().info("World Exist: \"" + (center.getWorld() != null) + "'");
-                    getJavaPlugin().getLogger().info("Debug End");
+                    CrazyEnvoy.getJavaPlugin().getLogger().info("Debug Start");
+                    CrazyEnvoy.getJavaPlugin().getLogger().info("Center String: \"" + centerString + "'");
+                    CrazyEnvoy.getJavaPlugin().getLogger().info("Location Object: \"" + center.toString() + "'");
+                    CrazyEnvoy.getJavaPlugin().getLogger().info("World Exist: \"" + (center.getWorld() != null) + "'");
+                    CrazyEnvoy.getJavaPlugin().getLogger().info("Debug End");
                     return new ArrayList<>();
                 }
             }
@@ -662,7 +657,7 @@ public class CrazyManager {
             setNextEnvoy(getEnvoyCooldown());
             resetWarnings();
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.NO_LOCATIONS_FOUND);
-            getJavaPlugin().getServer().getPluginManager().callEvent(event);
+            CrazyEnvoy.getJavaPlugin().getServer().getPluginManager().callEvent(event);
             Messages.NO_SPAWN_LOCATIONS_FOUND.broadcastMessage(false);
             return false;
         }
@@ -675,7 +670,7 @@ public class CrazyManager {
         
         EditControl.getEditors().clear();
         if (tiers.isEmpty()) {
-            getJavaPlugin().getServer().broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder" + " to allow it to remake the default tier files."));
+            CrazyEnvoy.getJavaPlugin().getServer().broadcastMessage(Methods.getPrefix() + Methods.color("&cNo tiers were found. Please delete the Tiers folder" + " to allow it to remake the default tier files."));
             return false;
         }
         setEnvoyActive(true);
@@ -736,11 +731,11 @@ public class CrazyManager {
             @Override
             public void run() {
                 EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.OUT_OF_TIME);
-                getJavaPlugin().getServer().getPluginManager().callEvent(event);
+                CrazyEnvoy.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                 Messages.ENDED.broadcastMessage(false);
                 endEnvoyEvent();
             }
-        }.runTaskLater(getJavaPlugin(), getTimeSeconds(envoySettings.getEnvoyRunTimer()) * 20L);
+        }.runTaskLater(CrazyEnvoy.getJavaPlugin(), getTimeSeconds(envoySettings.getEnvoyRunTimer()) * 20L);
         envoyTimeLeft = getEnvoyRunTimeCalendar();
         return true;
     }
@@ -793,7 +788,7 @@ public class CrazyManager {
             public void run() {
                 playSignal(loc.clone().add(.5, 0, .5), tier);
             }
-        }.runTaskTimer(getJavaPlugin(), getTimeSeconds(tier.getSignalFlareTimer()) * 20L, getTimeSeconds(tier.getSignalFlareTimer()) * 20L);
+        }.runTaskTimer(CrazyEnvoy.getJavaPlugin(), getTimeSeconds(tier.getSignalFlareTimer()) * 20L, getTimeSeconds(tier.getSignalFlareTimer()) * 20L);
         activeSignals.put(loc, task);
     }
     
@@ -969,13 +964,13 @@ public class CrazyManager {
     }
     
     private Location getLocationFromString(String locationString) {
-        World w = getJavaPlugin().getServer().getWorlds().get(0);
+        World w = CrazyEnvoy.getJavaPlugin().getServer().getWorlds().get(0);
         int x = 0;
         int y = 0;
         int z = 0;
         for (String i : locationString.toLowerCase().split(", ")) {
             if (i.startsWith("world:")) {
-                w = getJavaPlugin().getServer().getWorld(i.replace("world:", ""));
+                w = CrazyEnvoy.getJavaPlugin().getServer().getWorld(i.replace("world:", ""));
             } else if (i.startsWith("x:")) {
                 x = Integer.parseInt(i.replace("x:", ""));
             } else if (i.startsWith("y:")) {

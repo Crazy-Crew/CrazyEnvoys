@@ -24,9 +24,11 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
     private FileManager fileManager = FileManager.getInstance();
     private CrazyManager envoy = CrazyManager.getInstance();
     
+    private static JavaPlugin plugin;
+    
     @Override
     public void onEnable() {
-        
+        plugin = this;
         String homeFolder = Version.isNewer(Version.v1_12_R1) ? "/tiers1.13-Up" : "/tiers1.12.2-Down";
         fileManager.logInfo(true)
         .registerCustomFilesFolder("/tiers")
@@ -80,6 +82,10 @@ public class CrazyEnvoy extends JavaPlugin implements Listener {
             envoy.endEnvoyEvent();
         }
         envoy.unload();
+    }
+    
+    public static JavaPlugin getJavaPlugin() {
+        return plugin;
     }
     
 }

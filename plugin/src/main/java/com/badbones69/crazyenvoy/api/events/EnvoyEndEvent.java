@@ -28,6 +28,7 @@ public class EnvoyEndEvent extends Event {
     
     /**
      * Get the reason the envoy ended.
+     *
      * @return The reason it has ended.
      */
     public EnvoyEndReason getReason() {
@@ -36,6 +37,7 @@ public class EnvoyEndEvent extends Event {
     
     /**
      * Get the player that ended the event.
+     *
      * @return The player that ended it. This can be null if it auto ended.
      */
     public Player getPlayer() {

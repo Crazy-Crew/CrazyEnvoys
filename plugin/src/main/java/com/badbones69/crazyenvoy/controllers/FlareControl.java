@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoy.controllers;
 
+import com.badbones69.crazyenvoy.CrazyEnvoy;
 import com.badbones69.crazyenvoy.Methods;
 import com.badbones69.crazyenvoy.api.CrazyManager;
 import com.badbones69.crazyenvoy.api.enums.Messages;
@@ -32,7 +33,7 @@ public class FlareControl implements Listener {
                     if (envoy.isEnvoyActive()) {
                         Messages.ALREADY_STARTED.sendMessage(player);
                     } else {
-                        int online = CrazyManager.getJavaPlugin().getServer().getOnlinePlayers().size();
+                        int online = CrazyEnvoy.getJavaPlugin().getServer().getOnlinePlayers().size();
                         if (envoySettings.isMinPlayersEnabled() && envoySettings.isMinFlareEnabled() && online < envoySettings.getMinPlayers()) {
                             HashMap<String, String> placeholder = new HashMap<>();
                             placeholder.put("%amount%", online + "");
@@ -59,7 +60,7 @@ public class FlareControl implements Listener {
                             return;
                         }
                         EnvoyStartEvent event = new EnvoyStartEvent(EnvoyStartEvent.EnvoyStartReason.FLARE);
-                        CrazyManager.getJavaPlugin().getServer().getPluginManager().callEvent(event);
+                        CrazyEnvoy.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                         if (!event.isCancelled() && envoy.startEnvoyEvent()) {
                             Messages.USED_FLARE.sendMessage(player);
                             Flare.takeFlare(player);

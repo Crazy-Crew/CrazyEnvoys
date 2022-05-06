@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoy.multisupport.holograms;
 
+import com.badbones69.crazyenvoy.CrazyEnvoy;
 import com.badbones69.crazyenvoy.Methods;
 import com.badbones69.crazyenvoy.api.CrazyManager;
 import com.badbones69.crazyenvoy.api.FileManager;
@@ -18,7 +19,7 @@ public class HolographicSupport implements HologramController {
     
     public void createHologram(Block block, Tier tier) {
         double hight = tier.getHoloHeight();
-        Hologram hologram = HologramsAPI.createHologram(CrazyManager.getJavaPlugin(), block.getLocation().add(.5, hight, .5));
+        Hologram hologram = HologramsAPI.createHologram(CrazyEnvoy.getJavaPlugin(), block.getLocation().add(.5, hight, .5));
         tier.getHoloMessage().stream().map(Methods :: color).forEach(hologram :: appendTextLine);
         holograms.put(block, hologram);
     }
@@ -41,26 +42,26 @@ public class HolographicSupport implements HologramController {
     }
     
     public static void registerPlaceHolders() {
-        HologramsAPI.registerPlaceholder(CrazyManager.getJavaPlugin(), "{crazyenvoy_cooldown}", 1, () -> {
+        HologramsAPI.registerPlaceholder(CrazyEnvoy.getJavaPlugin(), "{crazyenvoy_cooldown}", 1, () -> {
             if (envoy.isEnvoyActive()) {
                 return FileManager.Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going");
             } else {
                 return envoy.getNextEnvoyTime();
             }
         });
-        HologramsAPI.registerPlaceholder(CrazyManager.getJavaPlugin(), "{crazyenvoy_time_left}", 1, () -> {
+        HologramsAPI.registerPlaceholder(CrazyEnvoy.getJavaPlugin(), "{crazyenvoy_time_left}", 1, () -> {
             if (envoy.isEnvoyActive()) {
                 return envoy.getEnvoyRunTimeLeft();
             } else {
                 return FileManager.Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
             }
         });
-        HologramsAPI.registerPlaceholder(CrazyManager.getJavaPlugin(), "{crazyenvoy_crates_left}", .5, () -> envoy.getActiveEnvoys().size() + "");
+        HologramsAPI.registerPlaceholder(CrazyEnvoy.getJavaPlugin(), "{crazyenvoy_crates_left}", .5, () -> envoy.getActiveEnvoys().size() + "");
     }
     
     public static void unregisterPlaceHolders() {
         try {
-            HologramsAPI.unregisterPlaceholders(CrazyManager.getJavaPlugin());
+            HologramsAPI.unregisterPlaceholders(CrazyEnvoy.getJavaPlugin());
         } catch (Exception ignored) {
         }
     }

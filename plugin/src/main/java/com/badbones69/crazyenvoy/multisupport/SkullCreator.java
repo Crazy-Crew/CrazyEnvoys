@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoy.multisupport;
 
-import com.badbones69.crazyenvoy.api.CrazyManager;
+import com.badbones69.crazyenvoy.CrazyEnvoy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,7 +16,6 @@ import java.util.UUID;
 /**
  * A library for the Bukkit API to create player skulls
  * from names, base64 strings, and texture URLs.
- *
  * Does not use any NMS code, and should work across all versions.
  *
  * @author Dean B on 12/28/2016.
@@ -28,7 +27,6 @@ public class SkullCreator {
      *
      * @param name The Player's name
      * @return The head of the Player
-     *
      * @deprecated names don't make for good identifiers
      */
     @Deprecated
@@ -44,7 +42,6 @@ public class SkullCreator {
      * @param item The item to apply the name to
      * @param name The Player's name
      * @return The head of the Player
-     *
      * @deprecated names don't make for good identifiers
      */
     @Deprecated
@@ -52,7 +49,7 @@ public class SkullCreator {
         notNull(item, "item");
         notNull(name, "name");
         
-        return CrazyManager.getJavaPlugin().getServer().getUnsafe().modifyItemStack(item,
+        return CrazyEnvoy.getJavaPlugin().getServer().getUnsafe().modifyItemStack(item,
         "{SkullOwner:\"" + name + "\"}"
         );
     }
@@ -133,7 +130,7 @@ public class SkullCreator {
         notNull(base64, "base64");
         
         UUID hashAsId = new UUID(base64.hashCode(), base64.hashCode());
-        return CrazyManager.getJavaPlugin().getServer().getUnsafe().modifyItemStack(item,
+        return CrazyEnvoy.getJavaPlugin().getServer().getUnsafe().modifyItemStack(item,
         "{SkullOwner:{Id:\"" + hashAsId + "\",Properties:{textures:[{Value:\"" + base64 + "\"}]}}}"
         );
     }
@@ -143,7 +140,6 @@ public class SkullCreator {
      *
      * @param block The block to set
      * @param name The player to set it to
-     *
      * @deprecated names don't make for good identifiers
      */
     @Deprecated
@@ -203,9 +199,9 @@ public class SkullCreator {
         );
         
         if (newerApi()) {
-            CrazyManager.getJavaPlugin().getServer().dispatchCommand(CrazyManager.getJavaPlugin().getServer().getConsoleSender(), "data merge block " + args);
+            CrazyEnvoy.getJavaPlugin().getServer().dispatchCommand(CrazyEnvoy.getJavaPlugin().getServer().getConsoleSender(), "data merge block " + args);
         } else {
-            CrazyManager.getJavaPlugin().getServer().dispatchCommand(CrazyManager.getJavaPlugin().getServer().getConsoleSender(), "blockdata " + args);
+            CrazyEnvoy.getJavaPlugin().getServer().dispatchCommand(CrazyEnvoy.getJavaPlugin().getServer().getConsoleSender(), "blockdata " + args);
         }
     }
     

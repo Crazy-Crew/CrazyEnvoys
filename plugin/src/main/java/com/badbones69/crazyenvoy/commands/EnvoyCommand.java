@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoy.commands;
 
+import com.badbones69.crazyenvoy.CrazyEnvoy;
 import com.badbones69.crazyenvoy.Methods;
 import com.badbones69.crazyenvoy.api.CrazyManager;
 import com.badbones69.crazyenvoy.api.FileManager;
@@ -34,7 +35,7 @@ public class EnvoyCommand implements CommandExecutor {
                 return true;
             }
             
-            CrazyManager.getJavaPlugin().getServer().dispatchCommand(sender, "envoy time");
+            CrazyEnvoy.getJavaPlugin().getServer().dispatchCommand(sender, "envoy time");
         } else {
             switch (args[0].toLowerCase()) {
                 case "help":
@@ -50,7 +51,7 @@ public class EnvoyCommand implements CommandExecutor {
                     if (hasPermission(sender, "reload")) {
                         if (envoy.isEnvoyActive()) {
                             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.RELOAD);
-                            CrazyManager.getJavaPlugin().getServer().getPluginManager().callEvent(event);
+                            CrazyEnvoy.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                             envoy.endEnvoyEvent();
                         }
                         
@@ -88,7 +89,7 @@ public class EnvoyCommand implements CommandExecutor {
                     return true;
                 case "center":
                     if (hasPermission(sender, "center")) {
-                        if (sender != CrazyManager.getJavaPlugin().getServer().getConsoleSender()) {
+                        if (sender != CrazyEnvoy.getJavaPlugin().getServer().getConsoleSender()) {
                             envoy.setCenter(((Player) sender).getLocation());
                             Messages.NEW_CENTER.sendMessage(sender);
                         } else {
@@ -205,7 +206,7 @@ public class EnvoyCommand implements CommandExecutor {
                             } else {
                                 event = new EnvoyStartEvent(EnvoyStartEvent.EnvoyStartReason.FORCED_START_CONSOLE);
                             }
-                            CrazyManager.getJavaPlugin().getServer().getPluginManager().callEvent(event);
+                            CrazyEnvoy.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                             if (!event.isCancelled() && envoy.startEnvoyEvent()) {
                                 Messages.FORCE_START.sendMessage(sender);
                             }
@@ -224,7 +225,7 @@ public class EnvoyCommand implements CommandExecutor {
                             } else {
                                 event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.FORCED_END_CONSOLE);
                             }
-                            CrazyManager.getJavaPlugin().getServer().getPluginManager().callEvent(event);
+                            CrazyEnvoy.getJavaPlugin().getServer().getPluginManager().callEvent(event);
                             envoy.endEnvoyEvent();
                             Messages.ENDED.broadcastMessage(false);
                             Messages.FORCE_ENDED.sendMessage(sender);
