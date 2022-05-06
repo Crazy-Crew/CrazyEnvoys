@@ -51,8 +51,7 @@ public class EnvoyControl implements Listener {
                     UUID uuid = player.getUniqueId();
                     if (cooldown.containsKey(uuid) && Calendar.getInstance().before(cooldown.get(uuid))) {
                         HashMap<String, String> placeholder = new HashMap<>();
-                        placeholder.put("%time%", getTimeLeft(cooldown.get(uuid)));
-                        placeholder.put("%Time%", getTimeLeft(cooldown.get(uuid)));
+                        placeholder.put("%Time%", Methods.convertTimeToString(cooldown.get(uuid)));
                         Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
                         return;
                     }
@@ -99,9 +98,7 @@ public class EnvoyControl implements Listener {
                     if (!envoy.getActiveEnvoys().isEmpty()) {
                         if (envoySettings.isPickupBroadcastEnabled()) {
                             HashMap<String, String> placeholder = new HashMap<>();
-                            placeholder.put("%player%", player.getName());
                             placeholder.put("%Player%", player.getName());
-                            placeholder.put("%amount%", envoy.getActiveEnvoys().size() + "");
                             placeholder.put("%Amount%", envoy.getActiveEnvoys().size() + "");
                             Messages.LEFT.broadcastMessage(true, placeholder);
                         }
@@ -185,30 +182,6 @@ public class EnvoyControl implements Listener {
             }
         }
         return cal;
-    }
-    
-    private String getTimeLeft(Calendar timeTill) {
-        Calendar rightNow = Calendar.getInstance();
-        int total = ((int) (timeTill.getTimeInMillis() / 1000) - (int) (rightNow.getTimeInMillis() / 1000));
-        int day = 0;
-        int hour = 0;
-        int minute = 0;
-        int second = 0;
-        for (; total > 86400; total -= 86400, day++) ;
-        for (; total > 3600; total -= 3600, hour++) ;
-        for (; total >= 60; total -= 60, minute++) ;
-        second += total;
-        String message = "";
-        if (day > 0) message += day + "d, ";
-        if (day > 0 || hour > 0) message += hour + "h, ";
-        if (day > 0 || hour > 0 || minute > 0) message += minute + "m, ";
-        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + "s, ";
-        if (message.length() < 2) {
-            message = "0s";
-        } else {
-            message = message.substring(0, message.length() - 2);
-        }
-        return message;
     }
     
     private List<Prize> pickRandomPrizes(Tier tier) {

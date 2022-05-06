@@ -183,7 +183,6 @@ public class EnvoyCommand implements CommandExecutor {
                     if (hasPermission(sender, "time")) {
                         HashMap<String, String> placeholder = new HashMap<>();
                         if (envoy.isEnvoyActive()) {
-                            placeholder.put("%time%", envoy.getEnvoyRunTimeLeft());
                             placeholder.put("%Time%", envoy.getEnvoyRunTimeLeft());
                             Messages.TIME_LEFT.sendMessage(sender, placeholder);
                         } else {

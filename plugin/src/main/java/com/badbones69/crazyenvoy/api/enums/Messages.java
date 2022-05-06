@@ -59,6 +59,10 @@ public enum Messages {
     NOT_IN_WORLD_GUARD_REGION("Not-In-World-Guard-Region", "%prefix%&cYou must be in the WarZone to use a flare."),
     NO_SPAWN_LOCATIONS_FOUND("No-Spawn-Locations-Found", "%prefix%&cNo spawn locations were found and so the event has been cancelled and the cooldown has been reset."),
     COMMAND_NOT_FOUND("Command-Not-Found", "%prefix%&cPlease do /envoy help for more information."),
+    DAY("Time-Placeholders.Day", "d"),
+    HOUR("Time-Placeholders.Hour", "h"),
+    MINUTE("Time-Placeholders.Minute", "m"),
+    SECOND("Time-Placeholders.Second", "s"),
     HELP("Help", Arrays.asList(
     "&6/envoy help &7- Shows the envoy help menu.",
     "&6/envoy reload &7- Reloads all the config files.",
@@ -77,12 +81,12 @@ public enum Messages {
     private final CrazyManager envoy = CrazyManager.getInstance();
     private final EnvoySettings envoySettings = EnvoySettings.getInstance();
     
-    private Messages(String path, String defaultMessage) {
+    Messages(String path, String defaultMessage) {
         this.path = path;
         this.defaultMessage = defaultMessage;
     }
     
-    private Messages(String path, List<String> defaultListMessage) {
+    Messages(String path, List<String> defaultListMessage) {
         this.path = path;
         this.defaultListMessage = defaultListMessage;
     }

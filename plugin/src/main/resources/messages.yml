@@ -50,6 +50,11 @@ Messages:
   Hologram-Placeholders:
     On-Going: 'On Going'
     Not-Running: 'Not Running'
+  Time-Placeholders:
+    Day: 'd'
+    Hour: 'h'
+    Minute: 'm'
+    Second: 's'
   Help:
     - '&6/envoy help &7- Shows the envoy help menu.'
     - '&6/envoy reload &7- Reloads all the config files.'

@@ -490,26 +490,9 @@ public class CrazyManager {
      * @return The time till the next envoy.
      */
     public String getNextEnvoyTime() {
-        Calendar cal = getNextEnvoy();
-        int total = ((int) (cal.getTimeInMillis() / 1000) - (int) (Calendar.getInstance().getTimeInMillis() / 1000));
-        int day = 0;
-        int hour = 0;
-        int minute = 0;
-        int second = 0;
-        for (; total > 86400; total -= 86400, day++) ;
-        for (; total > 3600; total -= 3600, hour++) ;
-        for (; total >= 60; total -= 60, minute++) ;
-        second += total;
-        String message = "";
-        if (day > 0) message += day + "d, ";
-        if (day > 0 || hour > 0) message += hour + "h, ";
-        if (day > 0 || hour > 0 || minute > 0) message += minute + "m, ";
-        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + "s, ";
-        
-        if (message.length() < 2) {
-            message = Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going");
-        } else {
-            message = message.substring(0, message.length() - 2);
+        String message = Methods.convertTimeToString(getNextEnvoy());
+        if (message.equals("0" + Messages.SECOND.getMessage())) {
+            message = Messages.ON_GOING.getMessage();
         }
         return message;
     }
@@ -575,25 +558,9 @@ public class CrazyManager {
      * @return The time left in the current envoy event.
      */
     public String getEnvoyRunTimeLeft() {
-        Calendar cal = envoyTimeLeft;
-        int total = ((int) (cal.getTimeInMillis() / 1000) - (int) (Calendar.getInstance().getTimeInMillis() / 1000));
-        int day = 0;
-        int hour = 0;
-        int minute = 0;
-        int second = 0;
-        for (; total > 86400; total -= 86400, day++) ;
-        for (; total > 3600; total -= 3600, hour++) ;
-        for (; total >= 60; total -= 60, minute++) ;
-        second += total;
-        String message = "";
-        if (day > 0) message += day + "d, ";
-        if (day > 0 || hour > 0) message += hour + "h, ";
-        if (day > 0 || hour > 0 || minute > 0) message += minute + "m, ";
-        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + "s, ";
-        if (message.length() < 2) {
-            message = Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
-        } else {
-            message = message.substring(0, message.length() - 2);
+        String message = Methods.convertTimeToString(envoyTimeLeft);
+        if (message.equals("0" + Messages.SECOND.getMessage())) {
+            message = Messages.NOT_RUNNING.getMessage();
         }
         return message;
     }

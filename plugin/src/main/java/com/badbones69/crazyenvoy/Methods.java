@@ -2,6 +2,7 @@ package com.badbones69.crazyenvoy;
 
 import com.badbones69.crazyenvoy.api.CrazyManager;
 import com.badbones69.crazyenvoy.api.FileManager.Files;
+import com.badbones69.crazyenvoy.api.enums.Messages;
 import com.badbones69.crazyenvoy.controllers.FireworkDamageAPI;
 import com.badbones69.crazyenvoy.multisupport.Version;
 import org.bukkit.*;
@@ -18,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -226,6 +228,30 @@ public class Methods {
             ent.remove();
         }
         return out;
+    }
+    
+    public static String convertTimeToString(Calendar timeTill) {
+        Calendar rightNow = Calendar.getInstance();
+        int total = ((int) (timeTill.getTimeInMillis() / 1000) - (int) (rightNow.getTimeInMillis() / 1000));
+        int day = 0;
+        int hour = 0;
+        int minute = 0;
+        int second = 0;
+        for (; total > 86400; total -= 86400, day++) ;
+        for (; total > 3600; total -= 3600, hour++) ;
+        for (; total >= 60; total -= 60, minute++) ;
+        second += total;
+        String message = "";
+        if (day > 0) message += day + Messages.DAY.getMessage() + ", ";
+        if (day > 0 || hour > 0) message += hour + Messages.HOUR.getMessage() + ", ";
+        if (day > 0 || hour > 0 || minute > 0) message += minute + Messages.MINUTE.getMessage() + ", ";
+        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + Messages.SECOND.getMessage() + ", ";
+        if (message.length() < 2) {
+            message = "0" + Messages.SECOND.getMessage();
+        } else {
+            message = message.substring(0, message.length() - 2);
+        }
+        return message;
     }
     
 }
