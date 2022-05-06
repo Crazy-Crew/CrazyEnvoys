@@ -3,7 +3,7 @@ package com.badbones69.crazyenvoy.controllers;
 import com.badbones69.crazyenvoy.Methods;
 import com.badbones69.crazyenvoy.api.CrazyManager;
 import com.badbones69.crazyenvoy.api.enums.Messages;
-import org.bukkit.Location;
+import com.badbones69.crazyenvoy.multisupport.Version;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -36,17 +36,19 @@ public class EditControl implements Listener {
         return editors.contains(player);
     }
     
-    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public static void showFakeBlocks(Player player) {
         for (Block block : envoy.getSpawnLocations()) {
-            player.sendBlockChange(block.getLocation(), Material.BEDROCK, (byte) 0);
+            if (Version.isNewer(Version.v1_12_R1)) {
+                player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
+            } else {
+                player.sendBlockChange(block.getLocation(), Material.BEDROCK, (byte) 0);
+            }
         }
     }
     
-    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public static void removeFakeBlocks(Player player) {
         for (Block block : envoy.getSpawnLocations()) {
-            player.sendBlockChange(block.getLocation(), block.getType(), block.getData());
+            block.getState().update();
         }
     }
     
@@ -57,17 +59,21 @@ public class EditControl implements Listener {
         envoy.clearLocations();
     }
     
-    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     @EventHandler
     public void onBlockPlace(final BlockPlaceEvent e) {
         final Player player = e.getPlayer();
+        Block block = e.getBlock();
         if (isEditor(player)) {
             e.setCancelled(true);
             if (Methods.getItemInHand(player).getType() == Material.BEDROCK) {
-                envoy.addLocation(e.getBlock());
+                envoy.addLocation(block);
                 Messages.ADD_LOCATION.sendMessage(player);
-                for (Player p : editors) {
-                    p.sendBlockChange(e.getBlock().getLocation(), Material.BEDROCK, (byte) 0);
+                for (Player editor : editors) {
+                    if (Version.isNewer(Version.v1_12_R1)) {
+                        editor.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
+                    } else {
+                        editor.sendBlockChange(block.getLocation(), Material.BEDROCK, (byte) 0);
+                    }
                 }
             }
         }
@@ -76,12 +82,12 @@ public class EditControl implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
         Player player = e.getPlayer();
+        Block block = e.getBlock();
         if (isEditor(player)) {
             e.setCancelled(true);
-            Location loc = e.getBlock().getLocation();
-            if (envoy.isLocation(loc)) {
-                e.getBlock().getState().update();
-                envoy.removeLocation(loc.getBlock());
+            if (envoy.isLocation(block.getLocation())) {
+                block.getState().update();
+                envoy.removeLocation(block);
                 Messages.REMOVE_LOCATION.sendMessage(player);
             }
         }
