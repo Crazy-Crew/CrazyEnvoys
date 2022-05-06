@@ -361,6 +361,9 @@ public class CrazyManager {
         cleanLocations();
         
         for (Block block : getActiveEnvoys()) {
+            if (!block.getChunk().isLoaded()) {
+                block.getChunk().load();
+            }
             block.setType(Material.AIR);
             stopSignalFlare(block.getLocation());
         }
@@ -897,6 +900,9 @@ public class CrazyManager {
         }
         for (Block spawnedLocation : locations) {
             if (spawnedLocation != null) {
+                if (!spawnedLocation.getChunk().isLoaded()) {
+                    spawnedLocation.getChunk().load();
+                }
                 spawnedLocation.setType(Material.AIR);
                 stopSignalFlare(spawnedLocation.getLocation());
                 if (hasHologramPlugin()) {
