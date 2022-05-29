@@ -88,12 +88,7 @@ public class CrazyManager {
         
         if (Calendar.getInstance().after(getNextEnvoy())) setEnvoyActive(false);
         
-        if (data.contains("Center")) {
-            centerString = data.getString("Center");
-            center = getLocationFromString(centerString);
-        } else {
-            center = Bukkit.getWorlds().get(0).getSpawnLocation();
-        }
+        loadCenter();
         
         if (envoySettings.isEnvoyRunTimerEnabled()) {
             Calendar cal = Calendar.getInstance();
@@ -592,16 +587,8 @@ public class CrazyManager {
             maxSpawns = envoySettings.isRandomLocationsEnabled() ? envoySettings.getMaxCrates() : spawnedLocations.size();
         }
         if (envoySettings.isRandomLocationsEnabled()) {
-            if (center.getWorld() == null) {//Check to make sure the center exist and if not try to load it again.
-                center = getLocationFromString(centerString);
-                if (center.getWorld() == null) {//If center still doesn't exist then it cancels the event.
-                    CrazyEnvoy.getJavaPlugin().getLogger().info("Debug Start");
-                    CrazyEnvoy.getJavaPlugin().getLogger().info("Center String: \"" + centerString + "'");
-                    CrazyEnvoy.getJavaPlugin().getLogger().info("Location Object: \"" + center.toString() + "'");
-                    CrazyEnvoy.getJavaPlugin().getLogger().info("World Exist: \"" + (center.getWorld() != null) + "'");
-                    CrazyEnvoy.getJavaPlugin().getLogger().info("Debug End");
-                    return new ArrayList<>();
-                }
+            if (!testCenter()) {
+                return new ArrayList<>();
             }
             List<Block> minimumRadiusBlocks = getBlocks(center.clone(), envoySettings.getMinRadius());
             while (dropLocations.size() < maxSpawns) {
@@ -647,13 +634,15 @@ public class CrazyManager {
      *
      * @return true if the event started successfully and false if it had an issue.
      */
-    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public boolean startEnvoyEvent() {
         //Called before locations are generated due to it setting those locations to air and causing
         //crates to spawn in the ground when not using falling blocks.
         deSpawnCrates();
         List<Block> dropLocations = generateSpawnLocations();
-        if (dropLocations.isEmpty() || (envoySettings.isRandomLocationsEnabled() && center.getWorld() == null)) {
+        if (envoySettings.isRandomLocationsEnabled() && !isCenterLoaded()) {
+            testCenter();
+        }
+        if (dropLocations.isEmpty() || (envoySettings.isRandomLocationsEnabled() && !isCenterLoaded())) {
             setNextEnvoy(getEnvoyCooldown());
             resetWarnings();
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.NO_LOCATIONS_FOUND);
@@ -888,6 +877,45 @@ public class CrazyManager {
     
     public List<Block> getSpawnedLocations() {
         return spawnedLocations;
+    }
+    
+    private boolean testCenter() {
+        if (isCenterLoaded()) {//Check to make sure the center exist and if not try to load it again.
+            CrazyEnvoy.getJavaPlugin().getLogger().info("Attempting to fix Center location that failed.");
+            loadCenter();
+            if (isCenterLoaded()) {//If center still doesn't exist then it cancels the event.
+                CrazyEnvoy.getJavaPlugin().getLogger().info("Debug Start");
+                CrazyEnvoy.getJavaPlugin().getLogger().info("Center String: \"" + centerString + "'");
+                CrazyEnvoy.getJavaPlugin().getLogger().info("Location Object: \"" + center.toString() + "'");
+                CrazyEnvoy.getJavaPlugin().getLogger().info("World Exist: \"" + (center.getWorld() != null) + "'");
+                CrazyEnvoy.getJavaPlugin().getLogger().info("Debug End");
+                CrazyEnvoy.getJavaPlugin().getLogger().info(
+                "Failed to fix Center. Will try again next event.");
+                return false;
+            } else {
+                CrazyEnvoy.getJavaPlugin().getLogger().info(
+                "Center has been fixed and will continue event.");
+            }
+        }
+        return true;
+    }
+    
+    private void loadCenter() {
+        FileConfiguration data = Files.DATA.getFile();
+        if (data.contains("Center")) {
+            centerString = data.getString("Center");
+            center = getLocationFromString(centerString);
+        } else {
+            center = Bukkit.getWorlds().get(0).getSpawnLocation();
+        }
+        if (center.getWorld() == null) {
+            if (fileManager.isLogging()) CrazyEnvoy.getJavaPlugin().getLogger().info(
+            "Failed to fix Center. Will try again next event.");
+        }
+    }
+    
+    private boolean isCenterLoaded() {
+        return center.getWorld() != null;
     }
     
     private void setEnvoyActive(boolean toggle) {
