@@ -880,10 +880,10 @@ public class CrazyManager {
     }
     
     private boolean testCenter() {
-        if (isCenterLoaded()) {//Check to make sure the center exist and if not try to load it again.
+        if (!isCenterLoaded()) {//Check to make sure the center exist and if not try to load it again.
             CrazyEnvoy.getJavaPlugin().getLogger().info("Attempting to fix Center location that failed.");
             loadCenter();
-            if (isCenterLoaded()) {//If center still doesn't exist then it cancels the event.
+            if (!isCenterLoaded()) {//If center still doesn't exist then it cancels the event.
                 CrazyEnvoy.getJavaPlugin().getLogger().info("Debug Start");
                 CrazyEnvoy.getJavaPlugin().getLogger().info("Center String: \"" + centerString + "'");
                 CrazyEnvoy.getJavaPlugin().getLogger().info("Location Object: \"" + center.toString() + "'");
