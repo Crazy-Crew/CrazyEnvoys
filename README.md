@@ -2,10 +2,10 @@
 Source Code for Crazy Envoy
 
 ## Build Status:
-[![Build Status](https://jenkins.badbones69.com/job/Crazy-Envoy/badge/icon)](https://jenkins.badbones69.com/job/Crazy-Envoy/)
+[![Build Status](https://jenkins.badbones69.com/view/Stable/job/Crazy-Auctions/badge/icon)](https://jenkins.badbones69.com/view/Stable/job/Crazy-Auctions/)
  
 ## Latest Version:
-[![Latest Version](https://img.shields.io/badge/Latest%20Version-1.3.13-blue)](https://github.com/badbones69/Crazy-Envoy/releases/latest)
+[![Latest Version](https://img.shields.io/badge/Latest%20Version-1.3.15-blue)](https://github.com/badbones69/Crazy-Envoy/releases/latest)
 
 ## Support:
 https://discord.com/invite/MCuz8JG/
