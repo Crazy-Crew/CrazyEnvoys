@@ -11,16 +11,17 @@ Source Code for Crazy Envoy
 https://discord.com/invite/MCuz8JG/
 
 ## Jenkins: 
-https://jenkins.badbones69.com/job/Crazy-Envoy/
+https://jenkins.badbones69.com/view/Stable/job/Crazy-Envoy/
  
-## Nexus:
-https://nexus.badbones69.com/#browse/browse:maven-releases:me%2Fbadbones69%2Fcrazyenvoy-plugin
+## Repo:
+https://repo.badbones69.com/#/releases/com/badbones69/crazyenvoy-plugin/1.3.15
 
 ## Maven:
 ```xml
 <repository>
-    <id>nexus</id>
-    <url>https://nexus.badbones69.com/repository/maven-releases/</url>
+    <id>crazycrew-repo-releases</id>
+    <name>CrazyCrew Team</name>
+    <url>https://repo.badbones69.com/releases</url>
 </repository>
 
 <dependency>
