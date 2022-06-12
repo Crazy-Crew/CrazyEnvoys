@@ -11,14 +11,6 @@
 
     <artifactId>crazyenvoy-plugin</artifactId>
 
-    <distributionManagement>
-        <repository>
-            <id>crazycrew-repo-releases</id>
-            <name>CrazyCrew Team</name>
-            <url>https://repo.badbones69.com/releases</url>
-        </repository>
-    </distributionManagement>
-
     <repositories>
         <repository>
             <id>spigot-repo</id>
