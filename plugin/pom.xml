@@ -125,7 +125,7 @@
     </dependencies>
 
     <build>
-        <finalName>${project.parent.name}-[v${project.version}]</finalName>
+        <finalName>${project.parent.name}-[1.8-1.19]-[v${project.version}]</finalName>
         <defaultGoal>clean install package</defaultGoal>
         <resources>
             <resource>
