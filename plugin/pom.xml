@@ -145,6 +145,7 @@
                             <shadedPattern>me.badbones69.crazyenvoy.nbtapi</shadedPattern>
                         </relocation>
                     </relocations>
+                    <outputFile>../${project.parent.name}-[1.8-1.19]-[v${project.version}].jar</outputFile>
                     <!--                    <outputFile>/Users/badbones/Desktop/Minecraft/Server/plugins/CrazyEnvoy[v${project.version}].jar</outputFile>-->
                 </configuration>
                 <executions>
