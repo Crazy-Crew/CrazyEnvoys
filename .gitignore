@@ -16,3 +16,5 @@ src/\.DS_Store
 plugin/src/main/lib/
 
 plugin/dependency-reduced-pom\.xml
+
+*.jar
