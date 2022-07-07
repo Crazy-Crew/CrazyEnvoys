@@ -34,12 +34,13 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         crazyManager.loadPlugin(this);
 
         String homeFolder = ServerProtocol.isNewer(ServerProtocol.v1_12_R1) ? "/tiers1.13-Up" : "/tiers1.12.2-Down";
+
         fileManager.logInfo(true)
         .registerCustomFilesFolder("/tiers")
         .registerDefaultGenerateFiles("Basic.yml", "/tiers", homeFolder)
         .registerDefaultGenerateFiles("Lucky.yml", "/tiers", homeFolder)
         .registerDefaultGenerateFiles("Titan.yml", "/tiers", homeFolder)
-        .setup();
+        .setup(this);
         
         Messages.addMissingMessages();
         

@@ -57,7 +57,7 @@ public class EnvoyCommand implements CommandExecutor {
                         crazyManager.unload();
 
                         try {
-                            fileManager.setup();
+                            fileManager.setup(crazyManager.getPlugin());
                         } catch (Exception ignored) {}
                         
                         crazyManager.load();
