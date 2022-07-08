@@ -19,7 +19,7 @@ Join us on [Discord](https://discord.badbones69.com)
 Downloads can be obtained from the [spigot page](https://www.spigotmc.org/resources/crazy-envoys.32870/) or the [Jenkins](https://jenkins.badbones69.com/view/Stable/job/Crazy-Envoys/).
 
 ## Plugin Data
-[![bStats Graph Data](https://bstats.org/signatures/bukkit/CrazyEnvoy.svg)](https://bstats.org/signatures/bukkit/CrazyEnvoy)
+[![bStats Graph Data](https://bstats.org/signatures/bukkit/CrazyEnvoy.svg)](https://bstats.org/plugin/bukkit/CrazyEnvoy/4537)
 
 ## API
 In Progress.
