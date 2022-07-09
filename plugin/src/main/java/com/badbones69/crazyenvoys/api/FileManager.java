@@ -1,9 +1,9 @@
 package com.badbones69.crazyenvoys.api;
 
+import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.multisupport.ServerProtocol;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class FileManager {
     /**
      * Sets up the plugin and loads all necessary files.
      */
-    public void setup(JavaPlugin plugin) {
+    public void setup(CrazyEnvoys plugin) {
         if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdirs();
 
         files.clear();
@@ -404,7 +404,7 @@ public class FileManager {
         
         private final String name;
         private final String fileName;
-        private final JavaPlugin plugin;
+        private final CrazyEnvoys plugin;
         private final String homeFolder;
         private FileConfiguration file;
         
@@ -414,7 +414,7 @@ public class FileManager {
          * @param name Name of the file.
          * @param homeFolder The home folder of the file.
          */
-        public CustomFile(String name, String homeFolder, JavaPlugin plugin) {
+        public CustomFile(String name, String homeFolder, CrazyEnvoys plugin) {
             this.name = name.replace(".yml", "");
             this.fileName = name;
             this.plugin = plugin;
