@@ -25,7 +25,7 @@
 
     <distributionManagement>
         <repository>
-            <id>crazycrew-repo-releases</id>
+            <id>crazycrew-repo</id>
             <name>CrazyCrew Team</name>
             <url>https://repo.badbones69.com/releases</url>
         </repository>
