@@ -42,6 +42,7 @@ public enum Messages {
     ADD_LOCATION("Add-Location", "%prefix%&7You have just added a spawn location."),
     COOLDOWN_LEFT("Cooldown-Left", "%prefix%&7You still have &6%time% &7till you can collect another crate."),
     NO_PERMISSION("No-Permission", "%prefix%&cYou do not have permission to use that command."),
+    NO_PERMISSION_CLAIM("No-Permission-Claim", "%prefix%&cYou do not have permission to claim that envoy."),
     TIME_TILL_EVENT("Time-Till-Event", "%prefix%&7The next crazyenvoy will start in &6%time%&7."),
     CANT_USE_FLARES("Cant-Use-Flares", "%prefix%&cYou do not have permission to use flares."),
     REMOVE_LOCATION("Remove-Location", "%prefix%&cYou have just removed a spawn location."),

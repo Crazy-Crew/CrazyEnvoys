@@ -10,7 +10,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class Tier {
-    
+
+    private boolean claimPermissionToggle;
+
+    private String claimPermission;
+
     private final String name;
     private final CustomFile file;
     private int spawnChance;
@@ -55,6 +59,28 @@ public class Tier {
         signalFlareColors = new ArrayList<>();
         prizes = new ArrayList<>();
         holoMessage.addAll(Collections.singletonList("&7&l(&6&l!&7&l) Envoy Crate"));
+    }
+
+    // Check if the envoy is allowed to require the claim permission.
+    public boolean isClaimPermissionToggleEnabled() {
+        return claimPermissionToggle;
+    }
+
+    // Set the boolean toggle.
+    public Tier setClaimPermissionToggle(boolean claimPermissionToggle) {
+        this.claimPermissionToggle = claimPermissionToggle;
+        return this;
+    }
+
+    // Fetch the permission required to claim the envoy.
+    public String getClaimPermission() {
+        return claimPermission;
+    }
+
+    // Set the claim permission.
+    public Tier setClaimPermission(String claimPermission) {
+        this.claimPermission = claimPermission;
+        return this;
     }
     
     /**

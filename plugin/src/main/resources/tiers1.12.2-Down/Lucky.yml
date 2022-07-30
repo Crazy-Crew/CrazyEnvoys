@@ -1,4 +1,8 @@
 Settings:
+  # If they need a permission to claim this envoy. Set too false to disable.
+  Claim-Permission: true
+  # What permission they need.
+  Claim-Permission-Name: 'lucky.envoy.use'
   Spawn-Chance: 25
   Use-Chance: true
   Placed-Block: '130'

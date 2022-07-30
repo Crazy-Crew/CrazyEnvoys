@@ -1,4 +1,8 @@
 Settings:
+  # If they need a permission to claim this envoy. Set too false to disable.
+  Claim-Permission: true
+  # What permission they need.
+  Claim-Permission-Name: 'titan.envoy.use'
   Spawn-Chance: 10
   Use-Chance: true
   Placed-Block: 'ENCHANTING_TABLE'

@@ -10,6 +10,7 @@
 #      - '&cto use that command. Please try another.'
 Messages:
   No-Permission: '%prefix%&cYou do not have permission to use that command.'
+  No-Permission-Claim: '%prefix%&cYou do not have permission to claim that envoy.'
   Players-Only: '%prefix%&cOnly players can use that command.'
   Not-Online: '%prefix%&cThat player is not online at this time.'
   Not-A-Number: '%prefix%&cThat is not a number.'

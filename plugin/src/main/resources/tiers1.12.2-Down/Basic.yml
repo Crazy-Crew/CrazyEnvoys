@@ -1,4 +1,8 @@
 Settings:
+  # If they need a permission to claim this envoy. Set too false to disable.
+  Claim-Permission: true
+  # What permission they need.
+  Claim-Permission-Name: 'basic.envoy.use'
   Spawn-Chance: 85 #The chance that this tier will spawn.
   Use-Chance: true #If true then it uses the chance option in the prizes and if false then each prize has a 1/(Amount of Prizes) chance of winning.
   Placed-Block: '54' #The block that will be clicked when they land.

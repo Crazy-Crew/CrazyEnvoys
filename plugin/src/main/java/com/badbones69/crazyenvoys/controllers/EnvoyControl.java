@@ -56,6 +56,13 @@ public class EnvoyControl implements Listener {
 
                 e.setCancelled(true);
 
+                Tier tier = crazyManager.getTier(e.getClickedBlock());
+
+                if (!player.hasPermission("crazyManager.bypass") && tier.isClaimPermissionToggleEnabled() && !player.hasPermission(tier.getClaimPermission())) {
+                    player.sendMessage(Messages.NO_PERMISSION_CLAIM.getMessage());
+                    return;
+                }
+
                 if (!player.hasPermission("crazyManager.bypass") && envoySettings.isCrateCooldownEnabled()) {
                     UUID uuid = player.getUniqueId();
 
@@ -69,7 +76,6 @@ public class EnvoyControl implements Listener {
                     cooldown.put(uuid, getTimeFromString(envoySettings.getCrateCooldownTimer()));
                 }
 
-                Tier tier = crazyManager.getTier(e.getClickedBlock());
                 List<Prize> prizes = tier.getUseChance() ? pickPrizesByChance(tier) : pickRandomPrizes(tier);
                 OpenEnvoyEvent openEnvoyEvent = new OpenEnvoyEvent(player, block, tier, prizes);
                 crazyManager.getPlugin().getServer().getPluginManager().callEvent(openEnvoyEvent);

@@ -173,6 +173,8 @@ public class CrazyManager {
         for (CustomFile tierFile : fileManager.getCustomFiles()) {
             Tier tier = new Tier(tierFile.getName());
             FileConfiguration file = tierFile.getFile();
+            tier.setClaimPermissionToggle(file.getBoolean("Settings.Claim-Permission"));
+            tier.setClaimPermission(file.getString("Settings.Claim-Permission-Name"));
             tier.setUseChance(file.getBoolean("Settings.Use-Chance"));
             tier.setSpawnChance(file.getInt("Settings.Spawn-Chance"));
             tier.setBulkToggle(file.getBoolean("Settings.Bulk-Prizes.Toggle"));
