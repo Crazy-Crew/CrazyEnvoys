@@ -1,51 +1,34 @@
 package com.badbones69.crazyenvoys.controllers;
 
+import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.multisupport.ServerProtocol;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Firework;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FireworkExplodeEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FireworkDamageAPI implements Listener {
-    
-    private static final List<Entity> fireworks = new ArrayList<>();
-    
-    /**
-     * @return All the active fireworks.
-     */
-    public static List<Entity> getFireworks() {
-        return fireworks;
-    }
-    
+
+    public static CrazyManager crazyManager = CrazyManager.getInstance();
+
     /**
      * @param firework The firework you want to add.
      */
     public static void addFirework(Entity firework) {
-        if (ServerProtocol.isNewer(ServerProtocol.v1_10_R1)) fireworks.add(firework);
-    }
-    
-    /**
-     * @param firework The firework you are removing.
-     */
-    public static void removeFirework(Entity firework) {
-        fireworks.remove(firework);
+        if (ServerProtocol.isNewer(ServerProtocol.v1_10_R1)) firework.setMetadata("nodamage", new FixedMetadataValue(crazyManager.getPlugin(), true));
     }
     
     @EventHandler
-    public void onPlayerDamage(EntityDamageEvent e) {
-        for (Entity en : e.getEntity().getNearbyEntities(5, 5, 5)) {
-            if (getFireworks().contains(en)) e.setCancelled(true);
-        }
-    }
-    
-    @EventHandler
-    public void onFireworkExplode(FireworkExplodeEvent e) {
-        final Entity firework = e.getEntity();
+    public void onPlayerDamage(EntityDamageByEntityEvent e) {
+        Firework fw = (Firework) e.getDamager();
 
-        if (getFireworks().contains(firework)) removeFirework(firework);
+        if (e.getDamager() instanceof Firework && fw.hasMetadata("nodamage")) e.setCancelled(true);
     }
-    
 }
