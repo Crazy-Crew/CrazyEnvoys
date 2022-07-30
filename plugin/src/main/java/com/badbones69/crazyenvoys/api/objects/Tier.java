@@ -11,12 +11,13 @@ import java.util.List;
 
 public class Tier {
 
+    private final String name;
+    private final CustomFile file;
+
     private boolean claimPermissionToggle;
 
     private String claimPermission;
-
-    private final String name;
-    private final CustomFile file;
+    
     private int spawnChance;
     private boolean useChance;
     private Material placedBlockMaterial;
@@ -40,10 +41,10 @@ public class Tier {
      * @param name The name of the tier.
      */
     public Tier(String name) {
-        claimPermission = "";
-        claimPermissionToggle = false;
         this.name = name;
         file = FileManager.getInstance().getFile(name);
+        claimPermission = "";
+        claimPermissionToggle = false;
         spawnChance = 100;
         useChance = true;
         placedBlockMaterial = Material.CHEST;
