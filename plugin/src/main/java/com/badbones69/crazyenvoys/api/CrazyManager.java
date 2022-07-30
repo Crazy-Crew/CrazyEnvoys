@@ -331,6 +331,10 @@ public class CrazyManager {
                     Calendar cal = Calendar.getInstance();
                     cal.clear(Calendar.MILLISECOND);
 
+                    int online = plugin.getServer().getOnlinePlayers().size();
+
+                    if (online == 0 && envoySettings.isEnvoyFilterEnabled()) return;
+
                     for (Calendar warn : getWarnings()) {
                         Calendar check = Calendar.getInstance();
                         check.setTimeInMillis(warn.getTimeInMillis());
@@ -350,7 +354,6 @@ public class CrazyManager {
                     
                     if (next.compareTo(cal) <= 0 && !isEnvoyActive()) {
                         if (envoySettings.isMinPlayersEnabled()) {
-                            int online = plugin.getServer().getOnlinePlayers().size();
 
                             if (online < envoySettings.getMinPlayers()) {
                                 HashMap<String, String> placeholder = new HashMap<>();
