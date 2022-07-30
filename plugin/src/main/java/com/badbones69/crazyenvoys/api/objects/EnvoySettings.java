@@ -73,7 +73,7 @@ public class EnvoySettings {
         this.envoyRunTimer = config.getString(path + "Envoy-Run-Time").toLowerCase();
         this.isEnvoyCooldownEnabled = config.getBoolean(path + "Envoy-Cooldown-Toggle");
         this.envoyCooldown = config.getString(path + "Envoy-Cooldown").toLowerCase();
-        this.envoyFilter = config.getBoolean(path + "Envoy-Filter-Players-Zero");
+        this.envoyFilter = config.getBoolean(path + "Envoy-Filter-Players-Zero", false);
         this.envoyClockTime = config.getString(path + "Envoy-Time").toLowerCase();
         this.isMinPlayersEnabled = config.getBoolean(path + "Minimum-Players-Toggle");
         this.isMinFlareEnabled = config.getBoolean(path + "Minimum-Flare-Toggle");
