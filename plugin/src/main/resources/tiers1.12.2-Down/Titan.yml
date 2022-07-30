@@ -1,6 +1,6 @@
 Settings:
   # If they need a permission to claim this envoy. Set too false to disable.
-  Claim-Permission: true
+  Claim-Permission: false
   # What permission they need.
   Claim-Permission-Name: 'titan.envoy.use'
   Spawn-Chance: 10

@@ -40,6 +40,8 @@ public class Tier {
      * @param name The name of the tier.
      */
     public Tier(String name) {
+        claimPermission = "";
+        claimPermissionToggle = false;
         this.name = name;
         file = FileManager.getInstance().getFile(name);
         spawnChance = 100;
