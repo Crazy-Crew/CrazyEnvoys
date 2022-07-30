@@ -28,9 +28,10 @@ public class FireworkDamageAPI implements Listener {
     // Ryder Start
     @EventHandler
     public void onPlayerDamage(EntityDamageByEntityEvent e) {
-        Firework fw = (Firework) e.getDamager();
-
-        if (e.getDamager() instanceof Firework && fw.hasMetadata("nodamage")) e.setCancelled(true);
+        if (e.getDamager() instanceof Firework) {
+            Firework fw = (Firework) e.getDamager();
+            if (fw.hasMetadata("nodamage")) e.setCancelled(true);
+        }
     }
     // Ryder End
 }
