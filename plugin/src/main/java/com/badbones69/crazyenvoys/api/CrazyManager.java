@@ -333,9 +333,11 @@ public class CrazyManager {
                     Calendar cal = Calendar.getInstance();
                     cal.clear(Calendar.MILLISECOND);
 
+                    // Ryder Start
                     int online = plugin.getServer().getOnlinePlayers().size();
 
                     if (online == 0 && envoySettings.isEnvoyFilterEnabled()) return;
+                    // Ryder End
 
                     for (Calendar warn : getWarnings()) {
                         Calendar check = Calendar.getInstance();

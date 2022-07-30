@@ -24,11 +24,13 @@ public class FireworkDamageAPI implements Listener {
     public static void addFirework(Entity firework) {
         if (ServerProtocol.isNewer(ServerProtocol.v1_10_R1)) firework.setMetadata("nodamage", new FixedMetadataValue(crazyManager.getPlugin(), true));
     }
-    
+
+    // Ryder Start
     @EventHandler
     public void onPlayerDamage(EntityDamageByEntityEvent e) {
         Firework fw = (Firework) e.getDamager();
 
         if (e.getDamager() instanceof Firework && fw.hasMetadata("nodamage")) e.setCancelled(true);
     }
+    // Ryder End
 }
