@@ -221,19 +221,19 @@ public class Tier {
     }
     
     /**
-     * Get the hieght of the hologram.
+     * Get the height of the hologram.
      */
     public Double getHoloHeight() {
         return holoHeight;
     }
     
     /**
-     * Set the hight of the hologram.
+     * Set the height of the hologram.
      *
-     * @param holoHeght The hight as a Double.
+     * @param holoHeight The height as a Double.
      */
-    public Tier setHoloHeight(Double holoHeght) {
-        this.holoHeight = holoHeght;
+    public Tier setHoloHeight(Double holoHeight) {
+        this.holoHeight = holoHeight;
         return this;
     }
     
