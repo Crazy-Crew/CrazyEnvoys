@@ -4,6 +4,7 @@ Settings:
   Falling-Block-Toggle: true #Toggle if it spawns a falling block or if the crates just appear.
   Falling-Block: 'BEACON' #The block that will be falling.
   Fall-Height: 15 #How high the falling blocks spawn.
+  # This option should ONLY be used if Random-Locations is false.
   Max-Crate-Toggle: false #If true then only a specified amount of crates will spawn and if false then all crates will spawn.
   Random-Amount: false # Selects a random number of crates between the Min-Crates and Max-Crates value (if true)
   Min-Crates: 7 #The min amount of crates that will spawn.
