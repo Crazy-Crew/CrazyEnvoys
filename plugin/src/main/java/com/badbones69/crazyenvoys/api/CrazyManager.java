@@ -652,11 +652,7 @@ public class CrazyManager {
             maxSpawns = envoySettings.getMaxCrates();
         } else if (envoySettings.isRandomAmount()) {
             // Generates a random number between the min and max settings
-
-            // Ryder start
-            maxSpawns = (int) Math.floor(Math.random()*(envoySettings.getMaxCrates()-envoySettings.getMinCrates()+1)+envoySettings.getMinCrates());
-            //maxSpawns = this.random.nextInt(envoySettings.getMaxCrates() + 1 - envoySettings.getMinCrates()) + envoySettings.getMinCrates();
-            // Ryder end
+            maxSpawns = this.random.nextInt(envoySettings.getMaxCrates() + 1 - envoySettings.getMinCrates()) + envoySettings.getMinCrates();
         } else {
             maxSpawns = envoySettings.isRandomLocationsEnabled() ? envoySettings.getMaxCrates() : spawnedLocations.size();
         }
