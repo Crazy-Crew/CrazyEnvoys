@@ -6,7 +6,7 @@
     <parent>
         <artifactId>crazyenvoys-parent</artifactId>
         <groupId>com.badbones69</groupId>
-        <version>1.4.16</version>
+        <version>1.4.17</version>
     </parent>
 
     <artifactId>crazyenvoys-api</artifactId>

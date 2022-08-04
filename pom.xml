@@ -6,7 +6,7 @@
     <groupId>com.badbones69</groupId>
     <artifactId>crazyenvoys-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.16</version>
+    <version>1.4.17</version>
     <name>Crazy-Envoy</name>
 
     <modules>
