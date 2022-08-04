@@ -129,6 +129,7 @@ public class EnvoyControl implements Listener {
                             HashMap<String, String> placeholder = new HashMap<>();
                             placeholder.put("%Player%", player.getName());
                             placeholder.put("%Amount%", crazyManager.getActiveEnvoys().size() + "");
+                            placeholder.put("%Tier%", crazyManager.getTier(block).getName());
                             Messages.LEFT.broadcastMessage(true, placeholder);
                         }
                     } else {
