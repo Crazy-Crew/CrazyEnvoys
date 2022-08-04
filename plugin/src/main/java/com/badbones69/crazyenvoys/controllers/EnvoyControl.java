@@ -94,6 +94,11 @@ public class EnvoyControl implements Listener {
                     }
 
                     crazyManager.stopSignalFlare(e.getClickedBlock().getLocation());
+
+                    HashMap<String, String> placeholder = new HashMap<>();
+
+                    if (envoySettings.isPickupBroadcastEnabled()) placeholder.put("%Tier%", crazyManager.getTier(block).getName());
+
                     crazyManager.removeActiveEnvoy(block);
 
                     if (tier.getPrizes().isEmpty()) {
@@ -126,10 +131,8 @@ public class EnvoyControl implements Listener {
                     }
                     if (!crazyManager.getActiveEnvoys().isEmpty()) {
                         if (envoySettings.isPickupBroadcastEnabled()) {
-                            HashMap<String, String> placeholder = new HashMap<>();
                             placeholder.put("%Player%", player.getName());
                             placeholder.put("%Amount%", crazyManager.getActiveEnvoys().size() + "");
-                            placeholder.put("%Tier%", crazyManager.getTier(block).getName());
                             Messages.LEFT.broadcastMessage(true, placeholder);
                         }
                     } else {
