@@ -50,7 +50,7 @@ public class EnvoyControl implements Listener {
                     return;
                 }
 
-                if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission("crazyManager.gamemode-bypass")) {
+                if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission("envoy.gamemode-bypass")) {
                     return;
                 }
 
@@ -59,13 +59,13 @@ public class EnvoyControl implements Listener {
                 // Ryder Start
                 Tier tier = crazyManager.getTier(e.getClickedBlock());
 
-                if (!player.hasPermission("crazyManager.bypass") && tier.isClaimPermissionToggleEnabled() && !player.hasPermission(tier.getClaimPermission())) {
+                if (!player.hasPermission("envoy.bypass") && tier.isClaimPermissionToggleEnabled() && !player.hasPermission(tier.getClaimPermission())) {
                     player.sendMessage(Messages.NO_PERMISSION_CLAIM.getMessage());
                     return;
                 }
                 // Ryder End
 
-                if (!player.hasPermission("crazyManager.bypass") && envoySettings.isCrateCooldownEnabled()) {
+                if (!player.hasPermission("envoy.bypass") && envoySettings.isCrateCooldownEnabled()) {
                     UUID uuid = player.getUniqueId();
 
                     if (cooldown.containsKey(uuid) && Calendar.getInstance().before(cooldown.get(uuid))) {
