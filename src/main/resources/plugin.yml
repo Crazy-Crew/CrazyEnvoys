@@ -1,11 +1,98 @@
-name: CrazyEnvoy
-author: BadBones69
+name: CrazyEnvoys
+version: 1.4.17-SNAPSHOT
 main: com.badbones69.crazyenvoys.CrazyEnvoys
-version: ${project.version}${build.number}
+description: Drop envoys all over the world!
+authors:
+  - BadBones69
+  - Ryder Belserion
 api-version: 1.13
-description: A crazy envoy plugin.
-softdepend: [HolographicDisplays, DecentHolograms, PlaceholderAPI, MVdWPlaceholderAPI, Multiverse-Core, MultiWorld, WorldEdit, WorldGuard]
+
+softdepend:
+  - HolographicDisplays
+  - DecentHolograms
+  - PlaceholderAPI
+  - Multiverse-Core
+  - WorldEdit
+  - WorldGuard
 
 commands:
-  envoy:
-    description: Shows the next time till the next envoy.
+  crazyenvoys:
+    aliases:
+      - envoy
+      - envoys
+    permission: crazyenvoys.envoys.command.base
+    permission-message: "You do not have the proper permission for this, Try adding crazyenvoys.envoys.command.base"
+
+permissions:
+
+  crazyenvoys.command.player.*:
+    children:
+      crazyenvoys.command.player.help: true
+      crazyenvoys.command.player.ignore: true
+      crazyenvoys.command.player.time: true
+
+  crazyenvoys.command.player.help:
+    default: op
+
+  crazyenvoys.command.player.ignore:
+    default: op
+
+  crazyenvoys.command.player.time:
+    default: op
+
+  crazyenvoys.admin.*:
+    children:
+      crazyenvoys.command.admin.*: true
+      crazyenvoys.admin.crazyenvoys.gamemode-bypass: true
+      crazyenvoys.admin.crazyenvoys.bypass: true
+      crazyenvoys.admin.crazyenvoys.updates: true
+
+  crazyenvoys.admin.crazyenvoys.bypass:
+    default: op
+
+  crazyenvoys.admin.crazyenvoys.gamemode-bypass:
+    default: op
+
+  crazyenvoys.admin.crazyenvoys.updates:
+    description: Whether or not admins should get notified of updates regarding CrazyEnvoys.
+    default: op
+
+  crazyenvoys.command.admin.*:
+    children:
+      crazyenvoys.command.admin.reload: true
+      crazyenvoys.command.admin.clear: true
+      crazyenvoys.command.admin.edit: true
+      crazyenvoys.command.admin.stop: true
+      crazyenvoys.command.admin.start: true
+      crazyenvoys.command.admin.time: true
+      crazyenvoys.command.admin.drops: true
+      crazyenvoys.command.admin.flare.give: true
+      crazyenvoys.command.admin.center: true
+      crazyenvoys.command.admin.help: true
+
+  crazyenvoys.command.admin.center:
+    default: op
+
+  crazyenvoys.command.admin.clear:
+    default: op
+
+  crazyenvoys.command.admin.drops:
+    default: op
+
+  crazyenvoys.command.admin.edit:
+    default: op
+
+  crazyenvoys.command.admin.flare.give:
+    default: op
+
+  crazyenvoys.command.admin.help:
+    default: op
+
+  crazyenvoys.command.admin.reload:
+    default: op
+
+  crazyenvoys.command.admin.start:
+    default: op
+
+  crazyenvoys.command.admin.stop:
+    default: op
