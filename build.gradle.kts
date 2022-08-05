@@ -1,3 +1,5 @@
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+
 plugins {
     java
 
@@ -63,6 +65,12 @@ dependencies {
 tasks {
     shadowJar {
         archiveFileName.set("${rootProject.name}-[1.8-1.19]-v${rootProject.version}.jar")
+
+        listOf(
+            "org.bstats"
+        ).forEach {
+            relocate(it, "${rootProject.group}.plugin.lib.$it")
+        }
     }
 
     compileJava {
