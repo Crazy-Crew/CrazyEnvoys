@@ -1,12 +1,12 @@
 package com.badbones69.crazyenvoys.controllers;
 
+import com.badbones69.crazyenvoys.api.ItemBuilder;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.OpenEnvoyEvent;
 import com.badbones69.crazyenvoys.api.objects.EnvoySettings;
-import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoys.api.objects.Prize;
 import com.badbones69.crazyenvoys.api.objects.Tier;
 import org.bukkit.GameMode;
@@ -50,7 +50,7 @@ public class EnvoyControl implements Listener {
                     return;
                 }
 
-                if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission("envoy.gamemode-bypass")) {
+                if (player.getGameMode() == GameMode.CREATIVE && !Methods.hasPermission(player,"gamemode-bypass")) {
                     return;
                 }
 
@@ -59,13 +59,13 @@ public class EnvoyControl implements Listener {
                 // Ryder Start
                 Tier tier = crazyManager.getTier(e.getClickedBlock());
 
-                if (!player.hasPermission("envoy.bypass") && tier.isClaimPermissionToggleEnabled() && !player.hasPermission(tier.getClaimPermission())) {
+                if (!Methods.hasPermission(player,"bypass") && tier.isClaimPermissionToggleEnabled() && !player.hasPermission(tier.getClaimPermission())) {
                     player.sendMessage(Messages.NO_PERMISSION_CLAIM.getMessage());
                     return;
                 }
                 // Ryder End
 
-                if (!player.hasPermission("envoy.bypass") && envoySettings.isCrateCooldownEnabled()) {
+                if (!Methods.hasPermission(player,"bypass") && envoySettings.isCrateCooldownEnabled()) {
                     UUID uuid = player.getUniqueId();
 
                     if (cooldown.containsKey(uuid) && Calendar.getInstance().before(cooldown.get(uuid))) {
@@ -285,5 +285,4 @@ public class EnvoyControl implements Listener {
 
         return tiers.get(random.nextInt(tiers.size()));
     }
-    
 }

@@ -14,7 +14,6 @@ import com.badbones69.crazyenvoys.controllers.FireworkDamageAPI;
 import com.badbones69.crazyenvoys.controllers.FlareControl;
 import com.badbones69.crazyenvoys.multisupport.PlaceholderAPISupport;
 import com.badbones69.crazyenvoys.multisupport.Support;
-import com.badbones69.crazyenvoys.multisupport.ServerProtocol;
 import com.badbones69.crazyenvoys.multisupport.holograms.HolographicSupport;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.Player;
@@ -32,7 +31,7 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
         crazyManager.loadPlugin(this);
 
-        String homeFolder = ServerProtocol.isNewer(ServerProtocol.v1_12_R1) ? "/tiers1.13-Up" : "/tiers1.12.2-Down";
+        String homeFolder = "/tiers";
 
         fileManager.logInfo(true)
         .registerCustomFilesFolder("/tiers")
@@ -67,12 +66,6 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
             new Metrics(this, 4537);
         }
-
-        try {
-            if (ServerProtocol.isNewer(ServerProtocol.v1_10_R1)) {
-                pluginManager.registerEvents(new FireworkDamageAPI(), this);
-            }
-        } catch (Exception ignored) {}
         
         if (Support.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) HolographicSupport.registerPlaceHolders();
         if (Support.PLACEHOLDER_API.isPluginLoaded()) new PlaceholderAPISupport().register();

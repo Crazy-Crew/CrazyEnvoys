@@ -25,9 +25,7 @@ public enum Support {
     }
     
     public boolean isPluginLoaded() {
-        if (crazyManager.getPlugin().getServer().getPluginManager().getPlugin(name) != null) {
-            return crazyManager.getPlugin().isEnabled();
-        }
+        if (crazyManager.getPlugin().getServer().getPluginManager().getPlugin(name) != null) return crazyManager.getPlugin().isEnabled();
 
         return false;
     }

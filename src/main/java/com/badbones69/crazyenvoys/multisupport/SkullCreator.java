@@ -50,9 +50,7 @@ public class SkullCreator {
         notNull(item, "item");
         notNull(name, "name");
         
-        return crazyManager.getPlugin().getServer().getUnsafe().modifyItemStack(item,
-        "{SkullOwner:\"" + name + "\"}"
-        );
+        return crazyManager.getPlugin().getServer().getUnsafe().modifyItemStack(item, "{SkullOwner:\"" + name + "\"}");
     }
     
     /**
@@ -251,7 +249,6 @@ public class SkullCreator {
         String toEncode = "{\"textures\":{\"SKIN\":{\"url\":\"" + actualUrl + "\"}}}";
         return Base64.getEncoder().encodeToString(toEncode.getBytes());
     }
-    
 }
 
 /* Format for skull

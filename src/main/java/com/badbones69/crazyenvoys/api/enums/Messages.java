@@ -61,17 +61,22 @@ public enum Messages {
     HOUR("Time-Placeholders.Hour", "h"),
     MINUTE("Time-Placeholders.Minute", "m"),
     SECOND("Time-Placeholders.Second", "s"),
-    HELP("Help", Arrays.asList(
-    "&6/envoy help &7- Shows the envoy help menu.",
-    "&6/envoy reload &7- Reloads all the config files.",
-    "&6/envoy time &7- Shows the time till the envoy starts or ends.",
-    "&6/envoy drops [page] &7- Shows all current crate locations.",
-    "&6/envoy ignore &7- Shuts up the envoy collecting message.",
-    "&6/envoy flare [amount] [player] &7- Give a player a flare to call an envoy event.",
-    "&6/envoy edit &7- Edit the crate locations with bedrock.",
-    "&6/envoy start &7- Force starts the envoy.",
-    "&6/envoy stop &7- Force stops the envoy.",
-    "&6/envoy center &7- Set the center of the random crate drops."));
+    ADMIN_HELP("Admin-Help", Arrays.asList(
+    "&6/envoys help &7- Shows the envoy help menu.",
+    "&6/envoys reload &7- Reloads all the config files.",
+    "&6/envoys time &7- Shows the time till the envoy starts or ends.",
+    "&6/envoys drops [page] &7- Shows all current crate locations.",
+    "&6/envoys ignore &7- Shuts up the envoy collecting message.",
+    "&6/envoys flare [amount] [player] &7- Give a player a flare to call an envoy event.",
+    "&6/envoys edit &7- Edit the crate locations with bedrock.",
+    "&6/envoys start &7- Force starts the envoy.",
+    "&6/envoys stop &7- Force stops the envoy.",
+    "&6/envoys center &7- Set the center of the random crate drops.")),
+    PLAYER_HELP("Player-Help", Arrays.asList(
+    "&6/envoys help &7- Shows the envoy help menu.",
+    "&6/envoys time &7- Shows the time till the envoy starts or ends.",
+    "&6/envoys ignore &7- Shuts up the envoy collecting message."
+    ));
     
     private final String path;
     private String defaultMessage;
@@ -254,5 +259,4 @@ public enum Messages {
     private List<String> getDefaultListMessage() {
         return defaultListMessage;
     }
-
 }

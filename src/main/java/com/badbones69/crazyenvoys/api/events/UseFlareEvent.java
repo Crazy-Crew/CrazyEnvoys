@@ -45,5 +45,4 @@ public class UseFlareEvent extends Event implements Cancellable {
     public HandlerList getHandlers() {
         return handlers;
     }
-    
 }

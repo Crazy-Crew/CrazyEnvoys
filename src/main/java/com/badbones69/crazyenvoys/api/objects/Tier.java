@@ -13,11 +13,8 @@ public class Tier {
 
     private final String name;
     private final CustomFile file;
-
     private boolean claimPermissionToggle;
-
     private String claimPermission;
-    
     private int spawnChance;
     private boolean useChance;
     private Material placedBlockMaterial;

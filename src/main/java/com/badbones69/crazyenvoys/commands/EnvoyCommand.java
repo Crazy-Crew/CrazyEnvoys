@@ -29,7 +29,7 @@ public class EnvoyCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
         if (args.length == 0) {
             
-            if (!hasPermission(sender, "time")) {
+            if (!Methods.hasPermission(sender, "time")) {
                 Messages.NO_PERMISSION.sendMessage(sender);
                 return true;
             }
@@ -37,40 +37,40 @@ public class EnvoyCommand implements CommandExecutor {
             crazyManager.getPlugin().getServer().dispatchCommand(sender, "envoy time");
         } else {
             switch (args[0].toLowerCase()) {
-                case "help":
-                    
-                    if (hasPermission(sender, "help")) {
-                        Messages.HELP.sendMessage(sender);
+                case "help" -> {
+                    if (Methods.hasPermission(sender, "help")) {
+                        Messages.PLAYER_HELP.sendMessage(sender);
+                    } else if (Methods.hasPermission(sender, "admin.help")) {
+                        Messages.ADMIN_HELP.sendMessage(sender);
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-                    
                     return true;
-                case "reload":
-                    if (hasPermission(sender, "reload")) {
+                }
+                case "reload" -> {
+                    if (Methods.hasPermission(sender, "reload")) {
                         if (crazyManager.isEnvoyActive()) {
                             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.RELOAD);
                             crazyManager.getPlugin().getServer().getPluginManager().callEvent(event);
                             crazyManager.endEnvoyEvent();
                         }
-                        
+
                         crazyManager.unload();
 
                         try {
                             fileManager.setup(crazyManager.getPlugin());
                         } catch (Exception ignored) {}
-                        
+
                         crazyManager.load();
                         Messages.RELOADED.sendMessage(sender);
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-
                     return true;
-                case "ignore":
-                    if (hasPermission(sender, "ignore")) {
-                        if (sender instanceof Player) {
-                            Player player = (Player) sender;
+                }
+                case "ignore" -> {
+                    if (Methods.hasPermission(sender, "ignore")) {
+                        if (sender instanceof Player player) {
                             UUID uuid = player.getUniqueId();
 
                             if (crazyManager.isIgnoringMessages(uuid)) {
@@ -86,10 +86,10 @@ public class EnvoyCommand implements CommandExecutor {
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-
                     return true;
-                case "center":
-                    if (hasPermission(sender, "center")) {
+                }
+                case "center" -> {
+                    if (Methods.hasPermission(sender, "center")) {
                         if (sender != crazyManager.getPlugin().getServer().getConsoleSender()) {
                             crazyManager.setCenter(((Player) sender).getLocation());
                             Messages.NEW_CENTER.sendMessage(sender);
@@ -99,10 +99,10 @@ public class EnvoyCommand implements CommandExecutor {
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-
                     return true;
-                case "flare": // /envoy flare [Amount] [Player]
-                    if (hasPermission(sender, "flare.give")) {
+                }
+                case "flare" -> { // /envoy flare [Amount] [Player]
+                    if (Methods.hasPermission(sender, "flare.give")) {
                         int amount = 1;
                         Player player;
 
@@ -146,11 +146,10 @@ public class EnvoyCommand implements CommandExecutor {
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-
                     return true;
-                case "drops":
-                case "drop":
-                    if (hasPermission(sender, "drops")) {
+                }
+                case "drops", "drop" -> {
+                    if (Methods.hasPermission(sender, "drops")) {
                         ArrayList<String> locs = new ArrayList<>();
                         int page = 1;
 
@@ -194,10 +193,10 @@ public class EnvoyCommand implements CommandExecutor {
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-
                     return true;
-                case "time":
-                    if (hasPermission(sender, "time")) {
+                }
+                case "time" -> {
+                    if (Methods.hasPermission(sender, "time")) {
                         HashMap<String, String> placeholder = new HashMap<>();
 
                         if (crazyManager.isEnvoyActive()) {
@@ -210,11 +209,10 @@ public class EnvoyCommand implements CommandExecutor {
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-
                     return true;
-                case "start":
-                case "begin":
-                    if (hasPermission(sender, "start")) {
+                }
+                case "start", "begin" -> {
+                    if (Methods.hasPermission(sender, "start")) {
                         if (crazyManager.isEnvoyActive()) {
                             Messages.ALREADY_STARTED.sendMessage(sender);
                         } else {
@@ -235,11 +233,10 @@ public class EnvoyCommand implements CommandExecutor {
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-
                     return true;
-                case "stop":
-                case "end":
-                    if (hasPermission(sender, "stop")) {
+                }
+                case "stop", "end" -> {
+                    if (Methods.hasPermission(sender, "stop")) {
                         if (crazyManager.isEnvoyActive()) {
                             EnvoyEndEvent event;
 
@@ -259,10 +256,10 @@ public class EnvoyCommand implements CommandExecutor {
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-
                     return true;
-                case "edit":
-                    if (hasPermission(sender, "edit")) {
+                }
+                case "edit" -> {
+                    if (Methods.hasPermission(sender, "edit")) {
                         if (crazyManager.isEnvoyActive()) {
                             Messages.KICKED_FROM_EDITOR_MODE.sendMessage(sender);
                         } else {
@@ -283,10 +280,10 @@ public class EnvoyCommand implements CommandExecutor {
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-
                     return true;
-                case "clear":
-                    if (hasPermission(sender, "clear")) {
+                }
+                case "clear" -> {
+                    if (Methods.hasPermission(sender, "clear")) {
                         Player player = (Player) sender;
 
                         if (EditControl.isEditor(player)) {
@@ -300,8 +297,8 @@ public class EnvoyCommand implements CommandExecutor {
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);
                     }
-
                     return true;
+                }
             }
 
             Messages.COMMAND_NOT_FOUND.sendMessage(sender);
@@ -309,9 +306,4 @@ public class EnvoyCommand implements CommandExecutor {
 
         return true;
     }
-    
-    private boolean hasPermission(CommandSender sender, String node) {
-        return sender.hasPermission("envoy." + node) || sender.hasPermission("envoy.admin");
-    }
-    
 }

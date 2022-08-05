@@ -103,5 +103,4 @@ public class OpenEnvoyEvent extends Event implements Cancellable {
     public HandlerList getHandlers() {
         return handlers;
     }
-    
 }

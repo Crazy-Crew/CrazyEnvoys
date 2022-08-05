@@ -13,7 +13,6 @@ import com.badbones69.crazyenvoys.api.interfaces.HologramController;
 import com.badbones69.crazyenvoys.api.multisupport.WorldGuardVersion;
 import com.badbones69.crazyenvoys.api.objects.EnvoySettings;
 import com.badbones69.crazyenvoys.api.objects.Flare;
-import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoys.api.objects.Prize;
 import com.badbones69.crazyenvoys.api.objects.Tier;
 import com.badbones69.crazyenvoys.controllers.EditControl;
@@ -184,7 +183,7 @@ public class CrazyManager {
             ItemBuilder placedBlock = new ItemBuilder().setMaterial(file.getString("Settings.Placed-Block"));
             tier.setPlacedBlockMaterial(placedBlock.getMaterial());
             tier.setPlacedBlockMetaData(placedBlock.getDamage());
-            
+
             tier.setFireworkToggle(file.getBoolean("Settings.Firework-Toggle"));
 
             if (file.getStringList("Settings.Firework-Colors").isEmpty()) {
@@ -192,16 +191,16 @@ public class CrazyManager {
             } else {
                 file.getStringList("Settings.Firework-Colors").forEach(color -> tier.addFireworkColor(Methods.getColor(color)));
             }
-            
+
             tier.setSignalFlareToggle(file.getBoolean("Settings.Signal-Flare.Toggle"));
             tier.setSignalFlareTimer(file.getString("Settings.Signal-Flare.Time"));
-            
+
             if (file.getStringList("Settings.Signal-Flare.Colors").isEmpty()) {
                 tier.setSignalFlareColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
             } else {
                 file.getStringList("Settings.Signal-Flare.Colors").forEach(color -> tier.addSignalFlareColor(Methods.getColor(color)));
             }
-            
+
             for (String prizeID : file.getConfigurationSection("Prizes").getKeys(false)) {
                 String path = "Prizes." + prizeID + ".";
                 int chance = file.getInt(path + "Chance");
@@ -211,7 +210,7 @@ public class CrazyManager {
                 List<ItemBuilder> items = ItemBuilder.convertStringList(file.getStringList(path + "Items"));
                 tier.addPrize(new Prize(prizeID).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
             }
-            
+
             tiers.add(tier);
             cleanLocations();
 

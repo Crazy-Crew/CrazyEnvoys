@@ -4,8 +4,8 @@ import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.FileManager.Files;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.controllers.FireworkDamageAPI;
-import com.badbones69.crazyenvoys.multisupport.ServerProtocol;
 import org.bukkit.*;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
@@ -28,18 +28,14 @@ public class Methods {
     private final static CrazyManager crazyManager = CrazyManager.getInstance();
     
     public static String color(String message) {
-        if (ServerProtocol.isNewer(ServerProtocol.v1_15_R1)) {
-            Matcher matcher = HEX_PATTERN.matcher(message);
-            StringBuffer buffer = new StringBuffer();
+        Matcher matcher = HEX_PATTERN.matcher(message);
+        StringBuilder buffer = new StringBuilder();
 
-            while (matcher.find()) {
-                matcher.appendReplacement(buffer, net.md_5.bungee.api.ChatColor.of(matcher.group()).toString());
-            }
-
-            return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
+        while (matcher.find()) {
+            matcher.appendReplacement(buffer, net.md_5.bungee.api.ChatColor.of(matcher.group()).toString());
         }
 
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
     }
     
     public static String removeColor(String msg) {
@@ -53,14 +49,9 @@ public class Methods {
     public static String getPrefix(String message) {
         return color(Files.CONFIG.getFile().getString("Settings.Prefix") + message);
     }
-    
-    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
+
     public static ItemStack getItemInHand(Player player) {
-        if (ServerProtocol.isNewer(ServerProtocol.v1_8_R3)) {
-            return player.getInventory().getItemInMainHand();
-        } else {
-            return player.getItemInHand();
-        }
+        return player.getInventory().getItemInMainHand();
     }
     
     public static boolean isInt(String s) {
@@ -71,6 +62,11 @@ public class Methods {
         }
 
         return true;
+    }
+
+    public static boolean hasPermission(CommandSender player, String node) {
+        // TODO() Eventually remove the old permission nodes.
+        return player.hasPermission("crazyenvoys." + node) || player.hasPermission("crazyenvoys.admin.*") || player.hasPermission("envoy." + node) || player.hasPermission("envoy.admin");
     }
     
     public static boolean isOnline(String name) {

@@ -329,5 +329,4 @@ public class EnvoySettings {
         this.flaresRegions = flaresRegions;
         return this;
     }
-    
 }

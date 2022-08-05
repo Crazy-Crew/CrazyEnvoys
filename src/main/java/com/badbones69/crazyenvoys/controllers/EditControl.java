@@ -3,7 +3,6 @@ package com.badbones69.crazyenvoys.controllers;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
-import com.badbones69.crazyenvoys.multisupport.ServerProtocol;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -37,11 +36,7 @@ public class EditControl implements Listener {
     
     public static void showFakeBlocks(Player player) {
         for (Block block : crazyManager.getSpawnLocations()) {
-            if (ServerProtocol.isNewer(ServerProtocol.v1_12_R1)) {
-                player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
-            } else {
-                player.sendBlockChange(block.getLocation(), Material.BEDROCK, (byte) 0);
-            }
+            player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
         }
     }
     
@@ -71,11 +66,7 @@ public class EditControl implements Listener {
                 Messages.ADD_LOCATION.sendMessage(player);
 
                 for (Player editor : editors) {
-                    if (ServerProtocol.isNewer(ServerProtocol.v1_12_R1)) {
-                        editor.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
-                    } else {
-                        editor.sendBlockChange(block.getLocation(), Material.BEDROCK, (byte) 0);
-                    }
+                    editor.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
                 }
             }
         }
@@ -96,5 +87,4 @@ public class EditControl implements Listener {
             }
         }
     }
-    
 }

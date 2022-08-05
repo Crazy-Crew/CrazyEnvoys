@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoys.api.objects;
 
+import com.badbones69.crazyenvoys.api.ItemBuilder;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.FileManager.Files;
 import org.bukkit.configuration.file.FileConfiguration;

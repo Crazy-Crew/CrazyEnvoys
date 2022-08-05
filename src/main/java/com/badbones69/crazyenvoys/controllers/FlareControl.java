@@ -79,5 +79,4 @@ public class FlareControl implements Listener {
             }
         }
     }
-    
 }

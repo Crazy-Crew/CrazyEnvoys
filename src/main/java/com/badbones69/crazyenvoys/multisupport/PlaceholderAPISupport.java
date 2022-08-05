@@ -13,16 +13,14 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, String identifier) {
         String lower = identifier.toLowerCase();
 
-        switch (lower) {
-            case "cooldown":
-                return crazyManager.isEnvoyActive() ? FileManager.Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going") : crazyManager.getNextEnvoyTime();
-            case "time_left":
-                return crazyManager.isEnvoyActive() ? crazyManager.getEnvoyRunTimeLeft() : FileManager.Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
-            case "crates_left":
-                return String.valueOf(crazyManager.getActiveEnvoys().size());
-            default:
-                return "";
-        }
+        return switch (lower) {
+            case "cooldown" ->
+                    crazyManager.isEnvoyActive() ? FileManager.Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.On-Going") : crazyManager.getNextEnvoyTime();
+            case "time_left" ->
+                    crazyManager.isEnvoyActive() ? crazyManager.getEnvoyRunTimeLeft() : FileManager.Files.MESSAGES.getFile().getString("Messages.Hologram-Placeholders.Not-Running");
+            case "crates_left" -> String.valueOf(crazyManager.getActiveEnvoys().size());
+            default -> "";
+        };
     }
     
     @Override

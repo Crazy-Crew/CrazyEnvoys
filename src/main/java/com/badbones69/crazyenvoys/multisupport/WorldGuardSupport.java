@@ -29,5 +29,4 @@ public class WorldGuardSupport implements WorldGuardVersion {
 
         return false;
     }
-    
 }

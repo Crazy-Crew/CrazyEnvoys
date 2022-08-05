@@ -93,5 +93,4 @@ public class EnvoyEndEvent extends Event {
             return name;
         }
     }
-    
 }

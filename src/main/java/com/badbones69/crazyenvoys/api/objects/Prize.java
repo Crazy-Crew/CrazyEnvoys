@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoys.api.objects;
 
+import com.badbones69.crazyenvoys.api.ItemBuilder;
 import com.badbones69.crazyenvoys.Methods;
 import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;

@@ -35,5 +35,4 @@ public class DecentHologramsSupport implements HologramController {
     @Override public String getPluginName() {
         return null;
     }
-    
 }
