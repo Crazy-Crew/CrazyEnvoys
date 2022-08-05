@@ -8,7 +8,7 @@ plugins {
 
 rootProject.group = "com.badbones69.crazyenvoys.CrazyEnvoys"
 rootProject.version = "1.4.17-${System.getenv("BUILD_NUMBER") ?: "SNAPSHOT"}"
-rootProject.description = "A chat plugin for the ages."
+rootProject.description = "Drop envoys all over the world!"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -70,6 +70,17 @@ tasks {
             "org.bstats"
         ).forEach {
             relocate(it, "${rootProject.group}.plugin.lib.$it")
+        }
+    }
+
+    processResources {
+        filesMatching("plugin.yml") {
+            expand (
+                "name" to rootProject.name,
+                "group" to rootProject.group,
+                "version" to rootProject.version,
+                "description" to rootProject.description
+            )
         }
     }
 

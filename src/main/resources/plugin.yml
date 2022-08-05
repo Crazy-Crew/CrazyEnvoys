@@ -1,11 +1,13 @@
 name: CrazyEnvoys
-version: 1.4.17-SNAPSHOT
-main: com.badbones69.crazyenvoys.CrazyEnvoys
-description: Drop envoys all over the world!
+version: ${version}
+main: "${group}.CrazyEnvoys"
+description: ${description}
+
 authors:
   - BadBones69
   - Ryder Belserion
-api-version: 1.13
+
+api-version: 1.18
 
 softdepend:
   - HolographicDisplays
