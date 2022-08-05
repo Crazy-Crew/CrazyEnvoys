@@ -1,19 +1,6 @@
+.gradle
+.idea
 
-*.iml
-
-\.idea/
-
-target/
-
-src/main/lib/
-
-src/main/java/META-INF/
-
-src/\.DS_Store
-
-\.DS_Store
-
-plugin/src/main/lib/
-
-plugin/dependency-reduced-pom\.xml
-*.jar
+gradlew
+gradlew.bat
+build
