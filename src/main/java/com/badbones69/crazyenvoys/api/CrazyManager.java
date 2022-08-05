@@ -1166,5 +1166,4 @@ public class CrazyManager {
 
         return cachedChances.get(random.nextInt(cachedChances.size()));
     }
-    
 }
