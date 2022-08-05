@@ -7,7 +7,7 @@ plugins {
 }
 
 rootProject.group = "com.badbones69.crazyenvoys.CrazyEnvoys"
-rootProject.version = "1.4.17-${System.getenv("BUILD_NUMBER") ?: "SNAPSHOT"}"
+rootProject.version = "2.4.17-${System.getenv("BUILD_NUMBER") ?: "SNAPSHOT"}"
 rootProject.description = "Drop envoys all over the world!"
 
 java {
