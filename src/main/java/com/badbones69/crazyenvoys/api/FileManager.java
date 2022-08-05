@@ -1,7 +1,6 @@
 package com.badbones69.crazyenvoys.api;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.multisupport.ServerProtocol;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
@@ -53,19 +52,9 @@ public class FileManager {
 
             if (!newFile.exists()) {
                 try {
-                    String fileLocation = file.getFileLocation();
-
-                    // Switch between 1.12.2- and 1.13+ config version.
-                    if (file == Files.CONFIG) {
-                        if (ServerProtocol.isOlder(ServerProtocol.v1_13_R2)) {
-                            fileLocation = "config1.12.2-Down.yml";
-                        } else {
-                            fileLocation = "config1.13-Up.yml";
-                        }
-                    }
 
                     File serverFile = new File(plugin.getDataFolder(), "/" + file.getFileLocation());
-                    InputStream jarFile = getClass().getResourceAsStream("/" + fileLocation);
+                    InputStream jarFile = getClass().getResourceAsStream("/" + file.getFileLocation());
                     copyFile(jarFile, serverFile);
                 } catch (Exception e) {
                     if (log) plugin.getLogger().info("Failed to load " + file.getFileName());

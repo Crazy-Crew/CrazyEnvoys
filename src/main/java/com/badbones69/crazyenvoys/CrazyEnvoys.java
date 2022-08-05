@@ -52,6 +52,8 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         pluginManager.registerEvents(new EnvoyControl(), this);
         pluginManager.registerEvents(new FlareControl(), this);
 
+        pluginManager.registerEvents(new FireworkDamageAPI(), this);
+
         boolean metricsEnabled = Files.CONFIG.getFile().getBoolean("Settings.Toggle-Metrics");
 
         if (Files.CONFIG.getFile().getString("Settings.Toggle-Metrics") != null) {
