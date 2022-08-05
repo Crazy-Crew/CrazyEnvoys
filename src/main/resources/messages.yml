@@ -56,7 +56,11 @@ Messages:
     Hour: 'h'
     Minute: 'm'
     Second: 's'
-  Help:
+  Player-Help:
+    - '&6/envoys help &7- Shows the envoy help menu.'
+    - '&6/envoys time &7- Shows the time till the envoy starts or ends.'
+    - '&6/envoys ignore &7- Shuts up the envoy collecting message.'
+  Admin-Help:
     - '&6/envoy help &7- Shows the envoy help menu.'
     - '&6/envoy reload &7- Reloads all the config files.'
     - '&6/envoy time &7- Shows the time till the envoy starts or ends.'
