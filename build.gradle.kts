@@ -1,5 +1,3 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
-
 plugins {
     java
 
@@ -27,8 +25,7 @@ repositories {
     // PAPI
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 
-    // I don't now
-    // maven("https://repo.mvdw-software.be/content/groups/public/")
+    // NBT API?
     maven("https://repo.codemc.io/repository/maven-public/")
 }
 
@@ -41,11 +38,6 @@ dependencies {
     implementation(libs.nbt.api)
 
     compileOnly(libs.placeholder.api)
-
-    //compileOnly(libs.mvdw.placeholder.api) {
-    //    exclude("org.spigotmc", "spigot")
-    //    exclude("be.maximvdw", "MVdWUpdater")
-    //}
 
     compileOnly(libs.decent.holograms)
     compileOnly(libs.holographic.displays)
