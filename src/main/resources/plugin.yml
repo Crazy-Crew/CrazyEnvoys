@@ -1,6 +1,6 @@
 name: CrazyEnvoys
 version: ${version}
-main: "${group}.CrazyEnvoys"
+main: ${group}
 description: ${description}
 
 authors:
