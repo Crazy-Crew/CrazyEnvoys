@@ -34,10 +34,10 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         String homeFolder = "/tiers";
 
         fileManager.logInfo(true)
-        .registerCustomFilesFolder("/tiers")
-        .registerDefaultGenerateFiles("Basic.yml", "/tiers", homeFolder)
-        .registerDefaultGenerateFiles("Lucky.yml", "/tiers", homeFolder)
-        .registerDefaultGenerateFiles("Titan.yml", "/tiers", homeFolder)
+        .registerCustomFilesFolder(homeFolder)
+        .registerDefaultGenerateFiles("Basic.yml", homeFolder, homeFolder)
+        .registerDefaultGenerateFiles("Lucky.yml", homeFolder, homeFolder)
+        .registerDefaultGenerateFiles("Titan.yml", homeFolder, homeFolder)
         .setup(this);
         
         Messages.addMissingMessages();
@@ -96,5 +96,4 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
         crazyManager.unload();
     }
-    
 }

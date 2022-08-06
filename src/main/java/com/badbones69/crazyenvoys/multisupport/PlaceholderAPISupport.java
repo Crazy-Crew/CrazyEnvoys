@@ -42,5 +42,4 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
     public String getVersion() {
         return crazyManager.getPlugin().getDescription().getVersion();
     }
-    
 }

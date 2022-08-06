@@ -46,13 +46,9 @@ public class EnvoyControl implements Listener {
             Block block = e.getClickedBlock();
 
             if (crazyManager.isActiveEnvoy(e.getClickedBlock())) {
-                if (player.getGameMode() == GameMode.valueOf("SPECTATOR")) {
-                    return;
-                }
+                if (player.getGameMode() == GameMode.valueOf("SPECTATOR")) return;
 
-                if (player.getGameMode() == GameMode.CREATIVE && !Methods.hasPermission(player,"gamemode-bypass")) {
-                    return;
-                }
+                if (player.getGameMode() == GameMode.CREATIVE && !Methods.hasPermission(player,"gamemode-bypass")) return;
 
                 e.setCancelled(true);
 
@@ -83,15 +79,11 @@ public class EnvoyControl implements Listener {
                 crazyManager.getPlugin().getServer().getPluginManager().callEvent(openEnvoyEvent);
 
                 if (!openEnvoyEvent.isCancelled()) {
-                    if (tier.getFireworkToggle()) {
-                        Methods.fireWork(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
-                    }
+                    if (tier.getFireworkToggle()) Methods.fireWork(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
 
                     e.getClickedBlock().setType(Material.AIR);
 
-                    if (crazyManager.hasHologramPlugin()) {
-                        crazyManager.getHologramController().removeHologram(e.getClickedBlock());
-                    }
+                    if (crazyManager.hasHologramPlugin()) crazyManager.getHologramController().removeHologram(e.getClickedBlock());
 
                     crazyManager.stopSignalFlare(e.getClickedBlock().getLocation());
 
@@ -156,23 +148,17 @@ public class EnvoyControl implements Listener {
                 e.setCancelled(true);
                 Tier tier = pickRandomTier();
 
-                if (block.getType() != Material.AIR) {
-                    block = block.getLocation().add(0, 1, 0).getBlock();
-                }
+                if (block.getType() != Material.AIR) block = block.getLocation().add(0, 1, 0).getBlock();
 
                 block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
 
-                if (tier.isHoloEnabled() && crazyManager.hasHologramPlugin()) {
-                    crazyManager.getHologramController().createHologram(block, tier);
-                }
+                if (tier.isHoloEnabled() && crazyManager.hasHologramPlugin()) crazyManager.getHologramController().createHologram(block, tier);
 
                 crazyManager.removeFallingBlock(entity);
                 crazyManager.addActiveEnvoy(block, tier);
                 crazyManager.addSpawnedLocation(block);
 
-                if (tier.getSignalFlareToggle()) {
-                    crazyManager.startSignalFlare(block.getLocation(), tier);
-                }
+                if (tier.getSignalFlareToggle()) crazyManager.startSignalFlare(block.getLocation(), tier);
             }
         }
     }
@@ -186,23 +172,17 @@ public class EnvoyControl implements Listener {
                     e.setCancelled(true);
                     Tier tier = pickRandomTier();
 
-                    if (block.getType() != Material.AIR) {
-                        block = block.getLocation().add(0, 1, 0).getBlock();
-                    }
+                    if (block.getType() != Material.AIR) block = block.getLocation().add(0, 1, 0).getBlock();
 
                     block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
 
-                    if (tier.isHoloEnabled() && crazyManager.hasHologramPlugin()) {
-                        crazyManager.getHologramController().createHologram(block, tier);
-                    }
+                    if (tier.isHoloEnabled() && crazyManager.hasHologramPlugin()) crazyManager.getHologramController().createHologram(block, tier);
 
                     crazyManager.removeFallingBlock(entity);
                     crazyManager.addActiveEnvoy(block, tier);
                     crazyManager.addSpawnedLocation(block);
 
-                    if (tier.getSignalFlareToggle()) {
-                        crazyManager.startSignalFlare(block.getLocation(), tier);
-                    }
+                    if (tier.getSignalFlareToggle()) crazyManager.startSignalFlare(block.getLocation(), tier);
 
                     break;
                 }
@@ -214,21 +194,13 @@ public class EnvoyControl implements Listener {
         Calendar cal = Calendar.getInstance();
 
         for (String i : time.split(" ")) {
-            if (i.contains("D") || i.contains("d")) {
-                cal.add(Calendar.DATE, Integer.parseInt(i.replace("D", "").replace("d", "")));
-            }
+            if (i.contains("D") || i.contains("d")) cal.add(Calendar.DATE, Integer.parseInt(i.replace("D", "").replace("d", "")));
 
-            if (i.contains("H") || i.contains("h")) {
-                cal.add(Calendar.HOUR, Integer.parseInt(i.replace("H", "").replace("h", "")));
-            }
+            if (i.contains("H") || i.contains("h")) cal.add(Calendar.HOUR, Integer.parseInt(i.replace("H", "").replace("h", "")));
 
-            if (i.contains("M") || i.contains("m")) {
-                cal.add(Calendar.MINUTE, Integer.parseInt(i.replace("M", "").replace("m", "")));
-            }
+            if (i.contains("M") || i.contains("m")) cal.add(Calendar.MINUTE, Integer.parseInt(i.replace("M", "").replace("m", "")));
 
-            if (i.contains("S") || i.contains("s")) {
-                cal.add(Calendar.SECOND, Integer.parseInt(i.replace("S", "").replace("s", "")));
-            }
+            if (i.contains("S") || i.contains("s")) cal.add(Calendar.SECOND, Integer.parseInt(i.replace("S", "").replace("s", "")));
         }
 
         return cal;
@@ -241,9 +213,7 @@ public class EnvoyControl implements Listener {
         for (int i = 0; prizes.size() < max && i < 500; i++) {
             Prize prize = tier.getPrizes().get(random.nextInt(tier.getPrizes().size()));
 
-            if (!prizes.contains(prize)) {
-                prizes.add(prize);
-            }
+            if (!prizes.contains(prize)) prizes.add(prize);
         }
 
         return prizes;
@@ -255,13 +225,9 @@ public class EnvoyControl implements Listener {
 
         for (int i = 0; prizes.size() < maxBulk && i < 500; i++) {
             for (Prize prize : tier.getPrizes()) {
-                if (!prizes.contains(prize) && Methods.isSuccessful(prize.getChance(), 100)) {
-                    prizes.add(prize);
-                }
+                if (!prizes.contains(prize) && Methods.isSuccessful(prize.getChance(), 100)) prizes.add(prize);
 
-                if (prizes.size() == maxBulk) {
-                    break;
-                }
+                if (prizes.size() == maxBulk) break;
             }
         }
 
@@ -277,9 +243,7 @@ public class EnvoyControl implements Listener {
 
         while (tiers.isEmpty()) {
             for (Tier tier : crazyManager.getTiers()) {
-                if (Methods.isSuccessful(tier.getSpawnChance(), 100)) {
-                    tiers.add(tier);
-                }
+                if (Methods.isSuccessful(tier.getSpawnChance(), 100)) tiers.add(tier);
             }
         }
 

@@ -138,9 +138,7 @@ public class EnvoyCommand implements CommandExecutor {
                         placeholder.put("%Amount%", amount + "");
                         Messages.GIVE_FLARE.sendMessage(sender, placeholder);
 
-                        if (!sender.getName().equalsIgnoreCase(player.getName())) {
-                            Messages.GIVEN_FLARE.sendMessage(player, placeholder);
-                        }
+                        if (!sender.getName().equalsIgnoreCase(player.getName())) Messages.GIVEN_FLARE.sendMessage(player, placeholder);
 
                         Flare.giveFlare(player, amount);
                     } else {
@@ -186,9 +184,7 @@ public class EnvoyCommand implements CommandExecutor {
                             sender.sendMessage(dropLocation);
                         }
 
-                        if (!crazyManager.isEnvoyActive()) {
-                            Messages.DROPS_PAGE.sendMessage(sender);
-                        }
+                        if (!crazyManager.isEnvoyActive()) Messages.DROPS_PAGE.sendMessage(sender);
 
                     } else {
                         Messages.NO_PERMISSION.sendMessage(sender);

@@ -145,17 +145,17 @@ public class Methods {
             try {
                 String[] rgb = color.split(",");
                 return Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
-            } catch (Exception ignore) {
-            }
+            } catch (Exception ignore) {}
         }
+
         return Color.WHITE;
     }
     
     public static List<String> getPage(List<String> list, Integer page) {
         List<String> locations = new ArrayList<>();
-        if (page <= 0) {
-            page = 1;
-        }
+
+        if (page <= 0) page = 1;
+
         int max = 10;
         int index = page * max - max;
         int endIndex = index >= list.size() ? list.size() - 1 : index + max;
@@ -164,6 +164,7 @@ public class Methods {
                 locations.add(list.get(index));
             }
         }
+
         for (; locations.isEmpty(); page--) {
             if (page <= 0) {
                 break;
@@ -176,6 +177,7 @@ public class Methods {
                 }
             }
         }
+
         return locations;
     }
     
@@ -228,5 +230,4 @@ public class Methods {
 
         return message;
     }
-    
 }

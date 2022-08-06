@@ -38,9 +38,7 @@ public class EnvoyTab implements TabCompleter {
                     if (Methods.hasPermission(sender, "drops")) {
                         int size = crazyManager.isEnvoyActive() ? crazyManager.getActiveEnvoys().size() : crazyManager.getSpawnLocations().size();
 
-                        if ((size % 10) > 0) {
-                            size++;
-                        }
+                        if ((size % 10) > 0) size++;
 
                         for (int i = 1; i <= size; i++) completions.add(i + "");
                     }
