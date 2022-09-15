@@ -1115,14 +1115,14 @@ public class CrazyManager {
         int z = 0;
 
         for (String i : locationString.toLowerCase().split(", ")) {
-            if (i.startsWith("world:")) {
-                w = plugin.getServer().getWorld(i.replace("world:", ""));
-            } else if (i.startsWith("x:")) {
-                x = Integer.parseInt(i.replace("x:", ""));
-            } else if (i.startsWith("y:")) {
-                y = Integer.parseInt(i.replace("y:", ""));
-            } else if (i.startsWith("z:")) {
-                z = Integer.parseInt(i.replace("z:", ""));
+            if (i.startsWith("World:")) {
+                w = plugin.getServer().getWorld(i.replace("World:", ""));
+            } else if (i.startsWith("X:")) {
+                x = Integer.parseInt(i.replace("X:", ""));
+            } else if (i.startsWith("Y:")) {
+                y = Integer.parseInt(i.replace("Y:", ""));
+            } else if (i.startsWith("Z:")) {
+                z = Integer.parseInt(i.replace("Z:", ""));
             }
         }
 
