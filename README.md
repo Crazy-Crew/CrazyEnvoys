@@ -14,7 +14,7 @@ CrazyEnvoys is a plugin that drops custom crates with any prize you want all ove
 Join us on [Discord](https://discord.badbones69.com)
 
 ## Downloads
-[![Build Status](https://jenkins.badbones69.com/view/Stable/job/Crazy-Envoys/badge/icon)](https://ci.badbones69.com/view/Stable/job/CrazyEnvoys/)
+[![Build Status](https://jenkins.badbones69.com/view/Stable/job/CrazyEnvoys/badge/icon)](https://ci.badbones69.com/view/Stable/job/CrazyEnvoys/)
 
 Downloads can be obtained from the [spigot page](https://www.spigotmc.org/resources/crazy-envoys.32870/) or the [Jenkins](https://ci.badbones69.com/view/Stable/job/CrazyEnvoys/).
 
