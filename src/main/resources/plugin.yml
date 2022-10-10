@@ -7,7 +7,7 @@ authors:
   - Ryder Belserion
 
 version: ${version}
-api-version: "1.13"
+api-version: "1.19"
 description: ${description}
 
 softdepend:
