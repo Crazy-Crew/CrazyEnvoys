@@ -1,0 +1,31 @@
+name: "CrazyEnvoys"
+
+main: "${group}.CrazyEnvoys"
+
+authors:
+  - Badbones69
+  - Ryder Belserion
+
+version: ${version}
+api-version: "1.19"
+description: ${description}
+
+softdepend:
+  - HolographicDisplays
+  - DecentHolograms
+  - PlaceholderAPI
+  - MVdWPlaceholderAPI
+  - Multiverse-Core
+  - MultiWorld
+  - WorldEdit
+  - WorldGuard
+
+commands:
+  envoys:
+    description: "Manage your envoys however you want."
+    aliases:
+      - envoy
+
+permissions:
+  crazyenvoys.admin:
+    default: op
