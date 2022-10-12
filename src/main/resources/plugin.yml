@@ -2,9 +2,7 @@ name: "CrazyEnvoys"
 
 main: "${group}.CrazyEnvoys"
 
-authors:
-  - Badbones69
-  - Ryder Belserion
+authors: [BadBones69, RyderBelserion]
 
 version: ${version}
 api-version: "1.19"
