@@ -4,22 +4,42 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
+val buildNumber: String? = System.getenv("BUILD_NUMBER")
+
+val jenkinsVersion = "1.4.18-b$buildNumber"
+
 group = "com.badbones69.crazyenvoys"
-version = "1.4.18-${System.getenv("BUILD_NUMBER") ?: "SNAPSHOT"}"
+version = "1.4.18"
 description = "Drop custom crates with any prize you want all over spawn for players to fight over."
 
 repositories {
-    mavenCentral()
 
-    maven("https://jitpack.io/")
+    /**
+     * PAPI Team
+     */
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 
-    maven("https://maven.enginehub.org/repo/")
-
-    maven("https://repo.codemc.org/repository/maven-public/")
-
+    /**
+     * Spigot Team
+     */
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
 
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    /**
+     * NBT API
+     */
+    maven("https://repo.codemc.org/repository/maven-public/")
+
+    /**
+     * EngineHub Team
+     */
+    maven("https://maven.enginehub.org/repo/")
+
+    /**
+     * Everything else we need.
+     */
+    maven("https://jitpack.io/")
+
+    mavenCentral()
 }
 
 dependencies {
@@ -41,9 +61,17 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.0")
 }
 
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
 tasks {
     shadowJar {
-        archiveFileName.set("${rootProject.name}-[v${rootProject.version}].jar")
+        if (buildNumber != null) {
+            archiveFileName.set("${rootProject.name}-[v${jenkinsVersion}].jar")
+        } else {
+            archiveFileName.set("${rootProject.name}-[v${rootProject.version}].jar")
+        }
 
         listOf(
             "de.tr7zw",
