@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoys.api.interfaces;
 
-import com.badbones69.crazyenvoys.api.objects.Tier;
+import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import org.bukkit.block.Block;
 
 public interface HologramController {
@@ -10,4 +10,5 @@ public interface HologramController {
     void removeHologram(Block block);
     
     void removeAllHolograms();
+
 }

@@ -1,4 +1,4 @@
-package com.badbones69.crazyenvoys.api.objects;
+package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
