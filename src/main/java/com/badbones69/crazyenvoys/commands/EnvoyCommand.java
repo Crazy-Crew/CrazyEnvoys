@@ -7,7 +7,9 @@ import com.badbones69.crazyenvoys.api.FileManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
+import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
+import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.controllers.EditControl;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,11 +30,12 @@ public class EnvoyCommand implements CommandExecutor {
 
     private final FileManager fileManager = plugin.getFileManager();
 
+    private final LocationSettings locationSettings = plugin.getLocationSettings();
+    private final EditorSettings editorSettings = plugin.getEditorSettings();
+
     private final Methods methods = plugin.getMethods();
 
     private final FlareSettings flareSettings = plugin.getFlareSettings();
-
-    private final EditControl editControl = plugin.getEditControl();
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -175,7 +178,7 @@ public class EnvoyCommand implements CommandExecutor {
                         int i = 1;
                         HashMap<String, String> ph = new HashMap<>();
 
-                        for (Block block : crazyManager.isEnvoyActive() ? crazyManager.getActiveEnvoys() : crazyManager.getSpawnLocations()) {
+                        for (Block block : crazyManager.isEnvoyActive() ? crazyManager.getActiveEnvoys() : locationSettings.getSpawnLocations()) {
                             ph.put("%id%", i + "");
                             ph.put("%world%", block.getWorld().getName());
                             ph.put("%x%", block.getX() + "");
@@ -275,14 +278,14 @@ public class EnvoyCommand implements CommandExecutor {
                         } else {
                             Player player = (Player) sender;
 
-                            if (editControl.isEditor(player)) {
-                                editControl.removeEditor(player);
-                                editControl.removeFakeBlocks();
+                            if (editorSettings.isEditor(player)) {
+                                editorSettings.removeEditor(player);
+                                editorSettings.removeFakeBlocks();
                                 player.getInventory().remove(Material.BEDROCK);
                                 Messages.LEAVE_EDITOR_MODE.sendMessage(player);
                             } else {
-                                editControl.addEditor(player);
-                                editControl.showFakeBlocks(player);
+                                editorSettings.addEditor(player);
+                                editorSettings.showFakeBlocks(player);
                                 player.getInventory().addItem(new ItemStack(Material.BEDROCK, 1));
                                 Messages.ENTER_EDITOR_MODE.sendMessage(player);
                             }
@@ -297,9 +300,9 @@ public class EnvoyCommand implements CommandExecutor {
                     if (hasPermission(sender, "clear")) {
                         Player player = (Player) sender;
 
-                        if (editControl.isEditor(player)) {
+                        if (editorSettings.isEditor(player)) {
                             // User is in editor mode and is able to clear all locations.
-                            editControl.clearEnvoyLocations();
+                            locationSettings.clearLocations();
                             Messages.EDITOR_CLEAR_LOCATIONS.sendMessage(sender);
                         } else {
                             // User must be in editor mode to clear locations. This is to help prevent accidental clears.

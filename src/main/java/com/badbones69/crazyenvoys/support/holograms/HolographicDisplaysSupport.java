@@ -3,7 +3,7 @@ package com.badbones69.crazyenvoys.support.holograms;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.interfaces.HologramController;
-import com.badbones69.crazyenvoys.api.objects.Tier;
+import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import org.bukkit.block.Block;

@@ -6,8 +6,7 @@ import com.badbones69.crazyenvoys.api.FileManager.Files;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
-import com.badbones69.crazyenvoys.api.objects.EnvoySettings;
-import com.badbones69.crazyenvoys.api.objects.FlareSettings;
+import com.badbones69.crazyenvoys.api.objects.*;
 import com.badbones69.crazyenvoys.commands.EnvoyCommand;
 import com.badbones69.crazyenvoys.commands.EnvoyTab;
 import com.badbones69.crazyenvoys.controllers.EditControl;
@@ -27,6 +26,8 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
     private static CrazyEnvoys plugin;
 
+    private final PluginManager pluginManager = getServer().getPluginManager();
+
     private CrazyManager crazyManager;
 
     private FileManager fileManager;
@@ -37,13 +38,12 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
     private FireworkDamageAPI fireworkDamageAPI;
 
-    private EditControl editControl;
-    private EnvoyControl envoyControl;
-    private FlareControl flareControl;
-
+    // Envoy Required Classes
+    private LocationSettings locationSettings;
+    private EditorSettings editorSettings;
     private EnvoySettings envoySettings;
-
     private FlareSettings flareSettings;
+    private CoolDownSettings coolDownSettings;
 
     private boolean isEnabled = false;
     
@@ -55,6 +55,19 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
             fileManager = new FileManager();
 
+            fileManager.logInfo(true)
+                    .registerCustomFilesFolder("/tiers")
+                    .registerDefaultGenerateFiles("Basic.yml", "/tiers", "/tiers")
+                    .registerDefaultGenerateFiles("Lucky.yml", "/tiers", "/tiers")
+                    .registerDefaultGenerateFiles("Titan.yml", "/tiers", "/tiers")
+                    .setup();
+
+            pluginManager.registerEvents(fireworkDamageAPI = new FireworkDamageAPI(), this);
+
+            locationSettings = new LocationSettings();
+            editorSettings = new EditorSettings();
+            coolDownSettings = new CoolDownSettings();
+
             envoySettings = new EnvoySettings();
 
             flareSettings = new FlareSettings();
@@ -64,13 +77,6 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
             crazyManager = new CrazyManager();
 
             skullCreator = new SkullCreator();
-
-            fileManager.logInfo(true)
-                    .registerCustomFilesFolder("/tiers")
-                    .registerDefaultGenerateFiles("Basic.yml", "/tiers", "/tiers")
-                    .registerDefaultGenerateFiles("Lucky.yml", "/tiers", "/tiers")
-                    .registerDefaultGenerateFiles("Titan.yml", "/tiers", "/tiers")
-                    .setup();
 
             Messages.addMissingMessages();
 
@@ -106,9 +112,9 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         if (!isEnabled) return;
 
         for (Player player : getServer().getOnlinePlayers()) {
-            if (editControl.isEditor(player)) {
-                editControl.removeEditor(player);
-                editControl.removeFakeBlocks();
+            if (editorSettings.isEditor(player)) {
+                editorSettings.removeEditor(player);
+                editorSettings.removeFakeBlocks();
             }
         }
 
@@ -125,14 +131,10 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
     private void enable() {
 
-        PluginManager pluginManager = getServer().getPluginManager();
-
         pluginManager.registerEvents(this, this);
-        pluginManager.registerEvents(editControl = new EditControl(), this);
-        pluginManager.registerEvents(envoyControl = new EnvoyControl(), this);
-        pluginManager.registerEvents(flareControl = new FlareControl(), this);
-
-        pluginManager.registerEvents(fireworkDamageAPI = new FireworkDamageAPI(), this);
+        pluginManager.registerEvents(new EditControl(), this);
+        pluginManager.registerEvents(new EnvoyControl(), this);
+        pluginManager.registerEvents(new FlareControl(), this);
 
         crazyManager.load();
 
@@ -170,16 +172,14 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         return fireworkDamageAPI;
     }
 
-    public EnvoyControl getEnvoyControl() {
-        return envoyControl;
+    // Envoy Required Classes
+
+    public LocationSettings getLocationSettings() {
+        return locationSettings;
     }
 
-    public EditControl getEditControl() {
-        return editControl;
-    }
-
-    public FlareControl getFlareControl() {
-        return flareControl;
+    public EditorSettings getEditorSettings() {
+        return editorSettings;
     }
 
     public FlareSettings getFlareSettings() {
@@ -189,4 +189,10 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
     public EnvoySettings getEnvoySettings() {
         return envoySettings;
     }
+
+    public CoolDownSettings getCoolDownSettings() {
+        return coolDownSettings;
+    }
+
+    // Controllers
 }

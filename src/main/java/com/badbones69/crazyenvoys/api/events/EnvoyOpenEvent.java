@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.api.events;
 
-import com.badbones69.crazyenvoys.api.objects.Prize;
-import com.badbones69.crazyenvoys.api.objects.Tier;
+import com.badbones69.crazyenvoys.api.objects.misc.Prize;
+import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

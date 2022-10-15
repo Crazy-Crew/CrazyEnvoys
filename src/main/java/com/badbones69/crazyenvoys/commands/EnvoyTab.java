@@ -2,6 +2,7 @@ package com.badbones69.crazyenvoys.commands;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
+import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -14,6 +15,8 @@ public class EnvoyTab implements TabCompleter {
     private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
 
     private final CrazyManager crazyManager = plugin.getCrazyManager();
+
+    private final LocationSettings locationSettings = plugin.getLocationSettings();
     
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String commandLabel, String[] args) {
@@ -36,7 +39,7 @@ public class EnvoyTab implements TabCompleter {
                 case "drop":
                 case "drops":
                     if (hasPermission(sender, "drops")) {
-                        int size = crazyManager.isEnvoyActive() ? crazyManager.getActiveEnvoys().size() : crazyManager.getSpawnLocations().size();
+                        int size = crazyManager.isEnvoyActive() ? crazyManager.getActiveEnvoys().size() : locationSettings.getSpawnLocations().size();
 
                         if ((size % 10) > 0) size++;
 

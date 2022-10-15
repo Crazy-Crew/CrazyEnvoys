@@ -6,10 +6,12 @@ import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyOpenEvent;
+import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.EnvoySettings;
 import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
-import com.badbones69.crazyenvoys.api.objects.Prize;
-import com.badbones69.crazyenvoys.api.objects.Tier;
+import com.badbones69.crazyenvoys.api.objects.LocationSettings;
+import com.badbones69.crazyenvoys.api.objects.misc.Prize;
+import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -37,13 +39,10 @@ public class EnvoyControl implements Listener {
     private final Methods methods = plugin.getMethods();
 
     private final EnvoySettings envoySettings = plugin.getEnvoySettings();
-    
-    private final HashMap<UUID, Calendar> cooldown = new HashMap<>();
+    private final LocationSettings locationSettings = plugin.getLocationSettings();
+    private final CoolDownSettings coolDownSettings = plugin.getCoolDownSettings();
+
     private final Random random = new Random();
-    
-    public void clearCooldowns() {
-        cooldown.clear();
-    }
     
     @EventHandler(ignoreCancelled = true)
     public void onPlayerClick(PlayerInteractEvent e) {
@@ -73,14 +72,14 @@ public class EnvoyControl implements Listener {
                 if (!player.hasPermission("envoy.bypass") && envoySettings.isCrateCooldownEnabled()) {
                     UUID uuid = player.getUniqueId();
 
-                    if (cooldown.containsKey(uuid) && Calendar.getInstance().before(cooldown.get(uuid))) {
+                    if (coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(coolDownSettings.getCooldown().get(uuid))) {
                         HashMap<String, String> placeholder = new HashMap<>();
-                        placeholder.put("%Time%", methods.convertTimeToString(cooldown.get(uuid)));
+                        placeholder.put("%Time%", methods.convertTimeToString(coolDownSettings.getCooldown().get(uuid)));
                         Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
                         return;
                     }
 
-                    cooldown.put(uuid, getTimeFromString(envoySettings.getCrateCooldownTimer()));
+                    coolDownSettings.addCooldown(uuid, envoySettings.getCrateCooldownTimer());
                 }
 
                 List<Prize> prizes = tier.getUseChance() ? pickPrizesByChance(tier) : pickRandomPrizes(tier);
@@ -172,7 +171,7 @@ public class EnvoyControl implements Listener {
 
         crazyManager.removeFallingBlock(entity);
         crazyManager.addActiveEnvoy(block, tier);
-        crazyManager.addSpawnedLocation(block);
+        locationSettings.addSpawnBlock(block);
 
         if (tier.getSignalFlareToggle()) crazyManager.startSignalFlare(block.getLocation(), tier);
     }
@@ -191,22 +190,6 @@ public class EnvoyControl implements Listener {
                 }
             }
         }
-    }
-    
-    private Calendar getTimeFromString(String time) {
-        Calendar cal = Calendar.getInstance();
-
-        for (String i : time.split(" ")) {
-            if (i.contains("D") || i.contains("d")) cal.add(Calendar.DATE, Integer.parseInt(i.replace("D", "").replace("d", "")));
-
-            if (i.contains("H") || i.contains("h")) cal.add(Calendar.HOUR, Integer.parseInt(i.replace("H", "").replace("h", "")));
-
-            if (i.contains("M") || i.contains("m")) cal.add(Calendar.MINUTE, Integer.parseInt(i.replace("M", "").replace("m", "")));
-
-            if (i.contains("S") || i.contains("s")) cal.add(Calendar.SECOND, Integer.parseInt(i.replace("S", "").replace("s", "")));
-        }
-
-        return cal;
     }
     
     private List<Prize> pickRandomPrizes(Tier tier) {
