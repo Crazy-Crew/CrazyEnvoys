@@ -602,13 +602,7 @@ public class CrazyManager {
         // Called before locations are generated due to it setting those locations to air and causing
         // crates to spawn in the ground when not using falling blocks.
 
-        System.out.println(locationSettings.getSpawnLocations().size());
-        System.out.println("Before");
-
         deSpawnCrates();
-
-        System.out.println("After");
-        System.out.println(locationSettings.getSpawnLocations().size());
 
         List<Block> dropLocations = generateSpawnLocations();
 
