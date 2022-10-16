@@ -22,7 +22,6 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -69,16 +68,20 @@ public class CrazyManager {
     private boolean autoTimer = true;
     private WorldGuardSupport worldGuardSupportVersion;
     private HologramController hologramController;
+    private Location center;
+    private String centerString;
+
+    private final HashMap<Block, Tier> activeEnvoys = new HashMap<>();
+    private final HashMap<Location, BukkitTask> activeSignals = new HashMap<>();
+
+    private final HashMap<Entity, Block> fallingBlocks = new HashMap<>();
+
+    private final List<Tier> tiers = new ArrayList<>();
+    private final List<Tier> cachedChances = new ArrayList<>();
     private final List<Material> blacklistedBlocks = new ArrayList<>();
     private final List<UUID> ignoreMessages = new ArrayList<>();
     private final List<Calendar> warnings = new ArrayList<>();
-    private final HashMap<Entity, Block> fallingBlocks = new HashMap<>();
-    private Location center;
-    private String centerString;
-    private final HashMap<Block, Tier> activeEnvoys = new HashMap<>();
-    private final HashMap<Location, BukkitTask> activeSignals = new HashMap<>();
-    private final List<Tier> tiers = new ArrayList<>();
-    private final List<Tier> cachedChances = new ArrayList<>();
+
     private final Random random = new Random();
 
     /**
