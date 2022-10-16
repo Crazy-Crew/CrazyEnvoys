@@ -19,13 +19,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Methods {
-    
+
     private final Random random = new Random();
-    
-    public final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
+
+    private final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
 
     private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
-    
+
     private final CrazyManager crazyManager = plugin.getCrazyManager();
 
     private final FireworkDamageAPI fireworkDamageAPI = plugin.getFireworkDamageAPI();
@@ -40,24 +40,24 @@ public class Methods {
 
         return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
     }
-    
+
     public String removeColor(String msg) {
         return ChatColor.stripColor(msg);
     }
-    
+
     public String getPrefix() {
         return color(Files.CONFIG.getFile().getString("Settings.Prefix"));
     }
-    
+
     public String getPrefix(String message) {
         return color(Files.CONFIG.getFile().getString("Settings.Prefix") + message);
     }
-    
+
     @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public ItemStack getItemInHand(Player player) {
         return player.getInventory().getItemInMainHand();
     }
-    
+
     public boolean isInt(String s) {
         try {
             Integer.parseInt(s);
@@ -67,7 +67,7 @@ public class Methods {
 
         return true;
     }
-    
+
     public boolean isOnline(String name) {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             if (player.getName().equalsIgnoreCase(name)) {
@@ -77,15 +77,15 @@ public class Methods {
 
         return false;
     }
-    
+
     public Player getPlayer(String name) {
         return plugin.getServer().getPlayer(name);
     }
-    
+
     public boolean isInvFull(Player player) {
         return player.getInventory().firstEmpty() == -1;
     }
-    
+
     public void firework(Location loc, List<Color> colors) {
         Firework firework = loc.getWorld().spawn(loc, Firework.class);
         FireworkMeta fireworkMeta = firework.getFireworkMeta();
@@ -97,11 +97,11 @@ public class Methods {
 
         detonate(firework);
     }
-    
+
     private void detonate(Firework firework) {
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, firework::detonate, 2);
     }
-    
+
     public Color getColor(String color) {
         if (color != null) {
             switch (color.toUpperCase()) {
@@ -140,7 +140,7 @@ public class Methods {
                 case "YELLOW":
                     return Color.YELLOW;
             }
-            
+
             try {
                 String[] rgb = color.split(",");
                 return Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
@@ -148,7 +148,7 @@ public class Methods {
         }
         return Color.WHITE;
     }
-    
+
     public List<String> getPage(List<String> list, Integer page) {
         List<String> locations = new ArrayList<>();
 
@@ -175,14 +175,14 @@ public class Methods {
 
         return locations;
     }
-    
+
     public boolean isSuccessful(int min, int max) {
         if (max <= min || max <= 0) return true;
 
         int chance = 1 + random.nextInt(max);
         return chance <= min;
     }
-    
+
     @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
         List<Entity> out = new ArrayList<>();
@@ -195,7 +195,7 @@ public class Methods {
 
         return out;
     }
-    
+
     public String convertTimeToString(Calendar timeTill) {
         Calendar rightNow = Calendar.getInstance();
         int total = ((int) (timeTill.getTimeInMillis() / 1000) - (int) (rightNow.getTimeInMillis() / 1000));
