@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.api.objects;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.api.FileManager;
+import com.badbones69.crazyenvoys.api.FileManager.Files;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -12,65 +12,65 @@ public class LocationSettings {
 
     private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
 
-    private final List<Block> spawnLocations = new ArrayList<>();
-    private final List<Block> activeLocations = new ArrayList<>();
-
-    private final List<String> failedLocations = new ArrayList<>();
-
-    private final FileConfiguration data = FileManager.Files.DATA.getFile();
+    // private final FileConfiguration data = Files.DATA.getFile();
 
     /**
      * Clear all Envoy locations.
      */
     public void clearLocations() {
-        clearSpawnLocations();
+        spawnLocations.clear();
         saveSpawnLocations();
     }
 
-    // Spawn Locations.
+    // Active Locations.
+
+    // Locations of spawned envoys.
+    private final List<Block> activeLocations = new ArrayList<>();
 
     /**
      * Add a spawn block.
      * @param block - The block to add.
      */
-    public void addSpawnBlock(Block block) {
-        spawnLocations.add(block);
+    public void addActiveLocation(Block block) {
+        if (!activeLocations.contains(block)) activeLocations.add(block);
     }
 
     /**
      * Remove a spawn block
      * @param block - The block to remove.
      */
-    public void removeSpawnBlock(Block block) {
-        spawnLocations.remove(block);
+    public void removeActiveLocation(Block block) {
+        activeLocations.remove(block);
     }
 
-    /**
-     * Add spawn locations.
-     */
-    public void addSpawnLocations() {
-        for (String location : data.getStringList("Locations.Spawns")) {
-            try {
-                spawnLocations.add(getLocationFromString(location).getBlock());
+    public List<Block> getActiveLocations() {
+        return activeLocations;
+    }
 
-                System.out.println(spawnLocations.size());
+    // Spawn Locations
+    private final List<Block> spawnLocations = new ArrayList<>();
 
-                System.out.println(location);
-            } catch (Exception ignore) {
-                failedLocations.add(location);
-            }
+    private final List<String> failedLocations = new ArrayList<>();
+
+
+    public void addSpawnLocation(Block block) {
+        spawnLocations.add(block);
+        saveSpawnLocations();
+    }
+
+    public void removeSpawnLocation(Block block) {
+        if (isLocation(block.getLocation())) {
+            spawnLocations.remove(block);
+            saveSpawnLocations();
         }
     }
 
-    public void clearSpawnLocations() {
-        spawnLocations.clear();
-    }
-
-    /**
-     * @return All the locations the chests will spawn.
-     */
     public List<Block> getSpawnLocations() {
         return spawnLocations;
+    }
+
+    public List<String> getFailedLocations() {
+        return failedLocations;
     }
 
     /**
@@ -84,99 +84,34 @@ public class LocationSettings {
         return false;
     }
 
-    /**
-     * Save all spawn locations.
-     */
     public void saveSpawnLocations() {
         ArrayList<String> locations = new ArrayList<>();
 
         for (Block block : spawnLocations) {
             try {
-                locations.add(getStringFromLocation(block.getLocation()));
+                locations.add(getLocation(block.getLocation()));
             } catch (Exception ignored) {}
         }
 
-        FileManager.Files.DATA.getFile().set("Locations.Spawns", locations);
-        FileManager.Files.DATA.saveFile();
-    }
-
-    // Active Locations.
-
-    /**
-     * Add a location to the cleaning list of where crates actually spawned.
-     *
-     * @param block block the crate spawned at.
-     */
-    public void addActiveLocation(Block block) {
-        activeLocations.add(block);
-    }
-
-    /**
-     * @return All the active locations.
-     */
-    public List<Block> getActiveLocations() {
-        return activeLocations;
-    }
-
-    /**
-     * Clear active locations.
-     */
-    public void clearActiveLocations() {
-        activeLocations.clear();
-    }
-
-    // Failed Locations.
-
-    /**
-     * Add failed locations to spawn locations.
-     */
-    public void addFailedSpawnLocations() {
-        int failed = 0;
-        int fixed = 0;
-
-        for (String location : failedLocations) {
-            try {
-                spawnLocations.add(getLocationFromString(location).getBlock());
-                fixed++;
-            } catch (Exception ignore) {
-                failed++;
-            }
-        }
-
-        if (fixed > 0) plugin.getLogger().info("Was able to fix " + fixed + " locations that failed.");
-
-        if (failed > 0) plugin.getLogger().info("Failed to fix " + failed + " locations and will not reattempt.");
-    }
-
-    /**
-     * @return All failed locations.
-     */
-    public List<String> getFailedLocations() {
-        return failedLocations;
-    }
-
-    /**
-     * Clear all failed locations.
-     */
-    public void clearFailedLocations() {
-        failedLocations.clear();
+        Files.DATA.getFile().set("Locations.Spawns", locations);
+        Files.DATA.saveFile();
     }
 
     // Utils
 
-    public String getStringFromLocation(Location location) {
+    public String getLocation(Location location) {
         return "World:" + location.getWorld().getName() + ", X:" + location.getBlockX() + ", Y:" + location.getBlockY() + ", Z:" + location.getBlockZ();
     }
 
-    public Location getLocationFromString(String locationString) {
-        World w = plugin.getServer().getWorlds().get(0);
+    public Location getBlockLocation(String locationString) {
+        World world = plugin.getServer().getWorlds().get(0);
         int x = 0;
         int y = 0;
         int z = 0;
 
         for (String i : locationString.toLowerCase().split(", ")) {
             if (i.startsWith("World:")) {
-                w = plugin.getServer().getWorld(i.replace("World:", ""));
+                world = plugin.getServer().getWorld(i.replace("World:", ""));
             } else if (i.startsWith("X:")) {
                 x = Integer.parseInt(i.replace("X:", ""));
             } else if (i.startsWith("Y:")) {
@@ -186,6 +121,6 @@ public class LocationSettings {
             }
         }
 
-        return new Location(w, x, y, z);
+        return new Location(world, x, y, z);
     }
 }

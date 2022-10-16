@@ -171,7 +171,7 @@ public class EnvoyControl implements Listener {
 
         crazyManager.removeFallingBlock(entity);
         crazyManager.addActiveEnvoy(block, tier);
-        locationSettings.addSpawnBlock(block);
+        locationSettings.addActiveLocation(block);
 
         if (tier.getSignalFlareToggle()) crazyManager.startSignalFlare(block.getLocation(), tier);
     }

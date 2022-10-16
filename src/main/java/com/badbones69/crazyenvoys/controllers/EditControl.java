@@ -36,7 +36,7 @@ public class EditControl implements Listener {
             e.setCancelled(true);
 
             if (methods.getItemInHand(player).getType() == Material.BEDROCK) {
-                crazyManager.addLocation(block);
+                locationSettings.addSpawnLocation(block);
                 Messages.ADD_LOCATION.sendMessage(player);
 
                 for (Player editor : editorSettings.getEditors()) {
@@ -57,7 +57,7 @@ public class EditControl implements Listener {
             if (locationSettings.isLocation(block.getLocation())) {
                 block.getState().update();
 
-                crazyManager.removeLocation(block);
+                locationSettings.removeSpawnLocation(block);
 
                 Messages.REMOVE_LOCATION.sendMessage(player);
             }

@@ -22,6 +22,7 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -43,20 +44,22 @@ import java.util.Set;
 import java.util.UUID;
 
 public class CrazyManager {
-    
+
     private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
-    
+
     private final FileManager fileManager = plugin.getFileManager();
 
-    private final Methods methods = plugin.getMethods();
+    private final EnvoySettings envoySettings = plugin.getEnvoySettings();
+
+    private final FlareSettings flareSettings = plugin.getFlareSettings();
 
     private final LocationSettings locationSettings = plugin.getLocationSettings();
     private final EditorSettings editorSettings = plugin.getEditorSettings();
-    private final EnvoySettings envoySettings = plugin.getEnvoySettings();
-    private final FlareSettings flareSettings = plugin.getFlareSettings();
     private final CoolDownSettings coolDownSettings = plugin.getCoolDownSettings();
 
     private final FireworkDamageAPI fireworkDamageAPI = plugin.getFireworkDamageAPI();
+
+    private final Methods methods = plugin.getMethods();
 
     private BukkitTask runTimeTask;
     private BukkitTask coolDownTask;
@@ -77,7 +80,7 @@ public class CrazyManager {
     private final List<Tier> tiers = new ArrayList<>();
     private final List<Tier> cachedChances = new ArrayList<>();
     private final Random random = new Random();
-    
+
     /**
      * Run this when you need to load the new locations.
      */
@@ -90,15 +93,23 @@ public class CrazyManager {
         envoySettings.loadSettings();
         FileConfiguration data = Files.DATA.getFile();
         envoyTimeLeft = Calendar.getInstance();
-        
-        locationSettings.addSpawnLocations();
-        
-        if (fileManager.isLogging() && !locationSettings.getFailedLocations().isEmpty()) plugin.getLogger().info("Failed to load " + locationSettings.getFailedLocations().size() + " locations and will reattempt in 10s.");
-        
+
+        List<String> failedLocations = new ArrayList<>();
+
+        for (String location : data.getStringList("Locations.Spawns")) {
+            try {
+                locationSettings.getSpawnLocations().add(locationSettings.getBlockLocation(location).getBlock());
+            } catch (Exception ignore) {
+                failedLocations.add(location);
+            }
+        }
+
+        if (fileManager.isLogging() && !failedLocations.isEmpty()) plugin.getLogger().info("Failed to load " + failedLocations.size() + " locations and will reattempt in 10s.");
+
         if (Calendar.getInstance().after(getNextEnvoy())) setEnvoyActive(false);
-        
+
         loadCenter();
-        
+
         if (envoySettings.isEnvoyRunTimerEnabled()) {
             Calendar cal = Calendar.getInstance();
 
@@ -121,7 +132,7 @@ public class CrazyManager {
 
         //================================== Tiers Load ==================================//
         tiers.clear();
-        
+
         for (CustomFile tierFile : fileManager.getCustomFiles()) {
             Tier tier = new Tier(tierFile.getName());
             FileConfiguration file = tierFile.getFile();
@@ -198,19 +209,32 @@ public class CrazyManager {
             blacklistedBlocks.add(Material.GLASS_PANE);
             blacklistedBlocks.add(Material.STONE_SLAB);
         }
-        
+
         if (PluginSupport.WORLD_GUARD.isPluginLoaded() && PluginSupport.WORLD_EDIT.isPluginLoaded()) worldGuardSupportVersion = new WorldGuardSupport();
-        
+
         if (PluginSupport.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
             hologramController = new HolographicDisplaysSupport();
         } else if (PluginSupport.DECENT_HOLOGRAMS.isPluginLoaded()) {
             hologramController = new DecentHologramsSupport();
         } else plugin.getLogger().info("No holograms plugin were found.");
-        
-        if (!locationSettings.getFailedLocations().isEmpty()) {
-            if (fileManager.isLogging()) plugin.getLogger().info("Attempting to fix " + locationSettings.getFailedLocations().size() + " locations that failed.");
 
-            locationSettings.addFailedSpawnLocations();
+        if (!failedLocations.isEmpty()) {
+            if (fileManager.isLogging()) plugin.getLogger().info("Attempting to fix " + failedLocations.size() + " locations that failed.");
+            int failed = 0;
+            int fixed = 0;
+
+            for (String location : failedLocations) {
+                try {
+                    locationSettings.getSpawnLocations().add(locationSettings.getBlockLocation(location).getBlock());
+                    fixed++;
+                } catch (Exception ignore) {
+                    failed++;
+                }
+            }
+
+            if (fixed > 0) plugin.getLogger().info("Was able to fix " + fixed + " locations that failed.");
+
+            if (failed > 0) plugin.getLogger().info("Failed to fix " + failed + " locations and will not reattempt.");
         }
 
         flareSettings.load();
@@ -241,16 +265,15 @@ public class CrazyManager {
      * Run this when you need to save the locations.
      */
     public void unload() {
-        deSpawnCrates();
+        removeAllEnvoys();
 
         Files.DATA.getFile().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
         Files.DATA.saveFile();
-
-        locationSettings.clearSpawnLocations();
+        locationSettings.getSpawnLocations().clear();
 
         coolDownSettings.clearCoolDowns();
     }
-    
+
     /**
      * Used when the plugin starts to control the count-down and when the event starts
      */
@@ -285,7 +308,7 @@ public class CrazyManager {
                     Calendar next = Calendar.getInstance();
                     next.setTimeInMillis(getNextEnvoy().getTimeInMillis());
                     next.clear(Calendar.MILLISECOND);
-                    
+
                     if (next.compareTo(cal) <= 0 && !isEnvoyActive()) {
                         if (envoySettings.isMinPlayersEnabled()) {
 
@@ -299,7 +322,7 @@ public class CrazyManager {
                                 return;
                             }
                         }
-                        
+
                         if (envoySettings.isRandomLocationsEnabled() && center.getWorld() == null) {
                             plugin.getLogger().info("The envoy center's world can't be found and so envoy has been canceled.");
                             plugin.getLogger().info("Center String: " + centerString);
@@ -307,7 +330,7 @@ public class CrazyManager {
                             resetWarnings();
                             return;
                         }
-                        
+
                         EnvoyStartEvent event = new EnvoyStartEvent(autoTimer ? EnvoyStartReason.AUTO_TIMER : EnvoyStartReason.SPECIFIED_TIME);
                         plugin.getServer().getPluginManager().callEvent(event);
 
@@ -317,7 +340,7 @@ public class CrazyManager {
             }
         }.runTaskTimer(plugin, 20, 20);
     }
-    
+
     /**
      * @param block The location you want the tier from.
      * @return The tier that location is.
@@ -325,28 +348,28 @@ public class CrazyManager {
     public Tier getTier(Block block) {
         return activeEnvoys.get(block);
     }
-    
+
     /**
      * @return True if the envoy event is currently happening and false if not.
      */
     public boolean isEnvoyActive() {
         return envoyActive;
     }
-    
+
     /**
      * Despawns all the active crates.
      */
-    public void deSpawnCrates() {
+    public void removeAllEnvoys() {
         envoyActive = false;
         cleanLocations();
-        
+
         for (Block block : getActiveEnvoys()) {
             if (!block.getChunk().isLoaded()) block.getChunk().load();
 
             block.setType(Material.AIR);
             stopSignalFlare(block.getLocation());
         }
-        
+
         fallingBlocks.keySet().forEach(Entity :: remove);
 
         if (hasHologramPlugin()) hologramController.removeAllHolograms();
@@ -354,26 +377,26 @@ public class CrazyManager {
         fallingBlocks.clear();
         activeEnvoys.clear();
     }
-    
+
     public WorldGuardSupport getWorldGuardPluginSupport() {
         return worldGuardSupportVersion;
     }
-    
+
     public HologramController getHologramController() {
         return hologramController;
     }
-    
+
     public boolean hasHologramPlugin() {
         return hologramController != null;
     }
-    
+
     /**
      * @return All the active envoys that are active.
      */
     public Set<Block> getActiveEnvoys() {
         return activeEnvoys.keySet();
     }
-    
+
     /**
      * @param block The location you are checking.
      * @return Turn if it is and false if not.
@@ -381,53 +404,35 @@ public class CrazyManager {
     public boolean isActiveEnvoy(Block block) {
         return activeEnvoys.containsKey(block);
     }
-    
+
     /**
      * @param block The location you wish to add.
      */
     public void addActiveEnvoy(Block block, Tier tier) {
         activeEnvoys.put(block, tier);
     }
-    
+
     /**
      * @param block The location you wish to remove.
      */
     public void removeActiveEnvoy(Block block) {
         activeEnvoys.remove(block);
     }
-    
-    /**
-     * @param block The location you want to add.
-     */
-    public void addLocation(Block block) {
-        locationSettings.addSpawnBlock(block);
-        locationSettings.saveSpawnLocations();
-    }
-    
-    /**
-     * @param block The location you want to remove.
-     */
-    public void removeLocation(Block block) {
-        if (locationSettings.isLocation(block.getLocation())) {
-            locationSettings.removeSpawnBlock(block);
-            locationSettings.saveSpawnLocations();
-        }
-    }
-    
+
     /**
      * @return The next envoy time as a calendar.
      */
     public Calendar getNextEnvoy() {
         return nextEnvoy;
     }
-    
+
     /**
      * @param cal A calendar that has the next time the envoy will happen.
      */
     public void setNextEnvoy(Calendar cal) {
         nextEnvoy = cal;
     }
-    
+
     /**
      * @return The time till the next envoy.
      */
@@ -438,21 +443,21 @@ public class CrazyManager {
 
         return message;
     }
-    
+
     /**
      * @return All falling blocks are currently going.
      */
     public Map<Entity, Block> getFallingBlocks() {
         return fallingBlocks;
     }
-    
+
     /**
      * @param entity Remove a falling block from the list.
      */
     public void removeFallingBlock(Entity entity) {
         fallingBlocks.remove(entity);
     }
-    
+
     /**
      * Call when you want to set the new warning.
      */
@@ -460,21 +465,21 @@ public class CrazyManager {
         warnings.clear();
         envoySettings.getEnvoyWarnings().forEach(time -> addWarning(makeWarning(time)));
     }
-    
+
     /**
      * @param cal When adding a new warning.
      */
     public void addWarning(Calendar cal) {
         warnings.add(cal);
     }
-    
+
     /**
      * @return All the current warnings.
      */
     public List<Calendar> getWarnings() {
         return warnings;
     }
-    
+
     /**
      * @param time The new time for the warning.
      * @return The new time as a calendar
@@ -497,7 +502,7 @@ public class CrazyManager {
 
         return cal;
     }
-    
+
     /**
      * @return The time left in the current envoy event.
      */
@@ -508,7 +513,7 @@ public class CrazyManager {
 
         return message;
     }
-    
+
     /**
      * Call when the run time needs canceled.
      */
@@ -517,7 +522,7 @@ public class CrazyManager {
             runTimeTask.cancel();
         } catch (Exception ignored) {}
     }
-    
+
     /**
      * Call when the cool downtime needs canceled.
      */
@@ -526,17 +531,13 @@ public class CrazyManager {
             coolDownTask.cancel();
         } catch (Exception ignored) {}
     }
-    
+
     public List<Block> generateSpawnLocations() {
         List<Block> dropLocations = new ArrayList<>();
         int maxSpawns;
 
-        locationSettings.addSpawnLocations();
-
         if (envoySettings.isMaxCrateEnabled()) {
             maxSpawns = envoySettings.getMaxCrates();
-
-            System.out.println(maxSpawns);
         } else if (envoySettings.isRandomAmount()) {
             // Generates a random number between the min and max settings
             maxSpawns = this.random.nextInt(envoySettings.getMaxCrates() + 1 - envoySettings.getMinCrates()) + envoySettings.getMinCrates();
@@ -556,15 +557,15 @@ public class CrazyManager {
                 location = location.getWorld().getHighestBlockAt(location).getLocation();
 
                 if (!location.getChunk().isLoaded() && !location.getChunk().load()) continue;
-                
+
                 if (location.getBlockY() <= 0 ||
-                minimumRadiusBlocks.contains(location.getBlock()) || minimumRadiusBlocks.contains(location.clone().add(0, 1, 0).getBlock()) ||
-                dropLocations.contains(location.getBlock()) || dropLocations.contains(location.clone().add(0, 1, 0).getBlock()) ||
-                blacklistedBlocks.contains(location.getBlock().getType())) continue;
-                
+                        minimumRadiusBlocks.contains(location.getBlock()) || minimumRadiusBlocks.contains(location.clone().add(0, 1, 0).getBlock()) ||
+                        dropLocations.contains(location.getBlock()) || dropLocations.contains(location.clone().add(0, 1, 0).getBlock()) ||
+                        blacklistedBlocks.contains(location.getBlock().getType())) continue;
+
                 Block block = location.getBlock();
                 if (block.getType() != Material.AIR) block = block.getLocation().add(0, 1, 0).getBlock();
-                
+
                 dropLocations.add(block);
             }
 
@@ -583,16 +584,12 @@ public class CrazyManager {
                 }
             } else {
                 dropLocations.addAll(locationSettings.getSpawnLocations());
-
-                System.out.println(locationSettings.getSpawnLocations().size());
-
-                System.out.println("3rd Else " + dropLocations.size());
             }
         }
 
         return dropLocations;
     }
-    
+
     /**
      * Starts the envoy event.
      *
@@ -602,7 +599,7 @@ public class CrazyManager {
         // Called before locations are generated due to it setting those locations to air and causing
         // crates to spawn in the ground when not using falling blocks.
 
-        deSpawnCrates();
+        removeAllEnvoys();
 
         List<Block> dropLocations = generateSpawnLocations();
 
@@ -616,13 +613,13 @@ public class CrazyManager {
             Messages.NO_SPAWN_LOCATIONS_FOUND.broadcastMessage(false);
             return false;
         }
-        
+
         for (Player player : editorSettings.getEditors()) {
             editorSettings.removeFakeBlocks();
             player.getInventory().removeItem(new ItemStack(Material.BEDROCK, 1));
             Messages.KICKED_FROM_EDITOR_MODE.sendMessage(player);
         }
-        
+
         editorSettings.getEditors().clear();
 
         if (tiers.isEmpty()) {
@@ -674,17 +671,6 @@ public class CrazyManager {
             }
         }
 
-        //This is code for testing how the chance system is doing.
-        //Best to set no falling blocks for best testing as its quick and don't need to wait for the blocks to drop to the ground.
-//        Map<Tier, Integer> tierAmount = new HashMap<>();
-//        for (Block block : spawnedLocations) {
-//            Tier tier = getTier(block);
-//            tierAmount.put(tier, tierAmount.getOrDefault(tier, 0) + 1);
-//        }
-//        for (Tier tier : tiers) {
-//            System.out.println(tier.getName() + ": " + (tierAmount.getOrDefault(tier, 0)));
-//        }
-
         runTimeTask = new BukkitRunnable() {
             @Override
             public void run() {
@@ -698,12 +684,12 @@ public class CrazyManager {
         envoyTimeLeft = getEnvoyRunTimeCalendar();
         return true;
     }
-    
+
     /**
      * Ends the envoy event.
      */
     public void endEnvoyEvent() {
-        deSpawnCrates();
+        removeAllEnvoys();
         setEnvoyActive(false);
         cancelEnvoyRunTime();
 
@@ -714,7 +700,7 @@ public class CrazyManager {
 
         coolDownSettings.clearCoolDowns();
     }
-    
+
     /**
      * Get a list of all the tiers.
      *
@@ -723,7 +709,7 @@ public class CrazyManager {
     public List<Tier> getTiers() {
         return tiers;
     }
-    
+
     /**
      * Get a tier from its name.
      *
@@ -737,7 +723,7 @@ public class CrazyManager {
 
         return null;
     }
-    
+
     /**
      * @param loc The location the signals will be at.
      * @param tier The tier the signal is.
@@ -752,7 +738,7 @@ public class CrazyManager {
 
         activeSignals.put(loc, task);
     }
-    
+
     /**
      * @param loc The location that the signal is stopping.
      */
@@ -763,14 +749,14 @@ public class CrazyManager {
 
         activeSignals.remove(loc);
     }
-    
+
     /**
      * @return The center location for the random crates.
      */
     public Location getCenter() {
         return center;
     }
-    
+
     /**
      * Sets the center location for the random crates.
      *
@@ -778,11 +764,11 @@ public class CrazyManager {
      */
     public void setCenter(Location loc) {
         center = loc;
-        centerString = locationSettings.getStringFromLocation(center);
-        Files.DATA.getFile().set("Center", locationSettings.getStringFromLocation(center));
+        centerString = locationSettings.getLocation(center);
+        Files.DATA.getFile().set("Center", locationSettings.getLocation(center));
         Files.DATA.saveFile();
     }
-    
+
     /**
      * Check if a player is ignoring the messages.
      *
@@ -792,7 +778,7 @@ public class CrazyManager {
     public boolean isIgnoringMessages(UUID uuid) {
         return ignoreMessages.contains(uuid);
     }
-    
+
     /**
      * Make a player ignore the messages.
      *
@@ -801,7 +787,7 @@ public class CrazyManager {
     public void addIgnorePlayer(UUID uuid) {
         ignoreMessages.add(uuid);
     }
-    
+
     /**
      * Make a player stop ignoring the messages.
      *
@@ -810,12 +796,12 @@ public class CrazyManager {
     public void removeIgnorePlayer(UUID uuid) {
         ignoreMessages.remove(uuid);
     }
-    
+
     /**
      * Used to clean all spawn locations and set them back to air.
      */
     public void cleanLocations() {
-        List<Block> locations = new ArrayList<>(locationSettings.getSpawnLocations());
+        List<Block> locations = new ArrayList<>(locationSettings.getActiveLocations());
 
         if (envoySettings.isRandomLocationsEnabled()) {
             locations.addAll(getLocationsFromStringList(Files.DATA.getFile().getStringList("Locations.Spawned")));
@@ -834,11 +820,11 @@ public class CrazyManager {
             }
         }
 
-        locationSettings.clearSpawnLocations();
+        locationSettings.getActiveLocations().clear();
         Files.DATA.getFile().set("Locations.Spawned", new ArrayList<>());
         Files.DATA.saveFile();
     }
-    
+
     private boolean testCenter() {
         if (!isCenterLoaded()) { // Check to make sure the center exist and if not try to load it again.
             plugin.getLogger().info("Attempting to fix Center location that failed.");
@@ -854,20 +840,20 @@ public class CrazyManager {
                 return false;
             } else {
                 plugin.getLogger().info(
-                "Center has been fixed and will continue event.");
+                        "Center has been fixed and will continue event.");
             }
         }
 
         return true;
     }
-    
+
     private void loadCenter() {
         FileConfiguration data = Files.DATA.getFile();
 
         if (data.contains("Center")) {
             centerString = data.getString("Center");
             assert centerString != null;
-            center = locationSettings.getLocationFromString(centerString);
+            center = locationSettings.getBlockLocation(centerString);
         } else {
             center = plugin.getServer().getWorlds().get(0).getSpawnLocation();
         }
@@ -876,15 +862,15 @@ public class CrazyManager {
             if (fileManager.isLogging()) plugin.getLogger().info("Failed to fix Center. Will try again next event.");
         }
     }
-    
+
     private boolean isCenterLoaded() {
         return center.getWorld() != null;
     }
-    
+
     private void setEnvoyActive(boolean toggle) {
         envoyActive = toggle;
     }
-    
+
     private Calendar getEnvoyCooldown() {
         Calendar cal = Calendar.getInstance();
 
@@ -921,12 +907,12 @@ public class CrazyManager {
 
         return cal;
     }
-    
+
     private List<String> getStringsFromLocationList(List<Block> stringList) {
         ArrayList<String> strings = new ArrayList<>();
 
         for (Block block : stringList) {
-            strings.add(locationSettings.getStringFromLocation(block.getLocation()));
+            strings.add(locationSettings.getLocation(block.getLocation()));
         }
 
         return strings;
@@ -936,22 +922,26 @@ public class CrazyManager {
         ArrayList<Block> locations = new ArrayList<>();
 
         for (String location : locationsList) {
-            locations.add(locationSettings.getLocationFromString(location).getBlock());
+            locations.add(locationSettings.getBlockLocation(location).getBlock());
         }
 
         return locations;
     }
-    
+
     private void firework(Location loc, Tier tier) {
         List<Color> colors = tier.getFireworkColors();
+
         Firework firework = loc.getWorld().spawn(loc, Firework.class);
+
         FireworkMeta fireworkMeta = firework.getFireworkMeta();
+
         fireworkMeta.addEffects(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(colors).trail(true).flicker(false).build());
         fireworkMeta.setPower(1);
         firework.setFireworkMeta(fireworkMeta);
+
         fireworkDamageAPI.addFirework(firework);
     }
-    
+
     //TODO find a better away of doing this as it causes crashes with big radius.
     private List<Block> getBlocks(Location location, int radius) {
         Location locations2 = location.clone();
@@ -973,7 +963,7 @@ public class CrazyManager {
 
         return locations;
     }
-    
+
     private int getTimeSeconds(String time) {
         int seconds = 0;
 
@@ -991,7 +981,7 @@ public class CrazyManager {
 
         return seconds;
     }
-    
+
     private Tier pickRandomTier() {
         if (cachedChances.isEmpty()) {
             for (Tier tier : tiers) {

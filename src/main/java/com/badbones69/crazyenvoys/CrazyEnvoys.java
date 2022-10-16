@@ -46,7 +46,7 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
     private CoolDownSettings coolDownSettings;
 
     private boolean isEnabled = false;
-    
+
     @Override
     public void onEnable() {
 
@@ -78,6 +78,8 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
             skullCreator = new SkullCreator();
 
+            crazyManager.load();
+
             Messages.addMissingMessages();
 
             String metricsPath = Files.CONFIG.getFile().getString("Settings.Toggle-Metrics");
@@ -106,7 +108,7 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
         isEnabled = true;
     }
-    
+
     @Override
     public void onDisable() {
         if (!isEnabled) return;
@@ -135,8 +137,6 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         pluginManager.registerEvents(new EditControl(), this);
         pluginManager.registerEvents(new EnvoyControl(), this);
         pluginManager.registerEvents(new FlareControl(), this);
-
-        crazyManager.load();
 
         if (PluginSupport.PLACEHOLDER_API.isPluginLoaded()) {
             getLogger().warning("We no longer support placeholders using {}");
