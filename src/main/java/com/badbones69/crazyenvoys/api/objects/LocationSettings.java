@@ -5,7 +5,6 @@ import com.badbones69.crazyenvoys.api.FileManager.Files;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
 import java.util.*;
 
 public class LocationSettings {
@@ -71,6 +70,10 @@ public class LocationSettings {
 
     public List<String> getFailedLocations() {
         return failedLocations;
+    }
+
+    public void addFailedLocation(String location) {
+        failedLocations.add(location);
     }
 
     /**

@@ -97,17 +97,15 @@ public class CrazyManager {
         FileConfiguration data = Files.DATA.getFile();
         envoyTimeLeft = Calendar.getInstance();
 
-        List<String> failedLocations = new ArrayList<>();
-
         for (String location : data.getStringList("Locations.Spawns")) {
             try {
                 locationSettings.getSpawnLocations().add(locationSettings.getBlockLocation(location).getBlock());
             } catch (Exception ignore) {
-                failedLocations.add(location);
+                locationSettings.addFailedLocation(location);
             }
         }
 
-        if (fileManager.isLogging() && !failedLocations.isEmpty()) plugin.getLogger().info("Failed to load " + failedLocations.size() + " locations and will reattempt in 10s.");
+        if (fileManager.isLogging() && !locationSettings.getFailedLocations().isEmpty()) plugin.getLogger().info("Failed to load " + locationSettings.getFailedLocations().size() + " locations and will reattempt in 10s.");
 
         if (Calendar.getInstance().after(getNextEnvoy())) setEnvoyActive(false);
 
@@ -221,12 +219,12 @@ public class CrazyManager {
             hologramController = new DecentHologramsSupport();
         } else plugin.getLogger().info("No holograms plugin were found.");
 
-        if (!failedLocations.isEmpty()) {
-            if (fileManager.isLogging()) plugin.getLogger().info("Attempting to fix " + failedLocations.size() + " locations that failed.");
+        if (!locationSettings.getFailedLocations().isEmpty()) {
+            if (fileManager.isLogging()) plugin.getLogger().info("Attempting to fix " + locationSettings.getFailedLocations().size() + " locations that failed.");
             int failed = 0;
             int fixed = 0;
 
-            for (String location : failedLocations) {
+            for (String location : locationSettings.getFailedLocations()) {
                 try {
                     locationSettings.getSpawnLocations().add(locationSettings.getBlockLocation(location).getBlock());
                     fixed++;
@@ -272,7 +270,8 @@ public class CrazyManager {
 
         Files.DATA.getFile().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
         Files.DATA.saveFile();
-        locationSettings.getSpawnLocations().clear();
+
+        locationSettings.clearLocations();
 
         coolDownSettings.clearCoolDowns();
     }
@@ -880,7 +879,7 @@ public class CrazyManager {
         if (envoySettings.isEnvoyCooldownEnabled()) {
             String time = envoySettings.getEnvoyCooldown();
 
-            timeSplit(cal, time);
+            cal = methods.getTimeFromString(time);
         } else {
             getEnvoyTime(cal);
         }
@@ -888,27 +887,10 @@ public class CrazyManager {
         return cal;
     }
 
-    private void timeSplit(Calendar cal, String time) {
-        for (String i : time.split(" ")) {
-            if (i.contains("d")) {
-                cal.add(Calendar.DATE, Integer.parseInt(i.replace("d", "")));
-            } else if (i.contains("h")) {
-                cal.add(Calendar.HOUR, Integer.parseInt(i.replace("h", "")));
-            } else if (i.contains("m")) {
-                cal.add(Calendar.MINUTE, Integer.parseInt(i.replace("m", "")));
-            } else if (i.contains("s")) {
-                cal.add(Calendar.SECOND, Integer.parseInt(i.replace("s", "")));
-            }
-        }
-    }
-
     private Calendar getEnvoyRunTimeCalendar() {
-        Calendar cal = Calendar.getInstance();
         String time = envoySettings.getEnvoyRunTimer().toLowerCase();
 
-        timeSplit(cal, time);
-
-        return cal;
+        return methods.getTimeFromString(time);
     }
 
     private List<String> getStringsFromLocationList(List<Block> stringList) {
