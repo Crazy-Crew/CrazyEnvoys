@@ -2,14 +2,9 @@ package com.badbones69.crazyenvoys.controllers;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * A simple countdown timer using the Runnable interface in seconds!
- * <b>Great for minigames and other shiz?</b>
- * <p>
- * Project created by
+ *
  * @author ExpDev
  */
 public class CountdownTimer implements Runnable {
@@ -81,9 +76,5 @@ public class CountdownTimer implements Runnable {
     public void scheduleTimer() {
         // Initialize our assigned task's id, for later use, so we can cancel.
         this.assignedTaskId = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 20L);
-    }
-
-    public boolean isActiveSchedule() {
-        return plugin.getServer().getScheduler().isCurrentlyRunning(assignedTaskId);
     }
 }
