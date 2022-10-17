@@ -59,7 +59,7 @@ Prizes: #The prizes that can be won.
     Items:
       - 'Item:COOKED_BEEF, Amount:16'
       - 'Item:APPLE, Amount:16'
-      - 'Item:COOKED_FISH, Amount:16'
+      - 'Item:COOKED_COD, Amount:16'
       - 'Item:COOKED_SALMON, Amount:16'
       - 'Item:CARROT, Amount:16'
       - 'Item:BREAD, Amount:16'
