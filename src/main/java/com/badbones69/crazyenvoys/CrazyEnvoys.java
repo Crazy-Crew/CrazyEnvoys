@@ -85,6 +85,7 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
             String metricsPath = Files.CONFIG.getFile().getString("Settings.Toggle-Metrics");
 
             boolean metricsEnabled = Files.CONFIG.getFile().getBoolean("Settings.Toggle-Metrics");
+            String countDownSetting = config.getString("Settings.Crate-Countdown.Toggle");
 
             if (metricsPath != null) {
                 if (metricsEnabled) new Metrics(this, 4514);
@@ -94,7 +95,10 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
                 getLogger().warning("https://github.com/Crazy-Crew/CrazyEnvoys/blob/main/src/main/resources/config.yml");
                 getLogger().warning("An example if confused is linked above.");
 
-                new Metrics(this, 4514);
+            if (countDownSetting == null) {
+                config.set("Settings.Crate-Countdown.Toggle", false);
+                config.addDefault("Settings.Crate-Countdown.Time", 120);
+                Files.CONFIG.saveFile();
             }
 
             if (PluginSupport.PLACEHOLDER_API.isPluginLoaded()) new PlaceholderAPISupport().register();

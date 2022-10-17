@@ -41,6 +41,7 @@ public enum Messages {
     NOT_A_NUMBER("Not-A-Number", "%prefix%&cThat is not a number."),
     ADD_LOCATION("Add-Location", "%prefix%&7You have just added a spawn location."),
     COOLDOWN_LEFT("Cooldown-Left", "%prefix%&7You still have &6%time% &7till you can collect another crate."),
+    COUNTDOWN_IN_PROGRESS("Countdown-In-Progress", "%prefix%&7You cannot claim any envoys for another &6%time% seconds."),
     NO_PERMISSION("No-Permission", "%prefix%&cYou do not have permission to use that command."),
     NO_PERMISSION_CLAIM("No-Permission-Claim", "%prefix%&cYou do not have permission to claim that envoy."),
     TIME_TILL_EVENT("Time-Till-Event", "%prefix%&7The next envoy will start in &6%time%&7."),

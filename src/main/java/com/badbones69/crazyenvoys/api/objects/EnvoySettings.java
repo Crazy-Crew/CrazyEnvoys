@@ -26,6 +26,10 @@ public class EnvoySettings {
     private boolean envoyFilter;
 
     private String envoyClockTime;
+
+    private boolean isEnvoyCountDownEnabled;
+    private int envoyCountDownTimer;
+
     private boolean isMinPlayersEnabled;
     private boolean isMinFlareEnabled;
     private int minPlayers;
@@ -69,6 +73,10 @@ public class EnvoySettings {
         this.isEnvoyCooldownEnabled = config.getBoolean(path + "Envoy-Cooldown-Toggle");
         this.envoyCooldown = config.getString(path + "Envoy-Cooldown").toLowerCase();
         this.envoyFilter = config.getBoolean(path + "Envoy-Filter-Players-Zero", false);
+
+        this.isEnvoyCountDownEnabled = config.getBoolean(path + "Settings.Crate-Countdown.Toggle", false);
+        this.envoyCountDownTimer = config.getInt(path + "Settings.Crate-Countdown.Time", 120);
+
         this.envoyClockTime = config.getString(path + "Envoy-Time").toLowerCase();
         this.isMinPlayersEnabled = config.getBoolean(path + "Minimum-Players-Toggle");
         this.isMinFlareEnabled = config.getBoolean(path + "Minimum-Flare-Toggle");
@@ -136,7 +144,15 @@ public class EnvoySettings {
         this.envoyFilter = envoyFilter;
         return this;
     }
-    
+
+    public boolean isEnvoyCountDownEnabled() {
+        return isEnvoyCountDownEnabled;
+    }
+
+    public int getEnvoyCountDownTimer() {
+        return envoyCountDownTimer;
+    }
+
     public boolean isRandomAmount() {
         return this.randomAmount;
     }

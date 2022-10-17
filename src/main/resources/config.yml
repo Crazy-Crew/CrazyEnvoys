@@ -25,6 +25,9 @@ Settings:
   Crate-Collect-Cooldown: #If when a player collects a crate if they have to wait to collect another.
     Toggle: false #Toggle this option on and off.
     Time: '15s' #The time till they have to wait.
+  Crate-Countdown:
+    Toggle: false # If there should be a grace period when envoys spawn.
+    Time: '120' # How long in seconds till the envoys can be opened?
   World-Messages:
     Toggle: false #Toggle if the broadcast messages are only in a specific worlds.
     Worlds: #The worlds you wish to have the messages only show up in.

@@ -13,15 +13,13 @@ import com.badbones69.crazyenvoys.api.interfaces.HologramController;
 import com.badbones69.crazyenvoys.api.objects.*;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
+import com.badbones69.crazyenvoys.controllers.CountdownTimer;
 import com.badbones69.crazyenvoys.controllers.FireworkDamageAPI;
 import com.badbones69.crazyenvoys.support.PluginSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.HolographicDisplaysSupport;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -592,6 +590,12 @@ public class CrazyManager {
         return dropLocations;
     }
 
+    private CountdownTimer countdownTimer;
+
+    public CountdownTimer getCountdownTimer() {
+        return countdownTimer;
+    }
+
     /**
      * Starts the envoy event.
      *
@@ -635,6 +639,12 @@ public class CrazyManager {
         placeholder.put("%amount%", max + "");
         placeholder.put("%Amount%", max + "");
         Messages.STARTED.broadcastMessage(false, placeholder);
+
+        if (envoySettings.isEnvoyCountDownEnabled()) {
+            countdownTimer = new CountdownTimer(envoySettings.getEnvoyCountDownTimer());
+
+            countdownTimer.scheduleTimer();
+        }
 
         for (Block block : dropLocations) {
             if (block != null && block.getWorld() != null) {
@@ -684,6 +694,7 @@ public class CrazyManager {
         }.runTaskLater(plugin, getTimeSeconds(envoySettings.getEnvoyRunTimer()) * 20L);
 
         envoyTimeLeft = getEnvoyRunTimeCalendar();
+
         return true;
     }
 

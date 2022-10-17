@@ -42,6 +42,7 @@ Messages:
   Start-Ignoring-Messages: '%prefix%&7You are now ignoring the collecting messages.'
   Stop-Ignoring-Messages: '%prefix%&7You now see all the collecting messages.'
   Cooldown-Left: '%prefix%&7You still have &6%time% &7till you can collect another crate.'
+  Countdown-In-Progress: '%prefix%&7You cannot claim any envoys for another &6%time% seconds.'
   Drops-Available: '%prefix%&7List of all available envoys.'
   Drops-Possibilities: '%prefix%&7List of location envoy''s may spawn at.'
   Drops-Page: '%prefix%&7Use /envoy drops [page] to see more.'

@@ -62,25 +62,35 @@ public class EnvoyControl implements Listener {
 
                 Tier tier = crazyManager.getTier(e.getClickedBlock());
 
-                if (!player.hasPermission("envoy.bypass") && tier.isClaimPermissionToggleEnabled() && !player.hasPermission(tier.getClaimPermission())) {
-                    player.sendMessage(Messages.NO_PERMISSION_CLAIM.getMessage());
-                    return;
-                }
+                if (!player.hasPermission("envoy.bypass")) {
 
-                // Ryder End
-
-                if (!player.hasPermission("envoy.bypass") && envoySettings.isCrateCooldownEnabled()) {
-                    UUID uuid = player.getUniqueId();
-
-                    if (coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(coolDownSettings.getCooldown().get(uuid))) {
+                    if (envoySettings.isEnvoyCountDownEnabled() && crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
                         HashMap<String, String> placeholder = new HashMap<>();
-                        placeholder.put("%Time%", methods.convertTimeToString(coolDownSettings.getCooldown().get(uuid)));
-                        Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
+                        placeholder.put("%Time%", String.valueOf(crazyManager.getCountdownTimer().getSecondsLeft()));
+                        Messages.COUNTDOWN_IN_PROGRESS.sendMessage(player, placeholder);
                         return;
                     }
 
-                    coolDownSettings.addCooldown(uuid, envoySettings.getCrateCooldownTimer());
+                    if (tier.isClaimPermissionToggleEnabled() && !player.hasPermission(tier.getClaimPermission())) {
+                        player.sendMessage(Messages.NO_PERMISSION_CLAIM.getMessage());
+                        return;
+                    }
+
+                    if (envoySettings.isCrateCooldownEnabled()) {
+                        UUID uuid = player.getUniqueId();
+
+                        if (coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(coolDownSettings.getCooldown().get(uuid))) {
+                            HashMap<String, String> placeholder = new HashMap<>();
+                            placeholder.put("%Time%", methods.convertTimeToString(coolDownSettings.getCooldown().get(uuid)));
+                            Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
+                            return;
+                        }
+
+                        coolDownSettings.addCooldown(uuid, envoySettings.getCrateCooldownTimer());
+                    }
                 }
+
+                // Ryder End
 
                 List<Prize> prizes = tier.getUseChance() ? pickPrizesByChance(tier) : pickRandomPrizes(tier);
                 EnvoyOpenEvent envoyOpenEvent = new EnvoyOpenEvent(player, block, tier, prizes);
