@@ -17,6 +17,7 @@ import com.badbones69.crazyenvoys.support.PluginSupport;
 import com.badbones69.crazyenvoys.support.SkullCreator;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -82,18 +83,20 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
             Messages.addMissingMessages();
 
-            String metricsPath = Files.CONFIG.getFile().getString("Settings.Toggle-Metrics");
+            FileConfiguration config = Files.CONFIG.getFile();
 
-            boolean metricsEnabled = Files.CONFIG.getFile().getBoolean("Settings.Toggle-Metrics");
+            String metricsPath = config.getString("Settings.Toggle-Metrics");
+
+            boolean metricsEnabled = config.getBoolean("Settings.Toggle-Metrics");
+
             String countDownSetting = config.getString("Settings.Crate-Countdown.Toggle");
 
-            if (metricsPath != null) {
-                if (metricsEnabled) new Metrics(this, 4514);
-            } else {
-                getLogger().warning("Metrics was automatically enabled.");
-                getLogger().warning("Please add Toggle-Metrics: false to the top of your config.yml.");
-                getLogger().warning("https://github.com/Crazy-Crew/CrazyEnvoys/blob/main/src/main/resources/config.yml");
-                getLogger().warning("An example if confused is linked above.");
+            if (metricsPath == null) {
+                config.set("Settings.Toggle-Metrics", false);
+                Files.CONFIG.saveFile();
+            }
+
+            if (metricsEnabled) new Metrics(this, 4537);
 
             if (countDownSetting == null) {
                 config.set("Settings.Crate-Countdown.Toggle", false);
