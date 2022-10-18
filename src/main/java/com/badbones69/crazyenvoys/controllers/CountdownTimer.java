@@ -18,8 +18,6 @@ public class CountdownTimer implements Runnable {
     private final int seconds;
     private int secondsLeft;
 
-    // Actions to perform while counting down, before and after.
-
     public CountdownTimer(int seconds) {
         this.seconds = seconds;
         this.secondsLeft = seconds;
@@ -33,20 +31,10 @@ public class CountdownTimer implements Runnable {
     public void run() {
         // Is the timer up?
         if (secondsLeft < 1) {
-            // Do what was supposed to happen after the timer.
-            // afterTimer.run();
-
-            // Cancel timer.
             if (assignedTaskId != null) plugin.getServer().getScheduler().cancelTask(assignedTaskId);
 
             return;
         }
-
-        // Are we just starting?
-        // if (secondsLeft == seconds) beforeTimer.run();
-
-        // Do what's supposed to happen every second.
-        // everySecond.accept(this);
 
         // Decrement the seconds left.
         secondsLeft--;

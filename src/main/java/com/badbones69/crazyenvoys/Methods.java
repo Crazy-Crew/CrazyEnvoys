@@ -1,6 +1,5 @@
 package com.badbones69.crazyenvoys;
 
-import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.FileManager.Files;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.controllers.FireworkDamageAPI;
@@ -11,10 +10,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,8 +21,6 @@ public class Methods {
     private final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
 
     private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
-
-    private final CrazyManager crazyManager = plugin.getCrazyManager();
 
     private final FireworkDamageAPI fireworkDamageAPI = plugin.getFireworkDamageAPI();
 
@@ -264,5 +258,19 @@ public class Methods {
         }
 
         return new Location(w, x, y, z);
+    }
+
+    public List<String> getPlaceholders(List<String> message, HashMap<String, String> lorePlaceholders) {
+        List<String> lore = new ArrayList<>();
+
+        for (String msg : message) {
+            for (String placeholder : lorePlaceholders.keySet()) {
+                msg = msg.replace(placeholder, lorePlaceholders.get(placeholder)).replace(placeholder.toLowerCase(), lorePlaceholders.get(placeholder));
+            }
+
+            lore.add(msg);
+        }
+
+        return lore;
     }
 }

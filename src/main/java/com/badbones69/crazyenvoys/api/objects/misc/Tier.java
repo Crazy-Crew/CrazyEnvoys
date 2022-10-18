@@ -6,9 +6,8 @@ import com.badbones69.crazyenvoys.api.FileManager;
 import com.badbones69.crazyenvoys.api.FileManager.CustomFile;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
 
 public class Tier {
 
@@ -36,6 +35,9 @@ public class Tier {
     private List<Color> signalFlareColors;
     private List<Prize> prizes;
 
+    // Placeholders,
+    private final HashMap<String, String> lorePlaceholders;
+
     private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
 
     private final FileManager fileManager = plugin.getFileManager();
@@ -62,6 +64,7 @@ public class Tier {
         holoToggle = true;
         holoHeight = 1.5;
         holoMessage = new ArrayList<>();
+        lorePlaceholders = new HashMap<>();
         fireworkToggle = true;
         fireworkColors = new ArrayList<>();
         signalFlareToggle = true;
@@ -272,14 +275,34 @@ public class Tier {
         this.holoHeight = holoHeight;
         return this;
     }
-    
+
+
     /**
-     * Get the hologram message above the tier crates.
+     * Add a placeholder to the lore of the item.
+     *
+     * @param placeholder The placeholder you wish to replace.
+     * @param argument    The argument that will replace the placeholder.
+     */
+    public void addLorePlaceholder(String placeholder, String argument) {
+        this.lorePlaceholders.put(placeholder, argument);
+    }
+
+    /**
+     * @return All lore placeholders.
+     */
+    public HashMap<String, String> getLorePlaceholders() {
+        return lorePlaceholders;
+    }
+
+    /**
+     * Get the hologram message with all the placeholders added to it.
+     *
+     * @return The hologram with all placeholders in it.
      */
     public List<String> getHoloMessage() {
-        return holoMessage;
+        return methods.getPlaceholders(holoMessage, lorePlaceholders);
     }
-    
+
     /**
      * Set the message that the hologram displays.
      *

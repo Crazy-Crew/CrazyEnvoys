@@ -589,17 +589,7 @@ public class ItemBuilder {
      * @return The lore with all placeholders in it.
      */
     public List<String> getUpdatedLore() {
-        List<String> newLore = new ArrayList<>();
-
-        for (String item : itemLore) {
-            for (String placeholder : lorePlaceholders.keySet()) {
-                item = item.replace(placeholder, lorePlaceholders.get(placeholder)).replace(placeholder.toLowerCase(), lorePlaceholders.get(placeholder));
-            }
-
-            newLore.add(item);
-        }
-
-        return newLore;
+        return methods.getPlaceholders(itemLore, lorePlaceholders);
     }
 
     /**

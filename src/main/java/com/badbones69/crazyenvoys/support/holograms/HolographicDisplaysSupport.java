@@ -22,7 +22,7 @@ public class HolographicDisplaysSupport implements HologramController {
 
         Hologram hologram = HologramsAPI.createHologram(plugin, block.getLocation().add(.5, height, .5));
 
-        tier.getHoloMessage().stream().map(methods::color).forEach(hologram :: appendTextLine);
+        tier.getHoloMessage().forEach(line -> hologram.appendTextLine(methods.color(line)));
 
         holograms.put(block, hologram);
     }
@@ -35,7 +35,7 @@ public class HolographicDisplaysSupport implements HologramController {
         holograms.remove(block);
         hologram.delete();
     }
-    
+
     public void removeAllHolograms() {
         holograms.keySet().forEach(block -> holograms.get(block).delete());
         holograms.clear();

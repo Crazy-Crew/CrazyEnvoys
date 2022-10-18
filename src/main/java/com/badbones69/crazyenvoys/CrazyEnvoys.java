@@ -9,12 +9,11 @@ import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.api.objects.*;
 import com.badbones69.crazyenvoys.commands.EnvoyCommand;
 import com.badbones69.crazyenvoys.commands.EnvoyTab;
-import com.badbones69.crazyenvoys.controllers.EditControl;
-import com.badbones69.crazyenvoys.controllers.EnvoyControl;
-import com.badbones69.crazyenvoys.controllers.FireworkDamageAPI;
-import com.badbones69.crazyenvoys.controllers.FlareControl;
+import com.badbones69.crazyenvoys.controllers.*;
 import com.badbones69.crazyenvoys.support.PluginSupport;
 import com.badbones69.crazyenvoys.support.SkullCreator;
+import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
+import com.badbones69.crazyenvoys.support.holograms.HolographicDisplaysSupport;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -137,7 +136,6 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
     }
 
     private void enable() {
-
         pluginManager.registerEvents(this, this);
         pluginManager.registerEvents(new EditControl(), this);
         pluginManager.registerEvents(new EnvoyControl(), this);
