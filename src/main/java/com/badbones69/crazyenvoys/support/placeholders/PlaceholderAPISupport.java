@@ -26,7 +26,7 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
         if (lower.equals("crates_time")) {
             if (isEnabled) {
                 if (seconds != 0) {
-                    return seconds + " seconds";
+                    return seconds + envoySettings.getEnvoyCountDownMessageSeconds();
                 }
 
                 return envoySettings.getEnvoyCountDownMessage();

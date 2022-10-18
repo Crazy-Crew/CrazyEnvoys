@@ -30,6 +30,7 @@ public class EnvoySettings {
     private boolean isEnvoyCountDownEnabled;
     private int envoyCountDownTimer;
     private String envoyCountDownMessage;
+    private String envoyCountDownMessageSeconds;
 
     private boolean isMinPlayersEnabled;
     private boolean isMinFlareEnabled;
@@ -78,6 +79,7 @@ public class EnvoySettings {
         this.isEnvoyCountDownEnabled = config.getBoolean(path + "Crate-Countdown.Toggle", false);
         this.envoyCountDownTimer = config.getInt(path + "Crate-Countdown.Time", 120);
         this.envoyCountDownMessage = config.getString(path + "Crate-Countdown.Message", "&cReady to claim");
+        this.envoyCountDownMessageSeconds = config.getString(path + "Crate-Countdown.Message-Seconds", " seconds.");
 
         this.envoyClockTime = config.getString(path + "Envoy-Time").toLowerCase();
         this.isMinPlayersEnabled = config.getBoolean(path + "Minimum-Players-Toggle");
@@ -157,6 +159,10 @@ public class EnvoySettings {
 
     public String getEnvoyCountDownMessage() {
         return envoyCountDownMessage;
+    }
+
+    public String getEnvoyCountDownMessageSeconds() {
+        return envoyCountDownMessageSeconds;
     }
 
     public boolean isRandomAmount() {

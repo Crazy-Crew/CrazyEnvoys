@@ -99,6 +99,7 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
                 config.set("Settings.Crate-Countdown.Toggle", false);
                 config.set("Settings.Crate-Countdown.Time", 120);
                 config.set("Settings.Crate-Countdown.Message", "&cReady to claim.");
+                config.set("Settings.Crate-Countdown.Message-Seconds", " seconds.");
                 Files.CONFIG.saveFile();
             }
 
