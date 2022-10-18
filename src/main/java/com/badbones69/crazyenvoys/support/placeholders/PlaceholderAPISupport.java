@@ -19,8 +19,20 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, String identifier) {
         String lower = identifier.toLowerCase();
 
-        if (envoySettings.isEnvoyCountDownEnabled()) {
-            if (identifier.equalsIgnoreCase("crates_time")) return String.valueOf(crazyManager.getCountdownTimer().getSecondsLeft());
+        boolean isEnabled = FileManager.Files.CONFIG.getFile().getBoolean("Settings.Crate-Countdown.Toggle", false);
+
+        int seconds = crazyManager.getCountdownTimer().getSecondsLeft();
+
+        if (lower.equals("crates_time")) {
+            if (isEnabled) {
+                if (seconds != 0) {
+                    return seconds + " seconds";
+                }
+
+                return envoySettings.getEnvoyCountDownMessage();
+            }
+
+            return envoySettings.getEnvoyCountDownMessage();
         }
 
         return switch (lower) {

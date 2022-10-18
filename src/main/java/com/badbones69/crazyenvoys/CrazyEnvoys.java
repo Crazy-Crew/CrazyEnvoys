@@ -97,7 +97,8 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
             if (countDownSetting == null) {
                 config.set("Settings.Crate-Countdown.Toggle", false);
-                config.addDefault("Settings.Crate-Countdown.Time", 120);
+                config.set("Settings.Crate-Countdown.Time", 120);
+                config.set("Settings.Crate-Countdown.Message", "&cReady to claim.");
                 Files.CONFIG.saveFile();
             }
 

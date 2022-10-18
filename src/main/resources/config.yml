@@ -27,7 +27,9 @@ Settings:
     Time: '15s' #The time till they have to wait.
   Crate-Countdown:
     Toggle: false # If there should be a grace period when envoys spawn.
-    Time: '120' # How long in seconds till the envoys can be opened?
+    # Recommended value is at least 15+ seconds. With falling blocks, that takes up about 5 seconds and for technical reasons. I can't start it after that...
+    Time: 120 # How long in seconds till the envoys can be opened?
+    Message: '&cReady to claim.'
   World-Messages:
     Toggle: false #Toggle if the broadcast messages are only in a specific worlds.
     Worlds: #The worlds you wish to have the messages only show up in.

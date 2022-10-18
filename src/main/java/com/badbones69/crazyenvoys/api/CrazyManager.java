@@ -97,8 +97,6 @@ public class CrazyManager {
         FileConfiguration data = Files.DATA.getFile();
         envoyTimeLeft = Calendar.getInstance();
 
-        if (envoySettings.isEnvoyCountDownEnabled()) countdownTimer = new CountdownTimer(envoySettings.getEnvoyCountDownTimer());
-
         // Populate the array list.
         locationSettings.populateMap();
 
@@ -615,7 +613,11 @@ public class CrazyManager {
         placeholder.put("%Amount%", max + "");
         Messages.STARTED.broadcastMessage(false, placeholder);
 
-        if (envoySettings.isEnvoyCountDownEnabled()) getCountdownTimer().scheduleTimer();
+        if (envoySettings.isEnvoyCountDownEnabled()) {
+            countdownTimer = new CountdownTimer(envoySettings.getEnvoyCountDownTimer());
+
+            countdownTimer.scheduleTimer();
+        }
 
         for (Block block : dropLocations) {
             if (block != null && block.getWorld() != null) {
@@ -641,6 +643,7 @@ public class CrazyManager {
                     chest.setDropItem(false);
                     chest.setHurtEntities(false);
                     fallingBlocks.put(chest, block);
+
                 } else {
                     Tier tier = pickRandomTier();
 
