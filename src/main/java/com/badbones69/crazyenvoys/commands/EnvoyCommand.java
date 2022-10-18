@@ -10,7 +10,6 @@ import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
-import com.badbones69.crazyenvoys.controllers.EditControl;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -26,16 +25,15 @@ public class EnvoyCommand implements CommandExecutor {
 
     private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
 
-    private final CrazyManager crazyManager = plugin.getCrazyManager();
-
     private final FileManager fileManager = plugin.getFileManager();
-
-    private final LocationSettings locationSettings = plugin.getLocationSettings();
-    private final EditorSettings editorSettings = plugin.getEditorSettings();
 
     private final Methods methods = plugin.getMethods();
 
+    private final EditorSettings editorSettings = plugin.getEditorSettings();
+    private final LocationSettings locationSettings = plugin.getLocationSettings();
     private final FlareSettings flareSettings = plugin.getFlareSettings();
+
+    private final CrazyManager crazyManager = plugin.getCrazyManager();
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -302,7 +300,7 @@ public class EnvoyCommand implements CommandExecutor {
 
                         if (editorSettings.isEditor(player)) {
                             // User is in editor mode and is able to clear all locations.
-                            locationSettings.clearLocations();
+                            locationSettings.clearSpawnLocations();
                             Messages.EDITOR_CLEAR_LOCATIONS.sendMessage(sender);
                         } else {
                             // User must be in editor mode to clear locations. This is to help prevent accidental clears.

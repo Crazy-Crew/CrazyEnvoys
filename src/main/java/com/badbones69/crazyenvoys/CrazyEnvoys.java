@@ -29,22 +29,22 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
     private final PluginManager pluginManager = getServer().getPluginManager();
 
-    private CrazyManager crazyManager;
-
     private FileManager fileManager;
 
     private Methods methods;
 
-    private SkullCreator skullCreator;
-
-    private FireworkDamageAPI fireworkDamageAPI;
-
-    // Envoy Required Classes
-    private LocationSettings locationSettings;
+    // Envoy Required Classes.
     private EditorSettings editorSettings;
     private EnvoySettings envoySettings;
     private FlareSettings flareSettings;
     private CoolDownSettings coolDownSettings;
+    private LocationSettings locationSettings;
+
+    private CrazyManager crazyManager;
+
+    private SkullCreator skullCreator;
+
+    private FireworkDamageAPI fireworkDamageAPI;
 
     private boolean isEnabled = false;
 
@@ -65,15 +65,13 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
             pluginManager.registerEvents(fireworkDamageAPI = new FireworkDamageAPI(), this);
 
+            methods = new Methods();
+
             locationSettings = new LocationSettings();
             editorSettings = new EditorSettings();
             coolDownSettings = new CoolDownSettings();
-
             envoySettings = new EnvoySettings();
-
             flareSettings = new FlareSettings();
-
-            methods = new Methods();
 
             crazyManager = new CrazyManager();
 
@@ -159,10 +157,6 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         return plugin;
     }
 
-    public CrazyManager getCrazyManager() {
-        return crazyManager;
-    }
-
     public FileManager getFileManager() {
         return fileManager;
     }
@@ -171,20 +165,7 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         return methods;
     }
 
-    public SkullCreator getSkullCreator() {
-        return skullCreator;
-    }
-
-    public FireworkDamageAPI getFireworkDamageAPI() {
-        return fireworkDamageAPI;
-    }
-
-    // Envoy Required Classes
-
-    public LocationSettings getLocationSettings() {
-        return locationSettings;
-    }
-
+    // Envoy Required Classes.
     public EditorSettings getEditorSettings() {
         return editorSettings;
     }
@@ -201,5 +182,19 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         return coolDownSettings;
     }
 
-    // Controllers
+    public LocationSettings getLocationSettings() {
+        return locationSettings;
+    }
+
+    public CrazyManager getCrazyManager() {
+        return crazyManager;
+    }
+
+    public SkullCreator getSkullCreator() {
+        return skullCreator;
+    }
+
+    public FireworkDamageAPI getFireworkDamageAPI() {
+        return fireworkDamageAPI;
+    }
 }

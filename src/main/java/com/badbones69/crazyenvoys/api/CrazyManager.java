@@ -46,17 +46,15 @@ public class CrazyManager {
 
     private final FileManager fileManager = plugin.getFileManager();
 
+    private final Methods methods = plugin.getMethods();
+
     private final EnvoySettings envoySettings = plugin.getEnvoySettings();
-
     private final FlareSettings flareSettings = plugin.getFlareSettings();
-
-    private final LocationSettings locationSettings = plugin.getLocationSettings();
     private final EditorSettings editorSettings = plugin.getEditorSettings();
     private final CoolDownSettings coolDownSettings = plugin.getCoolDownSettings();
+    private final LocationSettings locationSettings = plugin.getLocationSettings();
 
     private final FireworkDamageAPI fireworkDamageAPI = plugin.getFireworkDamageAPI();
-
-    private final Methods methods = plugin.getMethods();
 
     private BukkitTask runTimeTask;
     private BukkitTask coolDownTask;
@@ -88,20 +86,17 @@ public class CrazyManager {
     public void load() {
         if (!envoyActive) envoyActive = false;
 
-        locationSettings.getSpawnLocations().clear();
+        // Clear all spawn locations.
+        locationSettings.clearSpawnLocations();
+
         blacklistedBlocks.clear();
         cachedChances.clear();
         envoySettings.loadSettings();
         FileConfiguration data = Files.DATA.getFile();
         envoyTimeLeft = Calendar.getInstance();
 
-        for (String location : data.getStringList("Locations.Spawns")) {
-            try {
-                locationSettings.getSpawnLocations().add(locationSettings.getBlockLocation(location).getBlock());
-            } catch (Exception ignore) {
-                locationSettings.addFailedLocation(location);
-            }
-        }
+        // Populate the array list.
+        locationSettings.populateMap();
 
         if (fileManager.isLogging() && !locationSettings.getFailedLocations().isEmpty()) plugin.getLogger().info("Failed to load " + locationSettings.getFailedLocations().size() + " locations and will reattempt in 10s.");
 
@@ -217,24 +212,7 @@ public class CrazyManager {
             hologramController = new DecentHologramsSupport();
         } else plugin.getLogger().info("No holograms plugin were found.");
 
-        if (!locationSettings.getFailedLocations().isEmpty()) {
-            if (fileManager.isLogging()) plugin.getLogger().info("Attempting to fix " + locationSettings.getFailedLocations().size() + " locations that failed.");
-            int failed = 0;
-            int fixed = 0;
-
-            for (String location : locationSettings.getFailedLocations()) {
-                try {
-                    locationSettings.getSpawnLocations().add(locationSettings.getBlockLocation(location).getBlock());
-                    fixed++;
-                } catch (Exception ignore) {
-                    failed++;
-                }
-            }
-
-            if (fixed > 0) plugin.getLogger().info("Was able to fix " + fixed + " locations that failed.");
-
-            if (failed > 0) plugin.getLogger().info("Failed to fix " + failed + " locations and will not reattempt.");
-        }
+        locationSettings.fixLocations(fileManager);
 
         flareSettings.load();
     }
@@ -269,7 +247,7 @@ public class CrazyManager {
         Files.DATA.getFile().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
         Files.DATA.saveFile();
 
-        locationSettings.clearLocations();
+        locationSettings.clearSpawnLocations();
 
         coolDownSettings.clearCoolDowns();
     }
@@ -391,7 +369,7 @@ public class CrazyManager {
     }
 
     /**
-     * @return All the active envoys that are active.
+     * @return All the envoys that are active.
      */
     public Set<Block> getActiveEnvoys() {
         return activeEnvoys.keySet();
@@ -533,7 +511,6 @@ public class CrazyManager {
     }
 
     public List<Block> generateSpawnLocations() {
-        List<Block> dropLocations = new ArrayList<>();
         int maxSpawns;
 
         if (envoySettings.isMaxCrateEnabled()) {
@@ -550,7 +527,7 @@ public class CrazyManager {
 
             List<Block> minimumRadiusBlocks = getBlocks(center.clone(), envoySettings.getMinRadius());
 
-            while (dropLocations.size() < maxSpawns) {
+            while (locationSettings.getDropLocations().size() < maxSpawns) {
                 int maxRadius = envoySettings.getMaxRadius();
                 Location location = center.clone();
                 location.add(-(maxRadius / 2) + random.nextInt(maxRadius), 0, -(maxRadius / 2) + random.nextInt(maxRadius));
@@ -560,34 +537,34 @@ public class CrazyManager {
 
                 if (location.getBlockY() <= 0 ||
                         minimumRadiusBlocks.contains(location.getBlock()) || minimumRadiusBlocks.contains(location.clone().add(0, 1, 0).getBlock()) ||
-                        dropLocations.contains(location.getBlock()) || dropLocations.contains(location.clone().add(0, 1, 0).getBlock()) ||
+                        locationSettings.getDropLocations().contains(location.getBlock()) || locationSettings.getDropLocations().contains(location.clone().add(0, 1, 0).getBlock()) ||
                         blacklistedBlocks.contains(location.getBlock().getType())) continue;
 
                 Block block = location.getBlock();
                 if (block.getType() != Material.AIR) block = block.getLocation().add(0, 1, 0).getBlock();
 
-                dropLocations.add(block);
+                locationSettings.addDropLocations(block);
             }
 
-            Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(dropLocations));
+            Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(locationSettings.getDropLocations()));
             Files.DATA.saveFile();
         } else {
             if (envoySettings.isMaxCrateEnabled()) {
                 if (locationSettings.getSpawnLocations().size() <= maxSpawns) {
-                    dropLocations.addAll(locationSettings.getSpawnLocations());
+                    locationSettings.addAllDropLocations(locationSettings.getSpawnLocations());
                 } else {
-                    while (dropLocations.size() < maxSpawns) {
+                    while (locationSettings.getDropLocations().size() < maxSpawns) {
                         Block block = locationSettings.getSpawnLocations().get(random.nextInt(locationSettings.getSpawnLocations().size()));
 
-                        if (!dropLocations.contains(block)) dropLocations.add(block);
+                        locationSettings.addDropLocations(block);
                     }
                 }
             } else {
-                dropLocations.addAll(locationSettings.getSpawnLocations());
+                locationSettings.addAllDropLocations(locationSettings.getSpawnLocations());
             }
         }
 
-        return dropLocations;
+        return locationSettings.getDropLocations();
     }
 
     private CountdownTimer countdownTimer;
@@ -662,7 +639,11 @@ public class CrazyManager {
                 if (spawnFallingBlock) {
                     if (!block.getChunk().isLoaded()) block.getChunk().load();
 
-                    FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, envoySettings.getFallingHeight(), .5), envoySettings.getFallingBlockMaterial(), (byte) envoySettings.getFallingBlockDurability());
+                    int fallingHeight = envoySettings.getFallingHeight();
+                    Material fallingBlock = envoySettings.getFallingBlockMaterial();
+                    byte fallingDurability = (byte) envoySettings.getFallingBlockDurability();
+
+                    FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, fallingHeight, .5), fallingBlock, fallingDurability);
                     chest.setDropItem(false);
                     chest.setHurtEntities(false);
                     fallingBlocks.put(chest, block);
@@ -777,8 +758,8 @@ public class CrazyManager {
      */
     public void setCenter(Location loc) {
         center = loc;
-        centerString = locationSettings.getLocation(center);
-        Files.DATA.getFile().set("Center", locationSettings.getLocation(center));
+        centerString = methods.getUnBuiltLocation(center);
+        Files.DATA.getFile().set("Center", methods.getUnBuiltLocation(center));
         Files.DATA.saveFile();
     }
 
@@ -833,7 +814,9 @@ public class CrazyManager {
             }
         }
 
-        locationSettings.getActiveLocations().clear();
+        locationSettings.clearActiveLocations();
+        locationSettings.clearDropLocations();
+
         Files.DATA.getFile().set("Locations.Spawned", new ArrayList<>());
         Files.DATA.saveFile();
     }
@@ -852,8 +835,7 @@ public class CrazyManager {
                 plugin.getLogger().info("Failed to fix Center. Will try again next event.");
                 return false;
             } else {
-                plugin.getLogger().info(
-                        "Center has been fixed and will continue event.");
+                plugin.getLogger().info("Center has been fixed and will continue event.");
             }
         }
 
@@ -866,7 +848,7 @@ public class CrazyManager {
         if (data.contains("Center")) {
             centerString = data.getString("Center");
             assert centerString != null;
-            center = locationSettings.getBlockLocation(centerString);
+            center = methods.getBuiltLocation(centerString);
         } else {
             center = plugin.getServer().getWorlds().get(0).getSpawnLocation();
         }
@@ -902,26 +884,6 @@ public class CrazyManager {
         String time = envoySettings.getEnvoyRunTimer().toLowerCase();
 
         return methods.getTimeFromString(time);
-    }
-
-    private List<String> getStringsFromLocationList(List<Block> stringList) {
-        ArrayList<String> strings = new ArrayList<>();
-
-        for (Block block : stringList) {
-            strings.add(locationSettings.getLocation(block.getLocation()));
-        }
-
-        return strings;
-    }
-
-    private List<Block> getLocationsFromStringList(List<String> locationsList) {
-        ArrayList<Block> locations = new ArrayList<>();
-
-        for (String location : locationsList) {
-            locations.add(locationSettings.getBlockLocation(location).getBlock());
-        }
-
-        return locations;
     }
 
     private void firework(Location loc, Tier tier) {
@@ -988,5 +950,42 @@ public class CrazyManager {
         }
 
         return cachedChances.get(random.nextInt(cachedChances.size()));
+    }
+
+    private final Files data = Files.DATA;
+
+    /**
+     * @param location The location that you want to check.
+     */
+    public boolean isLocation(Location location) {
+        for (Block block : locationSettings.getSpawnLocations()) {
+            if (block.getLocation().equals(location)) return true;
+        }
+
+        return false;
+    }
+
+    // Utils.
+
+    // Get world location.
+
+    private List<String> getStringsFromLocationList(List<Block> stringList) {
+        ArrayList<String> strings = new ArrayList<>();
+
+        for (Block block : stringList) {
+            strings.add(methods.getUnBuiltLocation(block.getLocation()));
+        }
+
+        return strings;
+    }
+
+    private List<Block> getLocationsFromStringList(List<String> locationsList) {
+        ArrayList<Block> locations = new ArrayList<>();
+
+        for (String location : locationsList) {
+            locations.add(methods.getBuiltLocation(location).getBlock());
+        }
+
+        return locations;
     }
 }

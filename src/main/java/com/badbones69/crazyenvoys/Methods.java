@@ -240,4 +240,29 @@ public class Methods {
 
         return message;
     }
+
+    public String getUnBuiltLocation(Location location) {
+        return "World:" + location.getWorld().getName() + ", X:" + location.getBlockX() + ", Y:" + location.getBlockY() + ", Z:" + location.getBlockZ();
+    }
+
+    public Location getBuiltLocation(String locationString) {
+        World w = plugin.getServer().getWorlds().get(0);
+        int x = 0;
+        int y = 0;
+        int z = 0;
+
+        for (String i : locationString.toLowerCase().split(", ")) {
+            if (i.startsWith("world:")) {
+                w = plugin.getServer().getWorld(i.replace("world:", ""));
+            } else if (i.startsWith("x:")) {
+                x = Integer.parseInt(i.replace("x:", ""));
+            } else if (i.startsWith("y:")) {
+                y = Integer.parseInt(i.replace("y:", ""));
+            } else if (i.startsWith("z:")) {
+                z = Integer.parseInt(i.replace("z:", ""));
+            }
+        }
+
+        return new Location(w, x, y, z);
+    }
 }

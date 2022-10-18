@@ -13,19 +13,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EditControl implements Listener {
 
     private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
 
-    private final CrazyManager crazyManager = plugin.getCrazyManager();
+    private final Methods methods = plugin.getMethods();
 
     private final EditorSettings editorSettings = plugin.getEditorSettings();
+
     private final LocationSettings locationSettings = plugin.getLocationSettings();
 
-    private final Methods methods = plugin.getMethods();
+    private final CrazyManager crazyManager = plugin.getCrazyManager();
     
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent e) {
@@ -37,6 +36,7 @@ public class EditControl implements Listener {
 
             if (methods.getItemInHand(player).getType() == Material.BEDROCK) {
                 locationSettings.addSpawnLocation(block);
+
                 Messages.ADD_LOCATION.sendMessage(player);
 
                 for (Player editor : editorSettings.getEditors()) {
@@ -54,7 +54,7 @@ public class EditControl implements Listener {
         if (editorSettings.isEditor(player)) {
             e.setCancelled(true);
 
-            if (locationSettings.isLocation(block.getLocation())) {
+            if (crazyManager.isLocation(block.getLocation())) {
                 block.getState().update();
 
                 locationSettings.removeSpawnLocation(block);

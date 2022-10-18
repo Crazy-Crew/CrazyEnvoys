@@ -14,9 +14,9 @@ public class EnvoyTab implements TabCompleter {
 
     private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
 
-    private final CrazyManager crazyManager = plugin.getCrazyManager();
-
     private final LocationSettings locationSettings = plugin.getLocationSettings();
+
+    private final CrazyManager crazyManager = plugin.getCrazyManager();
     
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String commandLabel, String[] args) {

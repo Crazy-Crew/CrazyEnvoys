@@ -34,13 +34,13 @@ public class EnvoyControl implements Listener {
 
     private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
 
-    private final CrazyManager crazyManager = plugin.getCrazyManager();
-
     private final Methods methods = plugin.getMethods();
 
     private final EnvoySettings envoySettings = plugin.getEnvoySettings();
-    private final LocationSettings locationSettings = plugin.getLocationSettings();
     private final CoolDownSettings coolDownSettings = plugin.getCoolDownSettings();
+    private final LocationSettings locationSettings = plugin.getLocationSettings();
+
+    private final CrazyManager crazyManager = plugin.getCrazyManager();
 
     private final Random random = new Random();
     
