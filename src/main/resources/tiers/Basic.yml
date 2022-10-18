@@ -13,6 +13,8 @@ Settings:
   Hologram-Toggle: true #Toggle on and off holograms.
   Hologram-Height: 1.5 #How high the hologram will be from the crate.
   Hologram: #Holograms only show if Holographic Displays is on the server.
+  # Available placeholders:
+  # %crazyenvoys_crates_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
     - '&7&l(&6&l!&7&l) Basic Crate'
   Firework-Toggle: true #Toggle on or off fireworks.
   Firework-Colors: #The colors the fireworks will be.

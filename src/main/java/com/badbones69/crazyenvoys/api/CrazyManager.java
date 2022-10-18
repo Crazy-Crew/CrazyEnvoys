@@ -55,6 +55,7 @@ public class CrazyManager {
     private final LocationSettings locationSettings = plugin.getLocationSettings();
 
     private final FireworkDamageAPI fireworkDamageAPI = plugin.getFireworkDamageAPI();
+    private CountdownTimer countdownTimer;
 
     private BukkitTask runTimeTask;
     private BukkitTask coolDownTask;
@@ -90,10 +91,13 @@ public class CrazyManager {
         locationSettings.clearSpawnLocations();
 
         blacklistedBlocks.clear();
+        envoySettings.loadSettings();
         cachedChances.clear();
         envoySettings.loadSettings();
         FileConfiguration data = Files.DATA.getFile();
         envoyTimeLeft = Calendar.getInstance();
+
+        if (envoySettings.isEnvoyCountDownEnabled()) countdownTimer = new CountdownTimer(envoySettings.getEnvoyCountDownTimer());
 
         // Populate the array list.
         locationSettings.populateMap();
@@ -567,12 +571,6 @@ public class CrazyManager {
         return locationSettings.getDropLocations();
     }
 
-    private CountdownTimer countdownTimer;
-
-    public CountdownTimer getCountdownTimer() {
-        return countdownTimer;
-    }
-
     /**
      * Starts the envoy event.
      *
@@ -617,11 +615,7 @@ public class CrazyManager {
         placeholder.put("%Amount%", max + "");
         Messages.STARTED.broadcastMessage(false, placeholder);
 
-        if (envoySettings.isEnvoyCountDownEnabled()) {
-            countdownTimer = new CountdownTimer(envoySettings.getEnvoyCountDownTimer());
-
-            countdownTimer.scheduleTimer();
-        }
+        if (envoySettings.isEnvoyCountDownEnabled()) getCountdownTimer().scheduleTimer();
 
         for (Block block : dropLocations) {
             if (block != null && block.getWorld() != null) {
@@ -952,8 +946,6 @@ public class CrazyManager {
         return cachedChances.get(random.nextInt(cachedChances.size()));
     }
 
-    private final Files data = Files.DATA;
-
     /**
      * @param location The location that you want to check.
      */
@@ -965,7 +957,9 @@ public class CrazyManager {
         return false;
     }
 
-    // Utils.
+    public CountdownTimer getCountdownTimer() {
+        return countdownTimer;
+    }
 
     // Get world location.
 

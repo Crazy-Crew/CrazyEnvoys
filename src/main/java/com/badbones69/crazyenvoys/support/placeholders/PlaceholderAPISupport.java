@@ -3,6 +3,7 @@ package com.badbones69.crazyenvoys.support.placeholders;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.FileManager;
+import com.badbones69.crazyenvoys.api.objects.EnvoySettings;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
@@ -12,9 +13,15 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 
     private final CrazyManager crazyManager = plugin.getCrazyManager();
 
+    private final EnvoySettings envoySettings = plugin.getEnvoySettings();
+
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
         String lower = identifier.toLowerCase();
+
+        if (envoySettings.isEnvoyCountDownEnabled()) {
+            if (identifier.equalsIgnoreCase("crates_time")) return String.valueOf(crazyManager.getCountdownTimer().getSecondsLeft());
+        }
 
         return switch (lower) {
             case "cooldown" ->
@@ -33,7 +40,7 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
     
     @Override
     public String getIdentifier() {
-        return "crazyEnvoys";
+        return "crazyenvoys";
     }
     
     @Override
