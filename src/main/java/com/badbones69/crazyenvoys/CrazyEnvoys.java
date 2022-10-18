@@ -92,7 +92,7 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
             String countDownSetting = config.getString("Settings.Crate-Countdown.Toggle");
 
             if (metricsPath == null) {
-                config.set("Settings.Toggle-Metrics", false);
+                config.set("Settings.Toggle-Metrics", true);
                 Files.CONFIG.saveFile();
             }
 
