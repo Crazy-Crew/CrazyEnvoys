@@ -74,8 +74,8 @@ public class EnvoySettings {
         this.envoyCooldown = config.getString(path + "Envoy-Cooldown").toLowerCase();
         this.envoyFilter = config.getBoolean(path + "Envoy-Filter-Players-Zero", false);
 
-        this.isEnvoyCountDownEnabled = config.getBoolean(path + "Settings.Crate-Countdown.Toggle", false);
-        this.envoyCountDownTimer = config.getInt(path + "Settings.Crate-Countdown.Time", 120);
+        this.isEnvoyCountDownEnabled = config.getBoolean(path + "Crate-Countdown.Toggle", false);
+        this.envoyCountDownTimer = config.getInt(path + "Crate-Countdown.Time", 120);
 
         this.envoyClockTime = config.getString(path + "Envoy-Time").toLowerCase();
         this.isMinPlayersEnabled = config.getBoolean(path + "Minimum-Players-Toggle");
