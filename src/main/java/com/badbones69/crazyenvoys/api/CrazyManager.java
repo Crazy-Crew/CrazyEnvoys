@@ -582,6 +582,11 @@ public class CrazyManager {
         // Called before locations are generated due to it setting those locations to air and causing
         // crates to spawn in the ground when not using falling blocks.
 
+        if (tiers.isEmpty()) {
+            plugin.getServer().broadcastMessage(methods.getPrefix() + methods.color("&cNo tiers were found. Please delete the Tiers folder" + " to allow it to remake the default tier files."));
+            return false;
+        }
+
         removeAllEnvoys();
 
         List<Block> dropLocations = generateSpawnLocations();
@@ -604,11 +609,6 @@ public class CrazyManager {
         }
 
         editorSettings.getEditors().clear();
-
-        if (tiers.isEmpty()) {
-            plugin.getServer().broadcastMessage(methods.getPrefix() + methods.color("&cNo tiers were found. Please delete the Tiers folder" + " to allow it to remake the default tier files."));
-            return false;
-        }
 
         setEnvoyActive(true);
         int max = dropLocations.size();
