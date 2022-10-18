@@ -546,7 +546,7 @@ public class CrazyManager {
                 locationSettings.addDropLocations(block);
             }
 
-            Files.DATA.getFile().set("Locations.Spawned", getStringsFromLocationList(locationSettings.getDropLocations()));
+            Files.DATA.getFile().set("Locations.Spawned", getBlockList(locationSettings.getDropLocations()));
             Files.DATA.saveFile();
         } else {
             if (envoySettings.isMaxCrateEnabled()) {
@@ -969,7 +969,7 @@ public class CrazyManager {
 
     // Get world location.
 
-    private List<String> getStringsFromLocationList(List<Block> stringList) {
+    private List<String> getBlockList(List<Block> stringList) {
         ArrayList<String> strings = new ArrayList<>();
 
         for (Block block : stringList) {
