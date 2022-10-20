@@ -24,10 +24,10 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 
         if (lower.equals("crates_time")) {
             if (isEnabled) {
-                int seconds = crazyManager.getCountdownTimer().getSecondsLeft();
+                if (crazyManager.getCountdownTimer() != null) {
+                    int seconds = crazyManager.getCountdownTimer().getSecondsLeft();
 
-                if (seconds != 0) {
-                    return seconds + envoySettings.getEnvoyCountDownMessageSeconds();
+                    if (seconds != 0) return seconds + envoySettings.getEnvoyCountDownMessageSeconds();
                 }
 
                 return envoySettings.getEnvoyCountDownMessage();
