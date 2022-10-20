@@ -29,7 +29,7 @@ Settings:
     Toggle: false # If there should be a grace period when envoys spawn.
     # Recommended value is at least 15+ seconds. With falling blocks, that takes up about 5 seconds and for technical reasons. I can't start it after that...
     Time: 120 # How long in seconds till the envoys can be opened?
-    Message: '&cReady to claim.'
+    Message: '&cReady to claim.' # The message to show if the countdown is up or the toggle is set to false.
     # Needs to have a space, so it's not crunched next to the countdown.
     Message-Seconds: ' seconds.'
   World-Messages:
