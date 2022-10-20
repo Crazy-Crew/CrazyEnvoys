@@ -21,10 +21,11 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 
         boolean isEnabled = FileManager.Files.CONFIG.getFile().getBoolean("Settings.Crate-Countdown.Toggle", false);
 
-        int seconds = crazyManager.getCountdownTimer().getSecondsLeft();
 
         if (lower.equals("crates_time")) {
             if (isEnabled) {
+                int seconds = crazyManager.getCountdownTimer().getSecondsLeft();
+
                 if (seconds != 0) {
                     return seconds + envoySettings.getEnvoyCountDownMessageSeconds();
                 }
