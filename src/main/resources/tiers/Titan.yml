@@ -15,7 +15,7 @@ Settings:
   Hologram:
     # %crazyenvoys_crates_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
     - '&7&l(&4&l!&7&l) &4&lTitan Crate'
-    # - 'crazyenvoys_crates_time%'
+    - '%crazyenvoys_crates_time%'
   Firework-Toggle: true
   Firework-Colors:
     - 'Gray'

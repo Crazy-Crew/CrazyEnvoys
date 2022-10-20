@@ -16,7 +16,7 @@ Settings:
   # Available placeholders:
   # %crazyenvoys_crates_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
     - '&7&l(&6&l!&7&l) Basic Crate'
-    # - 'crazyenvoys_crates_time%'
+    - '%crazyenvoys_crates_time%'
   Firework-Toggle: true #Toggle on or off fireworks.
   Firework-Colors: #The colors the fireworks will be.
     - 'Gray'
