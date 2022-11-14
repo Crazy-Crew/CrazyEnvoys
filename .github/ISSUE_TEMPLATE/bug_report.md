@@ -12,9 +12,9 @@ A clear and concise description of what the bug is.
 
 **Versions (please complete the following information):**
  - Minecraft Server Version: [e.g. 1.19]
- - Plugin Version: [e.g. 1.4.17]
+ - Plugin Version: [e.g. 1.11.6-SNAPSHOT]
 
-*Do **NOT** say Latest use `/version crazyenvoy` in the console.
+*Do **NOT** say Latest use `/version crazycrates` in the console.
 
 **Pastebin any errors in console**
 Link: https://mclo.gs/
