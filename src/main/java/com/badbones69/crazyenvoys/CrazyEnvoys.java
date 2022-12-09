@@ -16,6 +16,9 @@ import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.HolographicDisplaysSupport;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -50,65 +53,59 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
 
-        try {
-            plugin = this;
+        plugin = this;
 
-            fileManager = new FileManager();
+        fileManager = new FileManager();
 
-            fileManager.logInfo(true)
-                    .registerCustomFilesFolder("/tiers")
-                    .registerDefaultGenerateFiles("Basic.yml", "/tiers", "/tiers")
-                    .registerDefaultGenerateFiles("Lucky.yml", "/tiers", "/tiers")
-                    .registerDefaultGenerateFiles("Titan.yml", "/tiers", "/tiers")
-                    .setup();
+        fileManager.logInfo(true)
+                .registerCustomFilesFolder("/tiers")
+                .registerDefaultGenerateFiles("Basic.yml", "/tiers", "/tiers")
+                .registerDefaultGenerateFiles("Lucky.yml", "/tiers", "/tiers")
+                .registerDefaultGenerateFiles("Titan.yml", "/tiers", "/tiers")
+                .setup();
 
-            pluginManager.registerEvents(fireworkDamageAPI = new FireworkDamageAPI(), this);
+        pluginManager.registerEvents(fireworkDamageAPI = new FireworkDamageAPI(), this);
 
-            methods = new Methods();
+        methods = new Methods();
 
-            locationSettings = new LocationSettings();
-            editorSettings = new EditorSettings();
-            coolDownSettings = new CoolDownSettings();
-            envoySettings = new EnvoySettings();
-            flareSettings = new FlareSettings();
+        locationSettings = new LocationSettings();
+        editorSettings = new EditorSettings();
+        coolDownSettings = new CoolDownSettings();
+        envoySettings = new EnvoySettings();
+        flareSettings = new FlareSettings();
 
-            crazyManager = new CrazyManager();
+        crazyManager = new CrazyManager();
 
-            skullCreator = new SkullCreator();
+        skullCreator = new SkullCreator();
 
-            crazyManager.load();
+        crazyManager.load();
 
-            Messages.addMissingMessages();
+        Messages.addMissingMessages();
 
-            FileConfiguration config = Files.CONFIG.getFile();
+        FileConfiguration config = Files.CONFIG.getFile();
 
-            String metricsPath = config.getString("Settings.Toggle-Metrics");
+        String metricsPath = config.getString("Settings.Toggle-Metrics");
 
-            boolean metricsEnabled = config.getBoolean("Settings.Toggle-Metrics");
+        boolean metricsEnabled = config.getBoolean("Settings.Toggle-Metrics");
 
-            String countDownSetting = config.getString("Settings.Crate-Countdown.Toggle");
+        String countDownSetting = config.getString("Settings.Crate-Countdown.Toggle");
 
-            if (metricsPath == null) {
-                config.set("Settings.Toggle-Metrics", true);
-                Files.CONFIG.saveFile();
-            }
-
-            if (metricsEnabled) new Metrics(this, 4537);
-
-            if (countDownSetting == null) {
-                config.set("Settings.Crate-Countdown.Toggle", false);
-                config.set("Settings.Crate-Countdown.Time", 120);
-                config.set("Settings.Crate-Countdown.Message", "&cReady to claim.");
-                config.set("Settings.Crate-Countdown.Message-Seconds", " seconds.");
-                Files.CONFIG.saveFile();
-            }
-
-            if (PluginSupport.PLACEHOLDER_API.isPluginLoaded()) new PlaceholderAPISupport().register();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-
-            isEnabled = false;
+        if (metricsPath == null) {
+            config.set("Settings.Toggle-Metrics", true);
+            Files.CONFIG.saveFile();
         }
+
+        if (metricsEnabled) new Metrics(this, 4537);
+
+        if (countDownSetting == null) {
+            config.set("Settings.Crate-Countdown.Toggle", false);
+            config.set("Settings.Crate-Countdown.Time", 120);
+            config.set("Settings.Crate-Countdown.Message", "&cReady to claim.");
+            config.set("Settings.Crate-Countdown.Message-Seconds", " seconds.");
+            Files.CONFIG.saveFile();
+        }
+
+        if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) new PlaceholderAPISupport().register();
 
         enable();
 
@@ -143,14 +140,21 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         pluginManager.registerEvents(new EnvoyControl(), this);
         pluginManager.registerEvents(new FlareControl(), this);
 
-        if (PluginSupport.PLACEHOLDER_API.isPluginLoaded()) {
+        if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
             getLogger().warning("We no longer support placeholders using {}");
             getLogger().warning("We only support %% placeholders i.e %crazyenvoys_cooldown%");
             new PlaceholderAPISupport().register();
         }
 
-        getCommand("envoy").setExecutor(new EnvoyCommand());
-        getCommand("envoy").setTabCompleter(new EnvoyTab());
+        registerCommand(getCommand("envoy"), new EnvoyTab(), new EnvoyCommand());
+    }
+
+    private void registerCommand(PluginCommand pluginCommand, TabCompleter tabCompleter, CommandExecutor commandExecutor) {
+        if (pluginCommand != null) {
+            pluginCommand.setExecutor(commandExecutor);
+
+            if (tabCompleter != null) pluginCommand.setTabCompleter(tabCompleter);
+        }
     }
 
     public static CrazyEnvoys getPlugin() {
