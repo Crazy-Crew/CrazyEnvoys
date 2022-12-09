@@ -206,11 +206,12 @@ public class CrazyManager {
             blacklistedBlocks.add(Material.STONE_SLAB);
         }
 
-        if (PluginSupport.WORLD_GUARD.isPluginLoaded() && PluginSupport.WORLD_EDIT.isPluginLoaded()) worldGuardSupportVersion = new WorldGuardSupport();
+        if (PluginSupport.WORLD_GUARD.isPluginEnabled() && PluginSupport.WORLD_EDIT.isPluginEnabled()) worldGuardSupportVersion = new WorldGuardSupport();
 
-        if (PluginSupport.HOLOGRAPHIC_DISPLAYS.isPluginLoaded()) {
-            hologramController = new HolographicDisplaysSupport();
-        } else if (PluginSupport.DECENT_HOLOGRAMS.isPluginLoaded()) {
+        if (PluginSupport.HOLOGRAPHIC_DISPLAYS.isPluginEnabled()) {
+            //hologramController = new HolographicDisplaysSupport();
+            plugin.getLogger().warning("HolographicDisplays is not supported until HolographicDisplays boots on 1.19.X");
+        } else if (PluginSupport.DECENT_HOLOGRAMS.isPluginEnabled()) {
             hologramController = new DecentHologramsSupport();
         } else plugin.getLogger().info("No holograms plugin were found.");
 

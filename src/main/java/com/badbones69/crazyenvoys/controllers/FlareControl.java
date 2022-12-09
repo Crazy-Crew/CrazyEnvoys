@@ -52,7 +52,7 @@ public class FlareControl implements Listener {
 
                         boolean toggle = false;
 
-                        if (PluginSupport.WORLD_EDIT.isPluginLoaded() && PluginSupport.WORLD_GUARD.isPluginLoaded()) {
+                        if (PluginSupport.WORLD_EDIT.isPluginEnabled() && PluginSupport.WORLD_GUARD.isPluginEnabled()) {
                             if (envoySettings.isWorldMessagesEnabled()) {
                                 for (String region : envoySettings.getFlaresRegions()) {
                                     if (crazyManager.getWorldGuardPluginSupport().inRegion(region, player.getLocation())) toggle = true;
