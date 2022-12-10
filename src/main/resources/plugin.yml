@@ -9,6 +9,7 @@ api-version: "1.19"
 description: ${description}
 
 softdepend:
+  - CMI
   - HolographicDisplays
   - DecentHolograms
   - PlaceholderAPI

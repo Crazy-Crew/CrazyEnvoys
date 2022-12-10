@@ -1,5 +1,7 @@
 package com.badbones69.crazyenvoys.api;
 
+import com.Zrips.CMI.Config;
+import com.Zrips.CMI.Modules.ModuleHandling.CMIModule;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.FileManager.CustomFile;
@@ -17,6 +19,7 @@ import com.badbones69.crazyenvoys.controllers.CountdownTimer;
 import com.badbones69.crazyenvoys.controllers.FireworkDamageAPI;
 import com.badbones69.crazyenvoys.support.PluginSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
+import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.HolographicDisplaysSupport;
 import org.bukkit.*;
@@ -210,10 +213,15 @@ public class CrazyManager {
 
         if (PluginSupport.HOLOGRAPHIC_DISPLAYS.isPluginEnabled()) {
             //hologramController = new HolographicDisplaysSupport();
+            //plugin.getLogger().info("HolographicDisplays support has been enabled.");
             plugin.getLogger().warning("HolographicDisplays is not supported until HolographicDisplays boots on 1.19.X");
         } else if (PluginSupport.DECENT_HOLOGRAMS.isPluginEnabled()) {
             hologramController = new DecentHologramsSupport();
-        } else plugin.getLogger().info("No holograms plugin were found.");
+            plugin.getLogger().info("DecentHolograms support has been enabled.");
+        } else if (PluginSupport.CMI.isPluginEnabled() && CMIModule.holograms.isEnabled()) {
+            hologramController = new CMIHologramsSupport();
+            plugin.getLogger().info("CMI Hologram support has been enabled.");
+        } else plugin.getLogger().warning("No holograms plugin were found. If using CMI, make sure holograms module is enabled.");
 
         locationSettings.fixLocations(fileManager);
 

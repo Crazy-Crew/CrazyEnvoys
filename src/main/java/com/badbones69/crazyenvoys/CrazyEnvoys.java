@@ -12,8 +12,6 @@ import com.badbones69.crazyenvoys.commands.EnvoyTab;
 import com.badbones69.crazyenvoys.controllers.*;
 import com.badbones69.crazyenvoys.support.PluginSupport;
 import com.badbones69.crazyenvoys.support.SkullCreator;
-import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
-import com.badbones69.crazyenvoys.support.holograms.HolographicDisplaysSupport;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandExecutor;

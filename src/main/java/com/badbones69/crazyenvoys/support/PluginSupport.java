@@ -6,6 +6,7 @@ public enum PluginSupport {
     
     HOLOGRAPHIC_DISPLAYS("HolographicDisplays"),
     DECENT_HOLOGRAMS("DecentHolograms"),
+    CMI("CMI"),
     PLACEHOLDER_API("PlaceholderAPI"),
     WORLD_GUARD("WorldGuard"),
     WORLD_EDIT("WorldEdit");
