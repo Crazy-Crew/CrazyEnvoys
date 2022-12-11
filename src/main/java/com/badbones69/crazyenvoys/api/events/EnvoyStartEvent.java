@@ -4,13 +4,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Event is called when the envoy is started for any reason.
  */
 public class EnvoyStartEvent extends Event implements Cancellable {
     
-    private final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
     private Player player;
     private final EnvoyStartReason reason;
@@ -53,8 +54,12 @@ public class EnvoyStartEvent extends Event implements Cancellable {
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }
-    
-    public HandlerList getHandlers() {
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
     

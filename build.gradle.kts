@@ -30,6 +30,11 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
 
     /**
+     * CrazyCrew Team
+     */
+    maven("https://repo.crazycrew.us/plugins/")
+
+    /**
      * EngineHub Team
      */
     maven("https://maven.enginehub.org/repo/")
@@ -54,6 +59,9 @@ dependencies {
     compileOnly("com.github.decentsoftware-eu", "decentholograms", "2.7.7")
 
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.1.0-SNAPSHOT")
+
+    compileOnly("com.Zrips.CMI", "CMI-API", "9.2.6.1")
+    compileOnly("CMILib", "CMILib", "1.2.3.7")
 
     compileOnly("me.clip", "placeholderapi", "2.11.2") {
         exclude(group = "org.spigotmc", module = "spigot")

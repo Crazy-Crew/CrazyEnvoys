@@ -3,13 +3,14 @@ package com.badbones69.crazyenvoys.api.events;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Event is called when the envoy event has ended for any reason.
  */
 public class EnvoyEndEvent extends Event {
     
-    private final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private Player player;
     private final EnvoyEndReason reason;
     
@@ -39,8 +40,12 @@ public class EnvoyEndEvent extends Event {
     public Player getPlayer() {
         return player;
     }
-    
-    public HandlerList getHandlers() {
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
     

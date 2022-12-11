@@ -6,13 +6,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Event is called when a player places a new crate spawning location in editor mode.
  */
 public class NewDropLocationEvent extends Event implements Cancellable {
     
-    private final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private final Player player;
     private final Location location;
     private final Block block;
@@ -50,8 +51,12 @@ public class NewDropLocationEvent extends Event implements Cancellable {
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }
-    
-    public HandlerList getHandlers() {
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 }
