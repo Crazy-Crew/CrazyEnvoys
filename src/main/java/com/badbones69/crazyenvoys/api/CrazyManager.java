@@ -575,15 +575,18 @@ public class CrazyManager {
             }
         }
 
-        String locations = "";
+        StringBuilder locations = new StringBuilder();
         int x = 1;
         for (Block b : locationSettings.getSpawnLocations()) {
-            locations = "%s&8[&3%d&8] &c%s: %d, %d, %d\n".formatted(locations, x++, b.getWorld().getName(), b.getX(), b.getY(), b.getZ());
+             locations.append(Messages.LOCATION_FORMAT.getMessage()
+                     .replace("%id%", x + "")
+                     .replace("%world%", b.getWorld().getName())
+                     .replace("%x%", b.getX() + "")
+                     .replace("%y%", b.getY() + "")
+                     .replace("%z%", b.getZ() + ""));
+            x += 1;
         }
-        Bukkit.broadcast(methods.color("&e&l" +
-                "All Envoy Locations: \n&c" +
-                "[ID], [World]: [X], [Y], [Z], &r\n" +
-                locations), "envoy.locations");
+        Bukkit.broadcast(Messages.CRATE_LOCATIONS.getMessage().replace("%locations%", locations.toString()).translateEscapes(), "envoy.locations");
 
         return locationSettings.getDropLocations();
     }

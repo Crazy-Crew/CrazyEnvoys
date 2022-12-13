@@ -63,6 +63,8 @@ public enum Messages {
     HOUR("Time-Placeholders.Hour", "h"),
     MINUTE("Time-Placeholders.Minute", "m"),
     SECOND("Time-Placeholders.Second", "s"),
+    CRATE_LOCATIONS("Crate-Locations", "&e&lAll Envoy Locations: \n&c[ID], [World]: [X], [Y], [Z] &r%locations%"),
+    LOCATION_FORMAT("Location-Format", "\n&8[&3%id%&8] &c%world%: %x%, %y%, %z%"),
     HELP("Help", Arrays.asList(
     "&6/envoy help &7- Shows the envoy help menu.",
     "&6/envoy reload &7- Reloads all the config files.",
