@@ -575,6 +575,16 @@ public class CrazyManager {
             }
         }
 
+        String locations = "";
+        int x = 1;
+        for (Block b : locationSettings.getSpawnLocations()) {
+            locations = "%s&8[&3%d&8] &c%s: %d, %d, %d\n".formatted(locations, x++, b.getWorld().getName(), b.getX(), b.getY(), b.getZ());
+        }
+        Bukkit.broadcast(methods.color("&e&l" +
+                "All Envoy Locations: \n&c" +
+                "[ID], [World]: [X], [Y], [Z], &r\n" +
+                locations), "envoy.locations");
+
         return locationSettings.getDropLocations();
     }
 
