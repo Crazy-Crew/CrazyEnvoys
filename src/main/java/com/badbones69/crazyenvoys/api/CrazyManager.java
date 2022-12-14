@@ -21,6 +21,7 @@ import com.badbones69.crazyenvoys.support.PluginSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
+import com.badbones69.crazyenvoys.support.holograms.HolographicDisplaysSupport;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -211,9 +212,8 @@ public class CrazyManager {
         if (PluginSupport.WORLD_GUARD.isPluginEnabled() && PluginSupport.WORLD_EDIT.isPluginEnabled()) worldGuardSupportVersion = new WorldGuardSupport();
 
         if (PluginSupport.HOLOGRAPHIC_DISPLAYS.isPluginEnabled()) {
-            //hologramController = new HolographicDisplaysSupport();
-            //plugin.getLogger().info("HolographicDisplays support has been enabled.");
-            plugin.getLogger().warning("HolographicDisplays is not supported until HolographicDisplays boots on 1.19.X");
+            hologramController = new HolographicDisplaysSupport();
+            plugin.getLogger().info("HolographicDisplays support has been enabled.");
         } else if (PluginSupport.DECENT_HOLOGRAMS.isPluginEnabled()) {
             hologramController = new DecentHologramsSupport();
             plugin.getLogger().info("DecentHolograms support has been enabled.");
