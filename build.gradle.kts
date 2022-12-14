@@ -1,19 +1,18 @@
 plugins {
-    java
+    `java-library`
+
+    `maven-publish`
+
+    id("com.modrinth.minotaur") version "2.5.0"
 
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
-val buildNumber: String? = System.getenv("BUILD_NUMBER")
-
-val jenkinsVersion = "1.4.19-b$buildNumber"
-
-group = "com.badbones69.crazyenvoys"
-version = "1.4.19"
-description = "Drop custom crates with any prize you want all over spawn for players to fight over."
+project.group = "com.badbones69.crazyenvoys"
+project.version = "${extra["plugin_version"]}"
+project.description = "Drop custom crates with any prize you want all over spawn for players to fight over."
 
 repositories {
-
     /**
      * PAPI Team
      */
@@ -48,11 +47,11 @@ repositories {
 }
 
 dependencies {
-    implementation("de.tr7zw", "nbt-data-api", "2.10.0")
+    implementation("de.tr7zw", "nbt-data-api", "2.11.0")
 
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
 
-    compileOnly("io.papermc.paper", "paper-api", "1.19.3-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper", "paper-api", "${project.extra["minecraft_version"]}-R0.1-SNAPSHOT")
 
     compileOnly("me.filoghost.holographicdisplays", "holographicdisplays-api", "3.0.0")
 
@@ -75,12 +74,15 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
+val buildNumber: String? = System.getenv("BUILD_NUMBER")
+val buildVersion = "${project.version}-b$buildNumber-SNAPSHOT"
+
 tasks {
     shadowJar {
         if (buildNumber != null) {
-            archiveFileName.set("${rootProject.name}-[v${jenkinsVersion}].jar")
+            archiveFileName.set("${rootProject.name}-${buildVersion}.jar")
         } else {
-            archiveFileName.set("${rootProject.name}-[v${rootProject.version}].jar")
+            archiveFileName.set("${rootProject.name}-${project.version}.jar")
         }
 
         listOf(
@@ -91,6 +93,22 @@ tasks {
         }
     }
 
+    modrinth {
+        token.set(System.getenv("MODRINTH_TOKEN"))
+        projectId.set("crazyenvoys")
+        versionName.set("${rootProject.name} ${project.version} Update")
+        versionNumber.set("${project.version}")
+        versionType.set("${extra["version_type"]}")
+        uploadFile.set(shadowJar.get())
+
+        autoAddDependsOn.set(true)
+
+        gameVersions.addAll(listOf("1.19", "1.19.1", "1.19.2", "1.19.3"))
+        loaders.addAll(listOf("paper", "purpur"))
+
+        changelog.set(System.getenv("COMMIT_MESSAGE"))
+    }
+
     compileJava {
         options.release.set(17)
     }
@@ -99,10 +117,31 @@ tasks {
         filesMatching("plugin.yml") {
             expand(
                 "name" to rootProject.name,
-                "group" to rootProject.group,
-                "version" to rootProject.version,
-                "description" to rootProject.description
+                "group" to project.group,
+                "version" to if (buildNumber != null) buildVersion else project.version,
+                "description" to project.description
             )
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven("https://repo.crazycrew.us/releases") {
+            name = "crazycrew"
+            credentials {
+                username = System.getenv("REPOSITORY_USERNAME")
+                password = System.getenv("REPOSITORY_PASSWORD")
+            }
+        }
+    }
+
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "${project.group}"
+            artifactId = rootProject.name.toLowerCase()
+            version = "${project.version}"
+            from(components["java"])
         }
     }
 }

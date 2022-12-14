@@ -1,6 +1,6 @@
 <br />
 
-[![CrazyEnvoys](https://raw.githubusercontent.com/RyderBelserion/Assets/main/crazycrew/new/crazyenvoys/Banner.png)](https://www.spigotmc.org/resources/crazy-crates.17599/)
+[![CrazyEnvoys](https://raw.githubusercontent.com/RyderBelserion/Assets/main/crazycrew/new/crazyenvoys/Banner.png)](https://modrinth.com/plugin/crazyenvoys)
 
 <div align="center">
 
@@ -12,7 +12,7 @@
 [![Contact][discord-shield]][discord-url]
 ![CodeFactor][codefactor-shield]
 
-<a href="/#"><img src="https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/supported/spigot_64h.png" height="50"></a>
+<a href="/#"><img src="https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/unsupported/spigot_64h.png" height="50"></a>
 <a href="/#"><img src="https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/supported/paper_64h.png" height="50"></a>
 <a href="/#"><img src="https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/supported/purpur_64h.png" height="50"></a>
 
@@ -49,9 +49,11 @@
 </details>
 
 ## Downloads
-https://www.spigotmc.org/resources/crazy-envoys.32870/
+https://modrinth.com/plugin/crazyenvoys
 
-https://ci.badbones69.com/view/Stable/job/CrazyEnvoys/
+## Snapshot Builds
+### Get the latest changes before they are uploaded to modrinth!
+https://ci.crazycrew.us/view/Plugins/job/CrazyEnvoys/
 
 ## Getting Started
 
