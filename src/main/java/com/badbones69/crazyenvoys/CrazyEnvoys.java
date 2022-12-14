@@ -88,6 +88,8 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
         String countDownSetting = config.getString("Settings.Crate-Countdown.Toggle");
 
+        String envoyLocationBroadcast = config.getString("Settings.Envoy-Locations-Broadcast");
+
         if (metricsPath == null) {
             config.set("Settings.Toggle-Metrics", true);
             Files.CONFIG.saveFile();
@@ -100,6 +102,11 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
             config.set("Settings.Crate-Countdown.Time", 120);
             config.set("Settings.Crate-Countdown.Message", "&cReady to claim.");
             config.set("Settings.Crate-Countdown.Message-Seconds", " seconds.");
+            Files.CONFIG.saveFile();
+        }
+
+        if (envoyLocationBroadcast == null) {
+            config.set("Settings.Envoy-Locations-Broadcast", false);
             Files.CONFIG.saveFile();
         }
 

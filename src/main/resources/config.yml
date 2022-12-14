@@ -12,8 +12,9 @@ Settings:
   Random-Locations: false #If true you will need to make sure to set the center location.
   Max-Radius: 300 #The maximum distance the crates will fall from the center.
   Min-Radius: 20 #The minimum distance from the middle the crates will fall from.
+  Envoy-Locations-Broadcast: false # If envoy locations should be broadcast whenever an envoy event starts
   Envoy-Run-Time: '5m' #The amount of time the envoy event will go for.
-  Envoy-Timer-Toggle: true #If the envoys happen on an interval. If false the only wait it will start is if its started with the command or flare.
+  Envoy-Timer-Toggle: true #If the envoys happen on an interval. If false the only wait it will start is if it's started with the command or flare.
   Envoy-Cooldown-Toggle: true #Toggle if it uses a cooldown or a specified time of the day.
   Envoy-Filter-Players-Zero: true #Toggle if you want CrazyEnvoys to ignore when player counts are 0.
   Envoy-Cooldown: '1h' #The time till the envoy event will happen again.

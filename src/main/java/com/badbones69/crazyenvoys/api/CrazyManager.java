@@ -21,7 +21,6 @@ import com.badbones69.crazyenvoys.support.PluginSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
-import com.badbones69.crazyenvoys.support.holograms.HolographicDisplaysSupport;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -575,18 +574,23 @@ public class CrazyManager {
             }
         }
 
-        StringBuilder locations = new StringBuilder();
-        int x = 1;
-        for (Block b : locationSettings.getSpawnLocations()) {
-             locations.append(Messages.LOCATION_FORMAT.getMessage()
-                     .replace("%id%", x + "")
-                     .replace("%world%", b.getWorld().getName())
-                     .replace("%x%", b.getX() + "")
-                     .replace("%y%", b.getY() + "")
-                     .replace("%z%", b.getZ() + ""));
-            x += 1;
+        boolean envoyLocationsBroadcast = Files.CONFIG.getFile().getBoolean("Settings.Envoy-Locations-Broadcast");
+
+        if (envoyLocationsBroadcast) {
+            StringBuilder locations = new StringBuilder();
+            int x = 1;
+            for (Block b : locationSettings.getSpawnLocations()) {
+                locations.append(Messages.LOCATION_FORMAT.getMessage()
+                        .replace("%id%", x + "")
+                        .replace("%world%", b.getWorld().getName())
+                        .replace("%x%", b.getX() + "")
+                        .replace("%y%", b.getY() + "")
+                        .replace("%z%", b.getZ() + ""));
+                x += 1;
+            }
+
+            plugin.getServer().broadcast(Messages.CRATE_LOCATIONS.getMessage().replace("%locations%", locations.toString()).translateEscapes(), "envoy.locations");
         }
-        Bukkit.broadcast(Messages.CRATE_LOCATIONS.getMessage().replace("%locations%", locations.toString()).translateEscapes(), "envoy.locations");
 
         return locationSettings.getDropLocations();
     }
