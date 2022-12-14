@@ -46,11 +46,8 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
     private FireworkDamageAPI fireworkDamageAPI;
 
-    private boolean isEnabled = false;
-
     @Override
     public void onEnable() {
-
         plugin = this;
 
         fileManager = new FileManager();
@@ -113,14 +110,10 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) new PlaceholderAPISupport().register();
 
         enable();
-
-        isEnabled = true;
     }
 
     @Override
     public void onDisable() {
-        if (!isEnabled) return;
-
         for (Player player : getServer().getOnlinePlayers()) {
             if (editorSettings.isEditor(player)) {
                 editorSettings.removeEditor(player);
