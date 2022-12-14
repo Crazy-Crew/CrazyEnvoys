@@ -2,7 +2,6 @@ package com.badbones69.crazyenvoys.api.objects;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
-
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.UUID;
