@@ -57,6 +57,8 @@ Messages:
     Hour: 'h'
     Minute: 'm'
     Second: 's'
+  Crate-Locations: '&e&lAll Envoy Locations: \n&c[ID], [World]: [X], [Y], [Z] &r%locations%'
+  Location-Format: '\n&8[&3%id%&8] &c%world%: %x%, %y%, %z%'
   Help:
     - '&6/envoy help &7- Shows the envoy help menu.'
     - '&6/envoy reload &7- Reloads all the config files.'

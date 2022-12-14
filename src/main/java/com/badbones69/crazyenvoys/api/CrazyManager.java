@@ -575,6 +575,19 @@ public class CrazyManager {
             }
         }
 
+        StringBuilder locations = new StringBuilder();
+        int x = 1;
+        for (Block b : locationSettings.getSpawnLocations()) {
+             locations.append(Messages.LOCATION_FORMAT.getMessage()
+                     .replace("%id%", x + "")
+                     .replace("%world%", b.getWorld().getName())
+                     .replace("%x%", b.getX() + "")
+                     .replace("%y%", b.getY() + "")
+                     .replace("%z%", b.getZ() + ""));
+            x += 1;
+        }
+        Bukkit.broadcast(Messages.CRATE_LOCATIONS.getMessage().replace("%locations%", locations.toString()).translateEscapes(), "envoy.locations");
+
         return locationSettings.getDropLocations();
     }
 
