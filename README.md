@@ -53,7 +53,7 @@ https://modrinth.com/plugin/crazyenvoys
 
 ## Snapshot Builds
 ### Get the latest changes before they are uploaded to modrinth!
-https://ci.crazycrew.us/view/Plugins/job/CrazyEnvoys/
+https://ci.crazycrew.us/view/Snapshots/job/CrazyEnvoys/
 
 ## Getting Started
 
