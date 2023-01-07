@@ -3,7 +3,7 @@ plugins {
 
     `maven-publish`
 
-    id("com.modrinth.minotaur") version "2.5.0"
+    id("com.modrinth.minotaur") version "2.6.0"
 
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
