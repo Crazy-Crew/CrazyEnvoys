@@ -52,8 +52,9 @@
 https://modrinth.com/plugin/crazyenvoys
 
 ## Snapshot Builds
-### Get the latest changes before they are uploaded to modrinth!
-https://ci.crazycrew.us/view/Snapshots/job/CrazyEnvoys/
+### Get the latest changes before marked as release.
+All snapshot builds will be labeled with Beta on Modrinth.<br>
+> https://modrinth.com/plugin/crazyenvoys/versions
 
 ## Getting Started
 
@@ -63,7 +64,7 @@ How to get started with contributing / maintaining your own version of CrazyEnvo
 
 A list of things necessary to make sure you can build CrazyEnvoys properly.
 * Intellij IDEA
-    * https://www.jetbrains.com/idea/download/
+    * > https://www.jetbrains.com/idea/download/
 * Gradle
 
 ### Installation
@@ -108,4 +109,4 @@ Distributed under the MIT License. See [`LICENSE`](/LICENSE) for more informatio
 [license-shield]: https://img.shields.io/github/license/Crazy-Crew/CrazyEnvoys.svg?style=flat&logo=appveyor
 [license-url]: https://github.com/Crazy-Crew/CrazyEnvoys/blob/master/LICENSE
 
-[codefactor-shield]: https://img.shields.io/codefactor/grade/github/crazy-crew/CrazyEnvoys/main?style=flat&logo=appveyor
+[codefactor-shield]: https://img.shields.io/codefactor/grade/github/crazy-crew/CrazyEnvoys/main?style=for-the-badge

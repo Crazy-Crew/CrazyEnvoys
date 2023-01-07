@@ -74,12 +74,12 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
-val buildNumber: String? = System.getenv("BUILD_NUMBER")
-val buildVersion = "${project.version}-b$buildNumber-SNAPSHOT"
+val buildVersion = "${project.version}-SNAPSHOT"
+val isSnapshot = true
 
 tasks {
     shadowJar {
-        if (buildNumber != null) {
+        if (isSnapshot) {
             archiveFileName.set("${rootProject.name}-${buildVersion}.jar")
         } else {
             archiveFileName.set("${rootProject.name}-${project.version}.jar")
@@ -96,9 +96,18 @@ tasks {
     modrinth {
         token.set(System.getenv("MODRINTH_TOKEN"))
         projectId.set("crazyenvoys")
-        versionName.set("${rootProject.name} Update ${project.version}")
-        versionNumber.set("${project.version}")
-        versionType.set("${extra["version_type"]}")
+
+        if (isSnapshot) {
+            versionName.set("${rootProject.name} $buildVersion")
+            versionNumber.set(buildVersion)
+
+            versionType.set("beta")
+        } else {
+            versionName.set("${rootProject.name} ${project.version}")
+            versionNumber.set("${project.version}")
+
+            versionType.set("release")
+        }
         uploadFile.set(shadowJar.get())
 
         autoAddDependsOn.set(true)
@@ -109,7 +118,7 @@ tasks {
         //<h3>The first release for CrazyEnvoys on Modrinth! 🎉🎉🎉🎉🎉<h3><br> If we want a header.
         changelog.set("""
                 <h2>Changes:</h2>
-                 <p>N/A</p>
+                 <p>Added 1.18.2 support.</p>
                 <h2>Bug Fixes:</h2>
                  <p>N/A</p>
             """.trimIndent())
@@ -124,7 +133,7 @@ tasks {
             expand(
                 "name" to rootProject.name,
                 "group" to project.group,
-                "version" to if (buildNumber != null) buildVersion else project.version,
+                "version" to if (isSnapshot) buildVersion else project.version,
                 "description" to project.description
             )
         }
@@ -132,8 +141,10 @@ tasks {
 }
 
 publishing {
+    val mavenExt: String = if (isSnapshot) "snapshots" else "releases"
+
     repositories {
-        maven("https://repo.crazycrew.us/snapshots") {
+        maven("https://repo.crazycrew.us/$mavenExt") {
             name = "crazycrew"
             //credentials(PasswordCredentials::class)
             credentials {
@@ -147,7 +158,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "${project.group}"
             artifactId = rootProject.name.toLowerCase()
-            version = "${project.version}"
+            version = if (isSnapshot) buildVersion else "${project.version}"
             from(components["java"])
         }
     }
