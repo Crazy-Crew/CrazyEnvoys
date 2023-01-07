@@ -96,7 +96,7 @@ tasks {
     modrinth {
         token.set(System.getenv("MODRINTH_TOKEN"))
         projectId.set("crazyenvoys")
-        versionName.set("${rootProject.name} ${project.version} Update")
+        versionName.set("${rootProject.name} Update ${project.version}")
         versionNumber.set("${project.version}")
         versionType.set("${extra["version_type"]}")
         uploadFile.set(shadowJar.get())
@@ -106,7 +106,13 @@ tasks {
         gameVersions.addAll(listOf("1.18", "1.18.1", "1.18.2", "1.19", "1.19.1", "1.19.2", "1.19.3"))
         loaders.addAll(listOf("paper", "purpur"))
 
-        changelog.set(System.getenv("COMMIT_MESSAGE"))
+        //<h3>The first release for CrazyEnvoys on Modrinth! 🎉🎉🎉🎉🎉<h3><br> If we want a header.
+        changelog.set("""
+                <h2>Changes:</h2>
+                 <p>N/A</p>
+                <h2>Bug Fixes:</h2>
+                 <p>N/A</p>
+            """.trimIndent())
     }
 
     compileJava {
@@ -127,8 +133,9 @@ tasks {
 
 publishing {
     repositories {
-        maven("https://repo.crazycrew.us/releases") {
+        maven("https://repo.crazycrew.us/snapshots") {
             name = "crazycrew"
+            //credentials(PasswordCredentials::class)
             credentials {
                 username = System.getenv("REPOSITORY_USERNAME")
                 password = System.getenv("REPOSITORY_PASSWORD")
