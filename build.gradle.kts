@@ -108,6 +108,7 @@ tasks {
 
             versionType.set("release")
         }
+
         uploadFile.set(shadowJar.get())
 
         autoAddDependsOn.set(true)
