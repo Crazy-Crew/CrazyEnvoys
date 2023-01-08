@@ -8,8 +8,6 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
-project.group = "com.badbones69.crazyenvoys"
-project.version = "${extra["plugin_version"]}"
 project.description = "Drop custom crates with any prize you want all over spawn for players to fight over."
 
 repositories {
@@ -60,7 +58,7 @@ dependencies {
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.1.0-SNAPSHOT")
 
     compileOnly("com.Zrips.CMI", "CMI-API", "9.2.6.1")
-    compileOnly("CMILib", "CMILib", "1.2.3.7")
+    compileOnly("net.Zrips.CMILib", "CMI-Lib", "1.2.4.1")
 
     compileOnly("me.clip", "placeholderapi", "2.11.2") {
         exclude(group = "org.spigotmc", module = "spigot")
@@ -74,16 +72,19 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
-val buildVersion = "${project.version}-SNAPSHOT"
-val isSnapshot = true
+val isSnapshot = false
+
+fun getPluginVersion(): String {
+    return if (isSnapshot) "${project.version}-SNAPSHOT" else project.version.toString()
+}
+
+fun getPluginVersionType(): String {
+    return if (isSnapshot) "beta" else "release"
+}
 
 tasks {
     shadowJar {
-        if (isSnapshot) {
-            archiveFileName.set("${rootProject.name}-${buildVersion}.jar")
-        } else {
-            archiveFileName.set("${rootProject.name}-${project.version}.jar")
-        }
+        archiveFileName.set("${rootProject.name}-${getPluginVersion()}.jar")
 
         listOf(
             "de.tr7zw",
@@ -97,17 +98,10 @@ tasks {
         token.set(System.getenv("MODRINTH_TOKEN"))
         projectId.set("crazyenvoys")
 
-        if (isSnapshot) {
-            versionName.set("${rootProject.name} $buildVersion")
-            versionNumber.set(buildVersion)
+        versionName.set("${rootProject.name} ${getPluginVersion()}")
+        versionNumber.set(getPluginVersion())
 
-            versionType.set("beta")
-        } else {
-            versionName.set("${rootProject.name} ${project.version}")
-            versionNumber.set("${project.version}")
-
-            versionType.set("release")
-        }
+        versionType.set(getPluginVersionType())
 
         uploadFile.set(shadowJar.get())
 
@@ -134,7 +128,7 @@ tasks {
             expand(
                 "name" to rootProject.name,
                 "group" to project.group,
-                "version" to if (isSnapshot) buildVersion else project.version,
+                "version" to getPluginVersion(),
                 "description" to project.description
             )
         }
@@ -159,7 +153,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "${project.group}"
             artifactId = rootProject.name.toLowerCase()
-            version = if (isSnapshot) buildVersion else "${project.version}"
+            version = getPluginVersion()
             from(components["java"])
         }
     }
