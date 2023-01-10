@@ -110,10 +110,10 @@ tasks {
 
         //<h3>The first release for CrazyEnvoys on Modrinth! 🎉🎉🎉🎉🎉<h3><br> If we want a header.
         changelog.set("""
-                <h2>Changes:</h2>
+                <h4>Changes:</h4>
                  <p>Nice!</p>
                  <p>Added 1.18.2 support.</p>
-                <h2>Bug Fixes:</h2>
+                <h4>Bug Fixes:</h4>
                  <p>N/A</p>
             """.trimIndent())
     }
