@@ -67,7 +67,7 @@ dependencies {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(extra["java_version"].toString()))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(project.extra["java_version"].toString()))
 }
 
 val isBeta: Boolean = extra["isBeta"].toString().toBoolean()
@@ -119,7 +119,7 @@ tasks {
     }
 
     compileJava {
-        options.release.set(extra["java_version"].toString().toInt())
+        options.release.set(project.extra["java_version"].toString().toInt())
     }
 
     processResources {
