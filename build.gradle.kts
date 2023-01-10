@@ -82,7 +82,7 @@ fun getPluginVersionType(): String {
 
 tasks {
     shadowJar {
-        archiveFileName.set("${project.name}-${getPluginVersion()}.jar")
+        archiveFileName.set("${rootProject.name}-${getPluginVersion()}.jar")
 
         listOf(
             "de.tr7zw",
@@ -94,9 +94,9 @@ tasks {
 
     modrinth {
         token.set(System.getenv("MODRINTH_TOKEN"))
-        projectId.set(project.name.toLowerCase())
+        projectId.set(rootProject.name.toLowerCase())
 
-        versionName.set("${project.name} ${getPluginVersion()}")
+        versionName.set("${rootProject.name} ${getPluginVersion()}")
         versionNumber.set(getPluginVersion())
 
         versionType.set(getPluginVersionType())
@@ -125,11 +125,11 @@ tasks {
     processResources {
         filesMatching("plugin.yml") {
             expand(
-                "name" to project.name,
+                "name" to rootProject.name,
                 "group" to project.group,
                 "version" to getPluginVersion(),
                 "description" to project.description,
-                "website" to "https://modrinth.com/plugin/${project.name.toLowerCase()}"
+                "website" to "https://modrinth.com/plugin/${rootProject.name.toLowerCase()}"
             )
         }
     }
@@ -152,7 +152,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "${project.group}"
-            artifactId = project.name.toLowerCase()
+            artifactId = rootProject.name.toLowerCase()
             version = getPluginVersion()
             from(components["java"])
         }
