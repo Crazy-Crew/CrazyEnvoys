@@ -532,6 +532,11 @@ public class CrazyManager {
             maxSpawns = envoySettings.isRandomLocationsEnabled() ? envoySettings.getMaxCrates() : locationSettings.getActiveLocations().size();
         }
 
+        if (maxSpawns > (Math.pow(envoySettings.getMaxRadius(), 2) - Math.pow((envoySettings.getMinRadius() * 2 + 1), 2))) {
+            maxSpawns = (int) (Math.pow(envoySettings.getMaxRadius(), 2) - Math.pow((envoySettings.getMinRadius() * 2 + 1), 2));
+            plugin.getLogger().warning("Crate spawn amount is larger than the area that was provided. Spawning " + maxSpawns + " crates instead.");
+        }
+
         if (envoySettings.isRandomLocationsEnabled()) {
             if (!testCenter()) return new ArrayList<>();
 
