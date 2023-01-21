@@ -17,7 +17,7 @@ repositories {
     /**
      * NBT API
      */
-    maven("https://repo.codemc.org/repository/maven-public/")
+    maven("https://repo.codemc.io/repository/maven-public/")
 
     /**
      * Paper Team

@@ -532,6 +532,11 @@ public class CrazyManager {
             maxSpawns = envoySettings.isRandomLocationsEnabled() ? envoySettings.getMaxCrates() : locationSettings.getActiveLocations().size();
         }
 
+        if (maxSpawns > (Math.pow(envoySettings.getMaxRadius() * 2, 2) - Math.pow((envoySettings.getMinRadius() * 2 + 1), 2))) {
+            maxSpawns = (int) (Math.pow(envoySettings.getMaxRadius() * 2, 2) - Math.pow((envoySettings.getMinRadius() * 2 + 1), 2));
+            plugin.getLogger().warning("Crate spawn amount is larger than the area that was provided. Spawning " + maxSpawns + " crates instead.");
+        }
+
         if (envoySettings.isRandomLocationsEnabled()) {
             if (!testCenter()) return new ArrayList<>();
 
@@ -540,7 +545,7 @@ public class CrazyManager {
             while (locationSettings.getDropLocations().size() < maxSpawns) {
                 int maxRadius = envoySettings.getMaxRadius();
                 Location location = center.clone();
-                location.add(-(maxRadius / 2) + random.nextInt(maxRadius), 0, -(maxRadius / 2) + random.nextInt(maxRadius));
+                location.add(-(maxRadius) + random.nextInt(maxRadius * 2), 0, -(maxRadius) + random.nextInt(maxRadius * 2));
                 location = location.getWorld().getHighestBlockAt(location).getLocation();
 
                 if (!location.getChunk().isLoaded() && !location.getChunk().load()) continue;
