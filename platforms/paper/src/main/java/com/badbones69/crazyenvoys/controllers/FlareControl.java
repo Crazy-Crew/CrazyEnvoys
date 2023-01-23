@@ -7,7 +7,7 @@ import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.objects.EnvoySettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
-import com.badbones69.crazyenvoys.support.PluginSupport;
+import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,7 +25,7 @@ public class FlareControl implements Listener {
     private final EnvoySettings envoySettings = plugin.getEnvoySettings();
 
     private final FlareSettings flareSettings = plugin.getFlareSettings();
-    
+
     @EventHandler(ignoreCancelled = true)
     public void onFlareActivate(PlayerInteractEvent e) {
         Player player = e.getPlayer();

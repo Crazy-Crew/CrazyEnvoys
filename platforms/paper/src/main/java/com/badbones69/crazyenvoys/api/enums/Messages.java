@@ -16,7 +16,7 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 
 public enum Messages {
-    
+
     LEFT("Left", "%prefix%&6%player% &7has just found a %tier% envoy. There are now &6%amount% &7left to find."),
     ENDED("Ended", "%prefix%&cThe envoy event has ended. Thanks for playing and please come back for the next one."),
     WARNING("Warning", "%prefix%&c[&4ALERT&c] &7There is an envoy event happening in &6%time%&7."),
@@ -33,7 +33,7 @@ public enum Messages {
     GIVEN_FLARE("Given-Flare", "%prefix%&7You have been given &6%amount% &7flares."),
     FORCE_START("Force-Start", "%prefix%&7You have just started the envoy."),
     FORCE_ENDED("Force-Ended", "%prefix%&cYou have just ended the envoy."),
-    DROPS_PAGE("Drops-Page", "%prefix%&7Use /envoy drops [page] to see more."),
+    DROPS_PAGE("Drops-Page", "%prefix%&7Use /crazyenvoys drops [page] to see more."),
     DROPS_FORMAT("Drops-Format", "&7[&6%id%&7]: %world%, %x%, %y%, %z%"),
     DROPS_AVAILABLE("Drops-Available", "%prefix%&7List of all available envoys."),
     DROPS_POSSIBILITIES("Drops-Possibilities", "%prefix%&7List of location envoy's may spawn at."),
@@ -58,7 +58,7 @@ public enum Messages {
     KICKED_FROM_EDITOR_MODE("Kicked-From-Editor-Mode", "%prefix%&cSorry but an envoy is active. Please stop it or wait till it's over."),
     NOT_IN_WORLD_GUARD_REGION("Not-In-World-Guard-Region", "%prefix%&cYou must be in the WarZone to use a flare."),
     NO_SPAWN_LOCATIONS_FOUND("No-Spawn-Locations-Found", "%prefix%&cNo spawn locations were found and so the event has been cancelled and the cooldown has been reset."),
-    COMMAND_NOT_FOUND("Command-Not-Found", "%prefix%&cPlease do /envoy help for more information."),
+    COMMAND_NOT_FOUND("Command-Not-Found", "%prefix%&cPlease do /crazyenvoys help for more information."),
     DAY("Time-Placeholders.Day", "d"),
     HOUR("Time-Placeholders.Hour", "h"),
     MINUTE("Time-Placeholders.Minute", "m"),
@@ -66,17 +66,17 @@ public enum Messages {
     CRATE_LOCATIONS("Crate-Locations", "&e&lAll Envoy Locations: \n&c[ID], [World]: [X], [Y], [Z] &r%locations%"),
     LOCATION_FORMAT("Location-Format", "\n&8[&3%id%&8] &c%world%: %x%, %y%, %z%"),
     HELP("Help", Arrays.asList(
-    "&6/envoy help &7- Shows the envoy help menu.",
-    "&6/envoy reload &7- Reloads all the config files.",
-    "&6/envoy time &7- Shows the time till the envoy starts or ends.",
-    "&6/envoy drops [page] &7- Shows all current crate locations.",
-    "&6/envoy ignore &7- Shuts up the envoy collecting message.",
-    "&6/envoy flare [amount] [player] &7- Give a player a flare to call an envoy event.",
-    "&6/envoy edit &7- Edit the crate locations with bedrock.",
-    "&6/envoy start &7- Force starts the envoy.",
-    "&6/envoy stop &7- Force stops the envoy.",
-    "&6/envoy center &7- Set the center of the random crate drops."));
-    
+    "&6/crazyenvoys help &7- Shows the envoy help menu.",
+    "&6/crazyenvoys reload &7- Reloads all the config files.",
+    "&6/crazyenvoys time &7- Shows the time till the envoy starts or ends.",
+    "&6/crazyenvoys drops [page] &7- Shows all current crate locations.",
+    "&6/crazyenvoys ignore &7- Shuts up the envoy collecting message.",
+    "&6/crazyenvoys flare [amount] [player] &7- Give a player a flare to call an envoy event.",
+    "&6/crazyenvoys edit &7- Edit the crate locations with bedrock.",
+    "&6/crazyenvoys start &7- Force starts the envoy.",
+    "&6/crazyenvoys stop &7- Force stops the envoy.",
+    "&6/crazyenvoys center &7- Set the center of the random crate drops."));
+
     private final String path;
     private String defaultMessage;
     private List<String> defaultListMessage;
@@ -88,17 +88,17 @@ public enum Messages {
     private final EnvoySettings envoySettings = plugin.getEnvoySettings();
 
     private final Methods methods = plugin.getMethods();
-    
+
     Messages(String path, String defaultMessage) {
         this.path = path;
         this.defaultMessage = defaultMessage;
     }
-    
+
     Messages(String path, List<String> defaultListMessage) {
         this.path = path;
         this.defaultListMessage = defaultListMessage;
     }
-    
+
     public String convertList(List<String> list) {
         StringBuilder message = new StringBuilder();
 
@@ -108,7 +108,7 @@ public enum Messages {
 
         return message.toString();
     }
-    
+
     public static void addMissingMessages() {
         FileConfiguration messages = Files.MESSAGES.getFile();
         boolean saveFile = false;
@@ -127,39 +127,39 @@ public enum Messages {
 
         if (saveFile) Files.MESSAGES.saveFile();
     }
-    
+
     public String getMessage() {
         return getMessage(true);
     }
-    
+
     public String getMessage(String placeholder, String replacement) {
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put(placeholder, replacement);
         return getMessage(placeholders, true);
     }
-    
+
     public String getMessage(Map<String, String> placeholders) {
         return getMessage(placeholders, true);
     }
-    
+
     public String getMessageNoPrefix() {
         return getMessage(false);
     }
-    
+
     public String getMessageNoPrefix(String placeholder, String replacement) {
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put(placeholder, replacement);
         return getMessage(placeholders, false);
     }
-    
+
     public String getMessageNoPrefix(Map<String, String> placeholders) {
         return getMessage(placeholders, false);
     }
-    
+
     private String getMessage(boolean prefix) {
         return getMessage(new HashMap<>(), prefix);
     }
-    
+
     private String getMessage(Map<String, String> placeholders, boolean prefix) {
         String message;
         boolean isList = isList();
@@ -188,27 +188,27 @@ public enum Messages {
 
         return methods.color(message);
     }
-    
+
     public void sendMessage(Player player) {
         sendMessage(player, new HashMap<>());
     }
-    
+
     public void sendMessage(Player player, Map<String, String> placeholder) {
         player.sendMessage(getMessage(placeholder));
     }
-    
+
     public void sendMessage(CommandSender sender) {
         sendMessage(sender, new HashMap<>());
     }
-    
+
     public void sendMessage(CommandSender sender, Map<String, String> placeholder) {
         sender.sendMessage(getMessage(placeholder));
     }
-    
+
     public void broadcastMessage(boolean ignore) {
         broadcastMessage(ignore, new HashMap<>());
     }
-    
+
     public void broadcastMessage(boolean ignore, Map<String, String> placeholder) {
         if (envoySettings.isWorldMessagesEnabled()) {
             for (Player player : plugin.getServer().getOnlinePlayers()) {
@@ -234,11 +234,11 @@ public enum Messages {
 
         plugin.getServer().getLogger().log(Level.INFO, getMessage(placeholder));
     }
-    
+
     private boolean exists() {
         return Files.MESSAGES.getFile().contains("Messages." + path);
     }
-    
+
     private boolean isList() {
         if (Files.MESSAGES.getFile().contains("Messages." + path)) {
             return !Files.MESSAGES.getFile().getStringList("Messages." + path).isEmpty();
@@ -246,15 +246,15 @@ public enum Messages {
             return defaultMessage == null;
         }
     }
-    
+
     private String getPath() {
         return path;
     }
-    
+
     private String getDefaultMessage() {
         return defaultMessage;
     }
-    
+
     private List<String> getDefaultListMessage() {
         return defaultListMessage;
     }

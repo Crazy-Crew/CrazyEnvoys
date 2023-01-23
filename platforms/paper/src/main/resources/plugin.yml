@@ -5,7 +5,7 @@ main: "${group}.CrazyEnvoys"
 authors: [BadBones69, RyderBelserion]
 
 version: ${version}
-api-version: "1.18"
+api-version: "1.17"
 description: ${description}
 
 website: ${website}
@@ -22,9 +22,10 @@ softdepend:
   - WorldGuard
 
 commands:
-  envoys:
+  crazyenvoys:
     description: "Manage your envoys however you want."
     aliases:
+      - envoys
       - envoy
 
 permissions:

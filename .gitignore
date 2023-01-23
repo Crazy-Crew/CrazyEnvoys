@@ -2,3 +2,13 @@
 .idea
 
 build
+
+build-logic/.gradle
+build-logic/build
+
+core/build
+
+platforms/paper/build
+platforms/paper/run/*
+
+!platforms/paper/run/eula.txt

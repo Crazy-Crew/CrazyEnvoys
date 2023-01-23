@@ -17,7 +17,7 @@ public class EnvoyTab implements TabCompleter {
     private final LocationSettings locationSettings = plugin.getLocationSettings();
 
     private final CrazyManager crazyManager = plugin.getCrazyManager();
-    
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String commandLabel, String[] args) {
         List<String> completions = new ArrayList<>();
@@ -36,8 +36,7 @@ public class EnvoyTab implements TabCompleter {
             return StringUtil.copyPartialMatches(args[0], completions, new ArrayList<>());
         } else if (args.length == 2) {// /envoy arg0
             switch (args[0].toLowerCase()) {
-                case "drop":
-                case "drops":
+                case "drop", "drops" -> {
                     if (hasPermission(sender, "drops")) {
                         int size = crazyManager.isEnvoyActive() ? crazyManager.getActiveEnvoys().size() : locationSettings.getSpawnLocations().size();
 
@@ -45,10 +44,10 @@ public class EnvoyTab implements TabCompleter {
 
                         for (int i = 1; i <= size; i++) completions.add(i + "");
                     }
-                    break;
-                case "flare":
+                }
+                case "flare" -> {
                     if (hasPermission(sender, "flare.give")) for (int i = 1; i <= 64; i++) completions.add(i + "");
-                    break;
+                }
             }
 
             return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
@@ -62,7 +61,7 @@ public class EnvoyTab implements TabCompleter {
 
         return new ArrayList<>();
     }
-    
+
     private boolean hasPermission(CommandSender sender, String node) {
         return sender.hasPermission("envoy." + node) || sender.hasPermission("envoy.bypass");
     }

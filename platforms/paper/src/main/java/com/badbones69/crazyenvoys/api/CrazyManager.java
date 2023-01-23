@@ -1,6 +1,5 @@
 package com.badbones69.crazyenvoys.api;
 
-import com.Zrips.CMI.Config;
 import com.Zrips.CMI.Modules.ModuleHandling.CMIModule;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
@@ -17,7 +16,7 @@ import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.controllers.CountdownTimer;
 import com.badbones69.crazyenvoys.controllers.FireworkDamageAPI;
-import com.badbones69.crazyenvoys.support.PluginSupport;
+import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
