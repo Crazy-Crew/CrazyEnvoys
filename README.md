@@ -12,7 +12,6 @@
 [![Contact][discord-shield]][discord-url]
 ![CodeFactor][codefactor-shield]
 
-![Spigot](https://cdn.jsdelivr.net/gh/intergrav/devins-badges/assets/compact/unsupported/spigot_vector.svg)
 ![Paper](https://cdn.jsdelivr.net/gh/intergrav/devins-badges/assets/compact/supported/paper_vector.svg)
 ![Purpur](https://cdn.jsdelivr.net/gh/intergrav/devins-badges/assets/compact/supported/purpur_vector.svg)
 
@@ -109,4 +108,4 @@ Distributed under the MIT License. See [`LICENSE`](/LICENSE) for more informatio
 [license-shield]: https://img.shields.io/github/license/Crazy-Crew/CrazyEnvoys.svg?style=flat&logo=appveyor
 [license-url]: https://github.com/Crazy-Crew/CrazyEnvoys/blob/master/LICENSE
 
-[codefactor-shield]: https://img.shields.io/codefactor/grade/github/crazy-crew/CrazyEnvoys/main?style=for-the-badge
+[codefactor-shield]: https://img.shields.io/codefactor/grade/github/crazy-crew/CrazyEnvoys/main?style=flat&logo=appveyor
