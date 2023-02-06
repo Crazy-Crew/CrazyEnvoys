@@ -104,17 +104,11 @@ tasks {
         changelog.set(
             """
                 <h4>Changes:</h4>
-                 <p>Changed /envoys to /crazyenvoys & made /envoys|/envoy an alias.</p>
-                 <p>Added a check to ensure that all the envoys have enough space to spawn (TDL)</p>
-                 <p>Added Config Version ( not in use. )</p>
-                 <p>Added an update checker ( can turn it off in config.yml )
+                 <p>N/A</p>
                 <h4>Under the hood changes</h4>
-                 <p>Re-organized the build script for the last time.</p>
-                 <p>Cleaned up a few pieces of code.</p>
-                 <p>Updated the nbt-api artifact id.</p>
+                 <p>N/A</p>
                 <h4>Bug Fixes:</h4>
-                 <p>Fixed radius crashes by changing the max-radius to act as a radius instead of diameter [Pull Request](https://github.com/Crazy-Crew/CrazyEnvoys/pull/84)</p>
-                 <p>Updated codemc repository from .org -> .io</p>
+                 <p>N/A</p>
             """.trimIndent()
         )
     }
