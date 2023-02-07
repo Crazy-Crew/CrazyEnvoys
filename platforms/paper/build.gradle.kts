@@ -130,7 +130,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = projectGroup
-            artifactId = "$projectNameLowerCase-paper"
+            artifactId = "$projectNameLowerCase-paper-api"
             version = finalVersion
 
             from(components["java"])
