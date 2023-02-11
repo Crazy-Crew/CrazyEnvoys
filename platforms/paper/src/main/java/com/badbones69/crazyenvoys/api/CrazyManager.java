@@ -549,7 +549,7 @@ public class CrazyManager {
 
                 if (!location.getChunk().isLoaded() && !location.getChunk().load()) continue;
 
-                if (location.getBlockY() <= 0 ||
+                if (location.getBlockY() <= location.getWorld().getMinHeight() ||
                         minimumRadiusBlocks.contains(location.getBlock()) || minimumRadiusBlocks.contains(location.clone().add(0, 1, 0).getBlock()) ||
                         locationSettings.getDropLocations().contains(location.getBlock()) || locationSettings.getDropLocations().contains(location.clone().add(0, 1, 0).getBlock()) ||
                         blacklistedBlocks.contains(location.getBlock().getType())) continue;
