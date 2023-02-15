@@ -108,7 +108,8 @@ tasks {
                 <h4>Under the hood changes</h4>
                  <p>N/A</p>
                 <h4>Bug Fixes:</h4>
-                 <p>Fix the problem that occurs when the y level of the highest blocks in the spawn area are all below y=1. <a href="https://github.com/Crazy-Crew/CrazyEnvoys/pull/88">Click Me</a></p>
+                 <p>Fix message for set spawn locations.</p>
+                 <p>Fix min/max spawn amount for set locations.</p>
             """.trimIndent()
         )
     }
