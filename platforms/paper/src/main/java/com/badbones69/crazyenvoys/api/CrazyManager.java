@@ -563,7 +563,7 @@ public class CrazyManager {
             Files.DATA.getFile().set("Locations.Spawned", getBlockList(locationSettings.getDropLocations()));
             Files.DATA.saveFile();
         } else {
-            if (envoySettings.isMaxCrateEnabled()) {
+            if (!envoySettings.isMaxCrateEnabled()) {
                 if (locationSettings.getSpawnLocations().size() <= maxSpawns) {
                     locationSettings.addAllDropLocations(locationSettings.getSpawnLocations());
                 } else {
@@ -583,7 +583,7 @@ public class CrazyManager {
         if (envoyLocationsBroadcast) {
             StringBuilder locations = new StringBuilder();
             int x = 1;
-            for (Block b : locationSettings.getSpawnLocations()) {
+            for (Block b : locationSettings.getDropLocations()) {
                 locations.append(Messages.LOCATION_FORMAT.getMessage()
                         .replace("%id%", x + "")
                         .replace("%world%", b.getWorld().getName())
