@@ -583,7 +583,7 @@ public class CrazyManager {
         if (envoyLocationsBroadcast) {
             StringBuilder locations = new StringBuilder();
             int x = 1;
-            for (Block b : locationSettings.getSpawnLocations()) {
+            for (Block b : locationSettings.getDropLocations()) {
                 locations.append(Messages.LOCATION_FORMAT.getMessage()
                         .replace("%id%", x + "")
                         .replace("%world%", b.getWorld().getName())
