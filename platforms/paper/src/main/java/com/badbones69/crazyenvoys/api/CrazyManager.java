@@ -563,7 +563,7 @@ public class CrazyManager {
             Files.DATA.getFile().set("Locations.Spawned", getBlockList(locationSettings.getDropLocations()));
             Files.DATA.saveFile();
         } else {
-            if (envoySettings.isMaxCrateEnabled()) {
+            if (!envoySettings.isMaxCrateEnabled()) {
                 if (locationSettings.getSpawnLocations().size() <= maxSpawns) {
                     locationSettings.addAllDropLocations(locationSettings.getSpawnLocations());
                 } else {
