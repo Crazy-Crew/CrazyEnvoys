@@ -23,9 +23,9 @@
     <br />
     <a href="https://github.com/Crazy-Crew/CrazyEnvoys/issues">Report Bug</a>
     ·
-    <a href="https://github.com/orgs/Crazy-Crew/discussions/categories/features?discussions_q=label%3Acrazyenvoys+category%3AFeatures">Request Feature</a>
+    <a href="https://github.com/Crazy-Crew/CrazyEnvoys/discussions/categories/feature-requests">Request Feature</a>
     ·
-    <a href="https://github.com/orgs/Crazy-Crew/discussions/categories/support?discussions_q=label%3Acrazyenvoys+category%3ASupport">Get Support</a>
+    <a href="https://discord.gg/crazycrew">Get Support</a>
   </p>
 </div>
 
@@ -47,13 +47,12 @@
   </ol>
 </details>
 
-## Downloads
-> https://modrinth.com/plugin/crazyenvoys
+## Resource Page
 
-## Beta Builds
-### Get the latest changes before marked as release.
-All beta builds will be on Modrinth.<br>
-> https://modrinth.com/plugin/crazyenvoys/versions
+### Beta Builds
+All beta builds will be on Modrinth marked as beta.<br>
+
+<a href="https://modrinth.com/plugin/crazyenvoys">![Modrinth](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/cozy/available/modrinth_64h.png)</a>
 
 ## Getting Started
 

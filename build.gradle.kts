@@ -16,8 +16,6 @@ val projectExt = settings.versions.projectExtension.get()
 
 val finalVersion = if (isBeta) "$projectVersion+Beta" else projectVersion
 
-val projectNameLowerCase = projectName.toLowerCase()
-
 val color = if (isBeta) betaUpdate else releaseUpdate
 val repo = if (isBeta) "beta" else "releases"
 
@@ -35,7 +33,7 @@ webhook {
             this.fields {
                 this.field(
                     "Version $finalVersion",
-                    "Download Link: https://modrinth.com/$projectExt/$projectNameLowerCase/version/$finalVersion"
+                    "Download Link: https://modrinth.com/$projectExt/${projectName.lowercase()}/version/$finalVersion"
                 )
 
                 this.field(
@@ -46,7 +44,7 @@ webhook {
 
             this.author(
                 projectName,
-                "https://modrinth.com/$projectExt/$projectNameLowerCase/versions",
+                "https://modrinth.com/$projectExt/${projectName.lowercase()}/versions",
                 "https://cdn-raw.modrinth.com/data/mqwRS0rH/527c23235d3bf4aa8ca1619b763c618b6c198109.png"
             )
         }
