@@ -4,6 +4,7 @@ plugins {
     id("crazyenvoys.paper-plugin")
 
     alias(settings.plugins.minotaur)
+    alias(settings.plugins.run.paper)
 }
 
 repositories {
