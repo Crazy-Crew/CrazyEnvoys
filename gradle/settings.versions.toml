@@ -1,14 +1,8 @@
 [versions]
 
-# Project Settings
-projectVersion = "1.4.20.3"
-
-projectGroup = "com.badbones69.crazyenvoys"
-projectName = "CrazyEnvoys"
-projectDescription = "Drop custom envoys with any prize you want all over spawn for players to fight over."
-projectGithub = "https://github.com/Crazy-Crew/CrazyEnvoys"
-projectBeta = "true"
-projectExtension = "plugin"
+github = "https://github.com/Crazy-Crew/CrazyEnvoys"
+beta = "true"
+extension = "plugin"
 
 [plugins]
 
