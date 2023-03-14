@@ -21,6 +21,7 @@ import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.HolographicDisplaysSupport;
+import io.papermc.lib.PaperLib;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -41,6 +42,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class CrazyManager {
 
@@ -351,7 +353,7 @@ public class CrazyManager {
         cleanLocations();
 
         for (Block block : getActiveEnvoys()) {
-            if (!block.getChunk().isLoaded()) block.getChunk().load();
+            PaperLib.getChunkAtAsync(block.getLocation()).thenAccept(result -> result.load(true));
 
             block.setType(Material.AIR);
             stopSignalFlare(block.getLocation());
@@ -547,7 +549,9 @@ public class CrazyManager {
                 location.add(-(maxRadius) + random.nextInt(maxRadius * 2), 0, -(maxRadius) + random.nextInt(maxRadius * 2));
                 location = location.getWorld().getHighestBlockAt(location).getLocation();
 
-                if (!location.getChunk().isLoaded() && !location.getChunk().load()) continue;
+                Chunk chunk = PaperLib.getChunkAtAsync(location).join();
+
+                if (!chunk.isLoaded() && !chunk.load()) continue;
 
                 if (location.getBlockY() <= location.getWorld().getMinHeight() ||
                         minimumRadiusBlocks.contains(location.getBlock()) || minimumRadiusBlocks.contains(location.clone().add(0, 1, 0).getBlock()) ||
@@ -663,7 +667,9 @@ public class CrazyManager {
                 }
 
                 if (spawnFallingBlock) {
-                    if (!block.getChunk().isLoaded()) block.getChunk().load();
+                    Chunk chunk = PaperLib.getChunkAtAsync(block.getLocation()).join();
+
+                    if (!chunk.isLoaded()) chunk.load();
 
                     int fallingHeight = envoySettings.getFallingHeight();
                     Material fallingBlock = envoySettings.getFallingBlockMaterial();
@@ -677,7 +683,9 @@ public class CrazyManager {
                 } else {
                     Tier tier = pickRandomTier();
 
-                    if (!block.getChunk().isLoaded()) block.getChunk().load();
+                    Chunk chunk = PaperLib.getChunkAtAsync(block.getLocation()).join();
+
+                    if (!chunk.isLoaded()) chunk.load();
 
                     block.setType(tier.getPlacedBlockMaterial());
 
@@ -832,7 +840,9 @@ public class CrazyManager {
 
         for (Block spawnedLocation : locations) {
             if (spawnedLocation != null) {
-                if (!spawnedLocation.getChunk().isLoaded()) spawnedLocation.getChunk().load();
+                Chunk chunk = PaperLib.getChunkAtAsync(spawnedLocation.getLocation()).join();
+
+                if (!chunk.isLoaded()) chunk.load();
 
                 spawnedLocation.setType(Material.AIR);
                 stopSignalFlare(spawnedLocation.getLocation());
