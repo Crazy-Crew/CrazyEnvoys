@@ -71,15 +71,11 @@ tasks {
 
         gameVersions.addAll(
             listOf(
-                "1.17",
-                "1.17.1",
-                "1.18",
-                "1.18.1",
-                "1.18.2",
                 "1.19",
                 "1.19.1",
                 "1.19.2",
-                "1.19.3"
+                "1.19.3",
+                "1.19.4"
             )
         )
 
@@ -89,9 +85,9 @@ tasks {
         changelog.set(
             """
                 <h4>Changes:</h4>
-                 <p>N/A</p>
+                 <p>Added 1.19.4 support</p>
                 <h4>Under the hood changes</h4>
-                 <p>N/A</p>
+                 <p>Simplified build script</p>
                 <h4>Bug Fixes:</h4>
                  <p>N/A</p>
             """.trimIndent()
