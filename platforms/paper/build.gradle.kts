@@ -23,8 +23,6 @@ dependencies {
     implementation(libs.nbt.api)
     implementation(libs.bstats.bukkit)
 
-    implementation(libs.paperlib)
-
     compileOnly(libs.papermc)
 
     compileOnly(libs.placeholder.api)
@@ -55,8 +53,7 @@ tasks {
 
         listOf(
             "de.tr7zw.changeme.nbtapi",
-            "org.bstats",
-            "io.papermc.lib"
+            "org.bstats"
         ).forEach { relocate(it, "${rootProject.group}.library.$it") }
     }
 
