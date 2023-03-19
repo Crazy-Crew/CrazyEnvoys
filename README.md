@@ -1,6 +1,6 @@
 <br />
 
-[![CrazyEnvoys](https://raw.githubusercontent.com/RyderBelserion/Assets/main/crazycrew/new/crazyenvoys/Banner.png)](https://modrinth.com/plugin/crazyenvoys)
+[![CrazyEnvoys](https://git.crazycrew.us/ryderbelserion/Assets/raw/branch/main/crazycrew/webp/CrazyEnvoysBanner.webp)](https://modrinth.com/plugin/crazyenvoys)
 
 <div align="center">
 
