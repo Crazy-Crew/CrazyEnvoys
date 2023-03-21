@@ -1,16 +1,10 @@
 [versions]
 
-# Project Settings
-projectVersion = "1.4.20.1"
-
-projectGroup = "com.badbones69.crazyenvoys"
-projectName = "CrazyEnvoys"
-projectDescription = "Drop custom envoys with any prize you want all over spawn for players to fight over."
-projectGithub = "https://github.com/Crazy-Crew/CrazyEnvoys"
-projectBeta = "true"
-projectExtension = "plugin"
+github = "https://github.com/Crazy-Crew/CrazyEnvoys"
+beta = "false"
+extension = "plugin"
 
 [plugins]
 
-minotaur = { id = "com.modrinth.minotaur", version = "2.6.0" }
-run-paper = { id = "xyz.jpenilla.run-paper", version = "2.0.0" }
+minotaur = { id = "com.modrinth.minotaur", version = "2.7.2" }
+run-paper = { id = "xyz.jpenilla.run-paper", version = "2.0.1" }

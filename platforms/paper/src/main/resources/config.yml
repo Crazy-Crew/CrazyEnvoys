@@ -9,8 +9,8 @@ Settings:
   Falling-Block: 'BEACON' #The block that will be falling.
   Fall-Height: 15 #How high the falling blocks spawn.
   # This option should ONLY be used if Random-Locations is false.
-  Max-Crate-Toggle: false #If true then only a specified amount of crates will spawn and if false then all crates will spawn.
-  Random-Amount: false # Selects a random number of crates between the Min-Crates and Max-Crates value (if true)
+  Max-Crate-Toggle: false #If true then Max-Crates amount of crates will spawn and if false and using set spawn locations, then all crates will spawn.
+  Random-Amount: false #If true, selects a random number of crates between the Min-Crates and Max-Crates values. Max-Crate-Toggle has to be false for this to work.
   Min-Crates: 7 #The min amount of crates that will spawn.
   Max-Crates: 20 #The max amount of crates that will spawn.
   Random-Locations: false #If true you will need to make sure to set the center location.

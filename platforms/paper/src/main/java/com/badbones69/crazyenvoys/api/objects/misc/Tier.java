@@ -6,8 +6,10 @@ import com.badbones69.crazyenvoys.api.FileManager;
 import com.badbones69.crazyenvoys.api.FileManager.CustomFile;
 import org.bukkit.Color;
 import org.bukkit.Material;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class Tier {
 

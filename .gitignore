@@ -1,12 +1,8 @@
 .gradle
 .idea
 
-build
-
-build-logic/.gradle
-build-logic/build
-
-core/build
+buildSrc/.gradle
+buildSrc/build
 
 platforms/paper/build
 platforms/paper/run/*
@@ -16,3 +12,5 @@ platforms/paper/run/*
 !platforms/paper/run/spigot.yml
 !platforms/paper/run/server.properties
 !platforms/paper/run/config
+
+build

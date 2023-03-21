@@ -11,7 +11,12 @@ import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent.EnvoyStartReason;
 import com.badbones69.crazyenvoys.api.interfaces.HologramController;
-import com.badbones69.crazyenvoys.api.objects.*;
+import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
+import com.badbones69.crazyenvoys.api.objects.EditorSettings;
+import com.badbones69.crazyenvoys.api.objects.EnvoySettings;
+import com.badbones69.crazyenvoys.api.objects.FlareSettings;
+import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
+import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.controllers.CountdownTimer;
@@ -21,7 +26,10 @@ import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.HolographicDisplaysSupport;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -549,7 +557,7 @@ public class CrazyManager {
 
                 if (!location.getChunk().isLoaded() && !location.getChunk().load()) continue;
 
-                if (location.getBlockY() <= 0 ||
+                if (location.getBlockY() <= location.getWorld().getMinHeight() ||
                         minimumRadiusBlocks.contains(location.getBlock()) || minimumRadiusBlocks.contains(location.clone().add(0, 1, 0).getBlock()) ||
                         locationSettings.getDropLocations().contains(location.getBlock()) || locationSettings.getDropLocations().contains(location.clone().add(0, 1, 0).getBlock()) ||
                         blacklistedBlocks.contains(location.getBlock().getType())) continue;
@@ -563,7 +571,7 @@ public class CrazyManager {
             Files.DATA.getFile().set("Locations.Spawned", getBlockList(locationSettings.getDropLocations()));
             Files.DATA.saveFile();
         } else {
-            if (envoySettings.isMaxCrateEnabled()) {
+            if (envoySettings.isMaxCrateEnabled() || envoySettings.isRandomAmount()) {
                 if (locationSettings.getSpawnLocations().size() <= maxSpawns) {
                     locationSettings.addAllDropLocations(locationSettings.getSpawnLocations());
                 } else {
@@ -583,7 +591,7 @@ public class CrazyManager {
         if (envoyLocationsBroadcast) {
             StringBuilder locations = new StringBuilder();
             int x = 1;
-            for (Block b : locationSettings.getSpawnLocations()) {
+            for (Block b : locationSettings.getDropLocations()) {
                 locations.append(Messages.LOCATION_FORMAT.getMessage()
                         .replace("%id%", x + "")
                         .replace("%world%", b.getWorld().getName())
