@@ -12,7 +12,7 @@ Settings:
     Max-Bulk: 3 #The max amount of prizes.
   Hologram-Toggle: true #Toggle on and off holograms.
   Hologram-Height: 1.5 #How high the hologram will be from the crate.
-  Hologram: #Holograms only show if Holographic Displays is on the server.
+  Hologram: #Requires 3rd party plugins such as DecentHolograms to function. https://github.com/Crazy-Crew/CrazyEnvoys/blob/main/platforms/paper/src/main/java/com/badbones69/crazyenvoys/support/libraries/PluginSupport.java
   # Available placeholders:
   # %crazyenvoys_crates_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
     - '&7&l(&6&l!&7&l) Basic Crate'
