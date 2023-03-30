@@ -1,8 +1,8 @@
 <br />
 
-[![CrazyEnvoys](https://git.crazycrew.us/ryderbelserion/Assets/raw/branch/main/crazycrew/webp/CrazyEnvoysBanner.webp)](https://modrinth.com/plugin/crazyenvoys)
-
 <div align="center">
+
+[![CrazyEnvoys](https://raw.githubusercontent.com/RyderBelserion/Assets/main/crazycrew/webp/CrazyEnvoysBanner.webp)](https://modrinth.com/plugin/crazyenvoys)
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
