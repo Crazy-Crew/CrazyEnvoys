@@ -147,8 +147,6 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
         checkUpdate();
 
-        if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) new PlaceholderAPISupport().register();
-
         enable();
     }
 
