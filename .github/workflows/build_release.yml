@@ -29,9 +29,6 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Shadow Jar
-        run: ./gradlew shadowJar --stacktrace
-
       - name: Modrinth Publish
         run: ./gradlew modrinth --stacktrace
         env:
@@ -42,6 +39,7 @@ jobs:
         env:
           REPOSITORY_USERNAME: ${{ secrets.CRAZYCREW_USERNAME }}
           REPOSITORY_PASSWORD: ${{ secrets.CRAZYCREW_PASSWORD }}
+
       - name: Update Notification
         run: |
           ./gradlew webhook --stacktrace
