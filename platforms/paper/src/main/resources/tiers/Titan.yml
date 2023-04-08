@@ -12,7 +12,7 @@ Settings:
     Max-Bulk: 3
   Hologram-Toggle: true
   Hologram-Height: 1.5
-  Hologram:
+  Hologram: #Requires 3rd party plugins such as DecentHolograms to function. https://github.com/Crazy-Crew/CrazyEnvoys/blob/main/platforms/paper/src/main/java/com/badbones69/crazyenvoys/support/libraries/PluginSupport.java
     # %crazyenvoys_crates_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
     - '&7&l(&4&l!&7&l) &4&lTitan Crate'
     - '%crazyenvoys_crates_time%'

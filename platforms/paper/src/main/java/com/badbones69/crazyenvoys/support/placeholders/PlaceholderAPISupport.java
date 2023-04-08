@@ -21,7 +21,6 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 
         boolean isEnabled = FileManager.Files.CONFIG.getFile().getBoolean("Settings.Crate-Countdown.Toggle", false);
 
-
         if (lower.equals("crates_time")) {
             if (isEnabled) {
                 if (crazyManager.getCountdownTimer() != null) {

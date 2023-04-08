@@ -1,8 +1,8 @@
 <br />
 
-[![CrazyEnvoys](https://git.crazycrew.us/ryderbelserion/Assets/raw/branch/main/crazycrew/webp/CrazyEnvoysBanner.webp)](https://modrinth.com/plugin/crazyenvoys)
-
 <div align="center">
+
+[![CrazyEnvoys](https://raw.githubusercontent.com/RyderBelserion/Assets/main/crazycrew/webp/CrazyEnvoysBanner.webp)](https://modrinth.com/plugin/crazyenvoys)
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -47,12 +47,13 @@
   </ol>
 </details>
 
-## Resource Page
+### Resource Page
+<a href="https://modrinth.com/plugin/crazyenvoys">![Modrinth](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/compact/available/modrinth_46h.png)</a>
 
 ### Beta Builds
-All beta builds will be on Modrinth marked as beta.<br>
+<p>Get the latest changes before marked as release.</p>
 
-<a href="https://modrinth.com/plugin/crazyenvoys">![Modrinth](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/cozy/available/modrinth_64h.png)</a>
+> https://ci.crazycrew.us/job/CrazyEnvoys/
 
 ## Getting Started
 
