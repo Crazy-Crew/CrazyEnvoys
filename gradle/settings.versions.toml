@@ -1,7 +1,8 @@
 [versions]
 
-github = "https://github.com/Crazy-Crew/CrazyEnvoys"
-beta = "false"
+# Project Settings
+github = "https://github.com/Crazy-Crew/CrazyEnchantments"
+beta = "true"
 extension = "plugin"
 
 [plugins]
