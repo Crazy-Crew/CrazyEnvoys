@@ -22,12 +22,12 @@ val downloads = """
 """.trimIndent()
 
 // The commit id for the "main" branch prior to merging a pull request.
-//val start = "7684e1a"
+val start = "7684e1a"
 
 // The commit id AFTER merging the pull request so the last commit before you release.
-//val end = "ddd1fb9"
+val end = "e634829"
 
-//val commitLog = getGitHistory().joinToString(separator = "") { formatGitLog(it) }
+val commitLog = getGitHistory().joinToString(separator = "") { formatGitLog(it) }
 
 val desc = """
   # Release ${rootProject.version}
@@ -40,7 +40,7 @@ val desc = """
           
   <summary>Other</summary>
            
-  
+  $commitLog
             
   </details>
                 
@@ -51,7 +51,7 @@ val versions = listOf(
     "1.19.4"
 )
 
-/*fun getGitHistory(): List<String> {
+fun getGitHistory(): List<String> {
     val output: String = ByteArrayOutputStream().use { outputStream ->
         project.exec {
             executable("git")
@@ -70,7 +70,6 @@ fun formatGitLog(commitLog: String): String {
     val message = commitLog.substring(8) // Get message after commit hash + space between
     return "[$hash](https://github.com/Crazy-Crew/${rootProject.name}/commit/$hash) $message<br>"
 }
- */
 
 tasks {
     modrinth {
