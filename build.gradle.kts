@@ -19,7 +19,7 @@ val repo = if (beta) "beta" else "releases"
 
 val msg = "New version of ${rootProject.name} is ready! <@&929463450214735912>"
 
-rootProject.version = "1.4.20.4"
+rootProject.version = "1.4.20.5"
 
 val download = "https://modrinth.com/$extension/${rootProject.name.lowercase()}/version/${rootProject.version}"
 
