@@ -1,70 +1,59 @@
-import task.WebhookExtension
-import java.awt.Color
-
 plugins {
-    id("crazyenvoys.root-plugin")
+    id("paper-plugin")
+    id("library-plugin")
 
-    id("featherpatcher") version "0.0.0.2"
+    id("xyz.jpenilla.run-paper") version "2.0.1"
 }
 
-val releaseUpdate = Color(27, 217, 106)
-val betaUpdate = Color(255, 163, 71)
-val changeLogs = Color(37, 137, 204)
+dependencies {
+    compileOnly(libs.placeholder.api)
+    compileOnly(libs.itemsadder.api)
 
-val beta = settings.versions.beta.get().toBoolean()
-val extension = settings.versions.extension.get()
+    compileOnly(libs.cmi.api)
+    compileOnly(libs.cmi.lib)
 
-val color = if (beta) betaUpdate else releaseUpdate
-val repo = if (beta) "beta" else "releases"
+    compileOnly(libs.holographic.displays)
+    compileOnly(libs.decent.holograms)
 
-val msg = "New version of ${rootProject.name} is ready! <@&929463450214735912>"
+    compileOnly(libs.worldguard.api)
 
-rootProject.version = "1.4.20.5"
+    implementation(libs.bstats.bukkit)
 
-val download = "https://modrinth.com/$extension/${rootProject.name.lowercase()}/version/${rootProject.version}"
+    implementation(libs.triumph.cmds)
 
-webhook {
-    this.avatar("https://en.gravatar.com/avatar/${WebhookExtension.Gravatar().md5Hex("no-reply@ryderbelserion.com")}.jpeg")
+    implementation(libs.nbt.api)
+}
 
-    this.username("Ryder Belserion")
+tasks {
+    reobfJar {
+        val file = File("$rootDir/jars")
 
-    this.content(msg)
+        if (!file.exists()) file.mkdirs()
 
-    this.embeds {
-        this.embed {
-            this.color(color)
-
-            this.fields {
-                this.field(
-                    "Download: ",
-                    download
-                )
-
-                this.field(
-                    "API: ",
-                    "https://repo.crazycrew.us/#/$repo/${rootProject.group.toString().replace(".", "/")}/${rootProject.name.lowercase()}-api/${rootProject.version}"
-                )
-            }
-
-            this.author(
-                "${rootProject.name} | Version ${rootProject.version}",
-                download,
-                "https://raw.githubusercontent.com/RyderBelserion/assets/main/crazycrew/png/${rootProject.name}Website.png"
-            )
-        }
-
-        this.embed {
-            this.color(changeLogs)
-
-            this.title("What changed?")
-
-            this.description("""
-                > 
-                
-                Full Changelog -> $download
-            """.trimIndent())
-        }
+        outputJar.set(layout.buildDirectory.file("$file/${rootProject.name}-${rootProject.version}.jar"))
     }
 
-    this.url("DISCORD_WEBHOOK")
+    shadowJar {
+        listOf(
+            "de.tr7zw.changeme.nbtapi",
+            "dev.triumphteam",
+            "org.bstats"
+        ).forEach { pack -> relocate(pack, "${rootProject.group}.$pack") }
+    }
+
+    runServer {
+        minecraftVersion("1.19.4")
+    }
+
+    processResources {
+        filesMatching("plugin.yml") {
+            expand(
+                "name" to rootProject.name,
+                "group" to rootProject.group,
+                "version" to rootProject.version,
+                "description" to rootProject.description,
+                "website" to "https://modrinth.com/plugin/${rootProject.name.lowercase()}"
+            )
+        }
+    }
 }
