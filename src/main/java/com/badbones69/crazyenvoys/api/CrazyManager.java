@@ -238,19 +238,15 @@ public class CrazyManager {
         String time = envoySettings.getEnvoyClockTime();
         int hour = Integer.parseInt(time.split(" ")[0].split(":")[0]);
         int min = Integer.parseInt(time.split(" ")[0].split(":")[1]);
-        int c = Calendar.AM;
+        int calender = Calendar.AM;
 
-        if (time.split(" ")[1].equalsIgnoreCase("AM")) {
-            c = Calendar.AM;
-        } else if (time.split(" ")[1].equalsIgnoreCase("PM")) {
-            c = Calendar.PM;
-        }
+        if (time.split(" ")[1].equalsIgnoreCase("PM")) calender = Calendar.PM;
 
         cal.set(Calendar.HOUR_OF_DAY, hour);
         cal.getTime(); // Without this makes the hours not change for some reason.
         cal.set(Calendar.MINUTE, min);
         cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.AM_PM, c);
+        cal.set(Calendar.AM_PM, calender);
 
         if (cal.before(Calendar.getInstance())) cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1);
     }
