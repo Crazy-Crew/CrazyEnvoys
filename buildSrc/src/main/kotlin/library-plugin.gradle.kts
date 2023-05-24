@@ -1,5 +1,3 @@
-import java.awt.Color
-import java.io.ByteArrayOutputStream
 import java.io.File
 
 plugins {
@@ -21,6 +19,7 @@ val downloads = """
     https://modrinth.com/plugin/${rootProject.name.lowercase()}/version/${rootProject.version}
 """.trimIndent()
 
+/*
 // The commit id for the "main" branch prior to merging a pull request.
 val start = "7684e1a"
 
@@ -28,6 +27,7 @@ val start = "7684e1a"
 val end = "e634829"
 
 val commitLog = getGitHistory().joinToString(separator = "") { formatGitLog(it) }
+*/
 
 val desc = """
   # Release ${rootProject.version}
@@ -39,8 +39,6 @@ val desc = """
   <details>
           
   <summary>Other</summary>
-           
-  $commitLog
             
   </details>
                 
@@ -48,9 +46,11 @@ val desc = """
 """.trimIndent()
 
 val versions = listOf(
-    "1.19.4"
+    "1.19.4",
+    "1.20"
 )
 
+/*
 fun getGitHistory(): List<String> {
     val output: String = ByteArrayOutputStream().use { outputStream ->
         project.exec {
@@ -70,6 +70,7 @@ fun formatGitLog(commitLog: String): String {
     val message = commitLog.substring(8) // Get message after commit hash + space between
     return "[$hash](https://github.com/Crazy-Crew/${rootProject.name}/commit/$hash) $message<br>"
 }
+ */
 
 tasks {
     modrinth {
