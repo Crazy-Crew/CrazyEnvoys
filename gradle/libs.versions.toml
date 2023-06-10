@@ -4,8 +4,8 @@
 papermc = { module = "io.papermc.paper:paper-api", version = "1.20-R0.1-SNAPSHOT" }
 hangar = { module = "io.papermc:hangar-publish-plugin", version = "0.0.5" }
 
-minotaur = { module = "com.modrinth.minotaur:Minotaur", version = "2.7.2" }
-paperweight = { module = "io.papermc.paperweight:paperweight-userdev", version = "1.5.3" }
+minotaur = { module = "com.modrinth.minotaur:Minotaur", version = "2.8.0" }
+paperweight = { module = "io.papermc.paperweight:paperweight-userdev", version = "1.5.5" }
 featherweight = { module = "com.ryderbelserion.feather:feather-plugin", version = "0.0.0.4" }
 
 shadow = { module = "com.github.johnrengelman:shadow", version = "8.1.1" }
@@ -34,3 +34,7 @@ itemsadder_api = { module = "com.github.LoneDev6:api-itemsadder", version = "3.0
 
 # World Guard
 worldguard_api = { module = "com.sk89q.worldguard:worldguard-bukkit", version = "7.1.0-SNAPSHOT" }
+
+[plugins]
+
+run-paper = { id = "xyz.jpenilla.run-paper", version = "2.1.0" }
