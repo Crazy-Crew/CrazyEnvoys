@@ -1,4 +1,3 @@
-import java.awt.Color
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -9,46 +8,42 @@ plugins {
     id("com.modrinth.minotaur")
 }
 
-val isBeta = false
-val repo = if (isBeta) "beta" else "releases"
-
-val type = if (isBeta) "beta" else "release"
-val otherType = if (isBeta) "Beta" else "Release"
-
-val msg = "New version of ${rootProject.name} is ready! <@&929463452232192063>"
-
-val downloads = """
-    https://modrinth.com/plugin/${rootProject.name.lowercase()}/version/${rootProject.version}
-""".trimIndent()
+val isSnapshot = rootProject.version.toString().contains("snapshot")
+val type = if (isSnapshot) "beta" else "release"
 
 // The commit id for the "main" branch prior to merging a pull request.
-val start = "7684e1a"
+val start = "ddeb4f3"
 
-// The commit id AFTER merging the pull request so the last commit before you release.
-val end = "e634829"
+// The commit id BEFORE merging the pull request so before "Merge pull request #30"
+val end = "5ffdca7"
 
 val commitLog = getGitHistory().joinToString(separator = "") { formatGitLog(it) }
 
 val desc = """
-  # Release ${rootProject.version}
-  ### Changes         
-  * WorldGuard no longer stops you from claiming envoys.
-           
-  ### Commits
+## Changes:
+ * Added 1.20 support.
+ * Temporarily removed CMI Support while they update.
+
+## API:
+ * N/A
+
+## Bugs:
+ * Submit any bugs @ https://github.com/Crazy-Crew/${rootProject.name}/issues 
+
+## Commits
             
-  <details>
+<details>
           
-  <summary>Other</summary>
-           
-  $commitLog
+<summary>Other</summary>
+
+$commitLog
             
-  </details>
-                
-  As always, report any bugs @ https://github.com/Crazy-Crew/${rootProject.name}/issues
+</details>
+
 """.trimIndent()
 
 val versions = listOf(
-    "1.19.4"
+    "1.20"
 )
 
 fun getGitHistory(): List<String> {
@@ -70,6 +65,8 @@ fun formatGitLog(commitLog: String): String {
     val message = commitLog.substring(8) // Get message after commit hash + space between
     return "[$hash](https://github.com/Crazy-Crew/${rootProject.name}/commit/$hash) $message<br>"
 }
+
+val javaComponent: SoftwareComponent = components["java"]
 
 tasks {
     modrinth {
@@ -94,29 +91,32 @@ tasks {
 
         changelog.set(desc)
     }
-}
 
-publishing {
-    repositories {
-        val repo = if (isBeta) "beta" else "releases"
-        maven("https://repo.crazycrew.us/$repo") {
-            name = "crazycrew"
-            //credentials(PasswordCredentials::class)
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = rootProject.group.toString()
+                artifactId = "${rootProject.name.lowercase()}-api"
+                version = rootProject.version.toString()
 
-            credentials {
-                username = System.getenv("REPOSITORY_USERNAME")
-                password = System.getenv("REPOSITORY_PASSWORD")
+                from(javaComponent)
             }
         }
-    }
 
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = rootProject.group.toString()
-            artifactId = "${rootProject.name.lowercase()}-api"
-            version = rootProject.version.toString()
+        repositories {
+            maven {
+                credentials {
+                    this.username = System.getenv("gradle_username")
+                    this.password = System.getenv("gradle_password")
+                }
 
-            from(components["java"])
+                if (isSnapshot) {
+                    url = uri("https://repo.crazycrew.us/snapshots/")
+                    return@maven
+                }
+
+                url = uri("https://repo.crazycrew.us/releases/")
+            }
         }
     }
 }

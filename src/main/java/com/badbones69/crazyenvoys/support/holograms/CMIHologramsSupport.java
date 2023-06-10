@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoys.support.holograms;
 
+/*
 import com.Zrips.CMI.CMI;
 import com.Zrips.CMI.Modules.Holograms.CMIHologram;
 import com.badbones69.crazyenvoys.api.interfaces.HologramController;
@@ -42,3 +43,4 @@ public class CMIHologramsSupport implements HologramController {
         holograms.clear();
     }
 }
+ */
