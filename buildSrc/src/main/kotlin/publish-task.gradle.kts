@@ -12,10 +12,10 @@ val isSnapshot = rootProject.version.toString().contains("snapshot")
 val type = if (isSnapshot) "beta" else "release"
 
 // The commit id for the "main" branch prior to merging a pull request.
-val start = "ddeb4f3"
+val start = "363a0d"
 
 // The commit id BEFORE merging the pull request so before "Merge pull request #30"
-val end = "5ffdca7"
+val end = "52b8d7"
 
 val commitLog = getGitHistory().joinToString(separator = "") { formatGitLog(it) }
 
