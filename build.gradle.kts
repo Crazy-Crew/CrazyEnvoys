@@ -5,15 +5,22 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
+repositories {
+    flatDir {
+        dirs("libs")
+    }
+}
+
 dependencies {
     compileOnly(libs.placeholder.api)
     compileOnly(libs.itemsadder.api)
 
-    //TODO() Add back when CMI updates
-    //compileOnly(libs.cmi.api)
+    compileOnly("cmi-api:CMI-API")
+    compileOnly("cmi-lib:CMILib")
 
-    compileOnly(libs.holographic.displays)
     compileOnly(libs.decent.holograms)
+    compileOnly(libs.fancy.holograms)
+    compileOnly(libs.fancy.npcs)
 
     compileOnly(libs.worldguard.api)
 

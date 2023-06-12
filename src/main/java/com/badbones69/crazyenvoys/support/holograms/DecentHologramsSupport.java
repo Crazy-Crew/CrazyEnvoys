@@ -8,7 +8,7 @@ import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.block.Block;
 import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.UUID;
 
 public class DecentHologramsSupport implements HologramController {
 
@@ -20,7 +20,7 @@ public class DecentHologramsSupport implements HologramController {
     
     public void createHologram(Block block, Tier tier) {
         double height = tier.getHoloHeight();
-        Hologram hologram = DHAPI.createHologram(ThreadLocalRandom.current().nextInt() + "", block.getLocation().add(.5, height, .5));
+        Hologram hologram = DHAPI.createHologram("CrazyCrates-" + UUID.randomUUID(), block.getLocation().add(.5, height, .5));
 
         tier.getHoloMessage().forEach(line -> DHAPI.addHologramLine(hologram, methods.color(line)));
 

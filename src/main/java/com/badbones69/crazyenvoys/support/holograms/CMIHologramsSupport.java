@@ -1,13 +1,13 @@
 package com.badbones69.crazyenvoys.support.holograms;
 
-/*
 import com.Zrips.CMI.CMI;
 import com.Zrips.CMI.Modules.Holograms.CMIHologram;
 import com.badbones69.crazyenvoys.api.interfaces.HologramController;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
+import net.Zrips.CMILib.Container.CMILocation;
 import org.bukkit.block.Block;
 import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.UUID;
 
 @SuppressWarnings("ALL")
 public class CMIHologramsSupport implements HologramController {
@@ -17,8 +17,10 @@ public class CMIHologramsSupport implements HologramController {
     @Override
     public void createHologram(Block block, Tier tier) {
         double height = tier.getHoloHeight();
-        CMIHologram hologram = new CMIHologram(ThreadLocalRandom.current().nextInt() + "", block.getLocation().add(.5, height, .5));
 
+        CMILocation location = new CMILocation(block.getLocation().add(0.5, height, 0.5));
+
+        CMIHologram hologram = new CMIHologram("CrazyCrates-" + UUID.randomUUID(), location);
         hologram.setLines(tier.getHoloMessage());
 
         CMI.getInstance().getHologramManager().addHologram(hologram);
@@ -43,4 +45,3 @@ public class CMIHologramsSupport implements HologramController {
         holograms.clear();
     }
 }
- */

@@ -15,6 +15,10 @@ repositories {
 
     maven("https://repo.triumphteam.dev/snapshots/")
 
+    maven("https://repo.fancyplugins.de/snapshots/")
+
+    maven("https://repo.fancyplugins.de/releases/")
+
     maven("https://maven.enginehub.org/repo/")
 }
 

@@ -1,8 +1,8 @@
-package com.badbones69.crazycrates.support.holograms;
+package com.badbones69.crazyenvoys.support.holograms;
 
-import com.badbones69.crazycrates.CrazyCrates;
-import com.badbones69.crazycrates.api.interfaces.HologramController;
-import com.badbones69.crazycrates.api.objects.Crate;
+import com.badbones69.crazyenvoys.CrazyEnvoys;
+import com.badbones69.crazyenvoys.api.interfaces.HologramController;
+import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import de.oliver.fancyholograms.Hologram;
 import de.oliver.fancyholograms.utils.HologramSpigotAdapter;
 import net.minecraft.world.entity.Display;
@@ -13,17 +13,17 @@ import java.util.UUID;
 
 public class FancyHologramSupport implements HologramController {
 
-    private final CrazyCrates plugin = CrazyCrates.getPlugin();
+    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
 
     private final HashMap<Location, Hologram> holograms = new HashMap<>();
 
     @Override
-    public void createHologram(Block block, Crate crate) {
-        if (!crate.getHologram().isEnabled()) return;
+    public void createHologram(Block block, Tier tier) {
+        if (!tier.isHoloEnabled()) return;
 
-        double height = crate.getHologram().getHeight();
+        double height = tier.getHoloHeight();
 
-        Hologram hologram = new Hologram("CrazyCrates-" + UUID.randomUUID(), block.getLocation().add(0.5, height, 0.5), crate.getHologram().getMessages(), Display.BillboardConstraints.CENTER, 1f, null, 0, 1, -1, null);
+        Hologram hologram = new Hologram("CrazyCrates-" + UUID.randomUUID(), block.getLocation().add(0.5, height, 0.5), tier.getHoloMessage(), Display.BillboardConstraints.CENTER, 1f, null, 0, 1, -1, null);
 
         hologram.create();
 
