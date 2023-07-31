@@ -4,9 +4,7 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.support.SkullCreator;
 import de.tr7zw.changeme.nbtapi.NBTItem;
-import org.bukkit.Color;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
@@ -14,11 +12,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BannerMeta;
-import org.bukkit.inventory.meta.BlockStateMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.*;
+import org.bukkit.inventory.meta.trim.ArmorTrim;
+import org.bukkit.inventory.meta.trim.TrimMaterial;
+import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
@@ -35,6 +32,8 @@ public class ItemBuilder {
 
     // Item Data
     private Material material;
+    private TrimMaterial trimMaterial;
+    private TrimPattern trimPattern;
     private int damage;
     private String itemName;
     private final List<String> itemLore;
@@ -94,6 +93,8 @@ public class ItemBuilder {
     public ItemBuilder() {
         this.nbtItem = null;
         this.material = Material.STONE;
+        this.trimMaterial = null;
+        this.trimPattern = null;
         this.damage = 0;
         this.itemName = "";
         this.itemLore = new ArrayList<>();
@@ -145,6 +146,8 @@ public class ItemBuilder {
     public ItemBuilder(ItemBuilder itemBuilder) {
         this.nbtItem = itemBuilder.nbtItem;
         this.material = itemBuilder.material;
+        this.trimMaterial = itemBuilder.trimMaterial;
+        this.trimPattern = itemBuilder.trimPattern;
         this.damage = itemBuilder.damage;
         this.itemName = itemBuilder.itemName;
         this.itemLore = new ArrayList<>(itemBuilder.itemLore);
@@ -320,6 +323,12 @@ public class ItemBuilder {
         return newName;
     }
 
+    private boolean isArmor() {
+        String name = this.material.name();
+
+        return name.endsWith("_HELMET") || name.endsWith("_CHESTPLATE") || name.endsWith("_LEGGINGS") || name.endsWith("_BOOTS") || name.equals(Material.TURTLE_HELMET.name());
+    }
+
     /**
      * Builder the item from all the information that was given to the builder.
      *
@@ -348,6 +357,12 @@ public class ItemBuilder {
             assert itemMeta != null;
             itemMeta.setDisplayName(getUpdatedName());
             itemMeta.setLore(getUpdatedLore());
+
+            if (isArmor()) {
+                if (this.trimPattern != null && this.trimMaterial != null) {
+                    ((ArmorMeta) itemMeta).setTrim(new ArmorTrim(this.trimMaterial, this.trimPattern));
+                }
+            }
 
             if (itemMeta instanceof org.bukkit.inventory.meta.Damageable) ((org.bukkit.inventory.meta.Damageable) itemMeta).setDamage(damage);
 
@@ -416,6 +431,18 @@ public class ItemBuilder {
     public ItemBuilder setMaterial(Material material) {
         this.material = material;
         this.isHead = material == Material.PLAYER_HEAD;
+        return this;
+    }
+
+    public ItemBuilder setTrimMaterial(TrimMaterial trimMaterial) {
+        this.trimMaterial = trimMaterial;
+
+        return this;
+    }
+
+    public ItemBuilder setTrimPattern(TrimPattern trimPattern) {
+        this.trimPattern = trimPattern;
+
         return this;
     }
 
@@ -932,35 +959,28 @@ public class ItemBuilder {
                 String value = optionString.replace(option + ":", "").replace(option, "");
 
                 switch (option.toLowerCase()) {
-                    case "item":
-                        itemBuilder.setMaterial(value);
-                        break;
-                    case "name":
-                        itemBuilder.setName(value);
-                        break;
-                    case "amount":
-
+                    case "item" -> itemBuilder.setMaterial(value);
+                    case "name" -> itemBuilder.setName(value);
+                    case "amount" -> {
                         try {
                             itemBuilder.setAmount(Integer.parseInt(value));
                         } catch (NumberFormatException e) {
                             itemBuilder.setAmount(1);
                         }
-
-                        break;
-                    case "lore":
-                        itemBuilder.setLore(Arrays.asList(value.split(",")));
-                        break;
-                    case "player":
-                        itemBuilder.setPlayerName(value);
-                        break;
-                    case "unbreakable-item":
-
+                    }
+                    case "lore" -> itemBuilder.setLore(Arrays.asList(value.split(",")));
+                    case "player" -> itemBuilder.setPlayerName(value);
+                    case "unbreakable-item" -> {
                         if (value.isEmpty() || value.equalsIgnoreCase("true")) itemBuilder.setUnbreakable(true);
-
-                        break;
-                    default:
+                    }
+                    case "trim-pattern" -> {
+                        if (!value.isEmpty()) itemBuilder.setTrimPattern(Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(value.toLowerCase())));
+                    }
+                    case "trim-material" -> {
+                        if (!value.isEmpty()) itemBuilder.setTrimMaterial(Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(value.toLowerCase())));
+                    }
+                    default -> {
                         Enchantment enchantment = getEnchantment(option);
-
                         if (enchantment != null && enchantment.getName() != null) {
                             try {
                                 itemBuilder.addEnchantments(enchantment, Integer.parseInt(value));
@@ -970,14 +990,12 @@ public class ItemBuilder {
 
                             break;
                         }
-
                         for (ItemFlag itemFlag : ItemFlag.values()) {
                             if (itemFlag.name().equalsIgnoreCase(option)) {
                                 itemBuilder.addItemFlag(itemFlag);
                                 break;
                             }
                         }
-
                         try {
                             for (PatternType pattern : PatternType.values()) {
                                 if (option.equalsIgnoreCase(pattern.name()) || value.equalsIgnoreCase(pattern.getIdentifier())) {
@@ -986,8 +1004,9 @@ public class ItemBuilder {
                                     break;
                                 }
                             }
-                        } catch (Exception ignored) {}
-                        break;
+                        } catch (Exception ignored) {
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
