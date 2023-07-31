@@ -31,6 +31,14 @@ dependencies {
     implementation(libs.nbt.api)
 }
 
+val buildNumber: String? = System.getenv("BUILD_NUMBER")
+val buildVersion = "${rootProject.version}-b$buildNumber"
+
+rootProject.version = if (buildNumber != null) buildVersion else rootProject.version
+
+val isSnapshot = rootProject.version.toString().contains("snapshot") || rootProject.version.toString() == buildVersion
+val javaComponent: SoftwareComponent = components["java"]
+
 tasks {
     reobfJar {
         val file = File("$rootDir/jars")
@@ -53,6 +61,35 @@ tasks {
                 "description" to rootProject.description,
                 "website" to "https://modrinth.com/plugin/${rootProject.name.lowercase()}"
             )
+        }
+    }
+
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = rootProject.group.toString()
+                artifactId = "${rootProject.name.lowercase()}-api"
+
+                version = rootProject.version.toString()
+
+                from(javaComponent)
+            }
+        }
+
+        repositories {
+            maven {
+                credentials {
+                    this.username = System.getenv("gradle_username")
+                    this.password = System.getenv("gradle_password")
+                }
+
+                if (isSnapshot) {
+                    url = uri("https://repo.crazycrew.us/snapshots/")
+                    return@maven
+                }
+
+                url = uri("https://repo.crazycrew.us/releases/")
+            }
         }
     }
 }

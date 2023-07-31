@@ -57,8 +57,10 @@ Prizes:
     Drop-Items: false
     Messages:
       - '&7Congratulations you have just won a &4Titan &7armor set.'
+    # Available Materials: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimMaterial.html
+    # Available Patterns: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimPattern.html
     Items:
-      - 'Item:DIAMOND_HELMET, Amount:1, Name:&4Titan Helmet, Protection:4, Unbreaking:3'
-      - 'Item:DIAMOND_CHESTPLATE, Amount:1, Name:&4Titan Chestplate, Protection:4, Unbreaking:3'
-      - 'Item:DIAMOND_LEGGINGS, Amount:1, Name:&4Titan Leggings, Protection:4, Unbreaking:3'
-      - 'Item:DIAMOND_BOOTS, Amount:1, Name:&4Titan Boots, Protection:4, Unbreaking:3'
+      - 'Item:DIAMOND_HELMET, Trim-Pattern:SENTRY, Trim-Material:QUARTZ, Amount:1, Name:&4Titan Helmet, Protection:4, Unbreaking:3'
+      - 'Item:DIAMOND_CHESTPLATE, Trim-Pattern:DUNE, Trim-Material:REDSTONE, Amount:1, Name:&4Titan Chestplate, Protection:4, Unbreaking:3'
+      - 'Item:DIAMOND_LEGGINGS, Trim-Pattern:HOST, Trim-Material:COPPER, Amount:1, Name:&4Titan Leggings, Protection:4, Unbreaking:3'
+      - 'Item:DIAMOND_BOOTS, Trim-Pattern:SHAPER, Trim-Material:GOLD, Amount:1, Name:&4Titan Boots, Protection:4, Unbreaking:3'
