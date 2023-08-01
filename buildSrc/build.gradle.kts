@@ -9,13 +9,7 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.shadow)
+    implementation("com.github.johnrengelman", "shadow", "8.1.1")
 
-    implementation(libs.paperweight)
-    implementation(libs.featherweight)
-
-    implementation(libs.minotaur)
-    implementation(libs.hangar)
-
-    implementation(libs.turtle)
+    implementation("io.papermc.paperweight", "paperweight-userdev", "1.5.5")
 }

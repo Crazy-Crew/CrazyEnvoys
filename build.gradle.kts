@@ -1,95 +1,66 @@
 plugins {
-    id("paper-plugin")
-    id("publish-task")
+    id("root-plugin")
 
-    id("xyz.jpenilla.run-paper") version "2.1.0"
+    id("com.modrinth.minotaur") version "2.8.2"
 }
 
-repositories {
-    flatDir {
-        dirs("libs")
+defaultTasks("build")
+
+rootProject.group = "com.badbones69.crazyenvoys"
+rootProject.description = "Drop custom envoys with any prize you want all over spawn for players to fight over."
+rootProject.version = "1.4.21"
+
+val combine = tasks.register<Jar>("combine") {
+    mustRunAfter("build")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    val jarFiles = subprojects.flatMap { subproject ->
+        files(subproject.layout.buildDirectory.file("libs/${rootProject.name}-${subproject.name}-${subproject.version}.jar").get())
+    }.filter { it.name != "MANIFEST.MF" }.map { file ->
+        if (file.isDirectory) file else zipTree(file)
     }
+
+    from(jarFiles)
 }
-
-dependencies {
-    compileOnly(libs.placeholder.api)
-    compileOnly(libs.itemsadder.api)
-
-    compileOnly("cmi-api:CMI-API")
-    compileOnly("cmi-lib:CMILib")
-
-    compileOnly(libs.decent.holograms)
-    compileOnly(libs.fancy.holograms)
-    compileOnly(libs.fancy.npcs)
-
-    compileOnly(libs.worldguard.api)
-
-    implementation(libs.bstats.bukkit)
-
-    implementation(libs.triumph.cmds)
-
-    implementation(libs.nbt.api)
-}
-
-val buildNumber: String? = System.getenv("BUILD_NUMBER")
-val buildVersion = "${rootProject.version}-b$buildNumber"
-
-rootProject.version = if (buildNumber != null) buildVersion else rootProject.version
-
-val isSnapshot = rootProject.version.toString().contains("snapshot") || rootProject.version.toString() == buildVersion
-val javaComponent: SoftwareComponent = components["java"]
 
 tasks {
-    reobfJar {
-        val file = File("$rootDir/jars")
-
-        if (!file.exists()) file.mkdirs()
-
-        outputJar.set(layout.buildDirectory.file("$file/${rootProject.name}-${rootProject.version}.jar"))
-    }
-
-    runServer {
-        minecraftVersion("1.20")
-    }
-
-    processResources {
-        filesMatching("plugin.yml") {
-            expand(
-                "name" to rootProject.name,
-                "group" to rootProject.group,
-                "version" to rootProject.version,
-                "description" to rootProject.description,
-                "website" to "https://modrinth.com/plugin/${rootProject.name.lowercase()}"
-            )
-        }
-    }
-
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                groupId = rootProject.group.toString()
-                artifactId = "${rootProject.name.lowercase()}-api"
-
-                version = rootProject.version.toString()
-
-                from(javaComponent)
-            }
+    assemble {
+        subprojects.forEach { project ->
+            dependsOn(":${project.name}:build")
         }
 
-        repositories {
-            maven {
-                credentials {
-                    this.username = System.getenv("gradle_username")
-                    this.password = System.getenv("gradle_password")
-                }
-
-                if (isSnapshot) {
-                    url = uri("https://repo.crazycrew.us/snapshots/")
-                    return@maven
-                }
-
-                url = uri("https://repo.crazycrew.us/releases/")
-            }
-        }
+        finalizedBy(combine)
     }
+}
+
+val description = """
+    ## Other:
+    * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/discussions/categories/features)
+    * [Bug Reports](https://github.com/Crazy-Crew/${rootProject.name}/issues)
+""".trimIndent()
+
+val versions = listOf(
+    "1.20",
+    "1.20.1"
+)
+
+val isSnapshot = rootProject.version.toString().contains("snapshot")
+val type = if (isSnapshot) "beta" else "release"
+
+modrinth {
+    autoAddDependsOn.set(false)
+
+    token.set(System.getenv("MODRINTH_TOKEN"))
+
+    projectId.set(rootProject.name.lowercase())
+
+    versionName.set("${rootProject.name} ${rootProject.version}")
+    versionNumber.set("${rootProject.version}")
+
+    uploadFile.set(combine.get())
+
+    gameVersions.addAll(versions)
+
+    changelog.set(description)
+
+    loaders.addAll("paper", "purpur")
 }

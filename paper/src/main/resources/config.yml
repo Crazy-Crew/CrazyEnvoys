@@ -1,0 +1,61 @@
+Settings:
+  Prefix: '&7[&cCrazyEnvoys&7]: ' #The prefix before the messages CrazyEnvoys sends.
+  # Do not change this. We use this to check if your Configs including if envoy configs are outdated!
+  Toggle-Metrics: true #Turn on and off if your server stats are sent to https://bstats.org/
+  Falling-Block-Toggle: true #Toggle if it spawns a falling block or if the crates just appear.
+  Falling-Block: 'BEACON' #The block that will be falling.
+  Fall-Height: 15 #How high the falling blocks spawn.
+  # This option should ONLY be used if Random-Locations is false.
+  Max-Crate-Toggle: false #If true then Max-Crates amount of crates will spawn and if false and using set spawn locations, then all crates will spawn.
+  Random-Amount: false #If true, selects a random number of crates between the Min-Crates and Max-Crates values. Max-Crate-Toggle has to be false for this to work.
+  Min-Crates: 7 #The min amount of crates that will spawn.
+  Max-Crates: 20 #The max amount of crates that will spawn.
+  Random-Locations: false #If true you will need to make sure to set the center location.
+  Max-Radius: 300 #The maximum distance the crates will fall from the center.
+  Min-Radius: 20 #The minimum distance from the middle the crates will fall from.
+  Envoy-Locations-Broadcast: false # If envoy locations should be broadcast whenever an envoy event starts
+  Envoy-Run-Time: '5m' #The amount of time the envoy event will go for.
+  Envoy-Timer-Toggle: true #If the envoys happen on an interval. If false the only wait it will start is if it's started with the command or flare.
+  Envoy-Cooldown-Toggle: true #Toggle if it uses a cooldown or a specified time of the day.
+  Envoy-Filter-Players-Zero: true #Toggle if you want CrazyEnvoys to ignore when player counts are 0.
+  Envoy-Cooldown: '1h' #The time till the envoy event will happen again.
+  Envoy-Time: '2:00 AM' #A specified time of the day that an envoy will happen. Please use 1-12 for hours and 0-59 for minutes.
+  Minimum-Players-Toggle: false #When the envoy is about to start toggle if there needs to be a minimum amount of players. (Does not affect flares)
+  Minimum-Flare-Toggle: false #Toggle if using a flare has to meet the minimum players' requirement. Minimum-Players-Toggle must be true for this to work.
+  Minimum-Players: 12 #The minimum amount of players needed to start the envoy.
+  Broadcast-Crate-Pick-Up: true #Toggle if when a player gets a crate if it broadcasts the message.
+  Crate-Collect-Cooldown: #If when a player collects a crate if they have to wait to collect another.
+    Toggle: false #Toggle this option on and off.
+    Time: '15s' #The time till they have to wait.
+  Crate-Countdown:
+    Toggle: false # If there should be a grace period when envoys spawn.
+    # Recommended value is at least 15+ seconds. With falling blocks, that takes up about 5 seconds and for technical reasons. I can't start it after that...
+    Time: 120 # How long in seconds till the envoys can be opened?
+    Message: '&cReady to claim.' # The message to show if the countdown is up or the toggle is set to false.
+    # Needs to have a space, so it's not crunched next to the countdown.
+    Message-Seconds: ' seconds.'
+  World-Messages:
+    Toggle: false #Toggle if the broadcast messages are only in a specific worlds.
+    Worlds: #The worlds you wish to have the messages only show up in.
+      - 'world'
+  Envoy-Warnings: #The times that will make the warning messages.
+    - '30m'
+    - '15m'
+    - '10m'
+    - '1m'
+    - '30s'
+    - '20s'
+    - '10s'
+    - '5s'
+    - '3s'
+    - '1s'
+  Flares: #Options about flares. Players need the crazyenvoy.flare.use permission to use the flares.
+    Item: 'REDSTONE_TORCH' #The time the flares are.
+    Name: '&7&l(&4&l!&7&l) &cFlare' #The name of the flare.
+    Lore: #The lore of the flare.
+      - '&7Right click me to'
+      - '&7start an envoy event.'
+    World-Guard: #The options for when using world guard regions to make flares work only in those regions.
+      Toggle: false #If they have to use flares in specified regions.
+      Regions: #The name of the regions you can use flares in.
+        - 'WarZone'
