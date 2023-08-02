@@ -1,0 +1,32 @@
+name: '${name}'
+main: '${group}.${name}'
+
+authors: ${authors}
+
+version: '${version}'
+api-version: '${apiVersion}'
+description: '${description}'
+website: '${website}'
+
+softdepend:
+  - CMI
+  - HolographicDisplays
+  - DecentHolograms
+  - PlaceholderAPI
+  - MVdWPlaceholderAPI
+  - Multiverse-Core
+  - MultiWorld
+  - MyWorlds
+  - WorldEdit
+  - WorldGuard
+
+commands:
+  crazyenvoys:
+    description: "Manage your envoys however you want."
+    aliases:
+      - envoys
+      - envoy
+
+permissions:
+  crazyenvoys.admin:
+    default: op
