@@ -3,6 +3,8 @@ Settings:
   Claim-Permission: false
   # What permission they need.
   Claim-Permission-Name: 'basic.envoy.use'
+  Prize-Message:
+    - '&7You have won &c%reward% &7from &c%tier%.'
   Spawn-Chance: 85 #The chance that this tier will spawn.
   Use-Chance: true #If true then it uses the chance option in the prizes and if false then each prize has a 1/(Amount of Prizes) chance of winning.
   Placed-Block: 'CHEST' #The block that will be clicked when they land.

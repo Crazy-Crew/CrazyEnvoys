@@ -118,8 +118,22 @@ public class EnvoyControl implements Listener {
                     }
 
                     for (Prize prize : envoyOpenEvent.getPrizes()) {
-                        for (String msg : prize.getMessages()) {
-                            player.sendMessage(methods.color(msg));
+                        if (!tier.getPrizeMessage().isEmpty() && prize.getMessages().isEmpty()) {
+                            for (String message : tier.getPrizeMessage()) {
+                                if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
+                                    message = PlaceholderAPI.setPlaceholders(player, message);
+                                }
+
+                                player.sendMessage(methods.color(message.replaceAll("%player%", player.getName()).replaceAll("%Player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())).replaceAll("%tier%", tier.getName())));
+                            }
+                        } else {
+                            for (String message : prize.getMessages()) {
+                                if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
+                                    message = PlaceholderAPI.setPlaceholders(player, message);
+                                }
+
+                                player.sendMessage(methods.color(message.replaceAll("%player%", player.getName()).replaceAll("%Player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())).replaceAll("%tier%", tier.getName())));
+                            }
                         }
 
                         for (String cmd : prize.getCommands()) {

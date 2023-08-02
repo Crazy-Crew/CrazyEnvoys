@@ -163,6 +163,10 @@ public class CrazyManager {
                 file.getStringList("Settings.Firework-Colors").forEach(color -> tier.addFireworkColor(methods.getColor(color)));
             }
 
+            if (file.contains("Settings.Prize-Message") && !file.getStringList("Settings.Prize-Message").isEmpty()) {
+                tier.setPrizeMessage(file.getStringList("Settings.Prize-Message"));
+            }
+
             tier.setSignalFlareToggle(file.getBoolean("Settings.Signal-Flare.Toggle"));
             tier.setSignalFlareTimer(file.getString("Settings.Signal-Flare.Time"));
 

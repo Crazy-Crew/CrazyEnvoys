@@ -3,6 +3,10 @@ Settings:
   Claim-Permission: false
   # What permission they need.
   Claim-Permission-Name: 'titan.envoy.use'
+  # A default message if the prize doesn't have any Messages
+  # i.e Messages: [] or the value isn't there.
+  Prize-Message:
+    - '&7You have won &c%reward% &7from &c%tier%.'
   Spawn-Chance: 10
   Use-Chance: true
   Placed-Block: 'ENCHANTING_TABLE'

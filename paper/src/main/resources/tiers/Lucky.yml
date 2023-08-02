@@ -3,6 +3,8 @@ Settings:
   Claim-Permission: false
   # What permission they need.
   Claim-Permission-Name: 'lucky.envoy.use'
+  Prize-Message:
+    - '&7You have won &c%reward% &7from &c%tier%.'
   Spawn-Chance: 25
   Use-Chance: true
   Placed-Block: 'ENDER_CHEST'
