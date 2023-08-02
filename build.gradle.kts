@@ -8,7 +8,7 @@ defaultTasks("build")
 
 rootProject.group = "com.badbones69.crazyenvoys"
 rootProject.description = "Drop custom envoys with any prize you want all over spawn for players to fight over."
-rootProject.version = "1.4.21"
+rootProject.version = "1.5"
 
 val combine = tasks.register<Jar>("combine") {
     mustRunAfter("build")
@@ -33,6 +33,15 @@ tasks {
 }
 
 val description = """
+    ## New Features:
+    * Armor Trims with all pattern/material support has been added. View how to use it below!
+      * https://docs.crazycrew.us/crazyenvoys/prizes/items/armor-trim/
+ 
+    ## Api Changes:
+    * `com.badbones69.crazyenvoys:crazyenvoys-api:1.4.20.7` from this point on is outdated.
+     * Please update your dependencies to match this version accordingly before updating!
+    * `crazyenvoys-api` has been split into `crazyenvoys-core-api` and `crazyenvoys-paper-api` due to future plans for CrazyEnvoys
+    * https://docs.crazycrew.us/crazyenvoys/api/intro
     ## Other:
     * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/discussions/categories/features)
     * [Bug Reports](https://github.com/Crazy-Crew/${rootProject.name}/issues)
