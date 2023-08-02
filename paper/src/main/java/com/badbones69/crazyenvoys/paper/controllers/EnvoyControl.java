@@ -203,7 +203,7 @@ public class EnvoyControl implements Listener {
         crazyManager.addActiveEnvoy(block, tier);
         locationSettings.addActiveLocation(block);
 
-        if (tier.getSignalFlareToggle()) crazyManager.startSignalFlare(block.getLocation(), tier);
+        if (tier.getSignalFlareToggle() && block.getChunk().isLoaded()) crazyManager.startSignalFlare(block.getLocation(), tier);
     }
 
     @EventHandler(ignoreCancelled = true)

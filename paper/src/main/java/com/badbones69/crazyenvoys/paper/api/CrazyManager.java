@@ -694,7 +694,7 @@ public class CrazyManager {
                     addActiveEnvoy(block, tier);
                     locationSettings.addActiveLocation(block);
 
-                    if (tier.getSignalFlareToggle()) startSignalFlare(block.getLocation(), tier);
+                    if (tier.getSignalFlareToggle() && block.getChunk().isLoaded()) startSignalFlare(block.getLocation(), tier);
                 }
             }
         }
