@@ -45,7 +45,7 @@ Prizes:
     DisplayName: '&a$10,000'
     Chance: 50
     Messages:
-      - '&7You have just found &a$10,000&7.'
+      - '&7You have just found %reward%.'
     Commands:
       - 'eco give %Player% 10000'
   '2':
