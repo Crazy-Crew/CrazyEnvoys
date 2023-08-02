@@ -36,6 +36,7 @@ public class Tier {
     private String signalFlareTimer;
     private List<Color> signalFlareColors;
     private List<Prize> prizes;
+    private List<String> prizeMessage;
 
     // Placeholders,
     private final HashMap<String, String> lorePlaceholders;
@@ -73,6 +74,7 @@ public class Tier {
         signalFlareTimer = "15s";
         signalFlareColors = new ArrayList<>();
         prizes = new ArrayList<>();
+        prizeMessage = Collections.emptyList();
         holoMessage.addAll(Collections.singletonList("&7&l(&6&l!&7&l) Envoy Crate"));
     }
 
@@ -97,7 +99,14 @@ public class Tier {
         this.claimPermission = claimPermission;
         return this;
     }
-    
+    public List<String> getPrizeMessage() {
+        return this.prizeMessage;
+    }
+
+    public void setPrizeMessage(List<String> prizeMessage) {
+        this.prizeMessage = prizeMessage;
+    }
+
     /**
      * Get the name of the tier.
      *

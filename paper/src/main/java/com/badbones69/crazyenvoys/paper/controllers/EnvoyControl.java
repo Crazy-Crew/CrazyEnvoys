@@ -12,6 +12,8 @@ import com.badbones69.crazyenvoys.paper.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoys.paper.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.paper.api.objects.misc.Tier;
+import com.badbones69.crazyenvoys.paper.support.libraries.PluginSupport;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import static java.util.regex.Matcher.quoteReplacement;
 
 public class EnvoyControl implements Listener {
 
@@ -137,7 +140,9 @@ public class EnvoyControl implements Listener {
                         }
 
                         for (String cmd : prize.getCommands()) {
-                            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), cmd.replace("%Player%", player.getName()).replace("%player%", player.getName()));
+                            if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
+
+                            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), cmd.replace("%Player%", player.getName()).replace("%player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())));
                         }
 
                         for (ItemStack item : prize.getItems()) {
@@ -158,7 +163,7 @@ public class EnvoyControl implements Listener {
                     if (!crazyManager.getActiveEnvoys().isEmpty()) {
                         if (envoySettings.isPickupBroadcastEnabled()) {
                             placeholder.put("%Player%", player.getName());
-                            placeholder.put("%Amount%", crazyManager.getActiveEnvoys().size() + "");
+                            placeholder.put("%Amount%", String.valueOf(crazyManager.getActiveEnvoys().size()));
                             Messages.LEFT.broadcastMessage(true, placeholder);
                         }
                     } else {

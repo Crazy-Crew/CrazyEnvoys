@@ -44,23 +44,26 @@ Settings:
 ###################################
 Prizes:
   '1':
+    DisplayName: '&a$1,000,000'
     Chance: 50
     Messages:
-      - '&7You have just found &a$1,000,000&7.'
+      - '&7You have just found %reward%.'
     Commands:
       - 'eco give %Player% 1000000'
   '2':
+    DisplayName: '&4Titan &7Sword.'
     Chance: 25
     Drop-Items: false
     Messages:
-      - '&7Congratulations you have just won a &4Titan &7sword.'
+      - '&7Congratulations you have just won a %reward%.'
     Items:
       - 'Item:DIAMOND_SWORD, Amount:1, Name:&4Titan Sword, Sharpness:5, Unbreaking:3, Knockback:2, Fire_Aspect:2, Looting:3'
   '3':
+    DisplayName: '&4Titan &7Armor'
     Chance: 10
     Drop-Items: false
     Messages:
-      - '&7Congratulations you have just won a &4Titan &7armor set.'
+      - '&7Congratulations you have just won a %reward% set.'
     # Available Materials: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimMaterial.html
     # Available Patterns: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimPattern.html
     Items:

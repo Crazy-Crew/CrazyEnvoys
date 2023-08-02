@@ -16,6 +16,7 @@ public class Prize {
     private List<String> commands;
     private List<ItemStack> items;
     private List<ItemBuilder> itemBuilders;
+    private String displayName;
 
     private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
 
@@ -25,12 +26,17 @@ public class Prize {
         this.prizeID = prizeID;
         this.chance = 100;
         this.dropItems = false;
+        this.displayName = "";
         this.messages = new ArrayList<>();
         this.commands = new ArrayList<>();
         this.items = new ArrayList<>();
         this.itemBuilders = new ArrayList<>();
     }
-    
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
     /**
      * Get the prizeID of the prize.
      *
@@ -56,6 +62,12 @@ public class Prize {
      */
     public Prize setChance(int chance) {
         this.chance = chance;
+        return this;
+    }
+
+    public Prize setDisplayName(String displayName) {
+        this.displayName = displayName;
+
         return this;
     }
     

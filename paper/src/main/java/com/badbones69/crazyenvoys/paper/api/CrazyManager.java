@@ -179,11 +179,12 @@ public class CrazyManager {
             for (String prizeID : file.getConfigurationSection("Prizes").getKeys(false)) {
                 String path = "Prizes." + prizeID + ".";
                 int chance = file.getInt(path + "Chance");
+                String displayName = file.contains(path + "DisplayName") ? file.getString(path + "DisplayName") : "";
                 List<String> commands = file.getStringList(path + "Commands");
                 List<String> messages = file.getStringList(path + "Messages");
                 boolean dropItems = file.getBoolean(path + "Drop-Items");
                 List<ItemBuilder> items = ItemBuilder.convertStringList(file.getStringList(path + "Items"));
-                tier.addPrize(new Prize(prizeID).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
+                tier.addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
             }
 
             tiers.add(tier);
