@@ -18,7 +18,7 @@
   <p align="center">
     Drop custom crates with any prize you want all over spawn for players to fight over.
     <br />
-    <a href="https://github.com/Crazy-Crew/CrazyEnvoys/wiki"><strong>Explore the docs »</strong></a>
+    <a href="https://docs.crazycrew.us/crazyenvoys/home"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/Crazy-Crew/CrazyEnvoys/issues">Report Bug</a>
@@ -49,6 +49,7 @@
 
 ### Resource Page
 <a href="https://modrinth.com/plugin/crazyenvoys">![Modrinth](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/compact/available/modrinth_46h.png)</a>
+<a href="https://hangar.papermc.io/CrazyCrew/CrazyEnvoys">![Hangar](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/compact/available/hangar_46h.png)</a>
 
 ## Getting Started
 

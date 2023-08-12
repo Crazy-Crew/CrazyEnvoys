@@ -364,7 +364,15 @@ public class ItemBuilder {
                 }
             }
 
-            if (itemMeta instanceof org.bukkit.inventory.meta.Damageable) ((org.bukkit.inventory.meta.Damageable) itemMeta).setDamage(damage);
+            if (itemMeta instanceof Damageable) {
+                if (damage >= 1) {
+                    if (damage >= item.getType().getMaxDurability()) {
+                        ((Damageable) itemMeta).setDamage(item.getType().getMaxDurability());
+                    } else {
+                        ((Damageable) itemMeta).setDamage(damage);
+                    }
+                }
+            }
 
             if (isPotion && (potionType != null || potionColor != null)) {
                 PotionMeta potionMeta = (PotionMeta) itemMeta;
@@ -911,29 +919,6 @@ public class ItemBuilder {
     // Other misc shit
 
     /**
-     * Convert an ItemStack to an ItemBuilder to allow easier editing of the ItemStack.
-     *
-     * @param item The ItemStack you wish to convert into an ItemBuilder.
-     * @return The ItemStack as an ItemBuilder with all the info from the item.
-     */
-    public static ItemBuilder convertItemStack(ItemStack item) {
-        ItemBuilder itemBuilder = new ItemBuilder().setReferenceItem(item).setAmount(item.getAmount()).setMaterial(item.getType()).setEnchantments(new HashMap<>(item.getEnchantments()));
-
-        if (item.hasItemMeta()) {
-            ItemMeta itemMeta = item.getItemMeta();
-            assert itemMeta != null;
-            itemBuilder.setName(itemMeta.getDisplayName()).setLore(itemMeta.getLore());
-            NBTItem nbt = new NBTItem(item);
-
-            if (nbt.hasKey("Unbreakable")) itemBuilder.setUnbreakable(nbt.getBoolean("Unbreakable"));
-
-            if (itemMeta instanceof org.bukkit.inventory.meta.Damageable) itemBuilder.setDamage(((org.bukkit.inventory.meta.Damageable) itemMeta).getDamage());
-        }
-
-        return itemBuilder;
-    }
-
-    /**
      * Converts a String to an ItemBuilder.
      *
      * @param itemString The String you wish to convert.
@@ -972,6 +957,13 @@ public class ItemBuilder {
                     case "player" -> itemBuilder.setPlayerName(value);
                     case "unbreakable-item" -> {
                         if (value.isEmpty() || value.equalsIgnoreCase("true")) itemBuilder.setUnbreakable(true);
+                    }
+                    case "damage" -> {
+                        try {
+                            itemBuilder.setDamage(Integer.parseInt(value));
+                        } catch (NumberFormatException e) {
+                            itemBuilder.setDamage(0);
+                        }
                     }
                     case "trim-pattern" -> {
                         if (!value.isEmpty()) itemBuilder.setTrimPattern(Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(value.toLowerCase())));

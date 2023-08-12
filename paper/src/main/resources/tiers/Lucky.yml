@@ -65,7 +65,7 @@ Prizes:
     # Available Materials: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimMaterial.html
     # Available Patterns: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimPattern.html
     Items:
-      - 'Item:DIAMOND_HELMET, Trim-Pattern:SENTRY, Trim-Material:QUARTZ, Amount:1, Name:&eLucky Helmet, Protection:2, Unbreaking:1'
-      - 'Item:DIAMOND_CHESTPLATE, Trim-Pattern:DUNE, Trim-Material:REDSTONE, Amount:1, Name:&eLucky Chestplate, Protection:2, Unbreaking:1'
-      - 'Item:DIAMOND_LEGGINGS, Trim-Pattern:HOST, Trim-Material:COPPER, Amount:1, Name:&eLucky Leggings, Protection:2, Unbreaking:1'
-      - 'Item:DIAMOND_BOOTS, Trim-Pattern:SHAPER, Trim-Material:GOLD, Amount:1, Name:&eLucky Boots, Protection:2, Unbreaking:1'
+      - 'Item:DIAMOND_HELMET, Damage:50, Trim-Pattern:SENTRY, Trim-Material:QUARTZ, Amount:1, Name:&eLucky Helmet, Protection:2, Unbreaking:1'
+      - 'Item:DIAMOND_CHESTPLATE, Damage:50, Trim-Pattern:DUNE, Trim-Material:REDSTONE, Amount:1, Name:&eLucky Chestplate, Protection:2, Unbreaking:1'
+      - 'Item:DIAMOND_LEGGINGS, Damage:50, Trim-Pattern:HOST, Trim-Material:COPPER, Amount:1, Name:&eLucky Leggings, Protection:2, Unbreaking:1'
+      - 'Item:DIAMOND_BOOTS, Damage:50, Trim-Pattern:SHAPER, Trim-Material:GOLD, Amount:1, Name:&eLucky Boots, Protection:2, Unbreaking:1'
