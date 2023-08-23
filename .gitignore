@@ -1,8 +1,17 @@
 .gradle
 .idea
-
 build
 
+buildSrc/.gradle
 buildSrc/build
 
+core/.gradle
+core/build
+
+api/.gradle
+api/build
+
 jars
+
+paper/.gradle
+paper/build
