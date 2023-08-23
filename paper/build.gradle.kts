@@ -1,13 +1,35 @@
 import io.papermc.hangarpublishplugin.model.Platforms
 
 plugins {
-    alias(libs.plugins.shadow)
-    alias(libs.plugins.userdev)
     alias(libs.plugins.modrinth)
     alias(libs.plugins.hangar)
+
+    id("paper-plugin")
 }
 
+project.group = "${rootProject.group}.paper"
+
 repositories {
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+
+    maven("https://repo.codemc.org/repository/maven-public/")
+
+    maven("https://repo.papermc.io/repository/maven-public/")
+
+    maven("https://repo.aikar.co/content/groups/aikar/")
+
+    maven("https://repo.triumphteam.dev/snapshots/")
+
+    maven("https://repo.crazycrew.us/snapshots/")
+
+    maven("https://repo.crazycrew.us/releases/")
+
+    maven("https://maven.enginehub.org/repo/")
+
+    maven("https://jitpack.io/")
+
+    mavenCentral()
+
     flatDir { dirs("libs") }
 }
 
@@ -27,8 +49,6 @@ dependencies {
     compileOnly("me.clip", "placeholderapi", "2.11.3")
 
     compileOnly("com.github.decentsoftware-eu", "decentholograms","2.8.3")
-
-    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 }
 
 val component: SoftwareComponent = components["java"]
@@ -37,7 +57,7 @@ tasks {
     publishing {
         publications {
             create<MavenPublication>("maven") {
-                groupId = rootProject.group.toString()
+                groupId = project.group.toString()
                 artifactId = "${rootProject.name.lowercase()}-${project.name.lowercase()}-api"
                 version = rootProject.version.toString()
 
@@ -46,19 +66,7 @@ tasks {
         }
     }
 
-    reobfJar {
-        outputJar.set(file("$buildDir/libs/${rootProject.name}-${project.version}.jar"))
-    }
-
-    assemble {
-        dependsOn(reobfJar)
-    }
-
     shadowJar {
-        archiveClassifier.set("")
-
-        exclude("META-INF/**")
-
         listOf(
             "dev.triumphteam",
             "org.bstats",
@@ -71,7 +79,7 @@ tasks {
     processResources {
         val props = mapOf(
             "name" to rootProject.name,
-            "group" to project.group,
+            "group" to project.group.toString(),
             "version" to rootProject.version,
             "description" to rootProject.description,
             "authors" to rootProject.properties["authors"],
@@ -85,30 +93,23 @@ tasks {
     }
 }
 
+val isSnapshot = rootProject.version.toString().contains("snapshot")
+val type = if (isSnapshot) "beta" else "release"
+val other = if (isSnapshot) "Beta" else "Release"
+
+val file = file("${rootProject.rootDir}/jars/${rootProject.name}-${rootProject.version}.jar")
+
 val description = """
-## New Features:
- * Added the ability for an item to have damage applied to it.
-   * You do need a mod to be able to see how much durability an item has by default in order to apply the correct damage.
-```yml
-Items:
-  - 'Item:GOLDEN_HELMET, Amount:1, Damage:50, Trim-Pattern:SENTRY, Trim-Material:QUARTZ, Name:&bCheap Helmet'
-```
-    
 ## Other:
-* [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/discussions/categories/features)
-* [Bug Reports](https://github.com/Crazy-Crew/${rootProject.name}/issues)
+ * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)
+ * [Bug Reports](https://github.com/Crazy-Crew/${rootProject.name}/issues)
 """.trimIndent()
 
 val versions = listOf(
     "1.20",
-    "1.20.1"
+    "1.20.1",
     //"1.20.2"
 )
-
-val output = file("${rootProject.rootDir}/jars/${rootProject.name}-${project.version}.jar")
-
-val isSnapshot = rootProject.version.toString().contains("snapshot")
-val type = if (isSnapshot) "beta" else "release"
 
 modrinth {
     autoAddDependsOn.set(false)
@@ -120,7 +121,9 @@ modrinth {
     versionName.set("${rootProject.name} ${rootProject.version}")
     versionNumber.set("${rootProject.version}")
 
-    uploadFile.set(output)
+    versionType.set(type)
+
+    uploadFile.set(file)
 
     gameVersions.addAll(versions)
 
@@ -133,14 +136,14 @@ hangarPublish {
     publications.register("plugin") {
         version.set(rootProject.version as String)
         namespace("CrazyCrew", rootProject.name)
-        channel.set("Release")
+        channel.set(other)
         changelog.set(description)
 
         apiKey.set(System.getenv("hangar_key"))
 
         platforms {
             register(Platforms.PAPER) {
-                jar.set(output)
+                jar.set(file)
                 platformVersions.set(versions)
             }
         }

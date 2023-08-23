@@ -75,6 +75,10 @@ public class ItemBuilder {
     private boolean isBanner;
     private List<Pattern> patterns;
 
+    // Maps
+    private boolean isMap;
+    private Color mapColor;
+
     // Placeholders
     private HashMap<String, String> namePlaceholders;
     private HashMap<String, String> lorePlaceholders;
@@ -126,17 +130,14 @@ public class ItemBuilder {
         this.isBanner = false;
         this.patterns = new ArrayList<>();
 
+        this.isMap = false;
+        this.mapColor = Color.RED;
+
         this.namePlaceholders = new HashMap<>();
         this.lorePlaceholders = new HashMap<>();
 
         this.itemFlags = new ArrayList<>();
     }
-
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
-
-    private final Methods methods = plugin.getMethods();
-
-    private final SkullCreator skullCreator = plugin.getSkullCreator();;
 
     /**
      * Deduplicate an item builder.
@@ -183,10 +184,19 @@ public class ItemBuilder {
         this.isBanner = itemBuilder.isBanner;
         this.patterns = new ArrayList<>(itemBuilder.patterns);
 
+        this.isMap = itemBuilder.isMap;
+        this.mapColor = itemBuilder.mapColor;
+
         this.namePlaceholders = new HashMap<>(itemBuilder.namePlaceholders);
         this.lorePlaceholders = new HashMap<>(itemBuilder.lorePlaceholders);
         this.itemFlags = new ArrayList<>(itemBuilder.itemFlags);
     }
+
+    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+
+    private final Methods methods = plugin.getMethods();
+
+    private final SkullCreator skullCreator = plugin.getSkullCreator();;
 
     /**
      * Gets the nbt item.
@@ -364,6 +374,12 @@ public class ItemBuilder {
                 }
             }
 
+            if (isMap) {
+                MapMeta mapMeta = (MapMeta) itemMeta;
+
+                if (mapColor != null) mapMeta.setColor(mapColor);
+            }
+
             if (itemMeta instanceof Damageable) {
                 if (damage >= 1) {
                     if (damage >= item.getType().getMaxDurability()) {
@@ -484,6 +500,7 @@ public class ItemBuilder {
                 this.potionType = getPotionType(PotionEffectType.getByName(metaData));
                 this.potionColor = methods.getColor(metaData);
                 this.armorColor = methods.getColor(metaData);
+                this.mapColor = methods.getColor(metaData);
             }
 
         } else if (material.contains("#")) {
