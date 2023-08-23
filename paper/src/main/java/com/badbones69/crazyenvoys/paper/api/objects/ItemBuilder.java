@@ -502,7 +502,6 @@ public class ItemBuilder {
                 this.armorColor = methods.getColor(metaData);
                 this.mapColor = methods.getColor(metaData);
             }
-
         } else if (material.contains("#")) {
             String[] materialSplit = material.split("#");
             material = materialSplit[0];
@@ -523,6 +522,7 @@ public class ItemBuilder {
             case "LEATHER_HELMET", "LEATHER_CHESTPLATE", "LEATHER_LEGGINGS", "LEATHER_BOOTS", "LEATHER_HORSE_ARMOR" -> this.isLeatherArmor = true;
             case "BANNER" -> this.isBanner = true;
             case "SHIELD" -> this.isShield = true;
+            case "MAP", "FILLED_MAP" -> this.isMap = true;
         }
 
         if (this.material.name().contains("BANNER")) this.isBanner = true;
