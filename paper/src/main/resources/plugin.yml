@@ -19,6 +19,8 @@ softdepend:
   - MyWorlds
   - WorldEdit
   - WorldGuard
+  - Oraxen
+  - ItemsAdder
 
 commands:
   crazyenvoys:

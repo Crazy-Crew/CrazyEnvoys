@@ -8,7 +8,9 @@ public enum PluginSupport {
     CMI("CMI"),
     PLACEHOLDER_API("PlaceholderAPI"),
     WORLD_GUARD("WorldGuard"),
-    WORLD_EDIT("WorldEdit");
+    WORLD_EDIT("WorldEdit"),
+    ORAXEN("Oraxen"),
+    ITEMS_ADDER("ItemsAdder");
 
     private final String name;
 

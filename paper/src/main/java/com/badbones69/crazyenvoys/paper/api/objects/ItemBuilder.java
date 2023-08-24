@@ -3,9 +3,13 @@ package com.badbones69.crazyenvoys.paper.api.objects;
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
 import com.badbones69.crazyenvoys.paper.support.SkullCreator;
+import com.badbones69.crazyenvoys.paper.support.libraries.PluginSupport;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import dev.lone.itemsadder.api.CustomStack;
+import io.th0rgal.oraxen.api.OraxenItems;
 import org.bukkit.*;
 import org.bukkit.block.Banner;
+import org.bukkit.block.Block;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
@@ -38,6 +42,7 @@ public class ItemBuilder {
     private String itemName;
     private final List<String> itemLore;
     private int itemAmount;
+    private String customMaterial;
 
     // Player
     private String player;
@@ -345,13 +350,25 @@ public class ItemBuilder {
      * @return The result of all the info that was given to the builder as an ItemStack.
      */
     public ItemStack build() {
-
         if (nbtItem != null) referenceItem = nbtItem.getItem();
 
-        ItemStack item = referenceItem != null ? referenceItem : new ItemStack(material);
+        ItemStack item = referenceItem;
+
+        if (item == null) {
+            if (PluginSupport.ITEMS_ADDER.isPluginEnabled()) {
+                CustomStack customStack = CustomStack.getInstance("ia:" + this.customMaterial);
+
+                if (customStack != null) item = customStack.getItemStack();
+            } else if (PluginSupport.ORAXEN.isPluginEnabled()) {
+                io.th0rgal.oraxen.items.ItemBuilder oraxenItem = OraxenItems.getItemById(this.customMaterial);
+
+                if (oraxenItem != null) item = oraxenItem.build();
+            }
+        }
+
+        if (item == null) item = new ItemStack(material);
 
         if (item.getType() != Material.AIR) {
-
             if (isHead) { // Has to go 1st due to it removing all data when finished.
                 if (isHash) { // Sauce: https://github.com/deanveloper/SkullCreator
                     if (isURL) {
@@ -478,6 +495,8 @@ public class ItemBuilder {
      */
     public ItemBuilder setMaterial(String material) {
         String metaData;
+        //Store material inside iaNamespace (e.g. ia:myblock)
+        this.customMaterial = material;
 
         if (material.contains(":")) { // Sets the durability or another value option.
             String[] b = material.split(":");
