@@ -5,6 +5,7 @@ import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 public enum PluginSupport {
 
     DECENT_HOLOGRAMS("DecentHolograms"),
+    HOLOGRAPHIC_DISPLAYS("HolographicDisplays"),
     CMI("CMI"),
     PLACEHOLDER_API("PlaceholderAPI"),
     WORLD_GUARD("WorldGuard"),

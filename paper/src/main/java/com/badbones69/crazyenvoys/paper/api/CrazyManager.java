@@ -22,6 +22,7 @@ import com.badbones69.crazyenvoys.paper.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.paper.controllers.CountdownTimer;
 import com.badbones69.crazyenvoys.paper.controllers.FireworkDamageAPI;
 import com.badbones69.crazyenvoys.paper.support.holograms.CMIHologramsSupport;
+import com.badbones69.crazyenvoys.paper.support.holograms.HolographicDisplaysSupport;
 import com.badbones69.crazyenvoys.paper.support.libraries.PluginSupport;
 import com.badbones69.crazyenvoys.paper.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.paper.support.holograms.DecentHologramsSupport;
@@ -222,16 +223,16 @@ public class CrazyManager {
 
         if (PluginSupport.WORLD_GUARD.isPluginEnabled() && PluginSupport.WORLD_EDIT.isPluginEnabled()) worldGuardSupportVersion = new WorldGuardSupport();
 
-        //if (PluginSupport.FANCY_HOLOGRAMS.isPluginEnabled()) {
-            //hologramController = new FancyHologramSupport();
-            //plugin.getLogger().info("FancyHolograms support has been enabled.");
         if (PluginSupport.DECENT_HOLOGRAMS.isPluginEnabled()) {
             hologramController = new DecentHologramsSupport();
             plugin.getLogger().info("DecentHolograms support has been enabled.");
         } else if (PluginSupport.CMI.isPluginEnabled() && CMIModule.holograms.isEnabled()) {
             hologramController = new CMIHologramsSupport();
             plugin.getLogger().info("CMI Hologram support has been enabled.");
-        } else plugin.getLogger().warning("No holograms plugin were found. If using CMI, make sure holograms module is enabled.");
+        } else if (PluginSupport.HOLOGRAPHIC_DISPLAYS.isPluginEnabled()) {
+            hologramController = new HolographicDisplaysSupport();
+            plugin.getLogger().info("Holographic Displays support has been enabled.");}
+        else plugin.getLogger().warning("No holograms plugin were found. If using CMI, make sure holograms module is enabled.");
 
         locationSettings.fixLocations(fileManager);
 
