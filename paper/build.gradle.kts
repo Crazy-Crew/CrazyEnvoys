@@ -12,41 +12,33 @@ project.group = "${rootProject.group}.paper"
 repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 
-    maven("https://repo.codemc.org/repository/maven-public/")
-
     maven("https://repo.papermc.io/repository/maven-public/")
 
     maven("https://repo.aikar.co/content/groups/aikar/")
 
     maven("https://repo.triumphteam.dev/snapshots/")
 
-    maven("https://repo.crazycrew.us/snapshots/")
-
-    maven("https://repo.crazycrew.us/releases/")
-
     maven("https://maven.enginehub.org/repo/")
-
-    maven("https://jitpack.io/")
-
-    mavenCentral()
 
     flatDir { dirs("libs") }
 }
 
 dependencies {
-    compileOnly("cmi-api:CMI-API")
-    compileOnly("cmi-lib:CMILib")
-
-    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.1.0-SNAPSHOT")
-
-    implementation("de.tr7zw", "item-nbt-api", "2.11.3")
-    implementation("org.bstats", "bstats-bukkit", "3.0.2")
+    implementation(project(":common"))
 
     implementation("dev.triumphteam", "triumph-cmd-bukkit", "2.0.0-SNAPSHOT")
 
-    compileOnly(fileTree("libs").include("*.jar"))
+    implementation("org.bstats", "bstats-bukkit", "3.0.2")
+
+    implementation("de.tr7zw", "item-nbt-api", "2.11.3")
+
+    implementation(libs.cluster.bukkit.api) {
+        exclude("com.ryderbelserion.cluster", "cluster-api")
+    }
 
     compileOnly("me.filoghost.holographicdisplays", "holographicdisplays-api", "3.0.0")
+
+    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.1.0-SNAPSHOT")
 
     compileOnly("com.github.decentsoftware-eu", "decentholograms","2.8.3")
 
@@ -55,6 +47,8 @@ dependencies {
     compileOnly("com.github.oraxen", "oraxen", "1.160.0")
 
     compileOnly("me.clip", "placeholderapi", "2.11.3")
+
+    compileOnly(fileTree("libs").include("*.jar"))
 }
 
 val component: SoftwareComponent = components["java"]
@@ -106,12 +100,8 @@ val other = if (isSnapshot) "Beta" else "Release"
 val file = file("${rootProject.rootDir}/jars/${rootProject.name}-${rootProject.version}.jar")
 
 val description = """
-## New Features:
- * Added back HolographicDisplays support as filoghost has updated it to 1.20.1
- * Added direct support for Oraxen/ItemsAdder
-   * https://docs.crazycrew.us/crazyenvoys/info/prizes/options#custom-items
- * Added the ability to color maps.
-   * https://docs.crazycrew.us/crazyenvoys/info/prizes/items/colored-map
+## Changes:
+* Added 1.20.2 support.
     
 ## Other:
  * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)
@@ -121,7 +111,7 @@ val description = """
 val versions = listOf(
     "1.20",
     "1.20.1",
-    //"1.20.2"
+    "1.20.2"
 )
 
 modrinth {
@@ -148,8 +138,11 @@ modrinth {
 hangarPublish {
     publications.register("plugin") {
         version.set(rootProject.version as String)
-        namespace("CrazyCrew", rootProject.name)
-        channel.set(other)
+
+        id.set(rootProject.name)
+
+        channel.set(if (isSnapshot) "Beta" else "Release")
+
         changelog.set(description)
 
         apiKey.set(System.getenv("hangar_key"))
