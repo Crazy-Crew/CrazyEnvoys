@@ -5,7 +5,7 @@ import java.util.List;
 public class MiscUtils {
 
     /**
-     * Loops through a string-list and parses the colors then returns a string builder
+     * Loops through a string-list and does magic with \n then returns the string builder
      *
      * @param list to convert
      * @return the string-builder
