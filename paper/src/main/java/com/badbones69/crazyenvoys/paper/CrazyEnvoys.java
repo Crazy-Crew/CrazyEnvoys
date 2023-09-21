@@ -2,8 +2,6 @@ package com.badbones69.crazyenvoys.paper;
 
 import com.badbones69.crazyenvoys.paper.api.CrazyManager;
 import com.badbones69.crazyenvoys.paper.api.FileManager;
-import com.badbones69.crazyenvoys.paper.api.FileManager.Files;
-import com.badbones69.crazyenvoys.paper.api.enums.Messages;
 import com.badbones69.crazyenvoys.paper.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.paper.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.paper.api.objects.CoolDownSettings;
@@ -17,22 +15,21 @@ import com.badbones69.crazyenvoys.paper.controllers.EditControl;
 import com.badbones69.crazyenvoys.paper.controllers.EnvoyControl;
 import com.badbones69.crazyenvoys.paper.controllers.FireworkDamageAPI;
 import com.badbones69.crazyenvoys.paper.controllers.FlareControl;
-import com.badbones69.crazyenvoys.paper.support.MetricsHandler;
 import com.badbones69.crazyenvoys.paper.support.libraries.PluginSupport;
 import com.badbones69.crazyenvoys.paper.support.SkullCreator;
 import com.badbones69.crazyenvoys.paper.support.placeholders.PlaceholderAPISupport;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
+import us.crazycrew.crazyenvoys.paper.api.plugin.CrazyHandler;
 
 public class CrazyEnvoys extends JavaPlugin implements Listener {
-
-    private static CrazyEnvoys plugin;
 
     private final PluginManager pluginManager = getServer().getPluginManager();
 
@@ -53,99 +50,66 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
     private FireworkDamageAPI fireworkDamageAPI;
 
+    private CrazyHandler crazyHandler;
+
     @Override
     public void onEnable() {
-        plugin = this;
+        this.crazyHandler = new CrazyHandler(getDataFolder());
+        this.crazyHandler.install();
 
-        fileManager = new FileManager();
+        this.pluginManager.registerEvents(this.fireworkDamageAPI = new FireworkDamageAPI(), this);
 
-        fileManager.logInfo(true)
-                .registerCustomFilesFolder("/tiers")
-                .registerDefaultGenerateFiles("Basic.yml", "/tiers", "/tiers")
-                .registerDefaultGenerateFiles("Lucky.yml", "/tiers", "/tiers")
-                .registerDefaultGenerateFiles("Titan.yml", "/tiers", "/tiers")
-                .setup();
+        this.methods = new Methods();
 
-        pluginManager.registerEvents(fireworkDamageAPI = new FireworkDamageAPI(), this);
+        this.locationSettings = new LocationSettings();
+        this.editorSettings = new EditorSettings();
+        this.coolDownSettings = new CoolDownSettings();
+        this.envoySettings = new EnvoySettings();
+        this.flareSettings = new FlareSettings();
 
-        methods = new Methods();
+        this.crazyManager = new CrazyManager();
+        this.skullCreator = new SkullCreator();
 
-        locationSettings = new LocationSettings();
-        editorSettings = new EditorSettings();
-        coolDownSettings = new CoolDownSettings();
-        envoySettings = new EnvoySettings();
-        flareSettings = new FlareSettings();
-
-        crazyManager = new CrazyManager();
-
-        skullCreator = new SkullCreator();
-
-        crazyManager.load();
-
-        Messages.addMissingMessages();
-
-        FileConfiguration config = Files.CONFIG.getFile();
-
-        String metricsPath = config.getString("Settings.Toggle-Metrics");
-
-        boolean metricsEnabled = config.getBoolean("Settings.Toggle-Metrics");
-
-        String countDownSetting = config.getString("Settings.Crate-Countdown.Toggle");
-
-        String envoyLocationBroadcast = config.getString("Settings.Envoy-Locations-Broadcast");
-
-        if (metricsPath == null) {
-            config.set("Settings.Toggle-Metrics", true);
-            Files.CONFIG.saveFile();
-        }
-
-        if (countDownSetting == null) {
-            config.set("Settings.Crate-Countdown.Toggle", false);
-            config.set("Settings.Crate-Countdown.Time", 120);
-            config.set("Settings.Crate-Countdown.Message", "&cReady to claim.");
-            config.set("Settings.Crate-Countdown.Message-Seconds", " seconds.");
-            Files.CONFIG.saveFile();
-        }
-
-        if (envoyLocationBroadcast == null) {
-            config.set("Settings.Envoy-Locations-Broadcast", false);
-            Files.CONFIG.saveFile();
-        }
-
-        if (metricsEnabled) {
-            MetricsHandler metricsHandler = new MetricsHandler();
-
-            metricsHandler.start();
-        }
+        this.crazyManager.load(true);
 
         enable();
     }
 
     @Override
     public void onDisable() {
+        this.crazyHandler.uninstall();
+
         for (Player player : getServer().getOnlinePlayers()) {
-            if (editorSettings.isEditor(player)) {
-                editorSettings.removeEditor(player);
-                editorSettings.removeFakeBlocks();
+            if (this.editorSettings.isEditor(player)) {
+                this.editorSettings.removeEditor(player);
+                this.editorSettings.removeFakeBlocks();
             }
         }
 
-        if (crazyManager.isEnvoyActive()) {
+        if (this.crazyManager.isEnvoyActive()) {
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.SHUTDOWN);
 
             getServer().getPluginManager().callEvent(event);
 
-            crazyManager.endEnvoyEvent();
+            this.crazyManager.endEnvoyEvent();
         }
 
-        crazyManager.unload();
+        //this.crazyManager.unload();
+    }
+
+    public @NotNull CrazyHandler getCrazyHandler() {
+        return this.crazyHandler;
+    }
+
+    public boolean isLogging() {
+        return this.crazyHandler.getConfigManager().getPluginConfig().getProperty(PluginConfig.verbose_logging);
     }
 
     private void enable() {
-        pluginManager.registerEvents(this, this);
-        pluginManager.registerEvents(new EditControl(), this);
-        pluginManager.registerEvents(new EnvoyControl(), this);
-        pluginManager.registerEvents(new FlareControl(), this);
+        this.pluginManager.registerEvents(this, this);
+        this.pluginManager.registerEvents(new EditControl(), this);
+        this.pluginManager.registerEvents(new EnvoyControl(), this);
+        this.pluginManager.registerEvents(new FlareControl(), this);
 
         if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
             getLogger().warning("We no longer support placeholders using {}");
@@ -164,48 +128,44 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         }
     }
 
-    public static CrazyEnvoys getPlugin() {
-        return plugin;
-    }
-
     public FileManager getFileManager() {
-        return fileManager;
+        return this.crazyHandler.getFileManager();
     }
 
     public Methods getMethods() {
-        return methods;
+        return this.methods;
     }
 
     // Envoy Required Classes.
     public EditorSettings getEditorSettings() {
-        return editorSettings;
+        return this.editorSettings;
     }
 
     public FlareSettings getFlareSettings() {
-        return flareSettings;
+        return this.flareSettings;
     }
 
     public EnvoySettings getEnvoySettings() {
-        return envoySettings;
+        return this.envoySettings;
     }
 
     public CoolDownSettings getCoolDownSettings() {
-        return coolDownSettings;
+        return this.coolDownSettings;
     }
 
     public LocationSettings getLocationSettings() {
-        return locationSettings;
+        return this.locationSettings;
     }
 
     public CrazyManager getCrazyManager() {
-        return crazyManager;
+        return this.crazyManager;
     }
 
     public SkullCreator getSkullCreator() {
-        return skullCreator;
+        return this.skullCreator;
     }
 
     public FireworkDamageAPI getFireworkDamageAPI() {
-        return fireworkDamageAPI;
+        return this.fireworkDamageAPI;
     }
 }

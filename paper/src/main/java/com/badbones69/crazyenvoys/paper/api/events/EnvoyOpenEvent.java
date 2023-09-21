@@ -43,7 +43,7 @@ public class EnvoyOpenEvent extends Event implements Cancellable {
      * @return The player that opened the crate.
      */
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
     
     /**
@@ -52,7 +52,7 @@ public class EnvoyOpenEvent extends Event implements Cancellable {
      * @return The location the crate was located at.
      */
     public Location getLocation() {
-        return location;
+        return this.location;
     }
     
     /**
@@ -61,21 +61,21 @@ public class EnvoyOpenEvent extends Event implements Cancellable {
      * @return The block that was claimed.
      */
     public Block getBlock() {
-        return block;
+        return this.block;
     }
     
     /**
      * Get the tier of the crate that was opened.
      */
     public Tier getTier() {
-        return tier;
+        return this.tier;
     }
     
     /**
      * Get the prize that was won.
      */
     public List<Prize> getPrizes() {
-        return prizes;
+        return this.prizes;
     }
     
     /**
@@ -89,7 +89,7 @@ public class EnvoyOpenEvent extends Event implements Cancellable {
     
     @Override
     public boolean isCancelled() {
-        return cancelled;
+        return this.cancelled;
     }
     
     @Override

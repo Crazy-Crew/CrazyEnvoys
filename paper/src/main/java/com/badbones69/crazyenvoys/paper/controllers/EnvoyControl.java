@@ -3,7 +3,7 @@ package com.badbones69.crazyenvoys.paper.controllers;
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
 import com.badbones69.crazyenvoys.paper.api.CrazyManager;
-import com.badbones69.crazyenvoys.paper.api.enums.Messages;
+import com.badbones69.crazyenvoys.paper.api.enums.Translation;
 import com.badbones69.crazyenvoys.paper.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.paper.api.events.EnvoyOpenEvent;
 import com.badbones69.crazyenvoys.paper.api.objects.CoolDownSettings;
@@ -13,6 +13,7 @@ import com.badbones69.crazyenvoys.paper.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.paper.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.paper.support.libraries.PluginSupport;
+import com.ryderbelserion.cluster.bukkit.utils.LegacyUtils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -26,6 +27,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -36,189 +38,184 @@ import static java.util.regex.Matcher.quoteReplacement;
 
 public class EnvoyControl implements Listener {
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final Methods methods = plugin.getMethods();
+    private final Methods methods = this.plugin.getMethods();
 
-    private final EnvoySettings envoySettings = plugin.getEnvoySettings();
-    private final CoolDownSettings coolDownSettings = plugin.getCoolDownSettings();
-    private final LocationSettings locationSettings = plugin.getLocationSettings();
+    private final EnvoySettings envoySettings = this.plugin.getEnvoySettings();
+    private final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
+    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    private final CrazyManager crazyManager = plugin.getCrazyManager();
-
-    private final Random random = new Random();
+    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
     
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
 
-        if (e.getClickedBlock() != null && crazyManager.isEnvoyActive()) {
-            Block block = e.getClickedBlock();
+        if (e.getClickedBlock() == null && !this.crazyManager.isEnvoyActive()) return;
 
-            if (crazyManager.isActiveEnvoy(e.getClickedBlock())) {
-                if (player.getGameMode() == GameMode.valueOf("SPECTATOR")) return;
+        final Block block = e.getClickedBlock();
 
-                if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission("envoy.gamemode-bypass")) return;
+        if (!this.crazyManager.isActiveEnvoy(block)) return;
 
-                e.setCancelled(true);
+        if (player.getGameMode() == GameMode.valueOf("SPECTATOR")) return;
 
-                // Ryder Start
+        if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission("envoy.gamemode-bypass")) return;
 
-                Tier tier = crazyManager.getTier(e.getClickedBlock());
+        e.setCancelled(true);
 
-                if (!player.hasPermission("envoy.bypass")) {
+        // Ryder Start
+        Tier tier = this.crazyManager.getTier(e.getClickedBlock());
 
-                    if (envoySettings.isEnvoyCountDownEnabled() && crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
-                        HashMap<String, String> placeholder = new HashMap<>();
-                        placeholder.put("%Time%", String.valueOf(crazyManager.getCountdownTimer().getSecondsLeft()));
-                        Messages.COUNTDOWN_IN_PROGRESS.sendMessage(player, placeholder);
-                        return;
-                    }
+        if (!player.hasPermission("envoy.bypass")) {
+            if (this.envoySettings.isEnvoyCountDownEnabled() && this.crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
+                HashMap<String, String> placeholder = new HashMap<>();
+                placeholder.put("%Time%", String.valueOf(this.crazyManager.getCountdownTimer().getSecondsLeft()));
+                Translation.countdown_in_progress.sendMessage(player, placeholder);
+                return;
+            }
 
-                    if (tier.isClaimPermissionToggleEnabled() && !player.hasPermission(tier.getClaimPermission())) {
-                        player.sendMessage(Messages.NO_PERMISSION_CLAIM.getMessage());
-                        return;
-                    }
+            if (tier.isClaimPermissionToggleEnabled() && !player.hasPermission(tier.getClaimPermission())) {
+                Translation.no_claim_permission.sendMessage(player);
+                return;
+            }
 
-                    if (envoySettings.isCrateCooldownEnabled()) {
-                        UUID uuid = player.getUniqueId();
+            if (this.envoySettings.isEnvoyCollectCooldownEnabled()) {
+                UUID uuid = player.getUniqueId();
 
-                        if (coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(coolDownSettings.getCooldown().get(uuid))) {
-                            HashMap<String, String> placeholder = new HashMap<>();
-                            placeholder.put("%Time%", methods.convertTimeToString(coolDownSettings.getCooldown().get(uuid)));
-                            Messages.COOLDOWN_LEFT.sendMessage(player, placeholder);
-                            return;
-                        }
-
-                        coolDownSettings.addCooldown(uuid, envoySettings.getCrateCooldownTimer());
-                    }
+                if (this.coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(this.coolDownSettings.getCooldown().get(uuid))) {
+                    HashMap<String, String> placeholder = new HashMap<>();
+                    placeholder.put("%Time%", this.methods.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
+                    Translation.cooldown_left.sendMessage(player, placeholder);
+                    return;
                 }
 
-                // Ryder End
+                this.coolDownSettings.addCooldown(uuid, this.envoySettings.getEnvoyCollectCooldownTimer());
+            }
+        }
+        // Ryder End
 
-                List<Prize> prizes = tier.getUseChance() ? pickPrizesByChance(tier) : pickRandomPrizes(tier);
-                EnvoyOpenEvent envoyOpenEvent = new EnvoyOpenEvent(player, block, tier, prizes);
-                plugin.getServer().getPluginManager().callEvent(envoyOpenEvent);
+        List<Prize> prizes = tier.getUseChance() ? pickPrizesByChance(tier) : pickRandomPrizes(tier);
+        EnvoyOpenEvent envoyOpenEvent = new EnvoyOpenEvent(player, block, tier, prizes);
+        this.plugin.getServer().getPluginManager().callEvent(envoyOpenEvent);
 
-                if (!envoyOpenEvent.isCancelled()) {
-                    if (tier.getFireworkToggle()) methods.firework(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
+        if (envoyOpenEvent.isCancelled()) return;
 
-                    e.getClickedBlock().setType(Material.AIR);
+        if (tier.getFireworkToggle()) this.methods.firework(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
 
-                    if (crazyManager.hasHologramPlugin()) crazyManager.getHologramController().removeHologram(e.getClickedBlock());
+        e.getClickedBlock().setType(Material.AIR);
 
-                    crazyManager.stopSignalFlare(e.getClickedBlock().getLocation());
+        if (this.crazyManager.hasHologramPlugin()) this.crazyManager.getHologramController().removeHologram(e.getClickedBlock());
 
-                    HashMap<String, String> placeholder = new HashMap<>();
+        this.crazyManager.stopSignalFlare(e.getClickedBlock().getLocation());
 
-                    if (envoySettings.isPickupBroadcastEnabled()) placeholder.put("%Tier%", crazyManager.getTier(block).getName());
+        HashMap<String, String> placeholder = new HashMap<>();
 
-                    crazyManager.removeActiveEnvoy(block);
+        if (this.envoySettings.isPickupBroadcastEnabled()) placeholder.put("%Tier%", this.crazyManager.getTier(block).getName());
 
-                    if (tier.getPrizes().isEmpty()) {
-                        plugin.getServer().broadcastMessage(methods.getPrefix() + methods.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
-                        return;
+        this.crazyManager.removeActiveEnvoy(block);
+
+        if (tier.getPrizes().isEmpty()) {
+            this.plugin.getServer().broadcastMessage(this.methods.getPrefix() + LegacyUtils.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+            return;
+        }
+
+        for (Prize prize : envoyOpenEvent.getPrizes()) {
+            if (!tier.getPrizeMessage().isEmpty() && prize.getMessages().isEmpty()) {
+                for (String message : tier.getPrizeMessage()) {
+                    if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
+                        message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
-                    for (Prize prize : envoyOpenEvent.getPrizes()) {
-                        if (!tier.getPrizeMessage().isEmpty() && prize.getMessages().isEmpty()) {
-                            for (String message : tier.getPrizeMessage()) {
-                                if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
-                                    message = PlaceholderAPI.setPlaceholders(player, message);
-                                }
-
-                                player.sendMessage(methods.color(message.replaceAll("%player%", player.getName()).replaceAll("%Player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())).replaceAll("%tier%", tier.getName())));
-                            }
-                        } else {
-                            for (String message : prize.getMessages()) {
-                                if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
-                                    message = PlaceholderAPI.setPlaceholders(player, message);
-                                }
-
-                                player.sendMessage(methods.color(message.replaceAll("%player%", player.getName()).replaceAll("%Player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())).replaceAll("%tier%", tier.getName())));
-                            }
-                        }
-
-                        for (String cmd : prize.getCommands()) {
-                            if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
-
-                            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), cmd.replace("%Player%", player.getName()).replace("%player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())));
-                        }
-
-                        for (ItemStack item : prize.getItems()) {
-                            if (prize.getDropItems()) {
-                                e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
-                            } else {
-                                if (methods.isInvFull(player)) {
-                                    e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
-                                } else {
-                                    player.getInventory().addItem(item);
-                                }
-                            }
-                        }
-
-                        player.updateInventory();
+                    player.sendMessage(LegacyUtils.color(message.replaceAll("%player%", player.getName()).replaceAll("%Player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())).replaceAll("%tier%", tier.getName())));
+                }
+            } else {
+                for (String message : prize.getMessages()) {
+                    if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
+                        message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
-                    if (!crazyManager.getActiveEnvoys().isEmpty()) {
-                        if (envoySettings.isPickupBroadcastEnabled()) {
-                            placeholder.put("%Player%", player.getName());
-                            placeholder.put("%Amount%", String.valueOf(crazyManager.getActiveEnvoys().size()));
-                            Messages.LEFT.broadcastMessage(true, placeholder);
-                        }
+                    player.sendMessage(LegacyUtils.color(message.replaceAll("%player%", player.getName()).replaceAll("%Player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())).replaceAll("%tier%", tier.getName())));
+                }
+            }
+
+            for (String cmd : prize.getCommands()) {
+                if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
+
+                this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), cmd.replace("%Player%", player.getName()).replace("%player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())));
+            }
+
+            for (ItemStack item : prize.getItems()) {
+                if (prize.getDropItems()) {
+                    e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
+                } else {
+                    if (this.methods.isInvFull(player)) {
+                        e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                     } else {
-                        EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);
-                        plugin.getServer().getPluginManager().callEvent(event);
-                        crazyManager.endEnvoyEvent();
-                        Messages.ENDED.broadcastMessage(false);
+                        player.getInventory().addItem(item);
                     }
                 }
             }
+
+            player.updateInventory();
+        }
+
+        if (!this.crazyManager.getActiveEnvoys().isEmpty()) {
+            if (this.envoySettings.isPickupBroadcastEnabled()) {
+                placeholder.put("%Player%", player.getName());
+                placeholder.put("%Amount%", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
+                Translation.left.broadcastMessage(true, placeholder);
+            }
+        } else {
+            EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);
+            this.plugin.getServer().getPluginManager().callEvent(event);
+            this.crazyManager.endEnvoyEvent();
+            Translation.ended.broadcastMessage(false);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onChestSpawn(EntityChangeBlockEvent e) {
-        if (crazyManager.isEnvoyActive()) {
-            Entity entity = e.getEntity();
+        if (!this.crazyManager.isEnvoyActive()) return;
 
-            if (crazyManager.getFallingBlocks().containsKey(entity)) {
-                e.setCancelled(true);
-                checkEntity(entity);
-            }
+        Entity entity = e.getEntity();
+
+        if (this.crazyManager.getFallingBlocks().containsKey(entity)) {
+            e.setCancelled(true);
+            checkEntity(entity);
         }
     }
 
     private void checkEntity(Entity entity) {
-        Block block = crazyManager.getFallingBlocks().get(entity);
+        Block block = this.crazyManager.getFallingBlocks().get(entity);
         Tier tier = pickRandomTier();
 
         if (block.getType() != Material.AIR) block = block.getLocation().add(0, 1, 0).getBlock();
 
         block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
 
-        if (tier.isHoloEnabled() && crazyManager.hasHologramPlugin()) crazyManager.getHologramController().createHologram(block, tier);
+        if (tier.isHoloEnabled() && this.crazyManager.hasHologramPlugin()) this.crazyManager.getHologramController().createHologram(block, tier);
 
-        crazyManager.removeFallingBlock(entity);
-        crazyManager.addActiveEnvoy(block, tier);
-        locationSettings.addActiveLocation(block);
+        this.crazyManager.removeFallingBlock(entity);
+        this.crazyManager.addActiveEnvoy(block, tier);
+        this.locationSettings.addActiveLocation(block);
 
-        if (tier.getSignalFlareToggle() && block.getChunk().isLoaded()) crazyManager.startSignalFlare(block.getLocation(), tier);
+        if (tier.getSignalFlareToggle() && block.getChunk().isLoaded()) this.crazyManager.startSignalFlare(block.getLocation(), tier);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onItemSpawn(ItemSpawnEvent e) {
-        if (crazyManager.isEnvoyActive()) {
-            for (Entity entity : e.getEntity().getNearbyEntities(1, 1, 1)) {
-                if (crazyManager.getFallingBlocks().containsKey(entity)) {
-                    Block block = crazyManager.getFallingBlocks().get(entity);
-                    e.setCancelled(true);
+        if (!this.crazyManager.isEnvoyActive()) return;
 
-                    checkEntity((Entity) block);
+        for (Entity entity : e.getEntity().getNearbyEntities(1, 1, 1)) {
+            if (!this.crazyManager.getFallingBlocks().containsKey(entity)) continue;
 
-                    break;
-                }
-            }
+            Block block = this.crazyManager.getFallingBlocks().get(entity);
+            e.setCancelled(true);
+
+            checkEntity((Entity) block);
+
+            break;
         }
     }
     
@@ -227,7 +224,7 @@ public class EnvoyControl implements Listener {
         int max = tier.getBulkToggle() ? tier.getBulkMax() : 1;
 
         for (int i = 0; prizes.size() < max && i < 500; i++) {
-            Prize prize = tier.getPrizes().get(random.nextInt(tier.getPrizes().size()));
+            Prize prize = tier.getPrizes().get(new Random().nextInt(tier.getPrizes().size()));
 
             if (!prizes.contains(prize)) prizes.add(prize);
         }
@@ -241,7 +238,7 @@ public class EnvoyControl implements Listener {
 
         for (int i = 0; prizes.size() < maxBulk && i < 500; i++) {
             for (Prize prize : tier.getPrizes()) {
-                if (!prizes.contains(prize) && methods.isSuccessful(prize.getChance(), 100)) prizes.add(prize);
+                if (!prizes.contains(prize) && this.methods.isSuccessful(prize.getChance(), 100)) prizes.add(prize);
 
                 if (prizes.size() == maxBulk) break;
             }
@@ -251,16 +248,16 @@ public class EnvoyControl implements Listener {
     }
     
     private Tier pickRandomTier() {
-        if (crazyManager.getTiers().size() == 1) return crazyManager.getTiers().get(0);
+        if (this.crazyManager.getTiers().size() == 1) return this.crazyManager.getTiers().get(0);
 
         ArrayList<Tier> tiers = new ArrayList<>();
 
         while (tiers.isEmpty()) {
-            for (Tier tier : crazyManager.getTiers()) {
-                if (methods.isSuccessful(tier.getSpawnChance(), 100)) tiers.add(tier);
+            for (Tier tier : this.crazyManager.getTiers()) {
+                if (this.methods.isSuccessful(tier.getSpawnChance(), 100)) tiers.add(tier);
             }
         }
 
-        return tiers.get(random.nextInt(tiers.size()));
+        return tiers.get(new Random().nextInt(tiers.size()));
     }
 }

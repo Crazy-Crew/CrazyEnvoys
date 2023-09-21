@@ -9,19 +9,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class FireworkDamageAPI implements Listener {
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    NamespacedKey noDamage = new NamespacedKey(plugin, "no-damage");
+    NamespacedKey noDamage = new NamespacedKey(this.plugin, "no-damage");
 
     /**
      * @param firework The firework you want to add.
      */
     public void addFirework(Entity firework) {
         PersistentDataContainer container = firework.getPersistentDataContainer();
-        container.set(noDamage, PersistentDataType.STRING, "no-damage");
+        container.set(this.noDamage, PersistentDataType.STRING, "no-damage");
     }
 
     // Ryder Start
@@ -31,7 +32,7 @@ public class FireworkDamageAPI implements Listener {
 
             PersistentDataContainer container = firework.getPersistentDataContainer();
 
-            if (container.has(noDamage, PersistentDataType.STRING)) e.setCancelled(true);
+            if (container.has(this.noDamage, PersistentDataType.STRING)) e.setCancelled(true);
         }
     }
     // Ryder End

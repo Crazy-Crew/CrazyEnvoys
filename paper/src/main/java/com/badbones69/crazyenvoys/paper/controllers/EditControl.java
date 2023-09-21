@@ -3,7 +3,7 @@ package com.badbones69.crazyenvoys.paper.controllers;
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
 import com.badbones69.crazyenvoys.paper.api.CrazyManager;
-import com.badbones69.crazyenvoys.paper.api.enums.Messages;
+import com.badbones69.crazyenvoys.paper.api.enums.Translation;
 import com.badbones69.crazyenvoys.paper.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.LocationSettings;
 import org.bukkit.Material;
@@ -13,33 +13,34 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class EditControl implements Listener {
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final Methods methods = plugin.getMethods();
+    private final Methods methods = this.plugin.getMethods();
 
-    private final EditorSettings editorSettings = plugin.getEditorSettings();
+    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
 
-    private final LocationSettings locationSettings = plugin.getLocationSettings();
+    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    private final CrazyManager crazyManager = plugin.getCrazyManager();
+    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
     
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent e) {
         final Player player = e.getPlayer();
-        Block block = e.getBlock();
+        final Block block = e.getBlock();
 
-        if (editorSettings.isEditor(player)) {
+        if (this.editorSettings.isEditor(player)) {
             e.setCancelled(true);
 
-            if (methods.getItemInHand(player).getType() == Material.BEDROCK) {
-                locationSettings.addSpawnLocation(block);
+            if (this.methods.getItemInHand(player).getType() == Material.BEDROCK) {
+                this.locationSettings.addSpawnLocation(block);
 
-                Messages.ADD_LOCATION.sendMessage(player);
+                Translation.add_location.sendMessage(player);
 
-                for (Player editor : editorSettings.getEditors()) {
+                for (Player editor : this.editorSettings.getEditors()) {
                     editor.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
                 }
             }
@@ -48,18 +49,18 @@ public class EditControl implements Listener {
     
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) {
-        Player player = e.getPlayer();
-        Block block = e.getBlock();
+        final Player player = e.getPlayer();
+        final Block block = e.getBlock();
 
-        if (editorSettings.isEditor(player)) {
+        if (this.editorSettings.isEditor(player)) {
             e.setCancelled(true);
 
-            if (crazyManager.isLocation(block.getLocation())) {
+            if (this.crazyManager.isLocation(block.getLocation())) {
                 block.getState().update();
 
-                locationSettings.removeSpawnLocation(block);
+                this.locationSettings.removeSpawnLocation(block);
 
-                Messages.REMOVE_LOCATION.sendMessage(player);
+                Translation.remove_location.sendMessage(player);
             }
         }
     }

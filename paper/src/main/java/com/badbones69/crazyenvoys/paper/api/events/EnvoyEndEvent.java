@@ -29,7 +29,7 @@ public class EnvoyEndEvent extends Event {
      * @return The reason it has ended.
      */
     public EnvoyEndReason getReason() {
-        return reason;
+        return this.reason;
     }
     
     /**
@@ -38,7 +38,7 @@ public class EnvoyEndEvent extends Event {
      * @return The player that ended it. This can be null if it auto ended.
      */
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
 
     public static HandlerList getHandlerList() {
@@ -91,7 +91,7 @@ public class EnvoyEndEvent extends Event {
         }
         
         public String getName() {
-            return name;
+            return this.name;
         }
     }
 }

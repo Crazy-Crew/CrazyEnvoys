@@ -1,8 +1,14 @@
 package com.badbones69.crazyenvoys.paper.api.objects;
 
+import ch.jalu.configme.SettingsManager;
+import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.api.FileManager.Files;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+import us.crazycrew.crazyenvoys.common.config.ConfigManager;
+import us.crazycrew.crazyenvoys.common.config.types.Config;
+
 import java.util.List;
 
 public class EnvoySettings {
@@ -36,8 +42,8 @@ public class EnvoySettings {
     private boolean isMinFlareEnabled;
     private int minPlayers;
     private boolean isPickupBroadcastEnabled;
-    private boolean isCrateCooldownEnabled;
-    private String crateCooldownTimer;
+    private boolean isEnvoyCollectCooldownEnabled;
+    private String envoyCollectCooldownTimer;
     private boolean isWorldMessagesEnabled;
     private List<String> worldMessagesWorlds;
     private List<String> envoyWarnings;
@@ -45,13 +51,13 @@ public class EnvoySettings {
     private List<String> flaresRegions;
     
     public void loadSettings() {
-        FileConfiguration config = Files.CONFIG.getFile();
+        ConfigManager configManager = JavaPlugin.getPlugin(CrazyEnvoys.class).getCrazyHandler().getConfigManager();
+        SettingsManager config = configManager.getConfig();
         String path = "Settings.";
-        this.isFallingBlocksEnabled = config.getBoolean(path + "Falling-Block-Toggle");
+        this.isFallingBlocksEnabled = config.getProperty(Config.falling_block_toggle);
         this.fallingBlockDurability = 15;
-        String fallingBlock = config.getString(path + "Falling-Block");
+        String fallingBlock = config.getProperty(Config.falling_block);
 
-        assert fallingBlock != null;
         if (fallingBlock.contains(":")) {
             String[] split = fallingBlock.split(":");
             fallingBlock = split[0];
@@ -62,50 +68,50 @@ public class EnvoySettings {
         
         if (fallingBlockMaterial == null) fallingBlockMaterial = Material.BEACON;
         
-        this.fallingHeight = config.getInt(path + "Fall-Height");
-        this.isMaxCrateEnabled = config.getBoolean(path + "Max-Crate-Toggle");
-        this.randomAmount = config.getBoolean(path + "Random-Amount", false);
-        this.minCrates = config.getInt(path + "Min-Crates", 1);
-        this.maxCrates = config.getInt(path + "Max-Crates");
-        this.useRandomLocations = config.getBoolean(path + "Random-Locations");
-        this.maxRadius = config.getInt(path + "Max-Radius");
-        this.minRadius = config.getInt(path + "Min-Radius");
-        this.isEnvoyRunTimerEnabled = config.getBoolean(path + "Envoy-Timer-Toggle");
-        this.envoyRunTimer = config.getString(path + "Envoy-Run-Time").toLowerCase();
-        this.isEnvoyCooldownEnabled = config.getBoolean(path + "Envoy-Cooldown-Toggle");
-        this.envoyCooldown = config.getString(path + "Envoy-Cooldown").toLowerCase();
-        this.envoyFilter = config.getBoolean(path + "Envoy-Filter-Players-Zero", false);
+        this.fallingHeight = config.getProperty(Config.falling_height);
+        this.isMaxCrateEnabled = config.getProperty(Config.max_crate_toggle);
+        this.randomAmount = config.getProperty(Config.random_amount);
+        this.minCrates = config.getProperty(Config.min_crates);
+        this.maxCrates = config.getProperty(Config.max_crates);
+        this.useRandomLocations = config.getProperty(Config.random_locations);
+        this.maxRadius = config.getProperty(Config.max_radius);
+        this.minRadius = config.getProperty(Config.min_radius);
+        this.isEnvoyRunTimerEnabled = config.getProperty(Config.envoy_timer_toggle);
+        this.envoyRunTimer = config.getProperty(Config.envoy_run_time).toLowerCase();
+        this.isEnvoyCooldownEnabled = config.getProperty(Config.envoy_cooldown_toggle);
+        this.envoyCooldown = config.getProperty(Config.envoy_cooldown);
+        this.envoyFilter = config.getProperty(Config.envoy_filter_players_zero);
 
-        this.isEnvoyCountDownEnabled = config.getBoolean(path + "Crate-Countdown.Toggle", false);
-        this.envoyCountDownTimer = config.getInt(path + "Crate-Countdown.Time", 120);
-        this.envoyCountDownMessage = config.getString(path + "Crate-Countdown.Message", "&cReady to claim");
-        this.envoyCountDownMessageSeconds = config.getString(path + "Crate-Countdown.Message-Seconds", " seconds.");
+        this.isEnvoyCountDownEnabled = config.getProperty(Config.envoy_countdown_toggle);
+        this.envoyCountDownTimer = config.getProperty(Config.envoy_countdown_time);
+        this.envoyCountDownMessage = config.getProperty(Config.envoy_countdown_message);
+        this.envoyCountDownMessageSeconds = config.getProperty(Config.envoy_countdown_message_other);
 
-        this.envoyClockTime = config.getString(path + "Envoy-Time").toLowerCase();
-        this.isMinPlayersEnabled = config.getBoolean(path + "Minimum-Players-Toggle");
-        this.isMinFlareEnabled = config.getBoolean(path + "Minimum-Flare-Toggle");
-        this.minPlayers = config.getInt(path + "Minimum-Players");
-        this.isPickupBroadcastEnabled = config.getBoolean(path + "Broadcast-Crate-Pick-Up");
-        this.isCrateCooldownEnabled = config.getBoolean(path + "Crate-Collect-Cooldown.Toggle");
-        this.crateCooldownTimer = config.getString(path + "Crate-Collect-Cooldown.Time").toLowerCase();
-        this.isWorldMessagesEnabled = config.getBoolean(path + "World-Messages.Toggle");
-        this.worldMessagesWorlds = config.getStringList(path + "World-Messages.Worlds");
-        this.envoyWarnings = config.getStringList(path + "Envoy-Warnings");
-        this.isFlaresRegionEnabled = config.getBoolean(path + "Flares.World-Guard.Toggle");
-        this.flaresRegions = config.getStringList(path + "Flares.World-Guard.Regions");
+        this.envoyClockTime = config.getProperty(Config.envoy_time);
+        this.isMinPlayersEnabled = config.getProperty(Config.minimum_players_toggle);
+        this.isMinFlareEnabled = config.getProperty(Config.minimum_flare_toggle);
+        this.minPlayers = config.getProperty(Config.minimum_players);
+        this.isPickupBroadcastEnabled = config.getProperty(Config.broadcast_envoy_pick_up);
+        this.isEnvoyCollectCooldownEnabled = config.getProperty(Config.envoy_collect_cooldown_toggle);
+        this.envoyCollectCooldownTimer = config.getProperty(Config.envoy_collect_cooldown_time);
+        this.isWorldMessagesEnabled = config.getProperty(Config.envoy_world_messages);
+        this.worldMessagesWorlds = config.getProperty(Config.envoy_allowed_worlds);
+        this.envoyWarnings = config.getProperty(Config.envoy_warnings);
+        this.isFlaresRegionEnabled = config.getProperty(Config.envoy_flare_world_guard_toggle);
+        this.flaresRegions = config.getProperty(Config.envoy_flare_world_guard_regions);
     }
     
     public boolean isFallingBlocksEnabled() {
-        return isFallingBlocksEnabled;
+        return this.isFallingBlocksEnabled;
     }
     
     public EnvoySettings setFallingBlocksEnabled(boolean fallingBlocksEnabled) {
-        isFallingBlocksEnabled = fallingBlocksEnabled;
+        this.isFallingBlocksEnabled = fallingBlocksEnabled;
         return this;
     }
     
     public Material getFallingBlockMaterial() {
-        return fallingBlockMaterial;
+        return this.fallingBlockMaterial;
     }
     
     public EnvoySettings setFallingBlockMaterial(Material fallingBlockMaterial) {
@@ -114,7 +120,7 @@ public class EnvoySettings {
     }
     
     public short getFallingBlockDurability() {
-        return fallingBlockDurability;
+        return this.fallingBlockDurability;
     }
     
     public EnvoySettings setFallingBlockDurability(short fallingBlockDurability) {
@@ -123,7 +129,7 @@ public class EnvoySettings {
     }
     
     public int getFallingHeight() {
-        return fallingHeight;
+        return this.fallingHeight;
     }
     
     public EnvoySettings setFallingHeight(int fallingHeight) {
@@ -132,16 +138,16 @@ public class EnvoySettings {
     }
     
     public boolean isMaxCrateEnabled() {
-        return isMaxCrateEnabled;
+        return this.isMaxCrateEnabled;
     }
     
     public EnvoySettings setMaxCrateEnabled(boolean maxCrateEnabled) {
-        isMaxCrateEnabled = maxCrateEnabled;
+        this.isMaxCrateEnabled = maxCrateEnabled;
         return this;
     }
 
     public boolean isEnvoyFilterEnabled() {
-        return envoyFilter;
+        return this.envoyFilter;
     }
 
     public EnvoySettings setEnvoyFilterEnabled(boolean envoyFilter) {
@@ -150,19 +156,19 @@ public class EnvoySettings {
     }
 
     public boolean isEnvoyCountDownEnabled() {
-        return isEnvoyCountDownEnabled;
+        return this.isEnvoyCountDownEnabled;
     }
 
     public int getEnvoyCountDownTimer() {
-        return envoyCountDownTimer;
+        return this.envoyCountDownTimer;
     }
 
     public String getEnvoyCountDownMessage() {
-        return envoyCountDownMessage;
+        return this.envoyCountDownMessage;
     }
 
     public String getEnvoyCountDownMessageSeconds() {
-        return envoyCountDownMessageSeconds;
+        return this.envoyCountDownMessageSeconds;
     }
 
     public boolean isRandomAmount() {
@@ -174,7 +180,7 @@ public class EnvoySettings {
     }
     
     public int getMaxCrates() {
-        return maxCrates;
+        return this.maxCrates;
     }
     
     public EnvoySettings setMaxCrates(int maxCrates) {
@@ -183,7 +189,7 @@ public class EnvoySettings {
     }
     
     public boolean isRandomLocationsEnabled() {
-        return useRandomLocations;
+        return this.useRandomLocations;
     }
     
     public EnvoySettings setUseRandomLocations(boolean useRandomLocations) {
@@ -192,7 +198,7 @@ public class EnvoySettings {
     }
     
     public int getMaxRadius() {
-        return maxRadius;
+        return this.maxRadius;
     }
     
     public EnvoySettings setMaxRadius(int maxRadius) {
@@ -201,7 +207,7 @@ public class EnvoySettings {
     }
     
     public int getMinRadius() {
-        return minRadius;
+        return this.minRadius;
     }
     
     public EnvoySettings setMinRadius(int minRadius) {
@@ -210,16 +216,16 @@ public class EnvoySettings {
     }
     
     public boolean isEnvoyRunTimerEnabled() {
-        return isEnvoyRunTimerEnabled;
+        return this.isEnvoyRunTimerEnabled;
     }
     
     public EnvoySettings setEnvoyRunTimerEnabled(boolean envoyRunTimerEnabled) {
-        isEnvoyRunTimerEnabled = envoyRunTimerEnabled;
+        this.isEnvoyRunTimerEnabled = envoyRunTimerEnabled;
         return this;
     }
     
     public String getEnvoyRunTimer() {
-        return envoyRunTimer;
+        return this.envoyRunTimer;
     }
     
     public EnvoySettings setEnvoyRunTimer(String envoyRunTimer) {
@@ -228,16 +234,16 @@ public class EnvoySettings {
     }
     
     public boolean isEnvoyCooldownEnabled() {
-        return isEnvoyCooldownEnabled;
+        return this.isEnvoyCooldownEnabled;
     }
     
     public EnvoySettings setEnvoyCooldownEnabled(boolean envoyCooldownEnabled) {
-        isEnvoyCooldownEnabled = envoyCooldownEnabled;
+        this.isEnvoyCooldownEnabled = envoyCooldownEnabled;
         return this;
     }
     
     public String getEnvoyCooldown() {
-        return envoyCooldown;
+        return this.envoyCooldown;
     }
     
     public EnvoySettings setEnvoyCooldown(String envoyCooldown) {
@@ -246,7 +252,7 @@ public class EnvoySettings {
     }
     
     public String getEnvoyClockTime() {
-        return envoyClockTime;
+        return this.envoyClockTime;
     }
     
     public EnvoySettings setEnvoyClockTime(String envoyClockTime) {
@@ -255,25 +261,25 @@ public class EnvoySettings {
     }
     
     public boolean isMinPlayersEnabled() {
-        return isMinPlayersEnabled;
+        return this.isMinPlayersEnabled;
     }
     
     public EnvoySettings setMinPlayersEnabled(boolean minPlayersEnabled) {
-        isMinPlayersEnabled = minPlayersEnabled;
+        this.isMinPlayersEnabled = minPlayersEnabled;
         return this;
     }
     
     public boolean isMinFlareEnabled() {
-        return isMinFlareEnabled;
+        return this.isMinFlareEnabled;
     }
     
     public EnvoySettings setMinFlareEnabled(boolean minFlareEnabled) {
-        isMinFlareEnabled = minFlareEnabled;
+        this.isMinFlareEnabled = minFlareEnabled;
         return this;
     }
     
     public int getMinPlayers() {
-        return minPlayers;
+        return this.minPlayers;
     }
     
     public EnvoySettings setMinPlayers(int minPlayers) {
@@ -282,43 +288,43 @@ public class EnvoySettings {
     }
     
     public boolean isPickupBroadcastEnabled() {
-        return isPickupBroadcastEnabled;
+        return this.isPickupBroadcastEnabled;
     }
     
     public EnvoySettings setPickupBroadcastEnabled(boolean pickupBroadcastEnabled) {
-        isPickupBroadcastEnabled = pickupBroadcastEnabled;
+        this.isPickupBroadcastEnabled = pickupBroadcastEnabled;
         return this;
     }
     
-    public boolean isCrateCooldownEnabled() {
-        return isCrateCooldownEnabled;
+    public boolean isEnvoyCollectCooldownEnabled() {
+        return this.isEnvoyCollectCooldownEnabled;
     }
     
-    public EnvoySettings setCrateCooldownEnabled(boolean crateCooldownEnabled) {
-        isCrateCooldownEnabled = crateCooldownEnabled;
+    public EnvoySettings setEnvoyCollectCooldownEnabled(boolean envoyCollectCooldownEnabled) {
+        this.isEnvoyCollectCooldownEnabled = envoyCollectCooldownEnabled;
         return this;
     }
     
-    public String getCrateCooldownTimer() {
-        return crateCooldownTimer;
+    public String getEnvoyCollectCooldownTimer() {
+        return this.envoyCollectCooldownTimer;
     }
     
-    public EnvoySettings setCrateCooldownTimer(String crateCooldownTimer) {
-        this.crateCooldownTimer = crateCooldownTimer;
+    public EnvoySettings setCrateCooldownTimer(String envoyCollectCooldownTimer) {
+        this.envoyCollectCooldownTimer = envoyCollectCooldownTimer;
         return this;
     }
     
     public boolean isWorldMessagesEnabled() {
-        return isWorldMessagesEnabled;
+        return this.isWorldMessagesEnabled;
     }
     
     public EnvoySettings setWorldMessagesEnabled(boolean worldMessagesEnabled) {
-        isWorldMessagesEnabled = worldMessagesEnabled;
+        this.isWorldMessagesEnabled = worldMessagesEnabled;
         return this;
     }
     
     public List<String> getWorldMessagesWorlds() {
-        return worldMessagesWorlds;
+        return this.worldMessagesWorlds;
     }
     
     public EnvoySettings setWorldMessagesWorlds(List<String> worldMessagesWorlds) {
@@ -327,7 +333,7 @@ public class EnvoySettings {
     }
     
     public List<String> getEnvoyWarnings() {
-        return envoyWarnings;
+        return this.envoyWarnings;
     }
     
     public EnvoySettings setEnvoyWarnings(List<String> envoyWarnings) {
@@ -336,16 +342,16 @@ public class EnvoySettings {
     }
     
     public boolean isFlaresRegionEnabled() {
-        return isFlaresRegionEnabled;
+        return this.isFlaresRegionEnabled;
     }
     
     public EnvoySettings setFlaresRegionEnabled(boolean flaresRegionEnabled) {
-        isFlaresRegionEnabled = flaresRegionEnabled;
+        this.isFlaresRegionEnabled = flaresRegionEnabled;
         return this;
     }
     
     public List<String> getFlaresRegions() {
-        return flaresRegions;
+        return this.flaresRegions;
     }
     
     public EnvoySettings setFlaresRegions(List<String> flaresRegions) {

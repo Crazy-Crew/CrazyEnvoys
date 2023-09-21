@@ -27,12 +27,12 @@ public class FlareUseEvent extends Event implements Cancellable {
      * @return The player that used the flare.
      */
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
     
     @Override
     public boolean isCancelled() {
-        return cancelled;
+        return this.cancelled;
     }
     
     @Override

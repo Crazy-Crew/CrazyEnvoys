@@ -1,9 +1,9 @@
 package com.badbones69.crazyenvoys.paper;
 
-import com.badbones69.crazyenvoys.paper.api.FileManager.Files;
-import com.badbones69.crazyenvoys.paper.api.enums.Messages;
+import ch.jalu.configme.SettingsManager;
+import com.badbones69.crazyenvoys.paper.api.enums.Translation;
 import com.badbones69.crazyenvoys.paper.controllers.FireworkDamageAPI;
-import org.bukkit.ChatColor;
+import com.ryderbelserion.cluster.bukkit.utils.LegacyUtils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -15,48 +15,34 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+import us.crazycrew.crazyenvoys.common.config.ConfigManager;
+import us.crazycrew.crazyenvoys.common.config.types.Config;
+import us.crazycrew.crazyenvoys.paper.api.plugin.CrazyHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Methods {
 
-    private final Random random = new Random();
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
+    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
+    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
+    private final SettingsManager config = this.configManager.getConfig();
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
-
-    private final FireworkDamageAPI fireworkDamageAPI = plugin.getFireworkDamageAPI();
-
-    public String color(String message) {
-        Matcher matcher = HEX_PATTERN.matcher(message);
-        StringBuilder buffer = new StringBuilder();
-
-        while (matcher.find()) {
-            matcher.appendReplacement(buffer, net.md_5.bungee.api.ChatColor.of(matcher.group()).toString());
-        }
-
-        return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
-    }
-
-    public String removeColor(String msg) {
-        return ChatColor.stripColor(msg);
-    }
+    private final FireworkDamageAPI fireworkDamageAPI = this.plugin.getFireworkDamageAPI();
 
     public String getPrefix() {
-        return color(Files.CONFIG.getFile().getString("Settings.Prefix"));
+        return LegacyUtils.color(this.config.getProperty(Config.command_prefix));
     }
 
     public String getPrefix(String message) {
-        return color(Files.CONFIG.getFile().getString("Settings.Prefix") + message);
+        return LegacyUtils.color(this.config.getProperty(Config.command_prefix) + message);
     }
 
-    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public ItemStack getItemInHand(Player player) {
         return player.getInventory().getItemInMainHand();
     }
@@ -88,7 +74,7 @@ public class Methods {
     }
 
     public boolean isOnline(String name) {
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        for (Player player : this.plugin.getServer().getOnlinePlayers()) {
             if (player.getName().equalsIgnoreCase(name)) {
                 return true;
             }
@@ -98,7 +84,7 @@ public class Methods {
     }
 
     public Player getPlayer(String name) {
-        return plugin.getServer().getPlayer(name);
+        return this.plugin.getServer().getPlayer(name);
     }
 
     public boolean isInvFull(Player player) {
@@ -112,77 +98,13 @@ public class Methods {
         fireworkMeta.setPower(0);
         firework.setFireworkMeta(fireworkMeta);
 
-        fireworkDamageAPI.addFirework(firework);
+        this.fireworkDamageAPI.addFirework(firework);
 
         detonate(firework);
     }
 
     private void detonate(Firework firework) {
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, firework::detonate, 2);
-    }
-
-    public Color getColor(String color) {
-        if (color != null) {
-            switch (color.toUpperCase()) {
-                case "AQUA" -> {
-                    return Color.AQUA;
-                }
-                case "BLACK" -> {
-                    return Color.BLACK;
-                }
-                case "BLUE" -> {
-                    return Color.BLUE;
-                }
-                case "FUCHSIA" -> {
-                    return Color.FUCHSIA;
-                }
-                case "GRAY" -> {
-                    return Color.GRAY;
-                }
-                case "GREEN" -> {
-                    return Color.GREEN;
-                }
-                case "LIME" -> {
-                    return Color.LIME;
-                }
-                case "MAROON" -> {
-                    return Color.MAROON;
-                }
-                case "NAVY" -> {
-                    return Color.NAVY;
-                }
-                case "OLIVE" -> {
-                    return Color.OLIVE;
-                }
-                case "ORANGE" -> {
-                    return Color.ORANGE;
-                }
-                case "PURPLE" -> {
-                    return Color.PURPLE;
-                }
-                case "RED" -> {
-                    return Color.RED;
-                }
-                case "SILVER" -> {
-                    return Color.SILVER;
-                }
-                case "TEAL" -> {
-                    return Color.TEAL;
-                }
-                case "WHITE" -> {
-                    return Color.WHITE;
-                }
-                case "YELLOW" -> {
-                    return Color.YELLOW;
-                }
-            }
-
-            try {
-                String[] rgb = color.split(",");
-                return Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
-            } catch (Exception ignore) {}
-        }
-        return Color.WHITE;
+        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, firework::detonate, 2);
     }
 
     public List<String> getPage(List<String> list, Integer page) {
@@ -215,11 +137,10 @@ public class Methods {
     public boolean isSuccessful(int min, int max) {
         if (max <= min || max <= 0) return true;
 
-        int chance = 1 + random.nextInt(max);
+        int chance = 1 + new Random().nextInt(max);
         return chance <= min;
     }
 
-    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
     public List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
         List<Entity> out = new ArrayList<>();
 
@@ -247,13 +168,13 @@ public class Methods {
         second += total;
         String message = "";
 
-        if (day > 0) message += day + Messages.DAY.getMessage() + ", ";
-        if (day > 0 || hour > 0) message += hour + Messages.HOUR.getMessage() + ", ";
-        if (day > 0 || hour > 0 || minute > 0) message += minute + Messages.MINUTE.getMessage() + ", ";
-        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + Messages.SECOND.getMessage() + ", ";
+        if (day > 0) message += day + Translation.day.getString() + ", ";
+        if (day > 0 || hour > 0) message += hour + Translation.hour.getString() + ", ";
+        if (day > 0 || hour > 0 || minute > 0) message += minute + Translation.minute.getString() + ", ";
+        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + Translation.second.getString() + ", ";
 
         if (message.length() < 2) {
-            message = "0" + Messages.SECOND.getMessage();
+            message = "0" + Translation.second.getMessage();
         } else {
             message = message.substring(0, message.length() - 2);
         }
@@ -266,14 +187,14 @@ public class Methods {
     }
 
     public Location getBuiltLocation(String locationString) {
-        World w = plugin.getServer().getWorlds().get(0);
+        World w = this.plugin.getServer().getWorlds().get(0);
         int x = 0;
         int y = 0;
         int z = 0;
 
         for (String i : locationString.toLowerCase().split(", ")) {
             if (i.startsWith("world:")) {
-                w = plugin.getServer().getWorld(i.replace("world:", ""));
+                w = this.plugin.getServer().getWorld(i.replace("world:", ""));
             } else if (i.startsWith("x:")) {
                 x = Integer.parseInt(i.replace("x:", ""));
             } else if (i.startsWith("y:")) {

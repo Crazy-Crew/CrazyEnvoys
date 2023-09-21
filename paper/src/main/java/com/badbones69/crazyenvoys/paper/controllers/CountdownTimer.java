@@ -1,6 +1,7 @@
 package com.badbones69.crazyenvoys.paper.controllers;
 
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * A simple countdown timer using the Runnable interface in seconds!
@@ -9,7 +10,7 @@ import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
  */
 public class CountdownTimer implements Runnable {
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
     // Our scheduled task's assigned id, needed for canceling
     private Integer assignedTaskId;
@@ -30,14 +31,14 @@ public class CountdownTimer implements Runnable {
     @Override
     public void run() {
         // Is the timer up?
-        if (secondsLeft < 1) {
-            if (assignedTaskId != null) plugin.getServer().getScheduler().cancelTask(assignedTaskId);
+        if (this.secondsLeft < 1) {
+            if (this.assignedTaskId != null) this.plugin.getServer().getScheduler().cancelTask(this.assignedTaskId);
 
             return;
         }
 
         // Decrement the seconds left.
-        secondsLeft--;
+        this.secondsLeft--;
     }
 
     /**
@@ -46,7 +47,7 @@ public class CountdownTimer implements Runnable {
      * @return Total seconds timer should run.
      */
     public int getTotalSeconds() {
-        return seconds;
+        return this.seconds;
     }
 
     /**
@@ -55,7 +56,7 @@ public class CountdownTimer implements Runnable {
      * @return Seconds left timer should run.
      */
     public int getSecondsLeft() {
-        return secondsLeft;
+        return this.secondsLeft;
     }
 
     /**
@@ -63,6 +64,6 @@ public class CountdownTimer implements Runnable {
      */
     public void scheduleTimer() {
         // Initialize our assigned task's id, for later use, so we can cancel.
-        this.assignedTaskId = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 20L);
+        this.assignedTaskId = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, this, 0L, 20L);
     }
 }

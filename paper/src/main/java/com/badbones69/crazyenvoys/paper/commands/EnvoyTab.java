@@ -6,20 +6,22 @@ import com.badbones69.crazyenvoys.paper.api.objects.LocationSettings;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EnvoyTab implements TabCompleter {
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final LocationSettings locationSettings = plugin.getLocationSettings();
+    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    private final CrazyManager crazyManager = plugin.getCrazyManager();
+    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String commandLabel, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String commandLabel, String[] args) {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) { // /envoy
             if (hasPermission(sender, "help")) completions.add("help");
@@ -38,7 +40,7 @@ public class EnvoyTab implements TabCompleter {
             switch (args[0].toLowerCase()) {
                 case "drop", "drops" -> {
                     if (hasPermission(sender, "drops")) {
-                        int size = crazyManager.isEnvoyActive() ? crazyManager.getActiveEnvoys().size() : locationSettings.getSpawnLocations().size();
+                        int size = this.crazyManager.isEnvoyActive() ? this.crazyManager.getActiveEnvoys().size() : this.locationSettings.getSpawnLocations().size();
 
                         if ((size % 10) > 0) size++;
 
@@ -53,7 +55,7 @@ public class EnvoyTab implements TabCompleter {
             return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
         } else if (args.length == 3) { // /envoy arg0 arg1
             if ("flare".equalsIgnoreCase(args[0])) {
-                if (hasPermission(sender, "flare.give")) plugin.getServer().getOnlinePlayers().forEach(player -> completions.add(player.getName()));
+                if (hasPermission(sender, "flare.give")) this.plugin.getServer().getOnlinePlayers().forEach(player -> completions.add(player.getName()));
             }
 
             return StringUtil.copyPartialMatches(args[2], completions, new ArrayList<>());

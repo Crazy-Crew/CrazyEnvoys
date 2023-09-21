@@ -1,6 +1,7 @@
 package com.badbones69.crazyenvoys.paper.support.libraries;
 
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public enum PluginSupport {
 
@@ -15,17 +16,17 @@ public enum PluginSupport {
 
     private final String name;
 
-    private static final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private static final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
     PluginSupport(String name) {
         this.name = name;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public boolean isPluginEnabled() {
-        return plugin.getServer().getPluginManager().isPluginEnabled(name);
+        return plugin.getServer().getPluginManager().isPluginEnabled(this.name);
     }
 }

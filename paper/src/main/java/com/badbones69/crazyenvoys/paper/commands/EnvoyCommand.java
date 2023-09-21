@@ -3,8 +3,7 @@ package com.badbones69.crazyenvoys.paper.commands;
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
 import com.badbones69.crazyenvoys.paper.api.CrazyManager;
-import com.badbones69.crazyenvoys.paper.api.FileManager;
-import com.badbones69.crazyenvoys.paper.api.enums.Messages;
+import com.badbones69.crazyenvoys.paper.api.enums.Translation;
 import com.badbones69.crazyenvoys.paper.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.paper.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.paper.api.objects.EditorSettings;
@@ -17,126 +16,125 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class EnvoyCommand implements CommandExecutor {
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final FileManager fileManager = plugin.getFileManager();
+    private final Methods methods = this.plugin.getMethods();
 
-    private final Methods methods = plugin.getMethods();
+    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
+    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
 
-    private final EditorSettings editorSettings = plugin.getEditorSettings();
-    private final LocationSettings locationSettings = plugin.getLocationSettings();
-    private final FlareSettings flareSettings = plugin.getFlareSettings();
-
-    private final CrazyManager crazyManager = plugin.getCrazyManager();
+    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
     
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
         if (args.length == 0) {
             
             if (!hasPermission(sender, "time")) {
-                Messages.NO_PERMISSION.sendMessage(sender);
+                Translation.no_permission.sendMessage(sender);
                 return true;
             }
 
-            plugin.getServer().dispatchCommand(sender, "envoy time");
+            this.plugin.getServer().dispatchCommand(sender, "envoy time");
         } else {
             switch (args[0].toLowerCase()) {
                 case "help" -> {
                     if (hasPermission(sender, "help")) {
-                        Messages.HELP.sendMessage(sender);
+                        Translation.help.sendMessage(sender);
                     } else {
-                        Messages.NO_PERMISSION.sendMessage(sender);
+                        Translation.no_permission.sendMessage(sender);
                     }
 
                     return true;
                 }
+
                 case "reload" -> {
                     if (hasPermission(sender, "reload")) {
-                        if (crazyManager.isEnvoyActive()) {
+                        if (this.crazyManager.isEnvoyActive()) {
                             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.RELOAD);
-                            plugin.getServer().getPluginManager().callEvent(event);
-                            crazyManager.endEnvoyEvent();
+                            this.plugin.getServer().getPluginManager().callEvent(event);
+                            this.crazyManager.endEnvoyEvent();
                         }
 
-                        crazyManager.unload();
+                        this.crazyManager.reload(false);
 
-                        try {
-                            fileManager.setup();
-                        } catch (Exception ignored) {}
-
-                        crazyManager.load();
-                        Messages.RELOADED.sendMessage(sender);
+                        Translation.reloaded.sendMessage(sender);
                     } else {
-                        Messages.NO_PERMISSION.sendMessage(sender);
+                        Translation.no_permission.sendMessage(sender);
                     }
 
                     return true;
                 }
+
                 case "ignore" -> {
                     if (hasPermission(sender, "ignore")) {
                         if (sender instanceof Player player) {
                             UUID uuid = player.getUniqueId();
 
-                            if (crazyManager.isIgnoringMessages(uuid)) {
-                                crazyManager.removeIgnorePlayer(uuid);
-                                Messages.STOP_IGNORING_MESSAGES.sendMessage(player);
+                            if (this.crazyManager.isIgnoringMessages(uuid)) {
+                                this.crazyManager.removeIgnorePlayer(uuid);
+                                Translation.stop_ignoring_messages.sendMessage(player);
                             } else {
-                                crazyManager.addIgnorePlayer(uuid);
-                                Messages.START_IGNORING_MESSAGES.sendMessage(player);
+                                this.crazyManager.addIgnorePlayer(uuid);
+                                Translation.start_ignoring_messages.sendMessage(player);
                             }
                         } else {
-                            Messages.PLAYERS_ONLY.sendMessage(sender);
+                            Translation.player_only.sendMessage(sender);
                         }
                     } else {
-                        Messages.NO_PERMISSION.sendMessage(sender);
+                        Translation.no_permission.sendMessage(sender);
                     }
 
                     return true;
                 }
+
                 case "center" -> {
                     if (hasPermission(sender, "center")) {
                         if (sender != plugin.getServer().getConsoleSender()) {
-                            crazyManager.setCenter(((Player) sender).getLocation());
-                            Messages.NEW_CENTER.sendMessage(sender);
+                            this.crazyManager.setCenter(((Player) sender).getLocation());
+                            Translation.new_center.sendMessage(sender);
                         } else {
-                            Messages.PLAYERS_ONLY.sendMessage(sender);
+                            Translation.player_only.sendMessage(sender);
                         }
                     } else {
-                        Messages.NO_PERMISSION.sendMessage(sender);
+                        Translation.no_permission.sendMessage(sender);
                     }
 
                     return true;
                 }
+
                 case "flare" -> { // /envoy flare [Amount] [Player]
                     if (hasPermission(sender, "flare.give")) {
                         int amount = 1;
                         Player player;
 
                         if (args.length >= 2) {
-                            if (methods.isInt(args[1])) {
+                            if (this.methods.isInt(args[1])) {
                                 amount = Integer.parseInt(args[1]);
                             } else {
-                                Messages.NOT_A_NUMBER.sendMessage(sender);
+                                Translation.not_a_number.sendMessage(sender);
                                 return true;
                             }
                         }
 
                         if (args.length >= 3) {
-                            if (methods.isOnline(args[2])) {
-                                player = methods.getPlayer(args[2]);
+                            if (this.methods.isOnline(args[2])) {
+                                player = this.methods.getPlayer(args[2]);
                             } else {
-                                Messages.NOT_ONLINE.sendMessage(sender);
+                                Translation.not_online.sendMessage(sender);
                                 return true;
                             }
                         } else {
                             if (!(sender instanceof Player)) {
-                                Messages.PLAYERS_ONLY.sendMessage(sender);
+                                Translation.player_only.sendMessage(sender);
                                 return true;
                             } else {
                                 player = (Player) sender;
@@ -148,27 +146,28 @@ public class EnvoyCommand implements CommandExecutor {
                         placeholder.put("%Player%", player.getName());
                         placeholder.put("%amount%", amount + "");
                         placeholder.put("%Amount%", amount + "");
-                        Messages.GIVE_FLARE.sendMessage(sender, placeholder);
+                        Translation.give_flare.sendMessage(sender, placeholder);
 
-                        if (!sender.getName().equalsIgnoreCase(player.getName())) Messages.GIVEN_FLARE.sendMessage(player, placeholder);
+                        if (!sender.getName().equalsIgnoreCase(player.getName())) Translation.given_flare.sendMessage(player, placeholder);
 
-                        flareSettings.giveFlare(player, amount);
+                        this.flareSettings.giveFlare(player, amount);
                     } else {
-                        Messages.NO_PERMISSION.sendMessage(sender);
+                        Translation.no_permission.sendMessage(sender);
                     }
 
                     return true;
                 }
+
                 case "drops", "drop" -> {
                     if (hasPermission(sender, "drops")) {
                         ArrayList<String> locs = new ArrayList<>();
                         int page = 1;
 
                         if (args.length >= 2) {
-                            if (methods.isInt(args[1])) {
+                            if (this.methods.isInt(args[1])) {
                                 page = Integer.parseInt(args[1]);
                             } else {
-                                Messages.NOT_A_NUMBER.sendMessage(sender);
+                                Translation.not_a_number.sendMessage(sender);
                                 return true;
                             }
                         }
@@ -176,56 +175,58 @@ public class EnvoyCommand implements CommandExecutor {
                         int i = 1;
                         HashMap<String, String> ph = new HashMap<>();
 
-                        for (Block block : crazyManager.isEnvoyActive() ? crazyManager.getActiveEnvoys() : locationSettings.getSpawnLocations()) {
+                        for (Block block : this.crazyManager.isEnvoyActive() ? this.crazyManager.getActiveEnvoys() : this.locationSettings.getSpawnLocations()) {
                             ph.put("%id%", i + "");
                             ph.put("%world%", block.getWorld().getName());
                             ph.put("%x%", block.getX() + "");
                             ph.put("%y%", block.getY() + "");
                             ph.put("%z%", block.getZ() + "");
-                            locs.add(Messages.DROPS_FORMAT.getMessage(ph));
+                            locs.add(Translation.drops_format.getMessage(ph).toString());
                             i++;
                             ph.clear();
                         }
 
-                        if (crazyManager.isEnvoyActive()) {
-                            Messages.DROPS_AVAILABLE.sendMessage(sender);
+                        if (this.crazyManager.isEnvoyActive()) {
+                            Translation.drops_available.sendMessage(sender);
                         } else {
-                            Messages.DROPS_POSSIBILITIES.sendMessage(sender);
+                            Translation.drops_possibilities.sendMessage(sender);
                         }
 
-                        for (String dropLocation : methods.getPage(locs, page)) {
+                        for (String dropLocation : this.methods.getPage(locs, page)) {
                             sender.sendMessage(dropLocation);
                         }
 
-                        if (!crazyManager.isEnvoyActive()) Messages.DROPS_PAGE.sendMessage(sender);
+                        if (!this.crazyManager.isEnvoyActive()) Translation.drops_page.sendMessage(sender);
 
                     } else {
-                        Messages.NO_PERMISSION.sendMessage(sender);
+                        Translation.no_permission.sendMessage(sender);
                     }
 
                     return true;
                 }
+
                 case "time" -> {
                     if (hasPermission(sender, "time")) {
                         HashMap<String, String> placeholder = new HashMap<>();
 
-                        if (crazyManager.isEnvoyActive()) {
-                            placeholder.put("%Time%", crazyManager.getEnvoyRunTimeLeft());
-                            Messages.TIME_LEFT.sendMessage(sender, placeholder);
+                        if (this.crazyManager.isEnvoyActive()) {
+                            placeholder.put("%Time%", this.crazyManager.getEnvoyRunTimeLeft());
+                            Translation.time_left.sendMessage(sender, placeholder);
                         } else {
-                            placeholder.put("%time%", crazyManager.getNextEnvoyTime());
-                            Messages.TIME_TILL_EVENT.sendMessage(sender, placeholder);
+                            placeholder.put("%time%", this.crazyManager.getNextEnvoyTime());
+                            Translation.time_till_event.sendMessage(sender, placeholder);
                         }
                     } else {
-                        Messages.NO_PERMISSION.sendMessage(sender);
+                        Translation.no_permission.sendMessage(sender);
                     }
 
                     return true;
                 }
+
                 case "start", "begin" -> {
                     if (hasPermission(sender, "start")) {
-                        if (crazyManager.isEnvoyActive()) {
-                            Messages.ALREADY_STARTED.sendMessage(sender);
+                        if (this.crazyManager.isEnvoyActive()) {
+                            Translation.already_started.sendMessage(sender);
                         } else {
                             EnvoyStartEvent event;
 
@@ -235,19 +236,20 @@ public class EnvoyCommand implements CommandExecutor {
                                 event = new EnvoyStartEvent(EnvoyStartEvent.EnvoyStartReason.FORCED_START_CONSOLE);
                             }
 
-                            plugin.getServer().getPluginManager().callEvent(event);
+                            this.plugin.getServer().getPluginManager().callEvent(event);
 
-                            if (!event.isCancelled() && crazyManager.startEnvoyEvent()) Messages.FORCE_START.sendMessage(sender);
+                            if (!event.isCancelled() && this.crazyManager.startEnvoyEvent()) Translation.force_start.sendMessage(sender);
                         }
                     } else {
-                        Messages.NO_PERMISSION.sendMessage(sender);
+                        Translation.no_permission.sendMessage(sender);
                     }
 
                     return true;
                 }
+
                 case "stop", "end" -> {
                     if (hasPermission(sender, "stop")) {
-                        if (crazyManager.isEnvoyActive()) {
+                        if (this.crazyManager.isEnvoyActive()) {
                             EnvoyEndEvent event;
 
                             if (sender instanceof Player) {
@@ -256,65 +258,67 @@ public class EnvoyCommand implements CommandExecutor {
                                 event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.FORCED_END_CONSOLE);
                             }
 
-                            plugin.getServer().getPluginManager().callEvent(event);
-                            crazyManager.endEnvoyEvent();
-                            Messages.ENDED.broadcastMessage(false);
-                            Messages.FORCE_ENDED.sendMessage(sender);
+                            this.plugin.getServer().getPluginManager().callEvent(event);
+                            this.crazyManager.endEnvoyEvent();
+                            Translation.ended.broadcastMessage(false);
+                            Translation.force_end.sendMessage(sender);
                         } else {
-                            Messages.NOT_STARTED.sendMessage(sender);
+                            Translation.not_started.sendMessage(sender);
                         }
                     } else {
-                        Messages.NO_PERMISSION.sendMessage(sender);
+                        Translation.no_permission.sendMessage(sender);
                     }
 
                     return true;
                 }
+
                 case "edit" -> {
                     if (hasPermission(sender, "edit")) {
-                        if (crazyManager.isEnvoyActive()) {
-                            Messages.KICKED_FROM_EDITOR_MODE.sendMessage(sender);
+                        if (this.crazyManager.isEnvoyActive()) {
+                            Translation.kicked_from_editor_mode.sendMessage(sender);
                         } else {
                             Player player = (Player) sender;
 
-                            if (editorSettings.isEditor(player)) {
-                                editorSettings.removeEditor(player);
-                                editorSettings.removeFakeBlocks();
+                            if (this.editorSettings.isEditor(player)) {
+                                this.editorSettings.removeEditor(player);
+                                this.editorSettings.removeFakeBlocks();
                                 player.getInventory().remove(Material.BEDROCK);
-                                Messages.LEAVE_EDITOR_MODE.sendMessage(player);
+                                Translation.leave_editor_mode.sendMessage(player);
                             } else {
-                                editorSettings.addEditor(player);
-                                editorSettings.showFakeBlocks(player);
+                                this.editorSettings.addEditor(player);
+                                this.editorSettings.showFakeBlocks(player);
                                 player.getInventory().addItem(new ItemStack(Material.BEDROCK, 1));
-                                Messages.ENTER_EDITOR_MODE.sendMessage(player);
+                                Translation.enter_editor_mode.sendMessage(player);
                             }
                         }
                     } else {
-                        Messages.NO_PERMISSION.sendMessage(sender);
+                        Translation.no_permission.sendMessage(sender);
                     }
 
                     return true;
                 }
+
                 case "clear" -> {
                     if (hasPermission(sender, "clear")) {
                         Player player = (Player) sender;
 
-                        if (editorSettings.isEditor(player)) {
+                        if (this.editorSettings.isEditor(player)) {
                             // User is in editor mode and is able to clear all locations.
-                            locationSettings.clearSpawnLocations();
-                            Messages.EDITOR_CLEAR_LOCATIONS.sendMessage(sender);
+                            this.locationSettings.clearSpawnLocations();
+                            Translation.editor_clear_locations.sendMessage(sender);
                         } else {
                             // User must be in editor mode to clear locations. This is to help prevent accidental clears.
-                            Messages.EDITOR_CLEAR_FAILURE.sendMessage(sender);
+                            Translation.editor_clear_failure.sendMessage(sender);
                         }
                     } else {
-                        Messages.NO_PERMISSION.sendMessage(sender);
+                        Translation.no_permission.sendMessage(sender);
                     }
 
                     return true;
                 }
             }
 
-            Messages.COMMAND_NOT_FOUND.sendMessage(sender);
+            Translation.command_not_found.sendMessage(sender);
         }
 
         return true;

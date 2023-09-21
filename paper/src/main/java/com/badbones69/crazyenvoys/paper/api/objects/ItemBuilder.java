@@ -4,12 +4,14 @@ import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
 import com.badbones69.crazyenvoys.paper.support.SkullCreator;
 import com.badbones69.crazyenvoys.paper.support.libraries.PluginSupport;
+import com.ryderbelserion.cluster.bukkit.items.utils.DyeUtils;
+import com.ryderbelserion.cluster.bukkit.utils.LegacyLogger;
+import com.ryderbelserion.cluster.bukkit.utils.LegacyUtils;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import dev.lone.itemsadder.api.CustomStack;
 import io.th0rgal.oraxen.api.OraxenItems;
 import org.bukkit.*;
 import org.bukkit.block.Banner;
-import org.bukkit.block.Block;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
@@ -20,6 +22,7 @@ import org.bukkit.inventory.meta.*;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
@@ -197,130 +200,130 @@ public class ItemBuilder {
         this.itemFlags = new ArrayList<>(itemBuilder.itemFlags);
     }
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final Methods methods = plugin.getMethods();
+    private final Methods methods = this.plugin.getMethods();
 
-    private final SkullCreator skullCreator = plugin.getSkullCreator();;
+    private final SkullCreator skullCreator = this.plugin.getSkullCreator();;
 
     /**
      * Gets the nbt item.
      */
     public NBTItem getNBTItem() {
-        nbtItem = new NBTItem(build());
-        return nbtItem;
+        this.nbtItem = new NBTItem(build());
+        return this.nbtItem;
     }
 
     /**
      * Gets the material.
      */
     public Material getMaterial() {
-        return material;
+        return this.material;
     }
 
     /**
      * Checks if the item is a banner.
      */
     public boolean isBanner() {
-        return isBanner;
+        return this.isBanner;
     }
 
     /**
      * Checks if an item is a shield.
      */
     public boolean isShield() {
-        return isShield;
+        return this.isShield;
     }
 
     /**
      * Checks if the item is a spawn mob egg.
      */
     public boolean isMobEgg() {
-        return isMobEgg;
+        return this.isMobEgg;
     }
 
     /**
      * Returns the player name.
      */
     public String getPlayerName() {
-        return player;
+        return this.player;
     }
 
     /**
      * Get the entity type of the spawn mob egg.
      */
     public EntityType getEntityType() {
-        return entityType;
+        return this.entityType;
     }
 
     /**
      * Get the name of the item.
      */
     public String getName() {
-        return itemName;
+        return this.itemName;
     }
 
     /**
      * Get the lore on the item.
      */
     public List<String> getLore() {
-        return itemLore;
+        return this.itemLore;
     }
 
     /**
      * Returns the enchantments on the Item.
      */
     public HashMap<Enchantment, Integer> getEnchantments() {
-        return enchantments;
+        return this.enchantments;
     }
 
     /**
      * Return a list of Item Flags.
      */
     public List<ItemFlag> getItemFlags() {
-        return itemFlags;
+        return this.itemFlags;
     }
 
     /**
      * Checks if flags are hidden.
      */
     public boolean isItemFlagsHidden() {
-        return hideItemFlags;
+        return this.hideItemFlags;
     }
 
     /**
      * Check if item is Leather Armor
      */
     public boolean isLeatherArmor() {
-        return isLeatherArmor;
+        return this.isLeatherArmor;
     }
 
     /**
      * Checks if item is glowing.
      */
     public boolean isGlowing() {
-        return glowing;
+        return this.glowing;
     }
 
     /**
      * Checks if the item is unbreakable.
      */
     public boolean isUnbreakable() {
-        return unbreakable;
+        return this.unbreakable;
     }
 
     /**
      * Returns the amount of the item stack.
      */
     public Integer getAmount() {
-        return itemAmount;
+        return this.itemAmount;
     }
 
     /**
      * Get the patterns on the banners.
      */
     public List<Pattern> getPatterns() {
-        return patterns;
+        return this.patterns;
     }
 
     /**
@@ -329,10 +332,10 @@ public class ItemBuilder {
      * @return The name with all the placeholders in it.
      */
     public String getUpdatedName() {
-        String newName = itemName;
+        String newName = this.itemName;
 
-        for (String placeholder : namePlaceholders.keySet()) {
-            newName = newName.replace(placeholder, namePlaceholders.get(placeholder)).replace(placeholder.toLowerCase(), namePlaceholders.get(placeholder));
+        for (String placeholder : this.namePlaceholders.keySet()) {
+            newName = newName.replace(placeholder, this.namePlaceholders.get(placeholder)).replace(placeholder.toLowerCase(), this.namePlaceholders.get(placeholder));
         }
 
         return newName;
@@ -350,9 +353,9 @@ public class ItemBuilder {
      * @return The result of all the info that was given to the builder as an ItemStack.
      */
     public ItemStack build() {
-        if (nbtItem != null) referenceItem = nbtItem.getItem();
+        if (this.nbtItem != null) this.referenceItem = this.nbtItem.getItem();
 
-        ItemStack item = referenceItem;
+        ItemStack item = this.referenceItem;
 
         if (item == null) {
             if (PluginSupport.ITEMS_ADDER.isPluginEnabled()) {
@@ -366,22 +369,22 @@ public class ItemBuilder {
             }
         }
 
-        if (item == null) item = new ItemStack(material);
+        if (item == null) item = new ItemStack(this.material);
 
         if (item.getType() != Material.AIR) {
-            if (isHead) { // Has to go 1st due to it removing all data when finished.
-                if (isHash) { // Sauce: https://github.com/deanveloper/SkullCreator
-                    if (isURL) {
-                        skullCreator.itemWithUrl(item, player);
+            if (this.isHead) { // Has to go 1st due to it removing all data when finished.
+                if (this.isHash) { // Sauce: https://github.com/deanveloper/SkullCreator
+                    if (this.isURL) {
+                        this.skullCreator.itemWithUrl(item, this.player);
                     } else {
-                        skullCreator.itemWithBase64(item, player);
+                        this.skullCreator.itemWithBase64(item, this.player);
                     }
                 }
             }
 
-            item.setAmount(itemAmount);
+            item.setAmount(this.itemAmount);
             ItemMeta itemMeta = item.getItemMeta();
-            assert itemMeta != null;
+
             itemMeta.setDisplayName(getUpdatedName());
             itemMeta.setLore(getUpdatedLore());
 
@@ -391,49 +394,49 @@ public class ItemBuilder {
                 }
             }
 
-            if (isMap) {
+            if (this.isMap) {
                 MapMeta mapMeta = (MapMeta) itemMeta;
 
-                if (mapColor != null) mapMeta.setColor(mapColor);
+                if (this.mapColor != null) mapMeta.setColor(this.mapColor);
             }
 
             if (itemMeta instanceof Damageable) {
-                if (damage >= 1) {
-                    if (damage >= item.getType().getMaxDurability()) {
+                if (this.damage >= 1) {
+                    if (this.damage >= item.getType().getMaxDurability()) {
                         ((Damageable) itemMeta).setDamage(item.getType().getMaxDurability());
                     } else {
-                        ((Damageable) itemMeta).setDamage(damage);
+                        ((Damageable) itemMeta).setDamage(this.damage);
                     }
                 }
             }
 
-            if (isPotion && (potionType != null || potionColor != null)) {
+            if (this.isPotion && (potionType != null || this.potionColor != null)) {
                 PotionMeta potionMeta = (PotionMeta) itemMeta;
 
-                if (potionType != null) potionMeta.setBasePotionData(new PotionData(potionType));
+                if (this.potionType != null) potionMeta.setBasePotionData(new PotionData(this.potionType));
 
-                if (potionColor != null) potionMeta.setColor(potionColor);
+                if (this.potionColor != null) potionMeta.setColor(this.potionColor);
             }
 
-            if (material == Material.TIPPED_ARROW && potionType != null) {
+            if (this.material == Material.TIPPED_ARROW && this.potionType != null) {
                 PotionMeta potionMeta = (PotionMeta) itemMeta;
-                potionMeta.setBasePotionData(new PotionData(potionType));
+                potionMeta.setBasePotionData(new PotionData(this.potionType));
             }
 
-            if (isLeatherArmor && armorColor != null) {
+            if (this.isLeatherArmor && this.armorColor != null) {
                 LeatherArmorMeta leatherMeta = (LeatherArmorMeta) itemMeta;
-                leatherMeta.setColor(armorColor);
+                leatherMeta.setColor(this.armorColor);
             }
 
-            if (isBanner && !patterns.isEmpty()) {
+            if (this.isBanner && !this.patterns.isEmpty()) {
                 BannerMeta bannerMeta = (BannerMeta) itemMeta;
-                bannerMeta.setPatterns(patterns);
+                bannerMeta.setPatterns(this.patterns);
             }
 
-            if (isShield && !patterns.isEmpty()) {
+            if (this.isShield && !this.patterns.isEmpty()) {
                 BlockStateMeta shieldMeta = (BlockStateMeta) itemMeta;
                 Banner banner = (Banner) shieldMeta.getBlockState();
-                banner.setPatterns(patterns);
+                banner.setPatterns(this.patterns);
                 banner.update();
                 shieldMeta.setBlockState(banner);
             }
@@ -517,9 +520,9 @@ public class ItemBuilder {
                 this.damage = Integer.parseInt(metaData);
             } else { // Value is something else.
                 this.potionType = getPotionType(PotionEffectType.getByName(metaData));
-                this.potionColor = methods.getColor(metaData);
-                this.armorColor = methods.getColor(metaData);
-                this.mapColor = methods.getColor(metaData);
+                this.potionColor = DyeUtils.getColor(metaData);
+                this.armorColor = DyeUtils.getColor(metaData);
+                this.mapColor = DyeUtils.getColor(metaData);
             }
         } else if (material.contains("#")) {
             String[] materialSplit = material.split("#");
@@ -564,7 +567,7 @@ public class ItemBuilder {
      * @return The damage to the item as an int.
      */
     public int getDamage() {
-        return damage;
+        return this.damage;
     }
 
     /**
@@ -572,7 +575,7 @@ public class ItemBuilder {
      * @return The ItemBuilder with an updated name.
      */
     public ItemBuilder setName(String itemName) {
-        if (itemName != null) this.itemName = methods.color(itemName);
+        if (itemName != null) this.itemName = LegacyUtils.color(itemName);
 
         return this;
     }
@@ -620,7 +623,7 @@ public class ItemBuilder {
             this.itemLore.clear();
 
             for (String line : lore) {
-                this.itemLore.add(methods.color(line));
+                this.itemLore.add(LegacyUtils.color(line));
             }
         }
 
@@ -634,7 +637,7 @@ public class ItemBuilder {
      * @return The ItemBuilder with updated info.
      */
     public ItemBuilder addLore(String lore) {
-        if (lore != null) this.itemLore.add(methods.color(lore));
+        if (lore != null) this.itemLore.add(LegacyUtils.color(lore));
 
         return this;
     }
@@ -668,7 +671,7 @@ public class ItemBuilder {
      * @return The lore with all placeholders in it.
      */
     public List<String> getUpdatedLore() {
-        return methods.getPlaceholders(itemLore, lorePlaceholders);
+        return this.methods.getPlaceholders(this.itemLore, this.lorePlaceholders);
     }
 
     /**
@@ -703,7 +706,7 @@ public class ItemBuilder {
             for (PatternType pattern : PatternType.values()) {
 
                 if (split[0].equalsIgnoreCase(pattern.name()) || split[0].equalsIgnoreCase(pattern.getIdentifier())) {
-                    DyeColor color = getDyeColor(split[1]);
+                    DyeColor color = DyeUtils.getDyeColor(split[1]);
 
                     if (color != null) addPattern(new Pattern(color, pattern));
 
@@ -727,7 +730,7 @@ public class ItemBuilder {
      * @return The ItemBuilder with an updated pattern.
      */
     public ItemBuilder addPattern(Pattern pattern) {
-        patterns.add(pattern);
+        this.patterns.add(pattern);
         return this;
     }
 
@@ -758,9 +761,9 @@ public class ItemBuilder {
     public ItemBuilder setPlayerName(String playerName) {
         this.player = playerName;
 
-        if (player != null && player.length() > 16) {
+        if (this.player != null && this.player.length() > 16) {
             this.isHash = true;
-            this.isURL = player.startsWith("http");
+            this.isURL = this.player.startsWith("http");
         }
 
         return this;
@@ -808,12 +811,12 @@ public class ItemBuilder {
      * @return The ItemBuilder with updated info.
      */
     public ItemBuilder setFlagsFromStrings(List<String> flagStrings) {
-        itemFlags.clear();
+        this.itemFlags.clear();
 
         for (String flagString : flagStrings) {
             ItemFlag flag = getFlag(flagString);
 
-            if (flag != null) itemFlags.add(flag);
+            if (flag != null) this.itemFlags.add(flag);
         }
 
         return this;
@@ -825,7 +828,7 @@ public class ItemBuilder {
             try {
                 ItemFlag itemFlag = ItemFlag.valueOf(flagString.toUpperCase());
 
-                if (itemFlag != null) addItemFlag(itemFlag);
+                addItemFlag(itemFlag);
             } catch (Exception ignored) {}
         }
 
@@ -841,7 +844,7 @@ public class ItemBuilder {
     public ItemBuilder addFlags(String flagString) {
         ItemFlag flag = getFlag(flagString);
 
-        if (flag != null) itemFlags.add(flag);
+        if (flag != null) this.itemFlags.add(flag);
 
         return this;
     }
@@ -853,7 +856,7 @@ public class ItemBuilder {
      * @return The ItemBuilder with an updated ItemFlag.
      */
     public ItemBuilder addItemFlag(ItemFlag itemFlag) {
-        if (itemFlag != null) itemFlags.add(itemFlag);
+        if (itemFlag != null) this.itemFlags.add(itemFlag);
 
         return this;
     }
@@ -883,7 +886,7 @@ public class ItemBuilder {
      * @return The ItemBuilder with an updated Item.
      */
     public ItemStack hideItemFlags(ItemStack item) {
-        if (hideItemFlags) {
+        if (this.hideItemFlags) {
             if (item != null && item.hasItemMeta()) {
                 ItemMeta itemMeta = item.getItemMeta();
                 assert itemMeta != null;
@@ -1027,7 +1030,7 @@ public class ItemBuilder {
                         try {
                             for (PatternType pattern : PatternType.values()) {
                                 if (option.equalsIgnoreCase(pattern.name()) || value.equalsIgnoreCase(pattern.getIdentifier())) {
-                                    DyeColor color = getDyeColor(value);
+                                    DyeColor color = DyeUtils.getDyeColor(value);
                                     if (color != null) itemBuilder.addPattern(new Pattern(color, pattern));
                                     break;
                                 }
@@ -1037,9 +1040,9 @@ public class ItemBuilder {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception exception) {
             itemBuilder.setMaterial(Material.RED_TERRACOTTA).setName("&c&lERROR").setLore(Arrays.asList("&cThere is an error", "&cFor : &c" + (placeHolder != null ? placeHolder : "")));
-            e.printStackTrace();
+            LegacyLogger.warn("There is an error with " + placeHolder, exception);
         }
 
         return itemBuilder;
@@ -1072,7 +1075,7 @@ public class ItemBuilder {
      * @param item The item to add glow to.
      */
     private void addGlow(ItemStack item) {
-        if (glowing) {
+        if (this.glowing) {
             try {
                 if (item != null) {
                     if (item.getItemMeta() != null) {
@@ -1124,27 +1127,6 @@ public class ItemBuilder {
                 return PotionType.WATER_BREATHING;
             } else if (type.equals(PotionEffectType.WEAKNESS)) {
                 return PotionType.WEAKNESS;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the dye color from a string.
-     *
-     * @param color The string of the color.
-     * @return The dye color from the string.
-     */
-    public static DyeColor getDyeColor(String color) {
-        if (color != null) {
-            try {
-                return DyeColor.valueOf(color.toUpperCase());
-            } catch (Exception e) {
-                try {
-                    String[] rgb = color.split(",");
-                    return DyeColor.getByColor(Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2])));
-                } catch (Exception ignore) {}
             }
         }
 
