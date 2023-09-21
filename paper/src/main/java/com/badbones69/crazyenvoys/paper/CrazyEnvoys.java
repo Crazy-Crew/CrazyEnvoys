@@ -33,8 +33,6 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
     private final PluginManager pluginManager = getServer().getPluginManager();
 
-    private FileManager fileManager;
-
     private Methods methods;
 
     // Envoy Required Classes.

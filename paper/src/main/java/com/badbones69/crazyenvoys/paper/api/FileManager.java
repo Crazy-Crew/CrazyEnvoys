@@ -41,7 +41,7 @@ public class FileManager {
         for (Files file : Files.values()) {
             File newFile = new File(this.plugin.getDataFolder(), file.getFileLocation());
 
-            if (this.plugin.isLogging()) this.plugin.getLogger().info("Loading the " + file.getFileName());
+            if (this.plugin.isLogging()) LegacyLogger.info("Loading the " + file.getFileName());
 
             if (!newFile.exists()) {
                 try {
