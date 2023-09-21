@@ -11,7 +11,6 @@ import us.crazycrew.crazyenvoys.common.config.ConfigManager;
 import us.crazycrew.crazyenvoys.common.config.types.Config;
 import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import us.crazycrew.crazyenvoys.paper.support.MetricsHandler;
-
 import java.io.File;
 
 public class CrazyHandler extends CrazyEnvoysPlugin {
