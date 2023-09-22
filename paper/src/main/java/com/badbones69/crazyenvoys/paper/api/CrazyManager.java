@@ -1034,7 +1034,7 @@ public class CrazyManager {
             }
         }
 
-        return this.cachedChances.get(this.random.nextInt(this.cachedChances.size()));
+        return this.cachedChances.get(new Random().nextInt(this.cachedChances.size()));
     }
 
     /**
