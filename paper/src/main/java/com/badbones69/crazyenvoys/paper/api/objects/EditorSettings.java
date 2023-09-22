@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class EditorSettings {
 
@@ -14,22 +15,22 @@ public class EditorSettings {
 
     private final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    private final ArrayList<Player> editors = new ArrayList<>();
+    private final ArrayList<UUID> editors = new ArrayList<>();
 
-    public List<Player> getEditors() {
+    public List<UUID> getEditors() {
         return this.editors;
     }
 
     public void addEditor(Player player) {
-        this.editors.add(player);
+        this.editors.add(player.getUniqueId());
     }
 
     public void removeEditor(Player player) {
-        this.editors.remove(player);
+        this.editors.remove(player.getUniqueId());
     }
 
     public boolean isEditor(Player player) {
-        return this.editors.contains(player);
+        return this.editors.contains(player.getUniqueId());
     }
 
     public void showFakeBlocks(Player player) {

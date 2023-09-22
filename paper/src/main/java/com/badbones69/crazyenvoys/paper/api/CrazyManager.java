@@ -688,9 +688,11 @@ public class CrazyManager {
             return false;
         }
 
-        for (Player player : this.editorSettings.getEditors()) {
+        for (UUID uuid : this.editorSettings.getEditors()) {
+            Player player = this.plugin.getServer().getPlayer(uuid);
+
             this.editorSettings.removeFakeBlocks();
-            player.getInventory().removeItem(new ItemStack(Material.BEDROCK, 1));
+            if (player != null) player.getInventory().removeItem(new ItemStack(Material.BEDROCK, 1));
             Translation.kicked_from_editor_mode.sendMessage(player);
         }
 

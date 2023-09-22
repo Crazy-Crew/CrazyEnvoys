@@ -102,6 +102,20 @@ val file = file("${rootProject.rootDir}/jars/${rootProject.name}-${rootProject.v
 val description = """
 ## Changes:
 * Added 1.20.2 support.
+* Made random more random.
+* Properly handle how Metrics shuts down and turns on when you change the true/false.
+* Add more verbose logging with an option to turn off the spammy garbage.
+* Updated how comments are displayed in the configuration.
+
+## Performance:
+* No longer use the player object in hashmap's/arrays just the uuid as god intended.
+
+## Developers / API:
+### This is nerd talk so only read this if you need to.
+* Changed how configurations are handled internally.
+* Changed how metrics is handled internally.
+* Updated CMILib.
+* Cleaned up some internals, reduce duplicated code.
     
 ## Other:
  * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)

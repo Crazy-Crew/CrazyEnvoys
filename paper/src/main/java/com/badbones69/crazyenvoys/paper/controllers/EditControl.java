@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import java.util.UUID;
 
 public class EditControl implements Listener {
 
@@ -40,8 +41,8 @@ public class EditControl implements Listener {
 
                 Translation.add_location.sendMessage(player);
 
-                for (Player editor : this.editorSettings.getEditors()) {
-                    editor.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
+                for (UUID uuid : this.editorSettings.getEditors()) {
+                    if (uuid == player.getUniqueId()) player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
                 }
             }
         }
