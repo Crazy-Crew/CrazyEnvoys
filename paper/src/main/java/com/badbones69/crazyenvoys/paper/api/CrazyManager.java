@@ -692,8 +692,10 @@ public class CrazyManager {
             Player player = this.plugin.getServer().getPlayer(uuid);
 
             this.editorSettings.removeFakeBlocks();
-            if (player != null) player.getInventory().removeItem(new ItemStack(Material.BEDROCK, 1));
-            Translation.kicked_from_editor_mode.sendMessage(player);
+            if (player != null) {
+                player.getInventory().removeItem(new ItemStack(Material.BEDROCK, 1));
+                Translation.kicked_from_editor_mode.sendMessage(player);
+            }
         }
 
         this.editorSettings.getEditors().clear();
