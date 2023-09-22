@@ -15,7 +15,7 @@ public class FireworkDamageAPI implements Listener {
 
     private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    NamespacedKey noDamage = new NamespacedKey(this.plugin, "no-damage");
+    private final NamespacedKey noDamage = new NamespacedKey(this.plugin, "no-damage");
 
     /**
      * @param firework The firework you want to add.
