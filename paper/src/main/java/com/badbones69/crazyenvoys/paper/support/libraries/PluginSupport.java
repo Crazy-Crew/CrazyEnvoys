@@ -16,7 +16,7 @@ public enum PluginSupport {
 
     private final String name;
 
-    private static final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
     PluginSupport(String name) {
         this.name = name;
@@ -27,6 +27,6 @@ public enum PluginSupport {
     }
 
     public boolean isPluginEnabled() {
-        return plugin.getServer().getPluginManager().isPluginEnabled(this.name);
+        return this.plugin.getServer().getPluginManager().isPluginEnabled(this.name);
     }
 }
