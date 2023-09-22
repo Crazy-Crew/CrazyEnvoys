@@ -97,8 +97,6 @@ public class CrazyManager {
     private final List<UUID> ignoreMessages = new ArrayList<>();
     private final List<Calendar> warnings = new ArrayList<>();
 
-    private final Random random = new Random();
-
     /**
      * Run this when you are starting up the server.
      */
@@ -578,7 +576,7 @@ public class CrazyManager {
             maxSpawns = this.envoySettings.getMaxCrates();
         } else if (this.envoySettings.isRandomAmount()) {
             // Generates a random number between the min and max settings
-            maxSpawns = this.random.nextInt(this.envoySettings.getMaxCrates() + 1 - this.envoySettings.getMinCrates()) + this.envoySettings.getMinCrates();
+            maxSpawns = new Random().nextInt(this.envoySettings.getMaxCrates() + 1 - this.envoySettings.getMinCrates()) + this.envoySettings.getMinCrates();
         } else {
             maxSpawns = this.envoySettings.isRandomLocationsEnabled() ? this.envoySettings.getMaxCrates() : this.locationSettings.getActiveLocations().size();
         }
@@ -596,7 +594,7 @@ public class CrazyManager {
             while (this.locationSettings.getDropLocations().size() < maxSpawns) {
                 int maxRadius = this.envoySettings.getMaxRadius();
                 Location location = this.center.clone();
-                location.add(-(maxRadius) + this.random.nextInt(maxRadius * 2), 0, -(maxRadius) + this.random.nextInt(maxRadius * 2));
+                location.add(-(maxRadius) + new Random().nextInt(maxRadius * 2), 0, -(maxRadius) + new Random().nextInt(maxRadius * 2));
                 location = location.getWorld().getHighestBlockAt(location).getLocation();
 
                 if (!location.getChunk().isLoaded() && !location.getChunk().load()) continue;
@@ -620,7 +618,7 @@ public class CrazyManager {
                     this.locationSettings.addAllDropLocations(this.locationSettings.getSpawnLocations());
                 } else {
                     while (this.locationSettings.getDropLocations().size() < maxSpawns) {
-                        Block block = this.locationSettings.getSpawnLocations().get(this.random.nextInt(this.locationSettings.getSpawnLocations().size()));
+                        Block block = this.locationSettings.getSpawnLocations().get(new Random().nextInt(this.locationSettings.getSpawnLocations().size()));
 
                         this.locationSettings.addDropLocations(block);
                     }
