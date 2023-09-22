@@ -172,5 +172,4 @@ public class Config implements SettingsHolder {
     public static final Property<List<String>> envoy_flare_world_guard_regions = newListProperty("Settings.Flares.World-Guard.Regions", List.of(
             "WarZone"
     ));
-
 }
