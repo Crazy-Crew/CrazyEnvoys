@@ -40,7 +40,7 @@ public class CrazyHandler extends CrazyEnvoysPlugin {
                 .registerDefaultGenerateFiles("Titan.yml", "/tiers", "/tiers")
                 .setup();
 
-        boolean metrics = this.plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(Config.toggle_metrics);
+        boolean metrics = getConfigManager().getConfig().getProperty(Config.toggle_metrics);
 
         this.metrics = new MetricsHandler();
         if (metrics) this.metrics.start();
