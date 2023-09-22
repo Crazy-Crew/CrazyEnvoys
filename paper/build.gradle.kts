@@ -30,7 +30,7 @@ dependencies {
 
     implementation("org.bstats", "bstats-bukkit", "3.0.2")
 
-    implementation("de.tr7zw", "item-nbt-api", "2.11.3")
+    implementation("de.tr7zw", "item-nbt-api", "2.12.0")
 
     implementation(libs.cluster.bukkit.api) {
         exclude("com.ryderbelserion.cluster", "cluster-api")
@@ -68,9 +68,9 @@ tasks {
 
     shadowJar {
         listOf(
+            "de.tr7zw.changeme.nbtapi",
             "dev.triumphteam",
-            "org.bstats",
-            "de.tr7zw"
+            "org.bstats"
         ).forEach {
             relocate(it, "libs.$it")
         }
@@ -116,6 +116,7 @@ val description = """
 * Changed how metrics is handled internally.
 * Updated CMILib.
 * Cleaned up some internals, reduce duplicated code.
+* Bumped nbt-api
     
 ## Other:
  * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)
