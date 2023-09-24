@@ -105,14 +105,17 @@ val description = """
 * Made random more random.
 * Properly handle how Metrics shuts down and turns on when you change the true/false.
 * Add more verbose logging with an option to turn off the spammy garbage.
-* Updated how comments are displayed in the configuration.
+* Internal placeholders such as %random% or %player% which are handled by us have been changed to {random} or {player}.
+* Migrated messages.yml to locale folder as en-us.yml, It should auto convert all your previous values.
+* Migrated Settings.Prefix and Settings.Toggle-Metrics to plugin-config.yml
+* Re-worked the config.yml to hopefully be more organized, It has a lot more descriptive comments and properly named options.
 
 ## Performance:
 * No longer use the player object in hashmap's/arrays just the uuid as god intended.
 
 ## Developers / API:
 ### This is nerd talk so only read this if you need to.
-* Changed how configurations are handled internally.
+* Changed how configurations are handled internally which massively helps.
 * Changed how metrics is handled internally.
 * Updated CMILib.
 * Cleaned up some internals, reduce duplicated code.
