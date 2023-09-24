@@ -31,7 +31,7 @@ public class Config implements SettingsHolder {
                 ""
         };
         
-        conf.setComment("Settings", header);
+        conf.setComment("envoys", header);
     }
 
     @Comment("Whether or not a block should fall when an envoy spawns.")
@@ -77,9 +77,6 @@ public class Config implements SettingsHolder {
     @Comment("If all drop locations should be broadcast when an envoy starts.")
     public static final Property<Boolean> envoys_locations_broadcast = newProperty("envoys.broadcast", false);
 
-    @Comment("If the envoys happen on an interval. If false the only wait it will start is if it's started with the command or flare.")
-    public static final Property<Boolean> envoys_timer_toggle = newProperty("Settings.Envoy-Timer-Toggle", true);
-
     @Comment({
             "This option decides whether to run envoys at an interval or on a schedule.",
             "Note: If the option is false, It will only start via a command or a player's flare."
@@ -117,7 +114,7 @@ public class Config implements SettingsHolder {
     public static final Property<String> envoys_flare_item_name = newProperty("flare.item.name", "&7&l(&4&l!&7&l) &cFlare");
 
     @Comment("The material of the flare item.")
-    public static final Property<String> envoys_flare_item_type = newProperty("Settings.Flares.Item", "REDSTONE_TORCH");
+    public static final Property<String> envoys_flare_item_type = newProperty("flare.item.type", "REDSTONE_TORCH");
 
     @Comment("The lore of the flare item.")
     public static final Property<List<String>> envoys_flare_item_lore = newListProperty("flare.item.lore", List.of(
