@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
+import us.crazycrew.crazyenvoys.common.config.types.Config;
 import us.crazycrew.crazyenvoys.common.config.types.Messages;
 import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import java.util.ArrayList;
@@ -106,8 +107,6 @@ public enum Translation {
     private final @NotNull SettingsManager messages = this.configManager.getMessages();
     private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
 
-    private final @NotNull EnvoySettings envoySettings = this.plugin.getEnvoySettings();
-
     private boolean isList() {
         return this.isList;
     }
@@ -177,9 +176,9 @@ public enum Translation {
     }
 
     public void broadcastMessage(boolean ignore, Map<String, String> placeholder) {
-        if (this.envoySettings.isWorldMessagesEnabled()) {
+        if (this.plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(Config.envoys_world_messages)) {
             for (Player player : this.plugin.getServer().getOnlinePlayers()) {
-                for (String world : this.envoySettings.getWorldMessagesWorlds()) {
+                for (String world : this.plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(Config.envoys_allowed_worlds)) {
                     if (player.getWorld().getName().equalsIgnoreCase(world)) {
                         if (ignore) {
                             if (!this.crazyManager.isIgnoringMessages(player.getUniqueId())) sendMessage(player, placeholder);

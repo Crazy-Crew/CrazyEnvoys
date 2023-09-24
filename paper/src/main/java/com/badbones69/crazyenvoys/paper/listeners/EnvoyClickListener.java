@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoys.paper.listeners;
 
+import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
 import com.badbones69.crazyenvoys.paper.api.CrazyManager;
@@ -28,6 +29,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import us.crazycrew.crazyenvoys.common.config.ConfigManager;
+import us.crazycrew.crazyenvoys.common.config.types.Config;
+import us.crazycrew.crazyenvoys.paper.api.plugin.CrazyHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -39,10 +43,12 @@ import static java.util.regex.Matcher.quoteReplacement;
 public class EnvoyClickListener implements Listener {
 
     private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
+    private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
+    private final @NotNull SettingsManager config = this.configManager.getConfig();
 
     private final @NotNull Methods methods = this.plugin.getMethods();
 
-    private final @NotNull EnvoySettings envoySettings = this.plugin.getEnvoySettings();
     private final @NotNull CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
     private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
 
@@ -68,7 +74,7 @@ public class EnvoyClickListener implements Listener {
         Tier tier = this.crazyManager.getTier(event.getClickedBlock());
 
         if (!player.hasPermission("envoy.bypass")) {
-            if (this.envoySettings.isEnvoyCountDownEnabled() && this.crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
+            if (this.config.getProperty(Config.envoys_grace_period_toggle) && this.crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
                 HashMap<String, String> placeholder = new HashMap<>();
                 placeholder.put("{time}", String.valueOf(this.crazyManager.getCountdownTimer().getSecondsLeft()));
                 Translation.countdown_in_progress.sendMessage(player, placeholder);
@@ -80,7 +86,7 @@ public class EnvoyClickListener implements Listener {
                 return;
             }
 
-            if (this.envoySettings.isEnvoyCollectCooldownEnabled()) {
+            if (this.config.getProperty(Config.envoys_grab_cooldown_toggle)) {
                 UUID uuid = player.getUniqueId();
 
                 if (this.coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(this.coolDownSettings.getCooldown().get(uuid))) {
@@ -90,7 +96,7 @@ public class EnvoyClickListener implements Listener {
                     return;
                 }
 
-                this.coolDownSettings.addCooldown(uuid, this.envoySettings.getEnvoyCollectCooldownTimer());
+                this.coolDownSettings.addCooldown(uuid, this.config.getProperty(Config.envoys_grab_cooldown_timer));
             }
         }
         // Ryder End
@@ -111,7 +117,7 @@ public class EnvoyClickListener implements Listener {
 
         HashMap<String, String> placeholder = new HashMap<>();
 
-        if (this.envoySettings.isPickupBroadcastEnabled()) placeholder.put("{tier}", this.crazyManager.getTier(block).getName());
+        if (this.config.getProperty(Config.envoys_announce_player_pickup)) placeholder.put("{tier}", this.crazyManager.getTier(block).getName());
 
         this.crazyManager.removeActiveEnvoy(block);
 
@@ -161,7 +167,7 @@ public class EnvoyClickListener implements Listener {
         }
 
         if (!this.crazyManager.getActiveEnvoys().isEmpty()) {
-            if (this.envoySettings.isPickupBroadcastEnabled()) {
+            if (this.config.getProperty(Config.envoys_announce_player_pickup)) {
                 placeholder.put("{player}", player.getName());
                 placeholder.put("{amount}", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
                 Translation.envoys_remaining.broadcastMessage(true, placeholder);
