@@ -31,7 +31,7 @@ public class MigrationService {
         copyMessages();
 
         // Rename file if found.
-        File file = new File(this.plugin.getDataFolder(), "users.yml");
+        File file = new File(this.plugin.getDataFolder(), "data.yml");
         if (file.exists()) file.renameTo(new File(this.plugin.getDataFolder(), "users.yml"));
     }
 
@@ -397,7 +397,7 @@ public class MigrationService {
         return message
                 .replaceAll("%prefix%", "")
                 .replaceAll("%Prefix%", "")
-                .replaceAll("{time}", "{time}")
+                .replaceAll("%time%", "{time}")
                 .replaceAll("%amount%", "{amount}")
                 .replaceAll("%tier%", "{tier}")
                 .replaceAll("%player%", "{player}")

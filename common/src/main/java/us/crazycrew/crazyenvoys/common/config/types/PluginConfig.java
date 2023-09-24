@@ -29,7 +29,7 @@ public class PluginConfig implements SettingsHolder {
                 ""
         };
 
-        conf.setComment("verbose_logging", header);
+        conf.setComment("language", header);
     }
 
     @Comment({
@@ -43,9 +43,9 @@ public class PluginConfig implements SettingsHolder {
             "Submit your finalized config using https://bin.bloom.host/ and send it to us in https://discord.gg/badbones-s-live-chat-182615261403283459",
             ""
     })
-    public static final Property<String> locale_file = PropertyInitializer.newProperty("plugin_locale", "en-US");
+    public static final Property<String> locale_file = PropertyInitializer.newProperty("language", "en-US");
 
-    @Comment("Whether you want CrazyCrates to shut up or not, This option is ignored by errors.")
+    @Comment("Whether you want CrazyEnvoys to shut up or not, This option is ignored by errors.")
     public static final Property<Boolean> verbose_logging = PropertyInitializer.newProperty("verbose_logging", true);
 
     @Comment({
@@ -59,7 +59,7 @@ public class PluginConfig implements SettingsHolder {
     public static final Property<String> command_prefix = PropertyInitializer.newProperty("command_prefix", "&8[&dCrazyEnvoys&8]: ");
 
     @Comment("The console prefix you want shown when the logging messages show up!")
-    public static final Property<String> console_prefix = PropertyInitializer.newProperty("console_prefix" ,"&8[&cCrazyEnvoys&8]");
+    public static final Property<String> console_prefix = PropertyInitializer.newProperty("console_prefix" ,"&8[&cCrazyEnvoys&8] ");
 
 
 }

@@ -1,0 +1,92 @@
+# Support: https://discord.gg/badbones-s-live-chat-182615261403283459
+# Github: https://github.com/Crazy-Crew
+# 
+# Issues: https://github.com/Crazy-Crew/CrazyEnvoys/issues
+# Features: https://github.com/Crazy-Crew/CrazyEnvoys/issues
+# 
+# Tips:
+#  1. Make sure to use the {prefix} to add the prefix in front of messages.
+#  2. If you wish to use more than one line for a message just go from a line to a list.
+# Examples:
+#   Line:
+#     No-Permission: '{prefix}&cYou do not have permission to use that command.'
+#   List:
+#     No-Permission:
+#       - '{prefix}&cYou do not have permission'
+#       - '&cto use that command. Please try another.'
+player:
+    no-permission: '{prefix}&cYou do not have permission to use that command.'
+    no-permission-to-claim: '{prefix}&cYou do not have permission to claim that envoy.'
+envoys:
+    already-started: '{prefix}&cThere is already an envoy event running. Please stop
+        it to start a new one.'
+    force-start: '{prefix}&7You have just started the envoy.'
+    not-started: '{prefix}&cThere is no envoy event going on at this time.'
+    force-ended: '{prefix}&cYou have just ended the envoy.'
+    warning: '{prefix}&c[&4ALERT&c] &7There is an envoy event happening in &6{time}.'
+    started: '{prefix}&7An envoy event has just started. &6{amount} &7crates have
+        spawned around spawn for 5m.'
+    left: '{prefix}&6player &7has just found a tier envoy. There are now &6amount
+        &7left to find.'
+    ended: '{prefix}&cThe envoy event has ended. Thanks for playing and please come
+        back for the next one.'
+    not-enough-players: '{prefix}&7Not enough players are online to start the envoy
+        event. Only &6{amount} &7players are online.'
+    enter-editor-mode: '{prefix}&7You are now in editor mode.'
+    leave-editor-mode: '{prefix}&7You have now left editor mode.'
+    editor-clear-locations: '{prefix}&7You have cleared all the editor spawn locations.'
+    editor-clear-failure: '{prefix}&7You must be in Editor mode to clear the spawn
+        locations.'
+    kicked-from-editor-mode: '{prefix}&cSorry but an envoy is active. Please stop
+        it or wait till it''''s over.'
+    add-location: '{prefix}&7You have just added a spawn location.'
+    remove-location: '{prefix}&cYou have just removed a spawn location.'
+    time-left: '{prefix}&7The current envoy has &6{time}&7 left.'
+    time-till-event: '{prefix}&7The next envoy will start in &6{time}&7.'
+    flare:
+        used-flare: '{prefix}&7You have just started an envoy event with a flare.'
+        cant-use-flares: '{prefix}&cYou do not have permission to use flares.'
+        sent-flare: '{prefix}&7You have just given &6{player} {amount} &7flares.'
+        received-flare: '{prefix}&7You have been given &6{amount} &7flares.'
+    new-center: '{prefix}&7You have just set a new center for the random envoy crates.'
+    not-in-world-guard-region: '{prefix}&cYou must be in the WarZone to use a flare.'
+    start-ignoring-messages: '{prefix}&7You are now ignoring the collecting messages.'
+    stop-ignoring-messages: '{prefix}&7You now see all the collecting messages.'
+    cooldown-left: '{prefix}&7You still have &6{time} &7till you can collect another
+        crate.'
+    countdown-in-progress: '{prefix}&7You cannot claim any envoys for another &6{time}
+        seconds.'
+    drops-available: '{prefix}&7List of all available envoys.'
+    drops-possibilities: '{prefix}&7List of location envoy''''s may spawn at.'
+    drops-page: '{prefix}&7Use /crazyenvoys drops [page] to see more.'
+    drops-format: '&7[&6{id}&7]: {world}, {x}, {y}, {z}'
+    no-spawn-locations-found: '{prefix}&cNo spawn locations were found and so the
+        event has been cancelled and the cooldown has been reset.'
+    hologram-placeholders:
+        on-going: On Going
+        not-running: Not Running
+    time-placeholders:
+        day: d
+        hour: h
+        minute: m
+        second: s
+    envoy-locations: '&e&lAll Envoy Locations: \n&c[ID], [World]: [X], [Y], [Z] &r{locations}'
+    location-format: '\n&8[&3{id}&8] &c{world}: {x}, {y}, {z}'
+misc:
+    command-not-found: '{prefix}&cPlease do /crazyenvoys help for more information.'
+    player-only: '{prefix}&cOnly players can use that command.'
+    not-online: '{prefix}&cThat player is not online at this time.'
+    not-a-number: '{prefix}&cThat is not a number.'
+    config-reload: '{prefix}&7You have just reloaded all the files.'
+    help:
+    - '&6/crazyenvoys help &7- Shows the envoy help menu.'
+    - '&6/crazyenvoys reload &7- Reloads all the config files.'
+    - '&6/crazyenvoys time &7- Shows the time till the envoy starts or ends.'
+    - '&6/crazyenvoys drops [page] &7- Shows all current crate locations.'
+    - '&6/crazyenvoys ignore &7- Shuts up the envoy collecting message.'
+    - '&6/crazyenvoys flare [amount] [player] &7- Give a player a flare to call an
+        envoy event.'
+    - '&6/crazyenvoys edit &7- Edit the crate locations with bedrock.'
+    - '&6/crazyenvoys start &7- Force starts the envoy.'
+    - '&6/crazyenvoys stop &7- Force stops the envoy.'
+    - '&6/crazyenvoys center &7- Set the center of the random crate drops.'

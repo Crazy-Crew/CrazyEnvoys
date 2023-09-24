@@ -2,13 +2,10 @@ package com.badbones69.crazyenvoys.paper.api.objects;
 
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
-import com.badbones69.crazyenvoys.paper.api.FileManager.Files;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
 import us.crazycrew.crazyenvoys.common.config.types.Config;
-
 import java.util.List;
 
 public class EnvoySettings {
@@ -75,9 +72,9 @@ public class EnvoySettings {
         this.useRandomLocations = config.getProperty(Config.envoys_random_locations);
         this.maxRadius = config.getProperty(Config.envoys_max_radius);
         this.minRadius = config.getProperty(Config.envoys_min_radius);
-        this.isEnvoyRunTimerEnabled = config.getProperty(Config.envoys_timer_toggle);
+        this.isEnvoyRunTimerEnabled = config.getProperty(Config.envoys_run_time_toggle);
         this.envoyRunTimer = config.getProperty(Config.envoys_run_time).toLowerCase();
-        this.isEnvoyCooldownEnabled = config.getProperty(Config.envoys_run_time_toggle);
+        this.isEnvoyCooldownEnabled = config.getProperty(Config.envoys_countdown);
         this.envoyCooldown = config.getProperty(Config.envoys_cooldown);
         this.envoyFilter = config.getProperty(Config.envoys_ignore_empty_server);
 
