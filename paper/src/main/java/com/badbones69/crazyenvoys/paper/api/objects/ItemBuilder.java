@@ -928,34 +928,31 @@ public class ItemBuilder {
         return this;
     }
 
-    /**
-     * The text that will be displayed on the item.
+     /**
+     * Convert an ItemStack to an ItemBuilder to allow easier editing of the ItemStack.
      *
-     * @param texture The skull texture.
-     * @param profileUUID The uuid of the profile.
-     * @return The ItemBuilder.
+     * @param item The ItemStack you wish to convert into an ItemBuilder.
+     * @return The ItemStack as an ItemBuilder with all the info from the item.
      */
-    public ItemBuilder texture(String texture, UUID profileUUID) {
-        return this;
-    }
+    public static ItemBuilder convertItemStack(ItemStack item) {
+            ItemBuilder itemBuilder = new ItemBuilder()
+                .setReferenceItem(item)
+                .setAmount(item.getAmount())
+                .setMaterial(item.getType())
+                .setEnchantments(new HashMap<>(item.getEnchantments()));
 
-    /**
-     * @param texture The skull texture.
-     * @return The ItemBuilder.
-     */
-    public ItemBuilder texture(String texture) {
-        return this;
-    }
+            if (item.hasItemMeta() && item.getItemMeta() != null) {
+                    ItemMeta itemMeta = item.getItemMeta();
+                    itemBuilder.setName(itemMeta.getDisplayName()).setLore(itemMeta.getLore());
+                    NBTItem nbt = new NBTItem(item);
 
-    /**
-     * @param texture The owner of the skull.
-     * @return The ItemBuilder.
-     */
-    public ItemBuilder owner(String texture) {
-        return this;
-    }
+                    if (nbt.hasTag("Unbreakable")) itemBuilder.setUnbreakable(nbt.getBoolean("Unbreakable"));
 
-    // Other misc shit
+                    if (itemMeta instanceof org.bukkit.inventory.meta.Damageable) itemBuilder.setDamage(((org.bukkit.inventory.meta.Damageable) itemMeta).getDamage());
+            }
+
+             return itemBuilder;
+    }
 
     /**
      * Converts a String to an ItemBuilder.
