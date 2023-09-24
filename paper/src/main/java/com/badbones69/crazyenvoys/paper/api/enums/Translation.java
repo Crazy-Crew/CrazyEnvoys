@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.Config;
 import us.crazycrew.crazyenvoys.common.config.types.Messages;
+import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,12 +102,12 @@ public enum Translation {
         this.isList = isList;
     }
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
-    private final ConfigManager configManager = this.plugin.getCrazyHandler().getConfigManager();
-    private final SettingsManager messages = this.configManager.getMessages();
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull ConfigManager configManager = this.plugin.getCrazyHandler().getConfigManager();
+    private final @NotNull SettingsManager messages = this.configManager.getMessages();
+    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
 
-    private final EnvoySettings envoySettings = this.plugin.getEnvoySettings();
+    private final @NotNull EnvoySettings envoySettings = this.plugin.getEnvoySettings();
 
     private boolean isList() {
         return this.isList;
@@ -204,7 +204,7 @@ public enum Translation {
     }
 
     public String asString() {
-        return LegacyUtils.color(this.message.replaceAll("%prefix%", this.configManager.getConfig().getProperty(Config.command_prefix)));
+        return LegacyUtils.color(this.message.replaceAll("\\{prefix}", this.configManager.getPluginConfig().getProperty(PluginConfig.command_prefix)));
     }
 
     public List<String> toListString() {

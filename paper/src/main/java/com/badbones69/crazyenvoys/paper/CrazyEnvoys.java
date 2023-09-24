@@ -11,27 +11,25 @@ import com.badbones69.crazyenvoys.paper.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.paper.commands.EnvoyCommand;
 import com.badbones69.crazyenvoys.paper.commands.EnvoyTab;
-import com.badbones69.crazyenvoys.paper.controllers.EditControl;
-import com.badbones69.crazyenvoys.paper.controllers.EnvoyControl;
-import com.badbones69.crazyenvoys.paper.controllers.FireworkDamageAPI;
-import com.badbones69.crazyenvoys.paper.controllers.FlareControl;
+import com.badbones69.crazyenvoys.paper.listeners.EnvoyEditListener;
+import com.badbones69.crazyenvoys.paper.listeners.EnvoyClickListener;
+import com.badbones69.crazyenvoys.paper.listeners.FireworkDamageListener;
+import com.badbones69.crazyenvoys.paper.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.paper.support.libraries.PluginSupport;
 import com.badbones69.crazyenvoys.paper.support.SkullCreator;
 import com.badbones69.crazyenvoys.paper.support.placeholders.PlaceholderAPISupport;
+import com.ryderbelserion.cluster.bukkit.utils.LegacyLogger;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import us.crazycrew.crazyenvoys.paper.api.plugin.CrazyHandler;
+import java.util.List;
 
-public class CrazyEnvoys extends JavaPlugin implements Listener {
-
-    private final PluginManager pluginManager = getServer().getPluginManager();
+public class CrazyEnvoys extends JavaPlugin {
 
     private Methods methods;
 
@@ -46,16 +44,12 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
     private SkullCreator skullCreator;
 
-    private FireworkDamageAPI fireworkDamageAPI;
-
     private CrazyHandler crazyHandler;
 
     @Override
     public void onEnable() {
         this.crazyHandler = new CrazyHandler(getDataFolder());
         this.crazyHandler.install();
-
-        this.pluginManager.registerEvents(this.fireworkDamageAPI = new FireworkDamageAPI(), this);
 
         this.methods = new Methods();
 
@@ -104,14 +98,19 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
     }
 
     private void enable() {
-        this.pluginManager.registerEvents(this, this);
-        this.pluginManager.registerEvents(new EditControl(), this);
-        this.pluginManager.registerEvents(new EnvoyControl(), this);
-        this.pluginManager.registerEvents(new FlareControl(), this);
+        getServer().getPluginManager().registerEvents(new EnvoyEditListener(), this);
+        getServer().getPluginManager().registerEvents(new EnvoyClickListener(), this);
+        getServer().getPluginManager().registerEvents(new FlareClickListener(), this);
+        getServer().getPluginManager().registerEvents(new FireworkDamageListener(), this);
 
         if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
-            getLogger().warning("We no longer support placeholders using {}");
-            getLogger().warning("We only support %% placeholders i.e %crazyenvoys_cooldown%");
+            List.of(
+                    "We no longer support MVDWPlaceholderAPI",
+                    "You are getting this message because PlaceholderAPI is enabled",
+                    "If you are already using our new placeholders like %crazyenvoys_cooldown%",
+                    "You can ignore this message but anyone else using {crazyenvoys_cooldown} must update."
+            ).forEach(LegacyLogger::warn);
+
             new PlaceholderAPISupport().register();
         }
 
@@ -161,9 +160,5 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
     public SkullCreator getSkullCreator() {
         return this.skullCreator;
-    }
-
-    public FireworkDamageAPI getFireworkDamageAPI() {
-        return this.fireworkDamageAPI;
     }
 }

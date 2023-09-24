@@ -1,11 +1,8 @@
 package com.badbones69.crazyenvoys.paper.api.objects.misc;
 
-import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
-import com.badbones69.crazyenvoys.paper.Methods;
 import com.badbones69.crazyenvoys.paper.api.objects.ItemBuilder;
 import com.ryderbelserion.cluster.bukkit.utils.LegacyUtils;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +16,6 @@ public class Prize {
     private List<ItemStack> items;
     private List<ItemBuilder> itemBuilders;
     private String displayName;
-
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
-
-    private final Methods methods = this.plugin.getMethods();
     
     public Prize(String prizeID) {
         this.prizeID = prizeID;

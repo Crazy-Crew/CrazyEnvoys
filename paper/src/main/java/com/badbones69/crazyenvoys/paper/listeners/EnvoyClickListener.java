@@ -1,4 +1,4 @@
-package com.badbones69.crazyenvoys.paper.controllers;
+package com.badbones69.crazyenvoys.paper.listeners;
 
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
@@ -28,6 +28,7 @@ import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -36,25 +37,25 @@ import java.util.Random;
 import java.util.UUID;
 import static java.util.regex.Matcher.quoteReplacement;
 
-public class EnvoyControl implements Listener {
+public class EnvoyClickListener implements Listener {
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final Methods methods = this.plugin.getMethods();
+    private final @NotNull Methods methods = this.plugin.getMethods();
 
-    private final EnvoySettings envoySettings = this.plugin.getEnvoySettings();
-    private final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private final @NotNull EnvoySettings envoySettings = this.plugin.getEnvoySettings();
+    private final @NotNull CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
+    private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
     
     @EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerClick(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
+    public void onPlayerClick(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
 
-        if (e.getClickedBlock() == null && !this.crazyManager.isEnvoyActive()) return;
+        if (event.getClickedBlock() == null && !this.crazyManager.isEnvoyActive()) return;
 
-        final Block block = e.getClickedBlock();
+        final Block block = event.getClickedBlock();
 
         if (!this.crazyManager.isActiveEnvoy(block)) return;
 
@@ -62,15 +63,15 @@ public class EnvoyControl implements Listener {
 
         if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission("envoy.gamemode-bypass")) return;
 
-        e.setCancelled(true);
+        event.setCancelled(true);
 
         // Ryder Start
-        Tier tier = this.crazyManager.getTier(e.getClickedBlock());
+        Tier tier = this.crazyManager.getTier(event.getClickedBlock());
 
         if (!player.hasPermission("envoy.bypass")) {
             if (this.envoySettings.isEnvoyCountDownEnabled() && this.crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
                 HashMap<String, String> placeholder = new HashMap<>();
-                placeholder.put("%Time%", String.valueOf(this.crazyManager.getCountdownTimer().getSecondsLeft()));
+                placeholder.put("{time}", String.valueOf(this.crazyManager.getCountdownTimer().getSecondsLeft()));
                 Translation.countdown_in_progress.sendMessage(player, placeholder);
                 return;
             }
@@ -85,7 +86,7 @@ public class EnvoyControl implements Listener {
 
                 if (this.coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(this.coolDownSettings.getCooldown().get(uuid))) {
                     HashMap<String, String> placeholder = new HashMap<>();
-                    placeholder.put("%Time%", this.methods.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
+                    placeholder.put("{time}", this.methods.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
                     Translation.cooldown_left.sendMessage(player, placeholder);
                     return;
                 }
@@ -103,15 +104,15 @@ public class EnvoyControl implements Listener {
 
         if (tier.getFireworkToggle()) this.methods.firework(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
 
-        e.getClickedBlock().setType(Material.AIR);
+        event.getClickedBlock().setType(Material.AIR);
 
-        if (this.crazyManager.hasHologramPlugin()) this.crazyManager.getHologramController().removeHologram(e.getClickedBlock());
+        if (this.crazyManager.hasHologramPlugin()) this.crazyManager.getHologramController().removeHologram(event.getClickedBlock());
 
-        this.crazyManager.stopSignalFlare(e.getClickedBlock().getLocation());
+        this.crazyManager.stopSignalFlare(event.getClickedBlock().getLocation());
 
         HashMap<String, String> placeholder = new HashMap<>();
 
-        if (this.envoySettings.isPickupBroadcastEnabled()) placeholder.put("%Tier%", this.crazyManager.getTier(block).getName());
+        if (this.envoySettings.isPickupBroadcastEnabled()) placeholder.put("{tier}", this.crazyManager.getTier(block).getName());
 
         this.crazyManager.removeActiveEnvoy(block);
 
@@ -127,7 +128,7 @@ public class EnvoyControl implements Listener {
                         message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
-                    player.sendMessage(LegacyUtils.color(message.replaceAll("%player%", player.getName()).replaceAll("%Player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())).replaceAll("%tier%", tier.getName())));
+                    player.sendMessage(LegacyUtils.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
                 }
             } else {
                 for (String message : prize.getMessages()) {
@@ -135,22 +136,22 @@ public class EnvoyControl implements Listener {
                         message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
-                    player.sendMessage(LegacyUtils.color(message.replaceAll("%player%", player.getName()).replaceAll("%Player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())).replaceAll("%tier%", tier.getName())));
+                    player.sendMessage(LegacyUtils.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
                 }
             }
 
             for (String cmd : prize.getCommands()) {
                 if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
 
-                this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), cmd.replace("%Player%", player.getName()).replace("%player%", player.getName()).replaceAll("%reward%", quoteReplacement(prize.getDisplayName())));
+                this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), cmd.replace("{player}", player.getName()).replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
             }
 
             for (ItemStack item : prize.getItems()) {
                 if (prize.getDropItems()) {
-                    e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
+                    event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                 } else {
                     if (this.methods.isInvFull(player)) {
-                        e.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
+                        event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                     } else {
                         player.getInventory().addItem(item);
                     }
@@ -162,28 +163,28 @@ public class EnvoyControl implements Listener {
 
         if (!this.crazyManager.getActiveEnvoys().isEmpty()) {
             if (this.envoySettings.isPickupBroadcastEnabled()) {
-                placeholder.put("%Player%", player.getName());
-                placeholder.put("%Amount%", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
-                Translation.left.broadcastMessage(true, placeholder);
+                placeholder.put("{player}", player.getName());
+                placeholder.put("{amount}", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
+                Translation.envoys_remaining.broadcastMessage(true, placeholder);
             }
         } else {
-            EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);
-            this.plugin.getServer().getPluginManager().callEvent(event);
+            EnvoyEndEvent envoyEndEvent = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);
+            this.plugin.getServer().getPluginManager().callEvent(envoyEndEvent);
             this.crazyManager.endEnvoyEvent();
             Translation.ended.broadcastMessage(false);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onChestSpawn(EntityChangeBlockEvent e) {
+    public void onChestSpawn(EntityChangeBlockEvent event) {
         if (!this.crazyManager.isEnvoyActive()) return;
 
-        Entity entity = e.getEntity();
+        Entity entity = event.getEntity();
 
-        if (this.crazyManager.getFallingBlocks().containsKey(entity)) {
-            e.setCancelled(true);
-            checkEntity(entity);
-        }
+        if (!this.crazyManager.getFallingBlocks().containsKey(entity)) return;
+
+        event.setCancelled(true);
+        checkEntity(entity);
     }
 
     private void checkEntity(Entity entity) {
@@ -204,14 +205,14 @@ public class EnvoyControl implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onItemSpawn(ItemSpawnEvent e) {
+    public void onItemSpawn(ItemSpawnEvent event) {
         if (!this.crazyManager.isEnvoyActive()) return;
 
-        for (Entity entity : e.getEntity().getNearbyEntities(1, 1, 1)) {
+        for (Entity entity : event.getEntity().getNearbyEntities(1, 1, 1)) {
             if (!this.crazyManager.getFallingBlocks().containsKey(entity)) continue;
 
             Block block = this.crazyManager.getFallingBlocks().get(entity);
-            e.setCancelled(true);
+            event.setCancelled(true);
 
             checkEntity((Entity) block);
 

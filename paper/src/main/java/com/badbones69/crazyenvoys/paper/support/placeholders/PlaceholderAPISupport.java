@@ -16,24 +16,24 @@ import us.crazycrew.crazyenvoys.paper.api.plugin.CrazyHandler;
 
 public class PlaceholderAPISupport extends PlaceholderExpansion {
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
-    private final SettingsManager config = this.configManager.getConfig();
-    private final SettingsManager messages = this.configManager.getMessages();
+    private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
+    private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
+    private final @NotNull SettingsManager config = this.configManager.getConfig();
+    private final @NotNull SettingsManager messages = this.configManager.getMessages();
 
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
 
-    private final EnvoySettings envoySettings = this.plugin.getEnvoySettings();
+    private final @NotNull EnvoySettings envoySettings = this.plugin.getEnvoySettings();
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
         String lower = identifier.toLowerCase();
 
-        boolean isEnabled = this.config.getProperty(Config.envoy_countdown_toggle);
+        boolean isEnabled = this.config.getProperty(Config.envoys_grace_period_toggle);
 
-        if (lower.equals("crates_time")) {
+        if (lower.equals("envoys_time")) {
             if (isEnabled) {
                 if (this.crazyManager.getCountdownTimer() != null) {
                     int seconds = this.crazyManager.getCountdownTimer().getSecondsLeft();
@@ -50,7 +50,7 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
         return switch (lower) {
             case "cooldown" -> this.crazyManager.isEnvoyActive() ? this.messages.getProperty(Messages.hologram_on_going) : this.crazyManager.getNextEnvoyTime();
             case "time_left" -> this.crazyManager.isEnvoyActive() ? this.crazyManager.getEnvoyRunTimeLeft() : this.messages.getProperty(Messages.hologram_not_running);
-            case "crates_left" -> String.valueOf(this.crazyManager.getActiveEnvoys().size());
+            case "envoys_left" -> String.valueOf(this.crazyManager.getActiveEnvoys().size());
             default -> "";
         };
     }

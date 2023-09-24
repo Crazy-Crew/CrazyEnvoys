@@ -8,15 +8,16 @@ import com.ryderbelserion.cluster.bukkit.utils.LegacyLogger;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LocationSettings {
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final Methods methods = plugin.getMethods();
+    private final @NotNull Methods methods = plugin.getMethods();
 
     private final List<Block> spawnLocations = new ArrayList<>();
 
@@ -146,11 +147,11 @@ public class LocationSettings {
      * Add all values from the DATA file to spawnLocations.
      */
     public void populateMap() {
-        FileConfiguration data = Files.DATA.getFile();
+        FileConfiguration users = Files.USERS.getFile();
 
         getSpawnLocations().clear();
 
-        for (String location : data.getStringList("Locations.Spawns")) {
+        for (String location : users.getStringList("Locations.Spawns")) {
             try {
                 getSpawnLocations().add(this.methods.getBuiltLocation(location).getBlock());
             } catch (Exception ignore) {
@@ -189,7 +190,7 @@ public class LocationSettings {
             } catch (Exception ignored) {}
         }
 
-        Files.DATA.getFile().set("Locations.Spawns", locations);
-        Files.DATA.saveFile();
+        Files.USERS.getFile().set("Locations.Spawns", locations);
+        Files.USERS.saveFile();
     }
 }

@@ -53,10 +53,9 @@ public class EnvoySettings {
     public void loadSettings() {
         ConfigManager configManager = JavaPlugin.getPlugin(CrazyEnvoys.class).getCrazyHandler().getConfigManager();
         SettingsManager config = configManager.getConfig();
-        String path = "Settings.";
-        this.isFallingBlocksEnabled = config.getProperty(Config.falling_block_toggle);
+        this.isFallingBlocksEnabled = config.getProperty(Config.envoy_falling_block_toggle);
         this.fallingBlockDurability = 15;
-        String fallingBlock = config.getProperty(Config.falling_block);
+        String fallingBlock = config.getProperty(Config.envoy_falling_block_type);
 
         if (fallingBlock.contains(":")) {
             String[] split = fallingBlock.split(":");
@@ -68,37 +67,37 @@ public class EnvoySettings {
         
         if (fallingBlockMaterial == null) fallingBlockMaterial = Material.BEACON;
         
-        this.fallingHeight = config.getProperty(Config.falling_height);
-        this.isMaxCrateEnabled = config.getProperty(Config.max_crate_toggle);
-        this.randomAmount = config.getProperty(Config.random_amount);
-        this.minCrates = config.getProperty(Config.min_crates);
-        this.maxCrates = config.getProperty(Config.max_crates);
-        this.useRandomLocations = config.getProperty(Config.random_locations);
-        this.maxRadius = config.getProperty(Config.max_radius);
-        this.minRadius = config.getProperty(Config.min_radius);
-        this.isEnvoyRunTimerEnabled = config.getProperty(Config.envoy_timer_toggle);
-        this.envoyRunTimer = config.getProperty(Config.envoy_run_time).toLowerCase();
-        this.isEnvoyCooldownEnabled = config.getProperty(Config.envoy_cooldown_toggle);
-        this.envoyCooldown = config.getProperty(Config.envoy_cooldown);
-        this.envoyFilter = config.getProperty(Config.envoy_filter_players_zero);
+        this.fallingHeight = config.getProperty(Config.envoy_falling_height);
+        this.isMaxCrateEnabled = config.getProperty(Config.envoys_max_drops_toggle);
+        this.randomAmount = config.getProperty(Config.envoys_random_drops);
+        this.minCrates = config.getProperty(Config.envoys_min_drops);
+        this.maxCrates = config.getProperty(Config.envoys_max_drops);
+        this.useRandomLocations = config.getProperty(Config.envoys_random_locations);
+        this.maxRadius = config.getProperty(Config.envoys_max_radius);
+        this.minRadius = config.getProperty(Config.envoys_min_radius);
+        this.isEnvoyRunTimerEnabled = config.getProperty(Config.envoys_timer_toggle);
+        this.envoyRunTimer = config.getProperty(Config.envoys_run_time).toLowerCase();
+        this.isEnvoyCooldownEnabled = config.getProperty(Config.envoys_run_time_toggle);
+        this.envoyCooldown = config.getProperty(Config.envoys_cooldown);
+        this.envoyFilter = config.getProperty(Config.envoys_ignore_empty_server);
 
-        this.isEnvoyCountDownEnabled = config.getProperty(Config.envoy_countdown_toggle);
-        this.envoyCountDownTimer = config.getProperty(Config.envoy_countdown_time);
-        this.envoyCountDownMessage = config.getProperty(Config.envoy_countdown_message);
-        this.envoyCountDownMessageSeconds = config.getProperty(Config.envoy_countdown_message_other);
+        this.isEnvoyCountDownEnabled = config.getProperty(Config.envoys_grace_period_toggle);
+        this.envoyCountDownTimer = config.getProperty(Config.envoys_grace_period_timer);
+        this.envoyCountDownMessage = config.getProperty(Config.envoys_grace_period_unlocked);
+        this.envoyCountDownMessageSeconds = config.getProperty(Config.envoys_grace_period_time_unit);
 
-        this.envoyClockTime = config.getProperty(Config.envoy_time);
-        this.isMinPlayersEnabled = config.getProperty(Config.minimum_players_toggle);
-        this.isMinFlareEnabled = config.getProperty(Config.minimum_flare_toggle);
-        this.minPlayers = config.getProperty(Config.minimum_players);
-        this.isPickupBroadcastEnabled = config.getProperty(Config.broadcast_envoy_pick_up);
-        this.isEnvoyCollectCooldownEnabled = config.getProperty(Config.envoy_collect_cooldown_toggle);
-        this.envoyCollectCooldownTimer = config.getProperty(Config.envoy_collect_cooldown_time);
-        this.isWorldMessagesEnabled = config.getProperty(Config.envoy_world_messages);
-        this.worldMessagesWorlds = config.getProperty(Config.envoy_allowed_worlds);
-        this.envoyWarnings = config.getProperty(Config.envoy_warnings);
-        this.isFlaresRegionEnabled = config.getProperty(Config.envoy_flare_world_guard_toggle);
-        this.flaresRegions = config.getProperty(Config.envoy_flare_world_guard_regions);
+        this.envoyClockTime = config.getProperty(Config.envoys_time);
+        this.isMinPlayersEnabled = config.getProperty(Config.envoys_minimum_players_toggle);
+        this.isMinFlareEnabled = config.getProperty(Config.envoys_flare_minimum_players_toggle);
+        this.minPlayers = config.getProperty(Config.envoys_minimum_players_amount);
+        this.isPickupBroadcastEnabled = config.getProperty(Config.envoys_announce_player_pickup);
+        this.isEnvoyCollectCooldownEnabled = config.getProperty(Config.envoys_grab_cooldown_toggle);
+        this.envoyCollectCooldownTimer = config.getProperty(Config.envoys_grab_cooldown_timer);
+        this.isWorldMessagesEnabled = config.getProperty(Config.envoys_world_messages);
+        this.worldMessagesWorlds = config.getProperty(Config.envoys_allowed_worlds);
+        this.envoyWarnings = config.getProperty(Config.envoys_warnings);
+        this.isFlaresRegionEnabled = config.getProperty(Config.envoys_flare_world_guard_toggle);
+        this.flaresRegions = config.getProperty(Config.envoys_flare_world_guard_regions);
     }
     
     public boolean isFallingBlocksEnabled() {

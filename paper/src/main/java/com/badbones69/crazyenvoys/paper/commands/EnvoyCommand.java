@@ -24,20 +24,19 @@ import java.util.UUID;
 
 public class EnvoyCommand implements CommandExecutor {
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final Methods methods = this.plugin.getMethods();
+    private final @NotNull Methods methods = this.plugin.getMethods();
 
-    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
-    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
+    private final @NotNull EditorSettings editorSettings = this.plugin.getEditorSettings();
+    private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private final @NotNull FlareSettings flareSettings = this.plugin.getFlareSettings();
 
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
     
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
         if (args.length == 0) {
-            
             if (!hasPermission(sender, "time")) {
                 Translation.no_permission.sendMessage(sender);
                 return true;
@@ -142,10 +141,8 @@ public class EnvoyCommand implements CommandExecutor {
                         }
 
                         HashMap<String, String> placeholder = new HashMap<>();
-                        placeholder.put("%player%", player.getName());
-                        placeholder.put("%Player%", player.getName());
-                        placeholder.put("%amount%", amount + "");
-                        placeholder.put("%Amount%", amount + "");
+                        placeholder.put("{player}", player.getName());
+                        placeholder.put("{amount}", amount + "");
                         Translation.give_flare.sendMessage(sender, placeholder);
 
                         if (!sender.getName().equalsIgnoreCase(player.getName())) Translation.given_flare.sendMessage(player, placeholder);
@@ -172,18 +169,18 @@ public class EnvoyCommand implements CommandExecutor {
                             }
                         }
 
-                        int i = 1;
-                        HashMap<String, String> ph = new HashMap<>();
+                        int amount = 1;
+                        HashMap<String, String> placeholders = new HashMap<>();
 
                         for (Block block : this.crazyManager.isEnvoyActive() ? this.crazyManager.getActiveEnvoys() : this.locationSettings.getSpawnLocations()) {
-                            ph.put("%id%", i + "");
-                            ph.put("%world%", block.getWorld().getName());
-                            ph.put("%x%", block.getX() + "");
-                            ph.put("%y%", block.getY() + "");
-                            ph.put("%z%", block.getZ() + "");
-                            locs.add(Translation.drops_format.getMessage(ph).toString());
-                            i++;
-                            ph.clear();
+                            placeholders.put("{id}", String.valueOf(amount));
+                            placeholders.put("{world}", block.getWorld().getName());
+                            placeholders.put("{x}", String.valueOf(block.getX()));
+                            placeholders.put("{y}", String.valueOf(block.getY()));
+                            placeholders.put("{z}", String.valueOf(block.getZ()));
+                            locs.add(Translation.drops_format.getMessage(placeholders).toString());
+                            amount++;
+                            placeholders.clear();
                         }
 
                         if (this.crazyManager.isEnvoyActive()) {
@@ -210,10 +207,10 @@ public class EnvoyCommand implements CommandExecutor {
                         HashMap<String, String> placeholder = new HashMap<>();
 
                         if (this.crazyManager.isEnvoyActive()) {
-                            placeholder.put("%Time%", this.crazyManager.getEnvoyRunTimeLeft());
+                            placeholder.put("{time}", this.crazyManager.getEnvoyRunTimeLeft());
                             Translation.time_left.sendMessage(sender, placeholder);
                         } else {
-                            placeholder.put("%time%", this.crazyManager.getNextEnvoyTime());
+                            placeholder.put("{time}", this.crazyManager.getNextEnvoyTime());
                             Translation.time_till_event.sendMessage(sender, placeholder);
                         }
                     } else {

@@ -3,14 +3,15 @@ package com.badbones69.crazyenvoys.paper.api.objects;
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class CoolDownSettings {
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
-    private final Methods methods = this.plugin.getMethods();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull Methods methods = this.plugin.getMethods();
 
     private final HashMap<UUID, Calendar> cooldown = new HashMap<>();
 

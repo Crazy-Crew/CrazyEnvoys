@@ -8,7 +8,7 @@ import com.ryderbelserion.cluster.bukkit.utils.LegacyUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
-
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,9 +44,9 @@ public class Tier {
     // Placeholders,
     private final HashMap<String, String> lorePlaceholders;
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final Methods methods = this.plugin.getMethods();
+    private final @NotNull Methods methods = this.plugin.getMethods();
     
     /**
      * Create a new tier.

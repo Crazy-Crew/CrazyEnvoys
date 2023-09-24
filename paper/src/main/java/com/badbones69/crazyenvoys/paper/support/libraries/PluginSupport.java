@@ -2,6 +2,7 @@ package com.badbones69.crazyenvoys.paper.support.libraries;
 
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public enum PluginSupport {
 
@@ -16,7 +17,7 @@ public enum PluginSupport {
 
     private final String name;
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
     PluginSupport(String name) {
         this.name = name;

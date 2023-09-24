@@ -6,22 +6,23 @@ import com.badbones69.crazyenvoys.paper.Methods;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.types.Config;
 
 public class FlareSettings {
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final Methods methods = this.plugin.getMethods();
+    private final @NotNull Methods methods = this.plugin.getMethods();
     
     private ItemBuilder flareItemBuilder;
     
     public void load() {
         SettingsManager config = this.plugin.getCrazyHandler().getConfigManager().getConfig();
         flareItemBuilder = new ItemBuilder()
-                .setMaterial(config.getProperty(Config.envoy_flare_item))
-                .setName(config.getProperty(Config.envoy_flare_item_name))
-                .setLore(config.getProperty(Config.envoy_flare_item_lore));
+                .setMaterial(config.getProperty(Config.envoys_flare_item_type))
+                .setName(config.getProperty(Config.envoys_flare_item_name))
+                .setLore(config.getProperty(Config.envoys_flare_item_lore));
     }
     
     public ItemStack getFlare() {

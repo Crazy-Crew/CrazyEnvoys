@@ -1,8 +1,8 @@
 package com.badbones69.crazyenvoys.paper;
 
 import ch.jalu.configme.SettingsManager;
+import com.badbones69.crazyenvoys.paper.api.enums.DataKeys;
 import com.badbones69.crazyenvoys.paper.api.enums.Translation;
-import com.badbones69.crazyenvoys.paper.controllers.FireworkDamageAPI;
 import com.ryderbelserion.cluster.bukkit.utils.LegacyUtils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -15,9 +15,12 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.Config;
+import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import us.crazycrew.crazyenvoys.paper.api.plugin.CrazyHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,20 +30,18 @@ import java.util.Random;
 
 public class Methods {
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
-    private final SettingsManager config = this.configManager.getConfig();
-
-    private final FireworkDamageAPI fireworkDamageAPI = this.plugin.getFireworkDamageAPI();
+    private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
+    private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
+    private final @NotNull SettingsManager pluginConfig = this.configManager.getPluginConfig();
 
     public String getPrefix() {
-        return LegacyUtils.color(this.config.getProperty(Config.command_prefix));
+        return LegacyUtils.color(this.pluginConfig.getProperty(PluginConfig.command_prefix));
     }
 
     public String getPrefix(String message) {
-        return LegacyUtils.color(this.config.getProperty(Config.command_prefix) + message);
+        return LegacyUtils.color(this.pluginConfig.getProperty(PluginConfig.command_prefix) + message);
     }
 
     public ItemStack getItemInHand(Player player) {
@@ -98,9 +99,18 @@ public class Methods {
         fireworkMeta.setPower(0);
         firework.setFireworkMeta(fireworkMeta);
 
-        this.fireworkDamageAPI.addFirework(firework);
+        addFirework(firework);
 
         detonate(firework);
+    }
+
+    /**
+     * @param firework The firework you want to add.
+     */
+    public void addFirework(Entity firework) {
+        PersistentDataContainer container = firework.getPersistentDataContainer();
+
+        container.set(DataKeys.NO_FIREWORK_DAMAGE.getKey(), PersistentDataType.BOOLEAN, true);
     }
 
     private void detonate(Firework firework) {

@@ -1,4 +1,4 @@
-package com.badbones69.crazyenvoys.paper.controllers;
+package com.badbones69.crazyenvoys.paper.listeners;
 
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 
-public class FlareControl implements Listener {
+public class FlareClickListener implements Listener {
 
     private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
@@ -28,10 +28,10 @@ public class FlareControl implements Listener {
     private final FlareSettings flareSettings = this.plugin.getFlareSettings();
 
     @EventHandler(ignoreCancelled = true)
-    public void onFlareActivate(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
+    public void onFlareInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
 
-        if (e.getAction() != Action.RIGHT_CLICK_AIR || e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_AIR || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         ItemStack flare = this.methods.getItemInHand(player);
 
@@ -39,7 +39,7 @@ public class FlareControl implements Listener {
 
         if (flare == null) return;
 
-        e.setCancelled(true);
+        event.setCancelled(true);
 
         if (!player.hasPermission("envoy.flare.use")) {
             Translation.cant_use_flares.sendMessage(player);
@@ -55,8 +55,7 @@ public class FlareControl implements Listener {
 
         if (this.envoySettings.isMinPlayersEnabled() && this.envoySettings.isMinFlareEnabled() && online < this.envoySettings.getMinPlayers()) {
             HashMap<String, String> placeholder = new HashMap<>();
-            placeholder.put("%amount%", String.valueOf(online));
-            placeholder.put("%Amount%", String.valueOf(online));
+            placeholder.put("{amount}", String.valueOf(online));
             Translation.not_enough_players.sendMessage(player, placeholder);
             return;
         }
@@ -81,10 +80,10 @@ public class FlareControl implements Listener {
             return;
         }
 
-        EnvoyStartEvent event = new EnvoyStartEvent(EnvoyStartEvent.EnvoyStartReason.FLARE);
-        this.plugin.getServer().getPluginManager().callEvent(event);
+        EnvoyStartEvent envoyStartEvent = new EnvoyStartEvent(EnvoyStartEvent.EnvoyStartReason.FLARE);
+        this.plugin.getServer().getPluginManager().callEvent(envoyStartEvent);
 
-        if (!event.isCancelled() && this.crazyManager.startEnvoyEvent()) {
+        if (!envoyStartEvent.isCancelled() && this.crazyManager.startEnvoyEvent()) {
             Translation.used_flare.sendMessage(player);
 
             this.flareSettings.takeFlare(player);

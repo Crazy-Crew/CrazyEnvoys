@@ -8,16 +8,16 @@ import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
-
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 public class HolographicDisplaysSupport implements HologramController {
-    
+
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+
+    private final @NotNull HolographicDisplaysAPI api = HolographicDisplaysAPI.get(this.plugin);
+
     private final HashMap<Block, Hologram> holograms = new HashMap<>();
-
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
-
-    private final HolographicDisplaysAPI api = HolographicDisplaysAPI.get(this.plugin);
 
     @Override
     public void createHologram(Block block, Tier tier) {

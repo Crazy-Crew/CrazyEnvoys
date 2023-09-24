@@ -32,13 +32,7 @@ public class ConfigManager {
                 .configurationData(createPluginConfig())
                 .create();
 
-        File messagesFile = new File(this.dataFolder, "messages.yml");
-
-        this.messages = SettingsManagerBuilder
-                .withYamlFile(messagesFile)
-                .useDefaultMigrationService()
-                .configurationData(Messages.class)
-                .create();
+        createLocale();
 
         File configFile = new File(this.dataFolder, "config.yml");
 
@@ -57,7 +51,23 @@ public class ConfigManager {
         this.config.reload();
 
         // Reload messages.yml
-        this.messages.reload();
+        this.messages.save();
+
+        createLocale();
+    }
+
+    private void createLocale() {
+        File localeDir = new File(this.dataFolder, "locale");
+
+        if (!localeDir.exists()) localeDir.mkdirs();
+
+        File messagesFile = new File(localeDir, this.config.getProperty(PluginConfig.locale_file) + ".yml");
+
+        this.messages = SettingsManagerBuilder
+                .withYamlFile(messagesFile)
+                .useDefaultMigrationService()
+                .configurationData(Messages.class)
+                .create();
     }
 
     public SettingsManager getConfig() {
