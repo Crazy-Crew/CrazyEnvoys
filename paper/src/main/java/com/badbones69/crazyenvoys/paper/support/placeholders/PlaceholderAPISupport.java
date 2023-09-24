@@ -3,8 +3,6 @@ package com.badbones69.crazyenvoys.paper.support.placeholders;
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.api.CrazyManager;
-import com.badbones69.crazyenvoys.paper.api.FileManager;
-import com.badbones69.crazyenvoys.paper.api.objects.EnvoySettings;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,8 +23,6 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 
     private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
 
-    private final @NotNull EnvoySettings envoySettings = this.plugin.getEnvoySettings();
-
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
         String lower = identifier.toLowerCase();
@@ -38,13 +34,13 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
                 if (this.crazyManager.getCountdownTimer() != null) {
                     int seconds = this.crazyManager.getCountdownTimer().getSecondsLeft();
 
-                    if (seconds != 0) return seconds + this.envoySettings.getEnvoyCountDownMessageSeconds();
+                    if (seconds != 0) return seconds + this.config.getProperty(Config.envoys_grace_period_time_unit);
                 }
 
-                return this.envoySettings.getEnvoyCountDownMessage();
+                return this.config.getProperty(Config.envoys_grace_period_unlocked);
             }
 
-            return this.envoySettings.getEnvoyCountDownMessage();
+            return this.config.getProperty(Config.envoys_grace_period_unlocked);
         }
 
         return switch (lower) {

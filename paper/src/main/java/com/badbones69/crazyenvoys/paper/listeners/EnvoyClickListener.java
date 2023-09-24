@@ -7,7 +7,6 @@ import com.badbones69.crazyenvoys.paper.api.enums.Translation;
 import com.badbones69.crazyenvoys.paper.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.paper.api.events.EnvoyOpenEvent;
 import com.badbones69.crazyenvoys.paper.api.objects.CoolDownSettings;
-import com.badbones69.crazyenvoys.paper.api.objects.EnvoySettings;
 import com.badbones69.crazyenvoys.paper.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoys.paper.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.misc.Prize;

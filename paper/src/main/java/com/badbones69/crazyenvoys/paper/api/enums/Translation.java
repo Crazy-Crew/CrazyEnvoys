@@ -4,7 +4,6 @@ import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.properties.Property;
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.api.CrazyManager;
-import com.badbones69.crazyenvoys.paper.api.objects.EnvoySettings;
 import com.ryderbelserion.cluster.api.utils.MiscUtils;
 import com.ryderbelserion.cluster.bukkit.utils.LegacyLogger;
 import com.ryderbelserion.cluster.bukkit.utils.LegacyUtils;

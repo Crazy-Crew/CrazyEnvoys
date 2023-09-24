@@ -14,7 +14,6 @@ import com.badbones69.crazyenvoys.paper.api.events.EnvoyStartEvent.EnvoyStartRea
 import com.badbones69.crazyenvoys.paper.api.interfaces.HologramController;
 import com.badbones69.crazyenvoys.paper.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.EditorSettings;
-import com.badbones69.crazyenvoys.paper.api.objects.EnvoySettings;
 import com.badbones69.crazyenvoys.paper.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoys.paper.api.objects.LocationSettings;
@@ -66,12 +65,12 @@ public class CrazyManager {
     private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
     private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
     private final @NotNull SettingsManager pluginConfig = this.configManager.getPluginConfig();
+    private final @NotNull SettingsManager config = this.configManager.getConfig();
 
     private final @NotNull FileManager fileManager = this.plugin.getFileManager();
 
     private final @NotNull Methods methods = plugin.getMethods();
 
-    private final @NotNull EnvoySettings envoySettings = plugin.getEnvoySettings();
     private final @NotNull FlareSettings flareSettings = plugin.getFlareSettings();
     private final @NotNull EditorSettings editorSettings = plugin.getEditorSettings();
     private final @NotNull CoolDownSettings coolDownSettings = plugin.getCoolDownSettings();
@@ -113,7 +112,7 @@ public class CrazyManager {
     }
 
     private void getEnvoyTime(Calendar cal) {
-        String time = envoySettings.getEnvoyClockTime();
+        String time = this.config.getProperty(Config.envoys_time);
         int hour = Integer.parseInt(time.split(" ")[0].split(":")[0]);
         int min = Integer.parseInt(time.split(" ")[0].split(":")[1]);
         int calender = Calendar.AM;
@@ -177,9 +176,7 @@ public class CrazyManager {
         this.locationSettings.clearSpawnLocations();
 
         this.blacklistedBlocks.clear();
-        this.envoySettings.loadSettings();
         this.cachedChances.clear();
-        this.envoySettings.loadSettings();
         FileConfiguration users = Files.USERS.getFile();
         this.envoyTimeLeft = Calendar.getInstance();
 
@@ -192,10 +189,10 @@ public class CrazyManager {
 
         loadCenter();
 
-        if (this.envoySettings.isEnvoyRunTimerEnabled()) {
+        if (this.config.getProperty(Config.envoys_run_time_toggle)) {
             Calendar cal = Calendar.getInstance();
 
-            if (this.envoySettings.isEnvoyCooldownEnabled()) {
+            if (this.config.getProperty(Config.envoys_countdown)) {
                 this.autoTimer = true;
                 cal.setTimeInMillis(users.getLong("Next-Envoy"));
 
@@ -330,7 +327,7 @@ public class CrazyManager {
                     // Ryder Start
                     int online = plugin.getServer().getOnlinePlayers().size();
 
-                    if (online == 0 && envoySettings.isEnvoyFilterEnabled()) return;
+                    if (online == 0 && config.getProperty(Config.envoys_ignore_empty_server)) return;
                     // Ryder End
 
                     for (Calendar warn : getWarnings()) {
@@ -350,9 +347,8 @@ public class CrazyManager {
                     next.clear(Calendar.MILLISECOND);
 
                     if (next.compareTo(cal) <= 0 && !isEnvoyActive()) {
-                        if (envoySettings.isMinPlayersEnabled()) {
-
-                            if (online < envoySettings.getMinPlayers()) {
+                        if (config.getProperty(Config.envoys_minimum_players_toggle)) {
+                            if (online < config.getProperty(Config.envoys_minimum_players_amount)) {
                                 HashMap<String, String> placeholder = new HashMap<>();
                                 placeholder.put("{amount}", online + "");
                                 Translation.not_enough_players.broadcastMessage(false, placeholder);
@@ -362,7 +358,7 @@ public class CrazyManager {
                             }
                         }
 
-                        if (envoySettings.isRandomLocationsEnabled() && center.getWorld() == null) {
+                        if (config.getProperty(Config.envoys_random_locations) && center.getWorld() == null) {
                             LegacyLogger.warn("The envoy center's world can't be found and so envoy has been canceled.");
                             LegacyLogger.warn("Center String: " + centerString);
 
@@ -503,7 +499,7 @@ public class CrazyManager {
      */
     public void resetWarnings() {
         this.warnings.clear();
-        this.envoySettings.getEnvoyWarnings().forEach(time -> addWarning(makeWarning(time)));
+        this.config.getProperty(Config.envoys_warnings).forEach(time -> addWarning(makeWarning(time)));
     }
 
     /**
@@ -575,27 +571,27 @@ public class CrazyManager {
     public List<Block> generateSpawnLocations() {
         int maxSpawns;
 
-        if (this.envoySettings.isMaxCrateEnabled()) {
-            maxSpawns = this.envoySettings.getMaxCrates();
-        } else if (this.envoySettings.isRandomAmount()) {
+        if (this.config.getProperty(Config.envoys_max_drops_toggle)) {
+            maxSpawns = this.config.getProperty(Config.envoys_max_drops);
+        } else if (this.config.getProperty(Config.envoys_random_drops)) {
             // Generates a random number between the min and max settings
-            maxSpawns = new Random().nextInt(this.envoySettings.getMaxCrates() + 1 - this.envoySettings.getMinCrates()) + this.envoySettings.getMinCrates();
+            maxSpawns = new Random().nextInt(this.config.getProperty(Config.envoys_max_drops) + 1 - this.config.getProperty(Config.envoys_min_drops)) + this.config.getProperty(Config.envoys_min_drops);
         } else {
-            maxSpawns = this.envoySettings.isRandomLocationsEnabled() ? this.envoySettings.getMaxCrates() : this.locationSettings.getActiveLocations().size();
+            maxSpawns = this.config.getProperty(Config.envoys_random_locations) ? this.config.getProperty(Config.envoys_max_drops) : this.locationSettings.getActiveLocations().size();
         }
 
-        if (maxSpawns > (Math.pow(this.envoySettings.getMaxRadius() * 2, 2) - Math.pow((this.envoySettings.getMinRadius() * 2 + 1), 2))) {
-            maxSpawns = (int) (Math.pow(this.envoySettings.getMaxRadius() * 2, 2) - Math.pow((this.envoySettings.getMinRadius() * 2 + 1), 2));
+        if (maxSpawns > (Math.pow(this.config.getProperty(Config.envoys_max_radius) * 2, 2) - Math.pow((this.config.getProperty(Config.envoys_min_radius) * 2 + 1), 2))) {
+            maxSpawns = (int) (Math.pow(this.config.getProperty(Config.envoys_max_radius) * 2, 2) - Math.pow((this.config.getProperty(Config.envoys_min_radius) * 2 + 1), 2));
             LegacyLogger.warn("Crate spawn amount is larger than the area that was provided. Spawning " + maxSpawns + " crates instead.");
         }
 
-        if (this.envoySettings.isRandomLocationsEnabled()) {
+        if (this.config.getProperty(Config.envoys_random_locations)) {
             if (!testCenter()) return new ArrayList<>();
 
-            List<Block> minimumRadiusBlocks = getBlocks(this.center.clone(), this.envoySettings.getMinRadius());
+            List<Block> minimumRadiusBlocks = getBlocks(this.center.clone(), this.config.getProperty(Config.envoys_min_radius));
 
             while (this.locationSettings.getDropLocations().size() < maxSpawns) {
-                int maxRadius = this.envoySettings.getMaxRadius();
+                int maxRadius = this.config.getProperty(Config.envoys_max_radius);
                 Location location = this.center.clone();
                 location.add(-(maxRadius) + new Random().nextInt(maxRadius * 2), 0, -(maxRadius) + new Random().nextInt(maxRadius * 2));
                 location = location.getWorld().getHighestBlockAt(location).getLocation();
@@ -616,7 +612,7 @@ public class CrazyManager {
             Files.USERS.getFile().set("Locations.Spawned", getBlockList(locationSettings.getDropLocations()));
             Files.USERS.saveFile();
         } else {
-            if (this.envoySettings.isMaxCrateEnabled() || this.envoySettings.isRandomAmount()) {
+            if (this.config.getProperty(Config.envoys_max_drops_toggle) || this.config.getProperty(Config.envoys_random_drops)) {
                 if (this.locationSettings.getSpawnLocations().size() <= maxSpawns) {
                     this.locationSettings.addAllDropLocations(this.locationSettings.getSpawnLocations());
                 } else {
@@ -680,9 +676,9 @@ public class CrazyManager {
 
         List<Block> dropLocations = generateSpawnLocations();
 
-        if (this.envoySettings.isRandomLocationsEnabled() && isCenterLoaded()) testCenter();
+        if (this.config.getProperty(Config.envoys_random_drops) && isCenterLoaded()) testCenter();
 
-        if (dropLocations.isEmpty() || (this.envoySettings.isRandomLocationsEnabled() && isCenterLoaded())) {
+        if (dropLocations.isEmpty() || (this.config.getProperty(Config.envoys_random_drops) && isCenterLoaded())) {
             setNextEnvoy(getEnvoyCooldown());
             resetWarnings();
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.NO_LOCATIONS_FOUND);
@@ -709,8 +705,8 @@ public class CrazyManager {
         placeholder.put("{amount}", max + "");
         Translation.started.broadcastMessage(false, placeholder);
 
-        if (this.envoySettings.isEnvoyCountDownEnabled()) {
-            this.countdownTimer = new CountdownTimer(this.envoySettings.getEnvoyCountDownTimer());
+        if (this.config.getProperty(Config.envoys_grace_period_toggle)) {
+            this.countdownTimer = new CountdownTimer(this.config.getProperty(Config.envoys_grace_period_timer));
 
             this.countdownTimer.scheduleTimer();
         }
@@ -719,7 +715,7 @@ public class CrazyManager {
             if (block != null) {
                 boolean spawnFallingBlock = false;
 
-                if (this.envoySettings.isFallingBlocksEnabled()) {
+                if (this.config.getProperty(Config.envoy_falling_block_toggle)) {
                     for (Entity entity : this.methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
                         if (entity instanceof Player) {
                             spawnFallingBlock = true;
@@ -731,9 +727,9 @@ public class CrazyManager {
                 if (spawnFallingBlock) {
                     if (!block.getChunk().isLoaded()) block.getChunk().load();
 
-                    int fallingHeight = this.envoySettings.getFallingHeight();
-                    Material fallingBlock = this.envoySettings.getFallingBlockMaterial();
-                    byte fallingDurability = (byte) this.envoySettings.getFallingBlockDurability();
+                    int fallingHeight = this.config.getProperty(Config.envoy_falling_height);
+                    Material fallingBlock = Material.valueOf(this.config.getProperty(Config.envoy_falling_block_type));
+                    byte fallingDurability = (byte) 15;
 
                     FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, fallingHeight, .5), fallingBlock, fallingDurability);
                     chest.setDropItem(false);
@@ -764,7 +760,7 @@ public class CrazyManager {
                 Translation.ended.broadcastMessage(false);
                 endEnvoyEvent();
             }
-        }.runTaskLater(this.plugin, getTimeSeconds(this.envoySettings.getEnvoyRunTimer()) * 20L);
+        }.runTaskLater(this.plugin, getTimeSeconds(this.config.getProperty(Config.envoys_run_time)) * 20L);
 
         this.envoyTimeLeft = getEnvoyRunTimeCalendar();
 
@@ -779,7 +775,7 @@ public class CrazyManager {
         setEnvoyActive(false);
         cancelEnvoyRunTime();
 
-        if (this.envoySettings.isEnvoyRunTimerEnabled()) {
+        if (this.config.getProperty(Config.envoys_run_time_toggle)) {
             setNextEnvoy(getEnvoyCooldown());
             resetWarnings();
         }
@@ -889,7 +885,7 @@ public class CrazyManager {
     public void cleanLocations() {
         List<Block> locations = new ArrayList<>(this.locationSettings.getActiveLocations());
 
-        if (this.envoySettings.isRandomLocationsEnabled()) {
+        if (this.config.getProperty(Config.envoys_random_locations)) {
             locations.addAll(getLocationsFromStringList(Files.USERS.getFile().getStringList("Locations.Spawned")));
         } else {
             locations.addAll(this.locationSettings.getSpawnLocations());
@@ -960,8 +956,8 @@ public class CrazyManager {
     private Calendar getEnvoyCooldown() {
         Calendar cal = Calendar.getInstance();
 
-        if (this.envoySettings.isEnvoyCooldownEnabled()) {
-            String time = this.envoySettings.getEnvoyCooldown();
+        if (this.config.getProperty(Config.envoys_countdown)) {
+            String time = this.config.getProperty(Config.envoys_cooldown);
 
             cal = this.methods.getTimeFromString(time);
         } else {
@@ -972,7 +968,7 @@ public class CrazyManager {
     }
 
     private Calendar getEnvoyRunTimeCalendar() {
-        String time = this.envoySettings.getEnvoyRunTimer().toLowerCase();
+        String time = this.config.getProperty(Config.envoys_run_time).toLowerCase();
 
         return this.methods.getTimeFromString(time);
     }
@@ -1059,7 +1055,6 @@ public class CrazyManager {
     }
 
     // Get world location.
-
     private List<String> getBlockList(List<Block> stringList) {
         ArrayList<String> strings = new ArrayList<>();
 

@@ -6,7 +6,6 @@ import com.badbones69.crazyenvoys.paper.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.paper.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.paper.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.EditorSettings;
-import com.badbones69.crazyenvoys.paper.api.objects.EnvoySettings;
 import com.badbones69.crazyenvoys.paper.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.paper.commands.EnvoyCommand;
@@ -35,7 +34,6 @@ public class CrazyEnvoys extends JavaPlugin {
 
     // Envoy Required Classes.
     private EditorSettings editorSettings;
-    private EnvoySettings envoySettings;
     private FlareSettings flareSettings;
     private CoolDownSettings coolDownSettings;
     private LocationSettings locationSettings;
@@ -56,7 +54,6 @@ public class CrazyEnvoys extends JavaPlugin {
         this.locationSettings = new LocationSettings();
         this.editorSettings = new EditorSettings();
         this.coolDownSettings = new CoolDownSettings();
-        this.envoySettings = new EnvoySettings();
         this.flareSettings = new FlareSettings();
 
         this.crazyManager = new CrazyManager();
@@ -140,10 +137,6 @@ public class CrazyEnvoys extends JavaPlugin {
 
     public FlareSettings getFlareSettings() {
         return this.flareSettings;
-    }
-
-    public EnvoySettings getEnvoySettings() {
-        return this.envoySettings;
     }
 
     public CoolDownSettings getCoolDownSettings() {

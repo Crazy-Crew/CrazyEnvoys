@@ -19,7 +19,7 @@ public class FlareSettings {
     
     public void load() {
         SettingsManager config = this.plugin.getCrazyHandler().getConfigManager().getConfig();
-        flareItemBuilder = new ItemBuilder()
+        this.flareItemBuilder = new ItemBuilder()
                 .setMaterial(config.getProperty(Config.envoys_flare_item_type))
                 .setName(config.getProperty(Config.envoys_flare_item_name))
                 .setLore(config.getProperty(Config.envoys_flare_item_lore));
