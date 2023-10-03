@@ -30,6 +30,9 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Assemble the plugin
+        run: ./gradlew assemble --stacktrace
+
       - name: Modrinth Publish
         run: ./gradlew modrinth --stacktrace
         env:
