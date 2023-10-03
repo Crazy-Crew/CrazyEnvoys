@@ -102,6 +102,8 @@ val other = if (isSnapshot) "Beta" else "Release"
 val file = file("${rootProject.rootDir}/jars/${rootProject.name}-${rootProject.version}.jar")
 
 val description = """
+# Please take a backup of your CrazyEnvoys folder before updating! 
+
 ## Changes:
 * Added 1.20.2 support.
 * Made random more random.
