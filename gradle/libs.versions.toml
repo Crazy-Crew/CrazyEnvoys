@@ -1,5 +1,5 @@
 [versions]
-modrinth = "2.8.2"
+modrinth = "2.8.4"
 hangar = "0.1.0"
 
 cluster = "1.1"
