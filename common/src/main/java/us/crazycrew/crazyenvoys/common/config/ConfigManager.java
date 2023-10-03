@@ -51,7 +51,7 @@ public class ConfigManager {
         this.config.reload();
 
         // Reload messages.yml
-        this.messages.save();
+        this.messages.reload();
 
         createLocale();
     }
