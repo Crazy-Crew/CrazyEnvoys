@@ -31,20 +31,20 @@ public class NewDropLocationEvent extends Event implements Cancellable {
     }
     
     public Location getLocation() {
-        return location;
+        return this.location;
     }
     
     public Block getBlock() {
-        return block;
+        return this.block;
     }
     
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
     
     @Override
     public boolean isCancelled() {
-        return cancelled;
+        return this.cancelled;
     }
     
     @Override

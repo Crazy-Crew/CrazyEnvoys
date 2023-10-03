@@ -20,28 +20,28 @@ public class CMIHologramsSupport implements HologramController {
 
         CMILocation location = new CMILocation(block.getLocation().add(0.5, height, 0.5));
 
-        CMIHologram hologram = new CMIHologram("CrazyCrates-" + UUID.randomUUID(), location);
+        CMIHologram hologram = new CMIHologram("CrazyEnvoys-" + UUID.randomUUID(), location);
         hologram.setLines(tier.getHoloMessage());
 
         CMI.getInstance().getHologramManager().addHologram(hologram);
 
-        holograms.put(block, hologram);
+        this.holograms.put(block, hologram);
     }
 
     @Override
     public void removeHologram(Block block) {
-        if (!holograms.containsKey(block)) return;
+        if (!this.holograms.containsKey(block)) return;
 
-        CMIHologram hologram = holograms.get(block);
+        CMIHologram hologram = this.holograms.get(block);
 
-        holograms.remove(block);
+        this.holograms.remove(block);
 
         hologram.remove();
     }
 
     @Override
     public void removeAllHolograms() {
-        holograms.forEach((key, value) -> value.remove());
-        holograms.clear();
+        this.holograms.forEach((key, value) -> value.remove());
+        this.holograms.clear();
     }
 }

@@ -4,41 +4,44 @@ import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class EditorSettings {
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final LocationSettings locationSettings = plugin.getLocationSettings();
+    private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    private final ArrayList<Player> editors = new ArrayList<>();
+    private final ArrayList<UUID> editors = new ArrayList<>();
 
-    public List<Player> getEditors() {
-        return editors;
+    public List<UUID> getEditors() {
+        return this.editors;
     }
 
     public void addEditor(Player player) {
-        editors.add(player);
+        this.editors.add(player.getUniqueId());
     }
 
     public void removeEditor(Player player) {
-        editors.remove(player);
+        this.editors.remove(player.getUniqueId());
     }
 
     public boolean isEditor(Player player) {
-        return editors.contains(player);
+        return this.editors.contains(player.getUniqueId());
     }
 
     public void showFakeBlocks(Player player) {
-        for (Block block : locationSettings.getSpawnLocations()) {
+        for (Block block : this.locationSettings.getSpawnLocations()) {
             player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
         }
     }
 
     public void removeFakeBlocks() {
-        for (Block block : locationSettings.getSpawnLocations()) {
+        for (Block block : this.locationSettings.getSpawnLocations()) {
             block.getState().update();
         }
     }

@@ -2,47 +2,38 @@ package com.badbones69.crazyenvoys.paper;
 
 import com.badbones69.crazyenvoys.paper.api.CrazyManager;
 import com.badbones69.crazyenvoys.paper.api.FileManager;
-import com.badbones69.crazyenvoys.paper.api.FileManager.Files;
-import com.badbones69.crazyenvoys.paper.api.enums.Messages;
 import com.badbones69.crazyenvoys.paper.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.paper.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.paper.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.EditorSettings;
-import com.badbones69.crazyenvoys.paper.api.objects.EnvoySettings;
 import com.badbones69.crazyenvoys.paper.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.paper.commands.EnvoyCommand;
 import com.badbones69.crazyenvoys.paper.commands.EnvoyTab;
-import com.badbones69.crazyenvoys.paper.controllers.EditControl;
-import com.badbones69.crazyenvoys.paper.controllers.EnvoyControl;
-import com.badbones69.crazyenvoys.paper.controllers.FireworkDamageAPI;
-import com.badbones69.crazyenvoys.paper.controllers.FlareControl;
-import com.badbones69.crazyenvoys.paper.support.MetricsHandler;
+import com.badbones69.crazyenvoys.paper.listeners.EnvoyEditListener;
+import com.badbones69.crazyenvoys.paper.listeners.EnvoyClickListener;
+import com.badbones69.crazyenvoys.paper.listeners.FireworkDamageListener;
+import com.badbones69.crazyenvoys.paper.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.paper.support.libraries.PluginSupport;
 import com.badbones69.crazyenvoys.paper.support.SkullCreator;
 import com.badbones69.crazyenvoys.paper.support.placeholders.PlaceholderAPISupport;
+import com.ryderbelserion.cluster.bukkit.utils.LegacyLogger;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
+import us.crazycrew.crazyenvoys.paper.api.plugin.CrazyHandler;
+import java.util.List;
 
-public class CrazyEnvoys extends JavaPlugin implements Listener {
-
-    private static CrazyEnvoys plugin;
-
-    private final PluginManager pluginManager = getServer().getPluginManager();
-
-    private FileManager fileManager;
+public class CrazyEnvoys extends JavaPlugin {
 
     private Methods methods;
 
     // Envoy Required Classes.
     private EditorSettings editorSettings;
-    private EnvoySettings envoySettings;
     private FlareSettings flareSettings;
     private CoolDownSettings coolDownSettings;
     private LocationSettings locationSettings;
@@ -51,105 +42,72 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
 
     private SkullCreator skullCreator;
 
-    private FireworkDamageAPI fireworkDamageAPI;
+    private CrazyHandler crazyHandler;
 
     @Override
     public void onEnable() {
-        plugin = this;
+        this.crazyHandler = new CrazyHandler(getDataFolder());
+        this.crazyHandler.install();
 
-        fileManager = new FileManager();
+        this.methods = new Methods();
 
-        fileManager.logInfo(true)
-                .registerCustomFilesFolder("/tiers")
-                .registerDefaultGenerateFiles("Basic.yml", "/tiers", "/tiers")
-                .registerDefaultGenerateFiles("Lucky.yml", "/tiers", "/tiers")
-                .registerDefaultGenerateFiles("Titan.yml", "/tiers", "/tiers")
-                .setup();
+        this.locationSettings = new LocationSettings();
+        this.editorSettings = new EditorSettings();
+        this.coolDownSettings = new CoolDownSettings();
+        this.flareSettings = new FlareSettings();
 
-        pluginManager.registerEvents(fireworkDamageAPI = new FireworkDamageAPI(), this);
+        this.crazyManager = new CrazyManager();
+        this.skullCreator = new SkullCreator();
 
-        methods = new Methods();
-
-        locationSettings = new LocationSettings();
-        editorSettings = new EditorSettings();
-        coolDownSettings = new CoolDownSettings();
-        envoySettings = new EnvoySettings();
-        flareSettings = new FlareSettings();
-
-        crazyManager = new CrazyManager();
-
-        skullCreator = new SkullCreator();
-
-        crazyManager.load();
-
-        Messages.addMissingMessages();
-
-        FileConfiguration config = Files.CONFIG.getFile();
-
-        String metricsPath = config.getString("Settings.Toggle-Metrics");
-
-        boolean metricsEnabled = config.getBoolean("Settings.Toggle-Metrics");
-
-        String countDownSetting = config.getString("Settings.Crate-Countdown.Toggle");
-
-        String envoyLocationBroadcast = config.getString("Settings.Envoy-Locations-Broadcast");
-
-        if (metricsPath == null) {
-            config.set("Settings.Toggle-Metrics", true);
-            Files.CONFIG.saveFile();
-        }
-
-        if (countDownSetting == null) {
-            config.set("Settings.Crate-Countdown.Toggle", false);
-            config.set("Settings.Crate-Countdown.Time", 120);
-            config.set("Settings.Crate-Countdown.Message", "&cReady to claim.");
-            config.set("Settings.Crate-Countdown.Message-Seconds", " seconds.");
-            Files.CONFIG.saveFile();
-        }
-
-        if (envoyLocationBroadcast == null) {
-            config.set("Settings.Envoy-Locations-Broadcast", false);
-            Files.CONFIG.saveFile();
-        }
-
-        if (metricsEnabled) {
-            MetricsHandler metricsHandler = new MetricsHandler();
-
-            metricsHandler.start();
-        }
+        this.crazyManager.load(true);
 
         enable();
     }
 
     @Override
     public void onDisable() {
+        this.crazyHandler.uninstall();
+
         for (Player player : getServer().getOnlinePlayers()) {
-            if (editorSettings.isEditor(player)) {
-                editorSettings.removeEditor(player);
-                editorSettings.removeFakeBlocks();
+            if (this.editorSettings.isEditor(player)) {
+                this.editorSettings.removeEditor(player);
+                this.editorSettings.removeFakeBlocks();
             }
         }
 
-        if (crazyManager.isEnvoyActive()) {
+        if (this.crazyManager.isEnvoyActive()) {
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.SHUTDOWN);
 
             getServer().getPluginManager().callEvent(event);
 
-            crazyManager.endEnvoyEvent();
+            this.crazyManager.endEnvoyEvent();
         }
 
-        crazyManager.unload();
+        //this.crazyManager.unload();
+    }
+
+    public @NotNull CrazyHandler getCrazyHandler() {
+        return this.crazyHandler;
+    }
+
+    public boolean isLogging() {
+        return this.crazyHandler.getConfigManager().getPluginConfig().getProperty(PluginConfig.verbose_logging);
     }
 
     private void enable() {
-        pluginManager.registerEvents(this, this);
-        pluginManager.registerEvents(new EditControl(), this);
-        pluginManager.registerEvents(new EnvoyControl(), this);
-        pluginManager.registerEvents(new FlareControl(), this);
+        getServer().getPluginManager().registerEvents(new EnvoyEditListener(), this);
+        getServer().getPluginManager().registerEvents(new EnvoyClickListener(), this);
+        getServer().getPluginManager().registerEvents(new FlareClickListener(), this);
+        getServer().getPluginManager().registerEvents(new FireworkDamageListener(), this);
 
         if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
-            getLogger().warning("We no longer support placeholders using {}");
-            getLogger().warning("We only support %% placeholders i.e %crazyenvoys_cooldown%");
+            List.of(
+                    "We no longer support MVDWPlaceholderAPI",
+                    "You are getting this message because PlaceholderAPI is enabled",
+                    "If you are already using our new placeholders like %crazyenvoys_cooldown%",
+                    "You can ignore this message but anyone else using {crazyenvoys_cooldown} must update."
+            ).forEach(LegacyLogger::warn);
+
             new PlaceholderAPISupport().register();
         }
 
@@ -164,48 +122,36 @@ public class CrazyEnvoys extends JavaPlugin implements Listener {
         }
     }
 
-    public static CrazyEnvoys getPlugin() {
-        return plugin;
-    }
-
     public FileManager getFileManager() {
-        return fileManager;
+        return this.crazyHandler.getFileManager();
     }
 
     public Methods getMethods() {
-        return methods;
+        return this.methods;
     }
 
     // Envoy Required Classes.
     public EditorSettings getEditorSettings() {
-        return editorSettings;
+        return this.editorSettings;
     }
 
     public FlareSettings getFlareSettings() {
-        return flareSettings;
-    }
-
-    public EnvoySettings getEnvoySettings() {
-        return envoySettings;
+        return this.flareSettings;
     }
 
     public CoolDownSettings getCoolDownSettings() {
-        return coolDownSettings;
+        return this.coolDownSettings;
     }
 
     public LocationSettings getLocationSettings() {
-        return locationSettings;
+        return this.locationSettings;
     }
 
     public CrazyManager getCrazyManager() {
-        return crazyManager;
+        return this.crazyManager;
     }
 
     public SkullCreator getSkullCreator() {
-        return skullCreator;
-    }
-
-    public FireworkDamageAPI getFireworkDamageAPI() {
-        return fireworkDamageAPI;
+        return this.skullCreator;
     }
 }

@@ -4,8 +4,11 @@ import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
 import com.badbones69.crazyenvoys.paper.api.FileManager;
 import com.badbones69.crazyenvoys.paper.api.FileManager.CustomFile;
+import com.ryderbelserion.cluster.bukkit.utils.LegacyUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,11 +44,9 @@ public class Tier {
     // Placeholders,
     private final HashMap<String, String> lorePlaceholders;
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final FileManager fileManager = plugin.getFileManager();
-
-    private final Methods methods = plugin.getMethods();
+    private final @NotNull Methods methods = this.plugin.getMethods();
     
     /**
      * Create a new tier.
@@ -54,33 +55,34 @@ public class Tier {
      */
     public Tier(String name) {
         this.name = name;
-        file = fileManager.getFile(name);
-        claimPermission = "";
-        claimPermissionToggle = false;
-        spawnChance = 100;
-        useChance = true;
-        placedBlockMaterial = Material.CHEST;
-        placedBlockMetaData = 0;
-        bulkToggle = false;
-        bulkRandom = true;
-        bulkMax = 3;
-        holoToggle = true;
-        holoHeight = 1.5;
-        holoMessage = new ArrayList<>();
-        lorePlaceholders = new HashMap<>();
-        fireworkToggle = true;
-        fireworkColors = new ArrayList<>();
-        signalFlareToggle = true;
-        signalFlareTimer = "15s";
-        signalFlareColors = new ArrayList<>();
-        prizes = new ArrayList<>();
-        prizeMessage = Collections.emptyList();
-        holoMessage.addAll(Collections.singletonList("&7&l(&6&l!&7&l) Envoy Crate"));
+        FileManager fileManager = this.plugin.getFileManager();
+        this.file = fileManager.getFile(name);
+        this.claimPermission = "";
+        this.claimPermissionToggle = false;
+        this.spawnChance = 100;
+        this.useChance = true;
+        this.placedBlockMaterial = Material.CHEST;
+        this.placedBlockMetaData = 0;
+        this.bulkToggle = false;
+        this.bulkRandom = true;
+        this.bulkMax = 3;
+        this.holoToggle = true;
+        this.holoHeight = 1.5;
+        this.holoMessage = new ArrayList<>();
+        this.lorePlaceholders = new HashMap<>();
+        this.fireworkToggle = true;
+        this.fireworkColors = new ArrayList<>();
+        this.signalFlareToggle = true;
+        this.signalFlareTimer = "15s";
+        this.signalFlareColors = new ArrayList<>();
+        this.prizes = new ArrayList<>();
+        this.prizeMessage = Collections.emptyList();
+        this.holoMessage.addAll(Collections.singletonList("&7&l(&6&l!&7&l) Envoy Crate"));
     }
 
     // Check if the envoy is allowed to require the claim permission.
     public boolean isClaimPermissionToggleEnabled() {
-        return claimPermissionToggle;
+        return this.claimPermissionToggle;
     }
 
     // Set the boolean toggle.
@@ -91,7 +93,7 @@ public class Tier {
 
     // Fetch the permission required to claim the envoy.
     public String getClaimPermission() {
-        return claimPermission;
+        return this.claimPermission;
     }
 
     // Set the claim permission.
@@ -113,21 +115,21 @@ public class Tier {
      * @return The name of the tier.
      */
     public String getName() {
-        return name;
+        return this.name;
     }
     
     /**
      * Get the file for the tier.
      */
     public CustomFile getFile() {
-        return file;
+        return this.file;
     }
     
     /**
      * Get the chance of the crate spawning.
      */
     public int getSpawnChance() {
-        return spawnChance;
+        return this.spawnChance;
     }
     
     /**
@@ -144,7 +146,7 @@ public class Tier {
      * Check to see if this tier uses a chance system for the prizes.
      */
     public boolean getUseChance() {
-        return useChance;
+        return this.useChance;
     }
     
     /**
@@ -161,7 +163,7 @@ public class Tier {
      * Get the material of the block that acts as the crate.
      */
     public Material getPlacedBlockMaterial() {
-        return placedBlockMaterial;
+        return this.placedBlockMaterial;
     }
     
     /**
@@ -178,7 +180,7 @@ public class Tier {
      * Get the metadata of the block that is acts as the crate.
      */
     public Short getPlacedBlockMetaData() {
-        return placedBlockMetaData;
+        return this.placedBlockMetaData;
     }
     
     /**
@@ -205,7 +207,7 @@ public class Tier {
      * Check to see if the bulk prizes option is on.
      */
     public boolean getBulkToggle() {
-        return bulkToggle;
+        return this.bulkToggle;
     }
     
     /**
@@ -223,7 +225,7 @@ public class Tier {
      * True if it picks from 1-max. False if it picks the max amount of prizes.
      */
     public boolean getBulkRandom() {
-        return bulkRandom;
+        return this.bulkRandom;
     }
     
     /**
@@ -240,7 +242,7 @@ public class Tier {
      * Get the max amount of prizes a bulk can have.
      */
     public int getBulkMax() {
-        return bulkMax;
+        return this.bulkMax;
     }
     
     /**
@@ -257,7 +259,7 @@ public class Tier {
      * Check to see if holograms are on for the tier crate.
      */
     public boolean isHoloEnabled() {
-        return holoToggle;
+        return this.holoToggle;
     }
     
     /**
@@ -274,7 +276,7 @@ public class Tier {
      * Get the height of the hologram.
      */
     public Double getHoloHeight() {
-        return holoHeight;
+        return this.holoHeight;
     }
     
     /**
@@ -302,7 +304,7 @@ public class Tier {
      * @return All lore placeholders.
      */
     public HashMap<String, String> getLorePlaceholders() {
-        return lorePlaceholders;
+        return this.lorePlaceholders;
     }
 
     /**
@@ -311,7 +313,7 @@ public class Tier {
      * @return The hologram with all placeholders in it.
      */
     public List<String> getHoloMessage() {
-        return methods.getPlaceholders(holoMessage, lorePlaceholders);
+        return this.methods.getPlaceholders(this.holoMessage, this.lorePlaceholders);
     }
 
     /**
@@ -323,7 +325,7 @@ public class Tier {
         this.holoMessage.clear();
 
         for (String message : holoMessage) {
-            this.holoMessage.add(methods.color(message));
+            this.holoMessage.add(LegacyUtils.color(message));
         }
 
         return this;
@@ -333,7 +335,7 @@ public class Tier {
      * Check if the tier crate shoots a firework when claimed.
      */
     public boolean getFireworkToggle() {
-        return fireworkToggle;
+        return this.fireworkToggle;
     }
     
     /**
@@ -350,7 +352,7 @@ public class Tier {
      * List of all the colors that the firework displays.
      */
     public List<Color> getFireworkColors() {
-        return fireworkColors;
+        return this.fireworkColors;
     }
     
     /**
@@ -377,7 +379,7 @@ public class Tier {
      * Check to see if the tier crate shoots signal fireworks for players to see where it is.
      */
     public boolean getSignalFlareToggle() {
-        return signalFlareToggle;
+        return this.signalFlareToggle;
     }
     
     /**
@@ -394,7 +396,7 @@ public class Tier {
      * Get the amount of time when a flare is shot off.
      */
     public String getSignalFlareTimer() {
-        return signalFlareTimer;
+        return this.signalFlareTimer;
     }
     
     /**
@@ -411,7 +413,7 @@ public class Tier {
      * Get a list of Colors that the flare displays.
      */
     public List<Color> getSignalFlareColors() {
-        return signalFlareColors;
+        return this.signalFlareColors;
     }
     
     /**
@@ -438,7 +440,7 @@ public class Tier {
      * Get the prizes that can be found in the tier.
      */
     public List<Prize> getPrizes() {
-        return prizes;
+        return this.prizes;
     }
     
     /**
@@ -457,7 +459,7 @@ public class Tier {
      * @param prize A new prize that is added to the list of prizes.
      */
     public Tier addPrize(Prize prize) {
-        prizes.add(prize);
+        this.prizes.add(prize);
         return this;
     }
 }

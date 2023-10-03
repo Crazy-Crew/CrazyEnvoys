@@ -19,7 +19,7 @@ tasks {
             doLast {
                 if (!jarsDir.exists()) jarsDir.mkdirs()
 
-                val file = file("${project.buildDir}/libs/${rootProject.name}-${rootProject.version}.jar")
+                val file = file("${project.layout.buildDirectory.get()}/libs/${rootProject.name}-${rootProject.version}.jar")
 
                 copy {
                     from(file)

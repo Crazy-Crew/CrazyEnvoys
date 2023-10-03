@@ -1,8 +1,7 @@
 package com.badbones69.crazyenvoys.paper.api.objects.misc;
 
-import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
-import com.badbones69.crazyenvoys.paper.Methods;
 import com.badbones69.crazyenvoys.paper.api.objects.ItemBuilder;
+import com.ryderbelserion.cluster.bukkit.utils.LegacyUtils;
 import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +16,6 @@ public class Prize {
     private List<ItemStack> items;
     private List<ItemBuilder> itemBuilders;
     private String displayName;
-
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
-
-    private final Methods methods = plugin.getMethods();
     
     public Prize(String prizeID) {
         this.prizeID = prizeID;
@@ -34,7 +29,7 @@ public class Prize {
     }
 
     public String getDisplayName() {
-        return displayName;
+        return this.displayName;
     }
 
     /**
@@ -43,7 +38,7 @@ public class Prize {
      * @return The prizeID of the prize.
      */
     public String getPrizeID() {
-        return prizeID;
+        return this.prizeID;
     }
     
     /**
@@ -52,7 +47,7 @@ public class Prize {
      * @return The chance as an integer.
      */
     public int getChance() {
-        return chance;
+        return this.chance;
     }
     
     /**
@@ -74,10 +69,10 @@ public class Prize {
     /**
      * Check if the items from Items: drop to the floor or go into the player's inventory.
      *
-     * @return True if drops to the ground and false if goes into their inventory.
+     * @return True if drops to the ground and false if it goes into their inventory.
      */
     public boolean getDropItems() {
-        return dropItems;
+        return this.dropItems;
     }
     
     /**
@@ -96,7 +91,7 @@ public class Prize {
      * @return The messages that are sent to the player.
      */
     public List<String> getMessages() {
-        return messages;
+        return this.messages;
     }
     
     /**
@@ -108,7 +103,7 @@ public class Prize {
         this.messages.clear();
 
         for (String message : messages) {
-            this.messages.add(methods.color(message));
+            this.messages.add(LegacyUtils.color(message));
         }
 
         return this;
@@ -118,7 +113,7 @@ public class Prize {
      * Get the list of commands the prize runs.
      */
     public List<String> getCommands() {
-        return commands;
+        return this.commands;
     }
     
     /**
@@ -137,7 +132,7 @@ public class Prize {
      * @return The items that are won in the prize.
      */
     public List<ItemStack> getItems() {
-        return items;
+        return this.items;
     }
     
     /**
@@ -151,7 +146,7 @@ public class Prize {
     }
     
     public List<ItemBuilder> getItemBuilders() {
-        return itemBuilders;
+        return this.itemBuilders;
     }
     
     public Prize setItemBuilders(List<ItemBuilder> itemBuilders) {

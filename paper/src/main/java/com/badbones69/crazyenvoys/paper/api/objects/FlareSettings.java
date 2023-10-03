@@ -1,26 +1,28 @@
 package com.badbones69.crazyenvoys.paper.api.objects;
 
+import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
-import com.badbones69.crazyenvoys.paper.api.FileManager.Files;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import us.crazycrew.crazyenvoys.common.config.types.Config;
 
 public class FlareSettings {
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final Methods methods = plugin.getMethods();
+    private final @NotNull Methods methods = this.plugin.getMethods();
     
     private ItemBuilder flareItemBuilder;
     
     public void load() {
-        FileConfiguration config = Files.CONFIG.getFile();
-        flareItemBuilder = new ItemBuilder()
-        .setMaterial(config.getString("Settings.Flares.Item"))
-        .setName(config.getString("Settings.Flares.Name"))
-        .setLore(config.getStringList("Settings.Flares.Lore"));
+        SettingsManager config = this.plugin.getCrazyHandler().getConfigManager().getConfig();
+        this.flareItemBuilder = new ItemBuilder()
+                .setMaterial(config.getProperty(Config.envoys_flare_item_type))
+                .setName(config.getProperty(Config.envoys_flare_item_name))
+                .setLore(config.getProperty(Config.envoys_flare_item_lore));
     }
     
     public ItemStack getFlare() {
@@ -28,7 +30,7 @@ public class FlareSettings {
     }
     
     public ItemStack getFlare(int amount) {
-        return flareItemBuilder.setAmount(amount).build();
+        return this.flareItemBuilder.setAmount(amount).build();
     }
     
     public boolean isFlare(ItemStack item) {
@@ -40,7 +42,7 @@ public class FlareSettings {
     }
     
     public void giveFlare(Player player, int amount) {
-        if (methods.isInvFull(player)) {
+        if (this.methods.isInvFull(player)) {
             player.getWorld().dropItem(player.getLocation(), getFlare(amount));
         } else {
             player.getInventory().addItem(getFlare(amount));

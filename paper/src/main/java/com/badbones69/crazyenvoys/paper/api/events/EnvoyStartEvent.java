@@ -33,7 +33,7 @@ public class EnvoyStartEvent extends Event implements Cancellable {
      * @return The EnvoyStartReason the event started.
      */
     public EnvoyStartReason getReason() {
-        return reason;
+        return this.reason;
     }
     
     /**
@@ -42,12 +42,12 @@ public class EnvoyStartEvent extends Event implements Cancellable {
      * @return The player that started it. This can be null if it auto started.
      */
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
     
     @Override
     public boolean isCancelled() {
-        return cancelled;
+        return this.cancelled;
     }
     
     @Override
@@ -97,7 +97,7 @@ public class EnvoyStartEvent extends Event implements Cancellable {
         }
         
         public String getName() {
-            return name;
+            return this.name;
         }
     }
 }

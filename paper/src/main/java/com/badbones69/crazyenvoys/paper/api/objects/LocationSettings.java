@@ -4,16 +4,20 @@ import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.Methods;
 import com.badbones69.crazyenvoys.paper.api.FileManager;
 import com.badbones69.crazyenvoys.paper.api.FileManager.Files;
+import com.ryderbelserion.cluster.bukkit.utils.LegacyLogger;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class LocationSettings {
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.getPlugin();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final Methods methods = plugin.getMethods();
+    private final @NotNull Methods methods = plugin.getMethods();
 
     private final List<Block> spawnLocations = new ArrayList<>();
 
@@ -31,7 +35,7 @@ public class LocationSettings {
      * @param block - The block to add.
      */
     public void addDropLocations(Block block) {
-        if (!dropLocations.contains(block)) dropLocations.add(block);
+        if (!this.dropLocations.contains(block)) this.dropLocations.add(block);
     }
 
     /**
@@ -39,14 +43,14 @@ public class LocationSettings {
      * @param block - The block to remove.
      */
     public void removeDropLocation(Block block) {
-        dropLocations.remove(block);
+        this.dropLocations.remove(block);
     }
 
     /**
      * Clear drop locations.
      */
     public void clearDropLocations() {
-        dropLocations.clear();
+        this.dropLocations.clear();
     }
 
     /**
@@ -54,7 +58,7 @@ public class LocationSettings {
      * @param blocks - The list of blocks to add.
      */
     public void addAllDropLocations(List<Block> blocks) {
-        dropLocations.addAll(blocks);
+        this.dropLocations.addAll(blocks);
     }
 
     /**
@@ -62,7 +66,7 @@ public class LocationSettings {
      * @return - The list of drop locations.
      */
     public List<Block> getDropLocations() {
-        return dropLocations;
+        return this.dropLocations;
     }
 
     /**
@@ -70,14 +74,14 @@ public class LocationSettings {
      * @param location - The location to add.
      */
     public void addFailedLocations(String location) {
-        failedLocations.add(location);
+        this.failedLocations.add(location);
     }
 
     /**
      * @return - The list of failed locations.
      */
     public List<String> getFailedLocations() {
-        return failedLocations;
+        return this.failedLocations;
     }
 
     /**
@@ -85,7 +89,7 @@ public class LocationSettings {
      * @param block - The block to add.
      */
     public void addActiveLocation(Block block) {
-        if (!activeLocations.contains(block)) activeLocations.add(block);
+        if (!this.activeLocations.contains(block)) this.activeLocations.add(block);
     }
 
     /**
@@ -93,21 +97,21 @@ public class LocationSettings {
      * @param block - The block to remove
      */
     public void removeActiveLocation(Block block) {
-        activeLocations.remove(block);
+        this.activeLocations.remove(block);
     }
 
     /**
      * Clear all active locations.
      */
     public void clearActiveLocations() {
-        activeLocations.clear();
+        this.activeLocations.clear();
     }
 
     /**
      * @return All active blocks.
      */
     public List<Block> getActiveLocations() {
-        return activeLocations;
+        return this.activeLocations;
     }
 
     /**
@@ -115,13 +119,13 @@ public class LocationSettings {
      * @param block - The block to add.
      */
     public void addSpawnLocation(Block block) {
-        spawnLocations.add(block);
+        this.spawnLocations.add(block);
 
         saveLocations();
     }
 
     public void removeSpawnLocation(Block block) {
-        spawnLocations.remove(block);
+        this.spawnLocations.remove(block);
         saveLocations();
     }
 
@@ -129,64 +133,64 @@ public class LocationSettings {
      * Clear spawn locations.
      */
     public void clearSpawnLocations() {
-        spawnLocations.clear();
+        this.spawnLocations.clear();
     }
 
     /**
      * @return All spawn locations.
      */
     public List<Block> getSpawnLocations() {
-        return spawnLocations;
+        return this.spawnLocations;
     }
 
     /**
      * Add all values from the DATA file to spawnLocations.
      */
     public void populateMap() {
-        FileConfiguration data = Files.DATA.getFile();
+        FileConfiguration users = Files.USERS.getFile();
 
         getSpawnLocations().clear();
 
-        for (String location : data.getStringList("Locations.Spawns")) {
+        for (String location : users.getStringList("Locations.Spawns")) {
             try {
-                getSpawnLocations().add(methods.getBuiltLocation(location).getBlock());
+                getSpawnLocations().add(this.methods.getBuiltLocation(location).getBlock());
             } catch (Exception ignore) {
                 addFailedLocations(location);
             }
         }
     }
 
-    public void fixLocations(FileManager fileManager) {
+    public void fixLocations() {
         if (!getFailedLocations().isEmpty()) {
-            if (fileManager.isLogging()) plugin.getLogger().info("Attempting to fix " + getFailedLocations().size() + " locations that failed.");
+            if (this.plugin.isLogging()) LegacyLogger.warn("Attempting to fix " + getFailedLocations().size() + " locations that failed.");
             int failed = 0;
             int fixed = 0;
 
             for (String location : getFailedLocations()) {
                 try {
-                    getSpawnLocations().add(methods.getBuiltLocation(location).getBlock());
+                    getSpawnLocations().add(this.methods.getBuiltLocation(location).getBlock());
                     fixed++;
                 } catch (Exception ignore) {
                     failed++;
                 }
             }
 
-            if (fixed > 0) plugin.getLogger().info("Was able to fix " + fixed + " locations that failed.");
+            if (fixed > 0) LegacyLogger.success("Was able to fix " + fixed + " locations that failed.");
 
-            if (failed > 0) plugin.getLogger().info("Failed to fix " + failed + " locations and will not reattempt.");
+            if (failed > 0) LegacyLogger.error("Failed to fix " + failed + " locations and will not reattempt.");
         }
     }
 
     public void saveLocations() {
         ArrayList<String> locations = new ArrayList<>();
 
-        for (Block block : spawnLocations) {
+        for (Block block : this.spawnLocations) {
             try {
-                locations.add(methods.getUnBuiltLocation(block.getLocation()));
+                locations.add(this.methods.getUnBuiltLocation(block.getLocation()));
             } catch (Exception ignored) {}
         }
 
-        Files.DATA.getFile().set("Locations.Spawns", locations);
-        Files.DATA.saveFile();
+        Files.USERS.getFile().set("Locations.Spawns", locations);
+        Files.USERS.saveFile();
     }
 }
