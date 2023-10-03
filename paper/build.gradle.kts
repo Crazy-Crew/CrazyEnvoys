@@ -121,7 +121,7 @@ val versions = listOf(
 modrinth {
     autoAddDependsOn.set(false)
 
-    token.set(System.getenv("modrinth_token"))
+    token.set(System.getenv("MODRINTH_TOKEN"))
 
     projectId.set(rootProject.name.lowercase())
 
@@ -149,7 +149,7 @@ hangarPublish {
 
         changelog.set(description)
 
-        apiKey.set(System.getenv("hangar_key"))
+        apiKey.set(System.getenv("HANGAR_KEY"))
 
         platforms {
             register(Platforms.PAPER) {
