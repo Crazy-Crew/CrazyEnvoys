@@ -43,8 +43,8 @@ jobs:
         env:
           HANGAR_KEY: ${{ secrets.HANGAR_KEY }}
 
-      - name: Repo Publish
-        run: ./gradlew publish --stacktrace
-        env:
-          REPOSITORY_USERNAME: ${{ secrets.GRADLE_USERNAME }}
-          REPOSITORY_PASSWORD: ${{ secrets.GRADLE_PASSWORD }}
+      #- name: Repo Publish
+      #  run: ./gradlew publish --stacktrace
+      #  env:
+      #    REPOSITORY_USERNAME: ${{ secrets.GRADLE_USERNAME }}
+      #    REPOSITORY_PASSWORD: ${{ secrets.GRADLE_PASSWORD }}
