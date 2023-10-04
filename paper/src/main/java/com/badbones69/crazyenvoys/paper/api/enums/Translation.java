@@ -175,6 +175,21 @@ public enum Translation {
         return this.message;
     }
 
+    public String getStringMessage() {
+        // Get the string first.
+        String message;
+
+        if (isList()) {
+            message = MiscUtils.convertList(getPropertyList(this.listProperty));
+        } else {
+            message = getProperty(this.property);
+        }
+
+        this.message = message;
+
+        return this.message;
+    }
+
     public void sendMessage(Player player) {
         sendMessage(player, new HashMap<>());
     }

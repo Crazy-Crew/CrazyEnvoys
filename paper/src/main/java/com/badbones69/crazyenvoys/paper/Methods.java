@@ -178,13 +178,13 @@ public class Methods {
         second += total;
         String message = "";
 
-        if (day > 0) message += day + Translation.day.getString() + ", ";
-        if (day > 0 || hour > 0) message += hour + Translation.hour.getString() + ", ";
-        if (day > 0 || hour > 0 || minute > 0) message += minute + Translation.minute.getString() + ", ";
-        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + Translation.second.getString() + ", ";
+        if (day > 0) message += day + Translation.day.getStringMessage() + ", ";
+        if (day > 0 || hour > 0) message += hour + Translation.hour.getStringMessage() + ", ";
+        if (day > 0 || hour > 0 || minute > 0) message += minute + Translation.minute.getStringMessage() + ", ";
+        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + Translation.second.getStringMessage() + ", ";
 
         if (message.length() < 2) {
-            message = "0" + Translation.second.getMessage();
+            message = "0" + Translation.second.getStringMessage();
         } else {
             message = message.substring(0, message.length() - 2);
         }

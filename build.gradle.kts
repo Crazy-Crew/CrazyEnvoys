@@ -6,7 +6,7 @@ defaultTasks("build")
 
 rootProject.group = "com.badbones69.crazyenvoys"
 rootProject.description = "Drop custom envoys with any prize you want all over spawn for players to fight over."
-rootProject.version = "1.7.3"
+rootProject.version = "1.7.4"
 
 tasks {
     assemble {
