@@ -197,8 +197,6 @@ public enum Translation {
                 }
             }
         }
-
-        LegacyLogger.info(getMessage(placeholder).toString());
     }
 
     public String asString() {

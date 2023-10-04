@@ -105,7 +105,9 @@ val description = """
 # Please take a backup of your CrazyEnvoys folder before updating!    
     
 ## Bugs Fixed:
- * Fixed locale reloading.
+ * Fixed some missing placeholders in the locale file
+ * Replaced all old %player% / %reward% placeholders in tier files.
+   * You can keep them as %player% etc, They should be replaced internally so nothing breaks.
     
 ## Other:
  * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)

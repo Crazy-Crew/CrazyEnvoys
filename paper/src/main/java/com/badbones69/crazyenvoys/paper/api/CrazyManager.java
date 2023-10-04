@@ -238,7 +238,11 @@ public class CrazyManager {
             }
 
             if (file.contains("Settings.Prize-Message") && !file.getStringList("Settings.Prize-Message").isEmpty()) {
-                tier.setPrizeMessage(file.getStringList("Settings.Prize-Message"));
+                List<String> array = new ArrayList<>();
+
+                file.getStringList("Settings.Prize-Message").forEach(line -> array.add(line.replaceAll("%reward%", "{reward}").replaceAll("%tier%", "{tier}")));
+
+                tier.setPrizeMessage(array);
             }
 
             tier.setSignalFlareToggle(file.getBoolean("Settings.Signal-Flare.Toggle"));
@@ -254,8 +258,21 @@ public class CrazyManager {
                 String path = "Prizes." + prizeID + ".";
                 int chance = file.getInt(path + "Chance");
                 String displayName = file.contains(path + "DisplayName") ? file.getString(path + "DisplayName") : "";
-                List<String> commands = file.getStringList(path + "Commands");
-                List<String> messages = file.getStringList(path + "Messages");
+
+                List<String> commands = new ArrayList<>();
+
+                file.getStringList(path + "Commands").forEach(line -> commands.add(line.replaceAll("%reward%", "{reward}")
+                        .replaceAll("%player%", "{player}")
+                        .replaceAll("%Player%", "{player}")
+                        .replaceAll("%tier%", "{tier}")));
+
+                List<String> messages = new ArrayList<>();
+
+                file.getStringList(path + "Messages").forEach(line -> messages.add(line.replaceAll("%reward%", "{reward}")
+                        .replaceAll("%player%", "{player}")
+                        .replaceAll("%Player%", "{player}")
+                        .replaceAll("%tier%", "{tier}")));
+
                 boolean dropItems = file.getBoolean(path + "Drop-Items");
                 List<ItemBuilder> items = ItemBuilder.convertStringList(file.getStringList(path + "Items"));
                 tier.addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
