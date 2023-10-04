@@ -9,6 +9,7 @@ import com.badbones69.crazyenvoys.paper.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.paper.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.paper.api.objects.LocationSettings;
+import com.ryderbelserion.cluster.bukkit.utils.LegacyUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -62,6 +63,8 @@ public class EnvoyCommand implements CommandExecutor {
                             this.plugin.getServer().getPluginManager().callEvent(event);
                             this.crazyManager.endEnvoyEvent();
                         }
+
+                        this.plugin.getFileManager().setup();
 
                         this.crazyManager.reload(false);
 
@@ -178,7 +181,7 @@ public class EnvoyCommand implements CommandExecutor {
                             placeholders.put("{x}", String.valueOf(block.getX()));
                             placeholders.put("{y}", String.valueOf(block.getY()));
                             placeholders.put("{z}", String.valueOf(block.getZ()));
-                            locs.add(Translation.drops_format.getMessage(placeholders).toString());
+                            locs.add(Translation.drops_format.getStringMessage(placeholders));
                             amount++;
                             placeholders.clear();
                         }
@@ -190,11 +193,10 @@ public class EnvoyCommand implements CommandExecutor {
                         }
 
                         for (String dropLocation : this.methods.getPage(locs, page)) {
-                            sender.sendMessage(dropLocation);
+                            sender.sendMessage(LegacyUtils.color(dropLocation));
                         }
 
                         if (!this.crazyManager.isEnvoyActive()) Translation.drops_page.sendMessage(sender);
-
                     } else {
                         Translation.no_permission.sendMessage(sender);
                     }

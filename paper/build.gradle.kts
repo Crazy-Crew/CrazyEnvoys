@@ -102,12 +102,12 @@ val other = if (isSnapshot) "Beta" else "Release"
 val file = file("${rootProject.rootDir}/jars/${rootProject.name}-${rootProject.version}.jar")
 
 val description = """
-# Please take a backup of your CrazyEnvoys folder before updating!    
+Please read the changelogs for v1.7-1.7.2 for any other information which you will likely need.   
     
 ## Bugs Fixed:
- * Fixed some missing placeholders in the locale file
- * Replaced all old %player% / %reward% placeholders in tier files.
-   * You can keep them as %player% etc, They should be replaced internally so nothing breaks.
+ * Fixed locale file not changing when doing /crazyenvoys reload.
+ * Fixed envoy files not updating on /crazyenvoys reload.
+ * Fixed the /crazyenvoys drops formatting.
     
 ## Other:
  * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)

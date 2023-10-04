@@ -5,7 +5,6 @@ import ch.jalu.configme.properties.Property;
 import com.badbones69.crazyenvoys.paper.CrazyEnvoys;
 import com.badbones69.crazyenvoys.paper.api.CrazyManager;
 import com.ryderbelserion.cluster.api.utils.MiscUtils;
-import com.ryderbelserion.cluster.bukkit.utils.LegacyLogger;
 import com.ryderbelserion.cluster.bukkit.utils.LegacyUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -153,6 +152,27 @@ public enum Translation {
         this.message = message;
 
         return this;
+    }
+
+    public String getStringMessage(Map<String, String> placeholders) {
+        // Get the string first.
+        String message;
+
+        if (isList()) {
+            message = MiscUtils.convertList(getPropertyList(this.listProperty));
+        } else {
+            message = getProperty(this.property);
+        }
+
+        if (!placeholders.isEmpty()) {
+            for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
+                message = message.replace(placeholder.getKey(), placeholder.getValue()).replace(placeholder.getKey().toLowerCase(), placeholder.getValue());
+            }
+        }
+
+        this.message = message;
+
+        return this.message;
     }
 
     public void sendMessage(Player player) {
