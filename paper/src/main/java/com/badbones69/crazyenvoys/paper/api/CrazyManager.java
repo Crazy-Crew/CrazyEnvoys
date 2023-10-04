@@ -702,7 +702,7 @@ public class CrazyManager {
         setEnvoyActive(true);
         int max = dropLocations.size();
         HashMap<String, String> placeholder = new HashMap<>();
-        placeholder.put("{amount}", max + "");
+        placeholder.put("{amount}", String.valueOf(max));
         Translation.started.broadcastMessage(false, placeholder);
 
         if (this.config.getProperty(Config.envoys_grace_period_toggle)) {

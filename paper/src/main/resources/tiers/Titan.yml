@@ -6,7 +6,7 @@ Settings:
   # A default message if the prize doesn't have any Messages
   # i.e Messages: [] or the value isn't there.
   Prize-Message:
-    - '&7You have won &c%reward% &7from &c%tier%.'
+    - '&7You have won &c{reward} &7from &c{tier}.'
   Spawn-Chance: 10
   Use-Chance: true
   Placed-Block: 'ENCHANTING_TABLE'
@@ -47,7 +47,7 @@ Prizes:
     DisplayName: '&a$1,000,000'
     Chance: 50
     Messages:
-      - '&7You have just found %reward%.'
+      - '&7You have just found {reward}.'
     Commands:
       - 'eco give %Player% 1000000'
   '2':
@@ -55,7 +55,7 @@ Prizes:
     Chance: 25
     Drop-Items: false
     Messages:
-      - '&7Congratulations you have just won a %reward%.'
+      - '&7Congratulations you have just won a {reward}.'
     Items:
       - 'Item:DIAMOND_SWORD, Amount:1, Name:&4Titan Sword, Sharpness:5, Unbreaking:3, Knockback:2, Fire_Aspect:2, Looting:3'
   '3':
@@ -63,7 +63,7 @@ Prizes:
     Chance: 10
     Drop-Items: false
     Messages:
-      - '&7Congratulations you have just won a %reward% set.'
+      - '&7Congratulations you have just won a {reward} set.'
     # Available Materials: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimMaterial.html
     # Available Patterns: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimPattern.html
     Items:

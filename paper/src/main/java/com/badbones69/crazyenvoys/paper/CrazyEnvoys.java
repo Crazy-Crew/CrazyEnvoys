@@ -83,7 +83,7 @@ public class CrazyEnvoys extends JavaPlugin {
             this.crazyManager.endEnvoyEvent();
         }
 
-        //this.crazyManager.unload();
+        this.crazyManager.reload(true);
     }
 
     public @NotNull CrazyHandler getCrazyHandler() {
