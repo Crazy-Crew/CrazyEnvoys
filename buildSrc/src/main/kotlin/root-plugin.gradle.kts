@@ -43,8 +43,8 @@ publishing {
             url = if (!isSnapshot) uri(releases) else uri(snapshots)
 
             credentials {
-                this.username = System.getenv("gradle_username")
-                this.password = System.getenv("gradle_password")
+                this.username = System.getenv("GRADLE_USERNAME")
+                this.password = System.getenv("GRADLE_PASSWORD")
             }
         }
     }
