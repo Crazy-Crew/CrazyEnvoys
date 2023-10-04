@@ -52,8 +52,6 @@ public class ConfigManager {
 
         // Reload messages.yml
         this.messages.reload();
-
-        createLocale();
     }
 
     private void createLocale() {
