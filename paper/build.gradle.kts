@@ -105,7 +105,7 @@ val description = """
 Please read the changelogs for v1.7-1.7.3 for any other information which you will likely need.   
     
 ## Bugs Fixed:
- * Fixed a display issue with %crazyenvoys_cooldown%
+ * Fixed an issue where flares weren't working.
     
 ## Other:
  * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)
