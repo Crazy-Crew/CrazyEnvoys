@@ -649,7 +649,7 @@ public class CrazyManager {
         if (envoyLocationsBroadcast) {
             StringBuilder locations = getStringBuilder();
 
-            this.plugin.getServer().broadcast(Translation.envoy_locations.getMessage("{locations}", locations.toString().translateEscapes()).asString(), "envoy.locations");
+            this.plugin.getServer().broadcast(Translation.envoy_locations.getMessage("{locations}", locations.toString().translateEscapes()).asString().translateEscapes(), "envoy.locations");
         }
 
         return this.locationSettings.getDropLocations();
@@ -668,7 +668,7 @@ public class CrazyManager {
             placeholders.put("{y}", String.valueOf(block.getY()));
             placeholders.put("{z}", String.valueOf(block.getZ()));
 
-            locations.append(Translation.location_format.getMessage(placeholders).asString());
+            locations.append(Translation.location_format.getMessage(placeholders).asString().translateEscapes());
             x += 1;
         }
 
@@ -746,11 +746,12 @@ public class CrazyManager {
 
                     int fallingHeight = this.config.getProperty(Config.envoy_falling_height);
                     Material fallingBlock = Material.valueOf(this.config.getProperty(Config.envoy_falling_block_type));
-                    byte fallingDurability = (byte) 15;
 
-                    FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, fallingHeight, .5), fallingBlock, fallingDurability);
+                    //TODO() Test to make sure this works.
+                    FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, fallingHeight, .5), fallingBlock.createBlockData());
                     chest.setDropItem(false);
                     chest.setHurtEntities(false);
+
                     this.fallingBlocks.put(chest, block);
                 } else {
                     Tier tier = pickRandomTier();
