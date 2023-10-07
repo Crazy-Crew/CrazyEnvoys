@@ -8,6 +8,7 @@ plugins {
 }
 
 project.group = "${rootProject.group}.paper"
+project.version = rootProject.version
 
 repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
@@ -81,12 +82,12 @@ tasks {
     processResources {
         val props = mapOf(
             "name" to rootProject.name,
-            "group" to project.group.toString(),
+            "group" to project.group,
             "version" to rootProject.version,
             "description" to rootProject.description,
             "authors" to rootProject.properties["authors"],
-            "apiVersion" to "1.20",
-            "website" to "https://modrinth.com/plugin/${rootProject.name.lowercase()}"
+            "apiVersion" to rootProject.properties["apiVersion"],
+            "website" to rootProject.properties["website"],
         )
 
         filesMatching("plugin.yml") {

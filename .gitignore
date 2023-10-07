@@ -1,17 +1,13 @@
-.gradle
 .idea
+.gradle
 build
-
-buildSrc/.gradle
-buildSrc/build
-
-core/.gradle
-core/build
-
-api/.gradle
-api/build
-
 jars
 
-paper/.gradle
+buildSrc/build
+buildSrc/.gradle
+
+common/build
+common/.gradle
+
 paper/build
+paper/.gradle

@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.20.2-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("${rootProject.properties["minecraftVersion"]}-R0.1-SNAPSHOT")
 }
 
 tasks {
@@ -18,6 +18,6 @@ tasks {
     }
 
     reobfJar {
-        outputJar.set(file("${project.layout.buildDirectory.get()}/libs/${rootProject.name}-${rootProject.version}.jar"))
+        outputJar.set(file("${layout.projectDirectory}/build/libs/${rootProject.name}-${rootProject.version}.jar"))
     }
 }
