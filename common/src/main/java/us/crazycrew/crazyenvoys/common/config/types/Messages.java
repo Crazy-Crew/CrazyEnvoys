@@ -61,7 +61,7 @@ public class Messages implements SettingsHolder {
 
     public static final Property<String> envoy_started = newProperty("envoys.started", "{prefix}&7An envoy event has just started. &6{amount} &7crates have spawned around spawn for 5m.");
 
-    public static final Property<String> envoys_remaining = newProperty("envoys.left", "{prefix}&6player &7has just found a tier envoy. There are now &6amount &7left to find.");
+    public static final Property<String> envoys_remaining = newProperty("envoys.left", "{prefix}&6{player} &7has just found a tier envoy. There are now &6{amount} &7left to find.");
 
     public static final Property<String> envoy_ended = newProperty("envoys.ended", "{prefix}&cThe envoy event has ended. Thanks for playing and please come back for the next one.");
 
