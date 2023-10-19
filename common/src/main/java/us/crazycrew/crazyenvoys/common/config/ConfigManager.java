@@ -4,6 +4,7 @@ import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;
 import ch.jalu.configme.configurationdata.ConfigurationData;
 import ch.jalu.configme.configurationdata.ConfigurationDataBuilder;
+import ch.jalu.configme.resource.YamlFileResourceOptions;
 import us.crazycrew.crazyenvoys.common.config.types.Config;
 import us.crazycrew.crazyenvoys.common.config.types.Messages;
 import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
@@ -22,22 +23,34 @@ public class ConfigManager {
     private SettingsManager config;
 
     public void load() {
+        YamlFileResourceOptions builder = YamlFileResourceOptions.builder().indentationSize(2).build();
+
         // Create the plugin-config.yml file.
         File pluginConfigFile = new File(this.dataFolder, "plugin-config.yml");
 
         // Bind it to settings manager
         this.pluginConfig = SettingsManagerBuilder
-                .withYamlFile(pluginConfigFile)
+                .withYamlFile(pluginConfigFile, builder)
                 .useDefaultMigrationService()
                 .configurationData(createPluginConfig())
                 .create();
 
-        createLocale();
+        File localeDir = new File(this.dataFolder, "locale");
+
+        if (!localeDir.exists()) localeDir.mkdirs();
+
+        File messagesFile = new File(localeDir, this.pluginConfig.getProperty(PluginConfig.locale_file) + ".yml");
+
+        this.messages = SettingsManagerBuilder
+                .withYamlFile(messagesFile, builder)
+                .useDefaultMigrationService()
+                .configurationData(Messages.class)
+                .create();
 
         File configFile = new File(this.dataFolder, "config.yml");
 
         this.config = SettingsManagerBuilder
-                .withYamlFile(configFile)
+                .withYamlFile(configFile, builder)
                 .useDefaultMigrationService()
                 .configurationData(ConfigurationDataBuilder.createConfiguration(Config.class))
                 .create();
@@ -52,20 +65,6 @@ public class ConfigManager {
 
         // Reload messages.yml
         this.messages.reload();
-    }
-
-    private void createLocale() {
-        File localeDir = new File(this.dataFolder, "locale");
-
-        if (!localeDir.exists()) localeDir.mkdirs();
-
-        File messagesFile = new File(localeDir, this.pluginConfig.getProperty(PluginConfig.locale_file) + ".yml");
-
-        this.messages = SettingsManagerBuilder
-                .withYamlFile(messagesFile)
-                .useDefaultMigrationService()
-                .configurationData(Messages.class)
-                .create();
     }
 
     public SettingsManager getConfig() {
