@@ -306,10 +306,10 @@ public class MigrationService {
         String hologramOnGoing = convert("{prefix}" + file.getString("Messages.Hologram-Placeholders.On-Going"));
         String hologramNotRunning = convert("{prefix}" + file.getString("Messages.Hologram-Placeholders.Not-Running"));
         
-        String timeDay = convert("{prefix}" + file.getString("Messages.Time-Placeholders.Day"));
-        String timeHour = convert("{prefix}" + file.getString("Messages.Time-Placeholders.Hour"));
-        String timeMinute = convert("{prefix}" + file.getString("Messages.Time-Placeholders.Minute"));
-        String timeSecond = convert("{prefix}" + file.getString("Messages.Time-Placeholders.Second"));
+        String timeDay = convert(file.getString("Messages.Time-Placeholders.Day"));
+        String timeHour = convert(file.getString("Messages.Time-Placeholders.Hour"));
+        String timeMinute = convert(file.getString("Messages.Time-Placeholders.Minute"));
+        String timeSecond = convert(file.getString("Messages.Time-Placeholders.Second"));
         
         String crateLocations = convert("{prefix}" + file.getString("Messages.Crate-Locations"));
         

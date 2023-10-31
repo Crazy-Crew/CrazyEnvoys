@@ -103,10 +103,10 @@ val other = if (isSnapshot) "Beta" else "Release"
 val file = file("${rootProject.rootDir}/jars/${rootProject.name}-${rootProject.version}.jar")
 
 val description = """
-Please read the changelogs for v1.7-1.7.5 for any other information which you will likely need.   
+Please read the changelogs for v1.7-1.7.6 for any other information which you will likely need.   
     
 ## Bugs Fixed:
- * Fixed envoy locations not being broadcast when an envoy starts.
+ * Stop adding {prefix} to message options that don't need it in the migration.
     
 ## Other:
  * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)
