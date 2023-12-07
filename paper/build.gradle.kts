@@ -1,162 +1,160 @@
 import io.papermc.hangarpublishplugin.model.Platforms
 
 plugins {
+    alias(libs.plugins.paperweight)
+    alias(libs.plugins.shadowjar)
+
     alias(libs.plugins.modrinth)
+
+    alias(libs.plugins.runpaper)
+
     alias(libs.plugins.hangar)
-
-    id("paper-plugin")
 }
 
-project.group = "${rootProject.group}.paper"
-project.version = rootProject.version
-
-repositories {
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-
-    maven("https://repo.papermc.io/repository/maven-public/")
-
-    maven("https://repo.aikar.co/content/groups/aikar/")
-
-    maven("https://repo.triumphteam.dev/snapshots/")
-
-    maven("https://maven.enginehub.org/repo/")
-
-    flatDir { dirs("libs") }
+base {
+    archivesName.set(rootProject.name)
 }
+
+val mcVersion = rootProject.properties["minecraftVersion"] as String
 
 dependencies {
-    implementation(project(":common"))
+    api(project(":common"))
 
-    implementation("dev.triumphteam", "triumph-cmd-bukkit", "2.0.0-SNAPSHOT")
+    implementation(libs.cluster.paper)
 
-    implementation("org.bstats", "bstats-bukkit", "3.0.2")
+    implementation(libs.triumph.cmds)
 
-    implementation("de.tr7zw", "item-nbt-api", "2.12.0")
+    implementation(libs.metrics)
 
-    implementation(libs.cluster.bukkit.api) {
-        exclude("com.ryderbelserion.cluster", "cluster-api")
-    }
+    implementation(libs.nbtapi)
 
-    compileOnly("me.filoghost.holographicdisplays", "holographicdisplays-api", "3.0.0")
+    compileOnly(libs.holographicdisplays)
+
+    compileOnly(libs.decentholograms)
+
+    compileOnly(libs.placeholderapi)
+
+    compileOnly(libs.itemsadder)
+
+    compileOnly(libs.oraxen)
 
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.1.0-SNAPSHOT")
 
-    compileOnly("com.github.decentsoftware-eu", "decentholograms","2.8.4")
-
-    compileOnly("com.github.LoneDev6", "API-ItemsAdder", "3.5.0b")
-
-    compileOnly("com.github.oraxen", "oraxen", "1.160.0") {
-        exclude("*", "*")
-    }
-
-    compileOnly("me.clip", "placeholderapi", "2.11.4")
-
     compileOnly(fileTree("libs").include("*.jar"))
+
+    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:$mcVersion-R0.1-SNAPSHOT")
 }
+
+val isBeta: Boolean get() = rootProject.extra["isBeta"]?.toString()?.toBoolean() ?: false
+val type = if (isBeta) "Beta" else "Release"
+
+val description = """
+## Changes:
+ * Used instanceof variables to make checks simpler
+ * Cleaned up command checks to be more readable
+ * Actually tell console the envoy event broadcast.
+ * Enable random drops/locations by default as it not doing anything might confuse people.
+    
+## Fixes:
+ * Fixed a few command bugs with invalid casts
+
+## Other:
+ * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)
+ * [Bug Reports](https://github.com/Crazy-Crew/${rootProject.name}/issues)
+"""
+
+val file = project.layout.buildDirectory.file("libs/${rootProject.name}-${rootProject.version}.jar").get().asFile
 
 val component: SoftwareComponent = components["java"]
 
 tasks {
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                groupId = rootProject.group.toString()
-                artifactId = "${rootProject.name.lowercase()}-${project.name.lowercase()}-api"
-                version = rootProject.version.toString()
+    // Publish to hangar.papermc.io.
+    hangarPublish {
+        publications.register("plugin") {
+            version.set("$rootProject.version")
 
-                from(component)
+            id.set(rootProject.name)
+
+            channel.set(type)
+
+            changelog.set(description)
+
+            apiKey.set(System.getenv("hangar_key"))
+
+            platforms {
+                register(Platforms.PAPER) {
+                    jar.set(file)
+
+                    platformVersions.set(listOf(mcVersion))
+                }
             }
         }
     }
 
+    // Publish to modrinth.
+    modrinth {
+        autoAddDependsOn.set(false)
+
+        token.set(System.getenv("modrinth_token"))
+
+        projectId.set(rootProject.name.lowercase())
+
+        versionName.set("${rootProject.name} ${rootProject.version}")
+
+        versionNumber.set("${rootProject.version}")
+
+        versionType.set(type.lowercase())
+
+        uploadFile.set(file)
+
+        gameVersions.add(mcVersion)
+
+        changelog.set(description)
+
+        loaders.addAll("paper", "purpur")
+    }
+
+    // Runs a test server.
+    runServer {
+        jvmArgs("-Dnet.kyori.ansi.colorLevel=truecolor")
+
+        minecraftVersion(mcVersion)
+    }
+
+    // Assembles the plugin.
+    assemble {
+        dependsOn(reobfJar)
+    }
+
     shadowJar {
+        archiveClassifier.set("")
+
+        exclude("META-INF/**")
+
         listOf(
-            "de.tr7zw.changeme.nbtapi",
-            "dev.triumphteam",
-            "org.bstats"
+                "de.tr7zw.changeme.nbtapi",
+                "dev.triumphteam.cmd",
+                "org.bstats"
         ).forEach {
             relocate(it, "libs.$it")
         }
     }
 
     processResources {
-        val props = mapOf(
-            "name" to rootProject.name,
-            "group" to project.group,
-            "version" to rootProject.version,
-            "description" to rootProject.description,
-            "authors" to rootProject.properties["authors"],
-            "apiVersion" to rootProject.properties["apiVersion"],
-            "website" to rootProject.properties["website"],
+        val properties = hashMapOf(
+                "name" to rootProject.name,
+                "version" to rootProject.version,
+                "group" to rootProject.group,
+                "description" to rootProject.description,
+                "apiVersion" to rootProject.properties["apiVersion"],
+                "authors" to rootProject.properties["authors"],
+                "website" to rootProject.properties["website"]
         )
 
+        inputs.properties(properties)
+
         filesMatching("plugin.yml") {
-            expand(props)
-        }
-    }
-}
-
-val isSnapshot = rootProject.version.toString().contains("snapshot")
-val type = if (isSnapshot) "beta" else "release"
-val other = if (isSnapshot) "Beta" else "Release"
-
-val file = file("${rootProject.rootDir}/jars/${rootProject.name}-${rootProject.version}.jar")
-
-val description = """
-Please read the changelogs for v1.7-1.7.6 for any other information which you will likely need.   
-    
-## Bugs Fixed:
- * Stop adding {prefix} to message options that don't need it in the migration.
-    
-## Other:
- * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)
- * [Bug Reports](https://github.com/Crazy-Crew/${rootProject.name}/issues)
-""".trimIndent()
-
-val versions = listOf(
-    "1.20",
-    "1.20.1",
-    "1.20.2"
-)
-
-modrinth {
-    autoAddDependsOn.set(false)
-
-    token.set(System.getenv("MODRINTH_TOKEN"))
-
-    projectId.set(rootProject.name.lowercase())
-
-    versionName.set("${rootProject.name} ${rootProject.version}")
-    versionNumber.set("${rootProject.version}")
-
-    versionType.set(type)
-
-    uploadFile.set(file("${rootProject.rootDir}/jars/${rootProject.name}-${rootProject.version}.jar"))
-
-    gameVersions.addAll(versions)
-
-    changelog.set(description)
-
-    loaders.addAll("paper", "purpur")
-}
-
-hangarPublish {
-    publications.register("plugin") {
-        version.set(rootProject.version as String)
-
-        id.set(rootProject.name)
-
-        channel.set(if (isSnapshot) "Beta" else "Release")
-
-        changelog.set(description)
-
-        apiKey.set(System.getenv("HANGAR_KEY"))
-
-        platforms {
-            register(Platforms.PAPER) {
-                jar.set(file("${rootProject.rootDir}/jars/${rootProject.name}-${rootProject.version}.jar"))
-                platformVersions.set(versions)
-            }
+            expand(properties)
         }
     }
 }

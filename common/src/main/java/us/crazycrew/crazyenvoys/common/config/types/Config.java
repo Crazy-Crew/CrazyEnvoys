@@ -4,7 +4,6 @@ import ch.jalu.configme.Comment;
 import ch.jalu.configme.SettingsHolder;
 import ch.jalu.configme.configurationdata.CommentsConfiguration;
 import ch.jalu.configme.properties.Property;
-import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import static ch.jalu.configme.properties.PropertyInitializer.newListProperty;
 import static ch.jalu.configme.properties.PropertyInitializer.newProperty;
@@ -14,7 +13,7 @@ public class Config implements SettingsHolder {
     protected Config() {}
 
     @Override
-    public void registerComments(@NotNull CommentsConfiguration conf) {
+    public void registerComments(CommentsConfiguration conf) {
         String[] header = {
                 "Support: https://discord.gg/badbones-s-live-chat-182615261403283459",
                 "Github: https://github.com/Crazy-Crew",
@@ -59,14 +58,14 @@ public class Config implements SettingsHolder {
             "This option will spawn a random number of envoys between min-drops-amount and max-drops-amount.",
             "Note: You must set max-drops-toggle to false otherwise this will not function."
     })
-    public static final Property<Boolean> envoys_random_drops = newProperty("envoys.generation.random-drops", false);
+    public static final Property<Boolean> envoys_random_drops = newProperty("envoys.generation.random-drops", true);
 
     @Comment({
             "This option will spawn envoys at complete random",
             "Note: You need to use /envoy center at wherever you want the center to be.",
             "Second Note: You may have to tweak the options above."
     })
-    public static final Property<Boolean> envoys_random_locations = newProperty("envoys.generation.random-locations.toggle", false);
+    public static final Property<Boolean> envoys_random_locations = newProperty("envoys.generation.random-locations.toggle", true);
 
     @Comment("The maximum distance the envoys will fall from the center.")
     public static final Property<Integer> envoys_max_radius = newProperty("envoys.generation.random-locations.max-radius", 300);
