@@ -8,9 +8,9 @@ import java.util.List;
 import static ch.jalu.configme.properties.PropertyInitializer.newListProperty;
 import static ch.jalu.configme.properties.PropertyInitializer.newProperty;
 
-public class Config implements SettingsHolder {
+public class ConfigKeys implements SettingsHolder {
     
-    protected Config() {}
+    protected ConfigKeys() {}
 
     @Override
     public void registerComments(CommentsConfiguration conf) {
@@ -138,7 +138,7 @@ public class Config implements SettingsHolder {
     @Comment("The amount of time a player has to wait before grabbing another envoy.")
     public static final Property<String> envoys_grab_cooldown_timer = newProperty("envoys.grab-cooldown.time", "15s");
 
-    @Comment("If htere should be a grace period when an envoy spawns. What this means is the player will have to wait a certain amount of time.")
+    @Comment("If there should be a grace period when an envoy spawns. What this means is the player will have to wait a certain amount of time.")
     public static final Property<Boolean> envoys_grace_period_toggle = newProperty("envoys.grace-period.toggle", false);
 
     @Comment("The time they have to wait to claim the envoy.")

@@ -4,7 +4,7 @@ import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.api.enums.Translation;
+import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyOpenEvent;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
@@ -29,7 +29,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.Config;
+import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,29 +73,29 @@ public class EnvoyClickListener implements Listener {
         Tier tier = this.crazyManager.getTier(event.getClickedBlock());
 
         if (!player.hasPermission("envoy.bypass")) {
-            if (this.config.getProperty(Config.envoys_grace_period_toggle) && this.crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
+            if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle) && this.crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
                 HashMap<String, String> placeholder = new HashMap<>();
                 placeholder.put("{time}", String.valueOf(this.crazyManager.getCountdownTimer().getSecondsLeft()));
-                Translation.countdown_in_progress.sendMessage(player, placeholder);
+                Messages.countdown_in_progress.sendMessage(player, placeholder);
                 return;
             }
 
             if (tier.isClaimPermissionToggleEnabled() && !player.hasPermission(tier.getClaimPermission())) {
-                Translation.no_claim_permission.sendMessage(player);
+                Messages.no_claim_permission.sendMessage(player);
                 return;
             }
 
-            if (this.config.getProperty(Config.envoys_grab_cooldown_toggle)) {
+            if (this.config.getProperty(ConfigKeys.envoys_grab_cooldown_toggle)) {
                 UUID uuid = player.getUniqueId();
 
                 if (this.coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(this.coolDownSettings.getCooldown().get(uuid))) {
                     HashMap<String, String> placeholder = new HashMap<>();
                     placeholder.put("{time}", this.methods.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
-                    Translation.cooldown_left.sendMessage(player, placeholder);
+                    Messages.cooldown_left.sendMessage(player, placeholder);
                     return;
                 }
 
-                this.coolDownSettings.addCooldown(uuid, this.config.getProperty(Config.envoys_grab_cooldown_timer));
+                this.coolDownSettings.addCooldown(uuid, this.config.getProperty(ConfigKeys.envoys_grab_cooldown_timer));
             }
         }
         // Ryder End
@@ -116,7 +116,7 @@ public class EnvoyClickListener implements Listener {
 
         HashMap<String, String> placeholder = new HashMap<>();
 
-        if (this.config.getProperty(Config.envoys_announce_player_pickup)) placeholder.put("{tier}", this.crazyManager.getTier(block).getName());
+        if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) placeholder.put("{tier}", this.crazyManager.getTier(block).getName());
 
         this.crazyManager.removeActiveEnvoy(block);
 
@@ -166,16 +166,16 @@ public class EnvoyClickListener implements Listener {
         }
 
         if (!this.crazyManager.getActiveEnvoys().isEmpty()) {
-            if (this.config.getProperty(Config.envoys_announce_player_pickup)) {
+            if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) {
                 placeholder.put("{player}", player.getName());
                 placeholder.put("{amount}", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
-                Translation.envoys_remaining.broadcastMessage(true, placeholder);
+                Messages.envoys_remaining.broadcastMessage(true, placeholder);
             }
         } else {
             EnvoyEndEvent envoyEndEvent = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);
             this.plugin.getServer().getPluginManager().callEvent(envoyEndEvent);
             this.crazyManager.endEnvoyEvent();
-            Translation.ended.broadcastMessage(false);
+            Messages.ended.broadcastMessage(false);
         }
     }
 

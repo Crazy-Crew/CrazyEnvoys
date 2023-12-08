@@ -10,65 +10,65 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.Config;
-import us.crazycrew.crazyenvoys.common.config.types.Messages;
+import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
+import us.crazycrew.crazyenvoys.common.config.types.MessageKeys;
 import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public enum Translation {
+public enum Messages {
 
-    ended(Messages.envoy_ended),
-    warning(Messages.envoy_warning),
-    started(Messages.envoy_started),
-    on_going(Messages.hologram_on_going),
-    not_running(Messages.hologram_not_running),
-    reloaded(Messages.envoy_plugin_reloaded),
-    time_left(Messages.envoy_time_left),
-    used_flare(Messages.envoy_used_flare),
-    give_flare(Messages.envoy_give_flare),
-    new_center(Messages.envoy_new_center),
-    not_online(Messages.not_online),
-    given_flare(Messages.envoy_received_flare),
-    force_start(Messages.envoy_force_start),
-    not_started(Messages.envoy_not_started),
-    envoys_remaining(Messages.envoys_remaining),
-    force_end(Messages.envoy_force_ended),
-    drops_page(Messages.drops_page),
-    drops_format(Messages.drops_format),
-    drops_available(Messages.drops_available),
-    drops_possibilities(Messages.drops_possibilities),
-    player_only(Messages.player_only),
-    not_a_number(Messages.not_a_number),
-    add_location(Messages.envoy_add_location),
-    remove_location(Messages.envoy_remove_location),
-    cooldown_left(Messages.cooldown_left),
-    countdown_in_progress(Messages.countdown_in_progress),
-    no_permission(Messages.no_permission),
-    no_claim_permission(Messages.no_claim_permission),
-    time_till_event(Messages.envoy_time_till_event),
-    cant_use_flares(Messages.envoy_cant_use_flare),
-    already_started(Messages.envoy_already_started),
-    enter_editor_mode(Messages.enter_editor_mode),
-    leave_editor_mode(Messages.exit_editor_mode),
-    editor_clear_locations(Messages.envoy_clear_locations),
-    editor_clear_failure(Messages.envoy_clear_failure),
-    not_enough_players(Messages.not_enough_players),
-    stop_ignoring_messages(Messages.stop_ignoring_messages),
-    start_ignoring_messages(Messages.start_ignoring_messages),
-    kicked_from_editor_mode(Messages.envoy_kicked_from_editor_mode),
-    not_in_world_guard_region(Messages.not_in_world_guard_region),
-    no_spawn_locations_found(Messages.no_spawn_locations_found),
-    command_not_found(Messages.command_not_found),
-    day(Messages.time_placeholder_day),
-    hour(Messages.time_placeholder_hour),
-    minute(Messages.time_placeholder_minute),
-    second(Messages.time_placeholder_second),
-    envoy_locations(Messages.envoy_locations),
-    location_format(Messages.location_format),
-    help(Messages.help, true);
+    ended(MessageKeys.envoy_ended),
+    warning(MessageKeys.envoy_warning),
+    started(MessageKeys.envoy_started),
+    on_going(MessageKeys.hologram_on_going),
+    not_running(MessageKeys.hologram_not_running),
+    reloaded(MessageKeys.envoy_plugin_reloaded),
+    time_left(MessageKeys.envoy_time_left),
+    used_flare(MessageKeys.envoy_used_flare),
+    give_flare(MessageKeys.envoy_give_flare),
+    new_center(MessageKeys.envoy_new_center),
+    not_online(MessageKeys.not_online),
+    given_flare(MessageKeys.envoy_received_flare),
+    force_start(MessageKeys.envoy_force_start),
+    not_started(MessageKeys.envoy_not_started),
+    envoys_remaining(MessageKeys.envoys_remaining),
+    force_end(MessageKeys.envoy_force_ended),
+    drops_page(MessageKeys.drops_page),
+    drops_format(MessageKeys.drops_format),
+    drops_available(MessageKeys.drops_available),
+    drops_possibilities(MessageKeys.drops_possibilities),
+    player_only(MessageKeys.player_only),
+    not_a_number(MessageKeys.not_a_number),
+    add_location(MessageKeys.envoy_add_location),
+    remove_location(MessageKeys.envoy_remove_location),
+    cooldown_left(MessageKeys.cooldown_left),
+    countdown_in_progress(MessageKeys.countdown_in_progress),
+    no_permission(MessageKeys.no_permission),
+    no_claim_permission(MessageKeys.no_claim_permission),
+    time_till_event(MessageKeys.envoy_time_till_event),
+    cant_use_flares(MessageKeys.envoy_cant_use_flare),
+    already_started(MessageKeys.envoy_already_started),
+    enter_editor_mode(MessageKeys.enter_editor_mode),
+    leave_editor_mode(MessageKeys.exit_editor_mode),
+    editor_clear_locations(MessageKeys.envoy_clear_locations),
+    editor_clear_failure(MessageKeys.envoy_clear_failure),
+    not_enough_players(MessageKeys.not_enough_players),
+    stop_ignoring_messages(MessageKeys.stop_ignoring_messages),
+    start_ignoring_messages(MessageKeys.start_ignoring_messages),
+    kicked_from_editor_mode(MessageKeys.envoy_kicked_from_editor_mode),
+    not_in_world_guard_region(MessageKeys.not_in_world_guard_region),
+    no_spawn_locations_found(MessageKeys.no_spawn_locations_found),
+    command_not_found(MessageKeys.command_not_found),
+    day(MessageKeys.time_placeholder_day),
+    hour(MessageKeys.time_placeholder_hour),
+    minute(MessageKeys.time_placeholder_minute),
+    second(MessageKeys.time_placeholder_second),
+    envoy_locations(MessageKeys.envoy_locations),
+    location_format(MessageKeys.location_format),
+    help(MessageKeys.help, true);
 
     private Property<String> property;
 
@@ -83,7 +83,7 @@ public enum Translation {
      *
      * @param property the property
      */
-    Translation(Property<String> property) {
+    Messages(Property<String> property) {
         this.property = property;
     }
 
@@ -93,7 +93,7 @@ public enum Translation {
      * @param listProperty the list property
      * @param isList Defines if it's a list or not.
      */
-    Translation(Property<List<String>> listProperty, boolean isList) {
+    Messages(Property<List<String>> listProperty, boolean isList) {
         this.listProperty = listProperty;
 
         this.isList = isList;
@@ -120,18 +120,18 @@ public enum Translation {
         return getMessage().toString();
     }
 
-    public Translation getMessage() {
+    public Messages getMessage() {
         return getMessage(new HashMap<>());
     }
 
-    public Translation getMessage(String placeholder, String replacement) {
+    public Messages getMessage(String placeholder, String replacement) {
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put(placeholder, replacement);
 
         return getMessage(placeholders);
     }
 
-    public Translation getMessage(Map<String, String> placeholders) {
+    public Messages getMessage(Map<String, String> placeholders) {
         // Get the string first.
         String message;
 
@@ -212,9 +212,9 @@ public enum Translation {
         // Send in console because we should lol.
         sendMessage(this.plugin.getServer().getConsoleSender(), placeholder);
 
-        if (this.plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(Config.envoys_world_messages)) {
+        if (this.plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(ConfigKeys.envoys_world_messages)) {
             for (Player player : this.plugin.getServer().getOnlinePlayers()) {
-                for (String world : this.plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(Config.envoys_allowed_worlds)) {
+                for (String world : this.plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(ConfigKeys.envoys_allowed_worlds)) {
                     if (player.getWorld().getName().equalsIgnoreCase(world)) {
                         if (ignore) {
                             if (!this.crazyManager.isIgnoringMessages(player.getUniqueId())) sendMessage(player, placeholder);

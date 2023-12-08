@@ -5,8 +5,8 @@ import ch.jalu.configme.SettingsManagerBuilder;
 import ch.jalu.configme.configurationdata.ConfigurationData;
 import ch.jalu.configme.configurationdata.ConfigurationDataBuilder;
 import ch.jalu.configme.resource.YamlFileResourceOptions;
-import us.crazycrew.crazyenvoys.common.config.types.Config;
-import us.crazycrew.crazyenvoys.common.config.types.Messages;
+import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
+import us.crazycrew.crazyenvoys.common.config.types.MessageKeys;
 import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import java.io.File;
 
@@ -44,7 +44,7 @@ public class ConfigManager {
         this.messages = SettingsManagerBuilder
                 .withYamlFile(messagesFile, builder)
                 .useDefaultMigrationService()
-                .configurationData(Messages.class)
+                .configurationData(MessageKeys.class)
                 .create();
 
         File configFile = new File(this.dataFolder, "config.yml");
@@ -52,7 +52,7 @@ public class ConfigManager {
         this.config = SettingsManagerBuilder
                 .withYamlFile(configFile, builder)
                 .useDefaultMigrationService()
-                .configurationData(ConfigurationDataBuilder.createConfiguration(Config.class))
+                .configurationData(ConfigurationDataBuilder.createConfiguration(ConfigKeys.class))
                 .create();
     }
 

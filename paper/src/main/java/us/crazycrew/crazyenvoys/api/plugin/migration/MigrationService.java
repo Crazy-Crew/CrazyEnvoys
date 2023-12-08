@@ -5,8 +5,8 @@ import ch.jalu.configme.SettingsManagerBuilder;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.types.Config;
-import us.crazycrew.crazyenvoys.common.config.types.Messages;
+import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
+import us.crazycrew.crazyenvoys.common.config.types.MessageKeys;
 import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import java.io.File;
 import java.io.IOException;
@@ -90,7 +90,7 @@ public class MigrationService {
         SettingsManager config = SettingsManagerBuilder
                 .withYamlFile(input)
                 .useDefaultMigrationService()
-                .configurationData(Config.class)
+                .configurationData(ConfigKeys.class)
                 .create();
 
         boolean fallingBlockToggle = file.getBoolean("Settings.Falling-Block-Toggle");
@@ -161,56 +161,56 @@ public class MigrationService {
 
         List<String> envoyFlareWorldGuardRegions = file.getStringList("Settings.Flares.World-Guard.Regions");
 
-        config.setProperty(Config.envoy_falling_block_toggle, fallingBlockToggle);
-        config.setProperty(Config.envoy_falling_block_type, fallingBlockType);
-        config.setProperty(Config.envoy_falling_height, fallingBlockHeight);
+        config.setProperty(ConfigKeys.envoy_falling_block_toggle, fallingBlockToggle);
+        config.setProperty(ConfigKeys.envoy_falling_block_type, fallingBlockType);
+        config.setProperty(ConfigKeys.envoy_falling_height, fallingBlockHeight);
 
-        config.setProperty(Config.envoys_max_drops_toggle, maxCrateToggle);
-        config.setProperty(Config.envoys_max_drops, maxCrates);
-        config.setProperty(Config.envoys_min_drops, minCrates);
+        config.setProperty(ConfigKeys.envoys_max_drops_toggle, maxCrateToggle);
+        config.setProperty(ConfigKeys.envoys_max_drops, maxCrates);
+        config.setProperty(ConfigKeys.envoys_min_drops, minCrates);
 
-        config.setProperty(Config.envoys_random_drops, randomAmount);
+        config.setProperty(ConfigKeys.envoys_random_drops, randomAmount);
 
-        config.setProperty(Config.envoys_random_locations, randomLocations);
-        config.setProperty(Config.envoys_max_radius, maxRadius);
-        config.setProperty(Config.envoys_min_radius, minRadius);
+        config.setProperty(ConfigKeys.envoys_random_locations, randomLocations);
+        config.setProperty(ConfigKeys.envoys_max_radius, maxRadius);
+        config.setProperty(ConfigKeys.envoys_min_radius, minRadius);
 
-        config.setProperty(Config.envoys_locations_broadcast, envoyLocationsBroadcast);
+        config.setProperty(ConfigKeys.envoys_locations_broadcast, envoyLocationsBroadcast);
 
-        config.setProperty(Config.envoys_run_time_toggle, envoyTimerToggle);
-        config.setProperty(Config.envoys_run_time, envoyRunTime);
+        config.setProperty(ConfigKeys.envoys_run_time_toggle, envoyTimerToggle);
+        config.setProperty(ConfigKeys.envoys_run_time, envoyRunTime);
 
-        config.setProperty(Config.envoys_countdown, envoyCooldownToggle);
-        config.setProperty(Config.envoys_cooldown, envoyCooldown);
-        config.setProperty(Config.envoys_time, envoyTime);
+        config.setProperty(ConfigKeys.envoys_countdown, envoyCooldownToggle);
+        config.setProperty(ConfigKeys.envoys_cooldown, envoyCooldown);
+        config.setProperty(ConfigKeys.envoys_time, envoyTime);
 
-        config.setProperty(Config.envoys_ignore_empty_server, envoyFilterPLayers);
+        config.setProperty(ConfigKeys.envoys_ignore_empty_server, envoyFilterPLayers);
 
-        config.setProperty(Config.envoys_minimum_players_toggle, minimumPlayersToggle);
-        config.setProperty(Config.envoys_minimum_players_amount, minimumPlayersRequired);
+        config.setProperty(ConfigKeys.envoys_minimum_players_toggle, minimumPlayersToggle);
+        config.setProperty(ConfigKeys.envoys_minimum_players_amount, minimumPlayersRequired);
 
-        config.setProperty(Config.envoys_flare_minimum_players_toggle, minimumFlareToggle);
-        config.setProperty(Config.envoys_flare_minimum_players_amount, minimumPlayersRequired);
+        config.setProperty(ConfigKeys.envoys_flare_minimum_players_toggle, minimumFlareToggle);
+        config.setProperty(ConfigKeys.envoys_flare_minimum_players_amount, minimumPlayersRequired);
 
-        config.setProperty(Config.envoys_flare_item_name, envoyFlareName);
-        config.setProperty(Config.envoys_flare_item_type, envoyFlareItem);
-        config.setProperty(Config.envoys_flare_item_lore, envoyFlareItemLore);
-        config.setProperty(Config.envoys_flare_world_guard_toggle, envoyFlareWorldGuard);
-        config.setProperty(Config.envoys_flare_world_guard_regions, envoyFlareWorldGuardRegions);
+        config.setProperty(ConfigKeys.envoys_flare_item_name, envoyFlareName);
+        config.setProperty(ConfigKeys.envoys_flare_item_type, envoyFlareItem);
+        config.setProperty(ConfigKeys.envoys_flare_item_lore, envoyFlareItemLore);
+        config.setProperty(ConfigKeys.envoys_flare_world_guard_toggle, envoyFlareWorldGuard);
+        config.setProperty(ConfigKeys.envoys_flare_world_guard_regions, envoyFlareWorldGuardRegions);
 
-        config.setProperty(Config.envoys_announce_player_pickup, broadcastEnvoyPickUp);
+        config.setProperty(ConfigKeys.envoys_announce_player_pickup, broadcastEnvoyPickUp);
 
-        config.setProperty(Config.envoys_grab_cooldown_toggle, envoyCollectCooldownToggle);
-        config.setProperty(Config.envoys_grab_cooldown_timer, envoyCollectCooldownTime);
+        config.setProperty(ConfigKeys.envoys_grab_cooldown_toggle, envoyCollectCooldownToggle);
+        config.setProperty(ConfigKeys.envoys_grab_cooldown_timer, envoyCollectCooldownTime);
 
-        config.setProperty(Config.envoys_grace_period_toggle, envoyCountdownToggle);
-        config.setProperty(Config.envoys_grace_period_timer, envoyCountdownTime);
-        config.setProperty(Config.envoys_grace_period_unlocked, envoyCountdownMessage);
-        config.setProperty(Config.envoys_grace_period_time_unit, envoyCountdownMessageOther);
+        config.setProperty(ConfigKeys.envoys_grace_period_toggle, envoyCountdownToggle);
+        config.setProperty(ConfigKeys.envoys_grace_period_timer, envoyCountdownTime);
+        config.setProperty(ConfigKeys.envoys_grace_period_unlocked, envoyCountdownMessage);
+        config.setProperty(ConfigKeys.envoys_grace_period_time_unit, envoyCountdownMessageOther);
 
-        config.setProperty(Config.envoys_world_messages, envoyWorldMessages);
-        config.setProperty(Config.envoys_allowed_worlds, envoyAllowedWorlds);
-        config.setProperty(Config.envoys_warnings, envoyWarnings);
+        config.setProperty(ConfigKeys.envoys_world_messages, envoyWorldMessages);
+        config.setProperty(ConfigKeys.envoys_allowed_worlds, envoyAllowedWorlds);
+        config.setProperty(ConfigKeys.envoys_warnings, envoyWarnings);
 
         // Save new config.
         config.save();
@@ -237,7 +237,7 @@ public class MigrationService {
         SettingsManager messages = SettingsManagerBuilder
                 .withYamlFile(messagesFile)
                 .useDefaultMigrationService()
-                .configurationData(Messages.class)
+                .configurationData(MessageKeys.class)
                 .create();
         
         String noPermission = convert("{prefix}" + file.getString("Messages.No-Permission"));
@@ -316,74 +316,74 @@ public class MigrationService {
         
         List<String> help = file.getStringList("Messages.Help");
 
-        messages.setProperty(Messages.no_permission, noPermission);
-        messages.setProperty(Messages.no_claim_permission, noClaimPermission);
+        messages.setProperty(MessageKeys.no_permission, noPermission);
+        messages.setProperty(MessageKeys.no_claim_permission, noClaimPermission);
 
-        messages.setProperty(Messages.envoy_already_started, alreadyStarted);
-        messages.setProperty(Messages.envoy_force_start, forceStart);
-        messages.setProperty(Messages.envoy_not_started, notStarted);
-        messages.setProperty(Messages.envoy_force_ended, forceEnded);
+        messages.setProperty(MessageKeys.envoy_already_started, alreadyStarted);
+        messages.setProperty(MessageKeys.envoy_force_start, forceStart);
+        messages.setProperty(MessageKeys.envoy_not_started, notStarted);
+        messages.setProperty(MessageKeys.envoy_force_ended, forceEnded);
 
-        messages.setProperty(Messages.envoy_warning, warning);
-        messages.setProperty(Messages.envoy_started, started);
-        messages.setProperty(Messages.envoys_remaining, left);
-        messages.setProperty(Messages.envoy_ended, ended);
+        messages.setProperty(MessageKeys.envoy_warning, warning);
+        messages.setProperty(MessageKeys.envoy_started, started);
+        messages.setProperty(MessageKeys.envoys_remaining, left);
+        messages.setProperty(MessageKeys.envoy_ended, ended);
 
-        messages.setProperty(Messages.not_enough_players, notEnoughPlayers);
+        messages.setProperty(MessageKeys.not_enough_players, notEnoughPlayers);
 
-        messages.setProperty(Messages.enter_editor_mode, enterEditorMode);
-        messages.setProperty(Messages.exit_editor_mode, leaveEditorMode);
-        messages.setProperty(Messages.envoy_clear_locations, editorClearLocations);
-        messages.setProperty(Messages.envoy_clear_failure, editorClearFailure);
+        messages.setProperty(MessageKeys.enter_editor_mode, enterEditorMode);
+        messages.setProperty(MessageKeys.exit_editor_mode, leaveEditorMode);
+        messages.setProperty(MessageKeys.envoy_clear_locations, editorClearLocations);
+        messages.setProperty(MessageKeys.envoy_clear_failure, editorClearFailure);
 
-        messages.setProperty(Messages.envoy_kicked_from_editor_mode, kickedFromEditor);
+        messages.setProperty(MessageKeys.envoy_kicked_from_editor_mode, kickedFromEditor);
 
-        messages.setProperty(Messages.envoy_add_location, addLocation);
-        messages.setProperty(Messages.envoy_remove_location, removeLocation);
+        messages.setProperty(MessageKeys.envoy_add_location, addLocation);
+        messages.setProperty(MessageKeys.envoy_remove_location, removeLocation);
 
-        messages.setProperty(Messages.envoy_time_left, timeLeft);
-        messages.setProperty(Messages.envoy_time_till_event, timeTillEvent);
+        messages.setProperty(MessageKeys.envoy_time_left, timeLeft);
+        messages.setProperty(MessageKeys.envoy_time_till_event, timeTillEvent);
 
-        messages.setProperty(Messages.envoy_used_flare, usedFlare);
-        messages.setProperty(Messages.envoy_cant_use_flare, cantUseFlares);
-        messages.setProperty(Messages.envoy_give_flare, giveFlare);
-        messages.setProperty(Messages.envoy_received_flare, givenFlare);
+        messages.setProperty(MessageKeys.envoy_used_flare, usedFlare);
+        messages.setProperty(MessageKeys.envoy_cant_use_flare, cantUseFlares);
+        messages.setProperty(MessageKeys.envoy_give_flare, giveFlare);
+        messages.setProperty(MessageKeys.envoy_received_flare, givenFlare);
 
-        messages.setProperty(Messages.envoy_new_center, newCenter);
+        messages.setProperty(MessageKeys.envoy_new_center, newCenter);
 
-        messages.setProperty(Messages.not_in_world_guard_region, notInWorldGuardRegion);
+        messages.setProperty(MessageKeys.not_in_world_guard_region, notInWorldGuardRegion);
 
-        messages.setProperty(Messages.start_ignoring_messages, startIgnoringMessages);
-        messages.setProperty(Messages.stop_ignoring_messages, stopIgnoringMessages);
+        messages.setProperty(MessageKeys.start_ignoring_messages, startIgnoringMessages);
+        messages.setProperty(MessageKeys.stop_ignoring_messages, stopIgnoringMessages);
 
-        messages.setProperty(Messages.cooldown_left, cooldownLeft);
+        messages.setProperty(MessageKeys.cooldown_left, cooldownLeft);
 
-        messages.setProperty(Messages.countdown_in_progress, countdownInProgress);
+        messages.setProperty(MessageKeys.countdown_in_progress, countdownInProgress);
 
-        messages.setProperty(Messages.drops_available, dropsAvailable);
-        messages.setProperty(Messages.drops_possibilities, dropsPossible);
-        messages.setProperty(Messages.drops_page, dropsPage);
-        messages.setProperty(Messages.drops_format, dropsFormat);
+        messages.setProperty(MessageKeys.drops_available, dropsAvailable);
+        messages.setProperty(MessageKeys.drops_possibilities, dropsPossible);
+        messages.setProperty(MessageKeys.drops_page, dropsPage);
+        messages.setProperty(MessageKeys.drops_format, dropsFormat);
 
-        messages.setProperty(Messages.no_spawn_locations_found, noSpawnLocations);
+        messages.setProperty(MessageKeys.no_spawn_locations_found, noSpawnLocations);
 
-        messages.setProperty(Messages.hologram_on_going, hologramOnGoing);
-        messages.setProperty(Messages.hologram_not_running, hologramNotRunning);
+        messages.setProperty(MessageKeys.hologram_on_going, hologramOnGoing);
+        messages.setProperty(MessageKeys.hologram_not_running, hologramNotRunning);
 
-        messages.setProperty(Messages.time_placeholder_day, timeDay);
-        messages.setProperty(Messages.time_placeholder_hour, timeHour);
-        messages.setProperty(Messages.time_placeholder_minute, timeMinute);
-        messages.setProperty(Messages.time_placeholder_second, timeSecond);
+        messages.setProperty(MessageKeys.time_placeholder_day, timeDay);
+        messages.setProperty(MessageKeys.time_placeholder_hour, timeHour);
+        messages.setProperty(MessageKeys.time_placeholder_minute, timeMinute);
+        messages.setProperty(MessageKeys.time_placeholder_second, timeSecond);
 
-        messages.setProperty(Messages.envoy_locations, crateLocations);
-        messages.setProperty(Messages.location_format, locationFormat);
-        messages.setProperty(Messages.command_not_found, commandNotFound);
-        messages.setProperty(Messages.player_only, playerOnly);
-        messages.setProperty(Messages.not_online, notOnline);
-        messages.setProperty(Messages.not_a_number, notANumber);
-        messages.setProperty(Messages.envoy_plugin_reloaded, reloaded);
+        messages.setProperty(MessageKeys.envoy_locations, crateLocations);
+        messages.setProperty(MessageKeys.location_format, locationFormat);
+        messages.setProperty(MessageKeys.command_not_found, commandNotFound);
+        messages.setProperty(MessageKeys.player_only, playerOnly);
+        messages.setProperty(MessageKeys.not_online, notOnline);
+        messages.setProperty(MessageKeys.not_a_number, notANumber);
+        messages.setProperty(MessageKeys.envoy_plugin_reloaded, reloaded);
 
-        messages.setProperty(Messages.help, help);
+        messages.setProperty(MessageKeys.help, help);
 
         // Save the file.
         messages.save();

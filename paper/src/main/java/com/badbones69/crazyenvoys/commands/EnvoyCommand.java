@@ -3,7 +3,7 @@ package com.badbones69.crazyenvoys.commands;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.api.enums.Translation;
+import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
@@ -39,7 +39,7 @@ public class EnvoyCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
         if (args.length == 0) {
             if (!hasPermission(sender, "time") || !(sender instanceof ConsoleCommandSender)) {
-                Translation.no_permission.sendMessage(sender);
+                Messages.no_permission.sendMessage(sender);
                 return true;
             }
 
@@ -48,18 +48,18 @@ public class EnvoyCommand implements CommandExecutor {
             switch (args[0].toLowerCase()) {
                 case "help" -> {
                     if (!hasPermission(sender, "help") && !(sender instanceof ConsoleCommandSender)) {
-                        Translation.no_permission.sendMessage(sender);
+                        Messages.no_permission.sendMessage(sender);
                         return true;
                     }
 
-                    Translation.help.sendMessage(sender);
+                    Messages.help.sendMessage(sender);
 
                     return true;
                 }
 
                 case "reload" -> {
                     if (!hasPermission(sender, "reload") && !(sender instanceof ConsoleCommandSender)) {
-                        Translation.no_permission.sendMessage(sender);
+                        Messages.no_permission.sendMessage(sender);
                         return true;
                     }
 
@@ -73,19 +73,19 @@ public class EnvoyCommand implements CommandExecutor {
 
                     this.crazyManager.reload(false);
 
-                    Translation.reloaded.sendMessage(sender);
+                    Messages.reloaded.sendMessage(sender);
 
                     return true;
                 }
 
                 case "ignore" -> {
                     if (!(sender instanceof Player player)) {
-                        Translation.player_only.sendMessage(sender);
+                        Messages.player_only.sendMessage(sender);
                         return true;
                     }
 
                     if (!hasPermission(player, "ignore")) {
-                        Translation.no_permission.sendMessage(player);
+                        Messages.no_permission.sendMessage(player);
                         return true;
                     }
 
@@ -93,10 +93,10 @@ public class EnvoyCommand implements CommandExecutor {
 
                     if (this.crazyManager.isIgnoringMessages(uuid)) {
                         this.crazyManager.removeIgnorePlayer(uuid);
-                        Translation.stop_ignoring_messages.sendMessage(player);
+                        Messages.stop_ignoring_messages.sendMessage(player);
                     } else {
                         this.crazyManager.addIgnorePlayer(uuid);
-                        Translation.start_ignoring_messages.sendMessage(player);
+                        Messages.start_ignoring_messages.sendMessage(player);
                     }
 
                     return true;
@@ -104,24 +104,24 @@ public class EnvoyCommand implements CommandExecutor {
 
                 case "center" -> {
                     if (!(sender instanceof Player player)) {
-                        Translation.player_only.sendMessage(sender);
+                        Messages.player_only.sendMessage(sender);
                         return true;
                     }
 
                     if (!hasPermission(player, "center")) {
-                        Translation.no_permission.sendMessage(player);
+                        Messages.no_permission.sendMessage(player);
                         return true;
                     }
 
                     this.crazyManager.setCenter(player.getLocation());
-                    Translation.new_center.sendMessage(player);
+                    Messages.new_center.sendMessage(player);
 
                     return true;
                 }
 
                 case "flare" -> { // /envoy flare [Amount] [Player]
                     if (!hasPermission(sender, "flare.give") && !(sender instanceof ConsoleCommandSender)) {
-                        Translation.no_permission.sendMessage(sender);
+                        Messages.no_permission.sendMessage(sender);
                         return true;
                     }
 
@@ -132,7 +132,7 @@ public class EnvoyCommand implements CommandExecutor {
                         if (this.methods.isInt(args[1])) {
                             amount = Integer.parseInt(args[1]);
                         } else {
-                            Translation.not_a_number.sendMessage(sender);
+                            Messages.not_a_number.sendMessage(sender);
                             return true;
                         }
                     }
@@ -141,12 +141,12 @@ public class EnvoyCommand implements CommandExecutor {
                         if (this.methods.isOnline(args[2])) {
                             player = this.methods.getPlayer(args[2]);
                         } else {
-                            Translation.not_online.sendMessage(sender);
+                            Messages.not_online.sendMessage(sender);
                             return true;
                         }
                     } else {
                         if (!(sender instanceof Player)) {
-                            Translation.player_only.sendMessage(sender);
+                            Messages.player_only.sendMessage(sender);
                             return true;
                         } else {
                             player = (Player) sender;
@@ -156,9 +156,9 @@ public class EnvoyCommand implements CommandExecutor {
                     HashMap<String, String> placeholder = new HashMap<>();
                     placeholder.put("{player}", player.getName());
                     placeholder.put("{amount}", amount + "");
-                    Translation.give_flare.sendMessage(sender, placeholder);
+                    Messages.give_flare.sendMessage(sender, placeholder);
 
-                    if (!sender.getName().equalsIgnoreCase(player.getName())) Translation.given_flare.sendMessage(player, placeholder);
+                    if (!sender.getName().equalsIgnoreCase(player.getName())) Messages.given_flare.sendMessage(player, placeholder);
 
                     this.flareSettings.giveFlare(player, amount);
 
@@ -167,7 +167,7 @@ public class EnvoyCommand implements CommandExecutor {
 
                 case "drops", "drop" -> {
                     if (!hasPermission(sender, "drops") && !(sender instanceof ConsoleCommandSender)) {
-                        Translation.no_permission.sendMessage(sender);
+                        Messages.no_permission.sendMessage(sender);
                         return true;
                     }
 
@@ -178,7 +178,7 @@ public class EnvoyCommand implements CommandExecutor {
                         if (this.methods.isInt(args[1])) {
                             page = Integer.parseInt(args[1]);
                         } else {
-                            Translation.not_a_number.sendMessage(sender);
+                            Messages.not_a_number.sendMessage(sender);
                             return true;
                         }
                     }
@@ -192,29 +192,29 @@ public class EnvoyCommand implements CommandExecutor {
                         placeholders.put("{x}", String.valueOf(block.getX()));
                         placeholders.put("{y}", String.valueOf(block.getY()));
                         placeholders.put("{z}", String.valueOf(block.getZ()));
-                        locs.add(Translation.drops_format.getStringMessage(placeholders));
+                        locs.add(Messages.drops_format.getStringMessage(placeholders));
                         amount++;
                         placeholders.clear();
                     }
 
                     if (this.crazyManager.isEnvoyActive()) {
-                        Translation.drops_available.sendMessage(sender);
+                        Messages.drops_available.sendMessage(sender);
                     } else {
-                        Translation.drops_possibilities.sendMessage(sender);
+                        Messages.drops_possibilities.sendMessage(sender);
                     }
 
                     for (String dropLocation : this.methods.getPage(locs, page)) {
                         sender.sendMessage(MsgUtils.color(dropLocation));
                     }
 
-                    if (!this.crazyManager.isEnvoyActive()) Translation.drops_page.sendMessage(sender);
+                    if (!this.crazyManager.isEnvoyActive()) Messages.drops_page.sendMessage(sender);
 
                     return true;
                 }
 
                 case "time" -> {
                     if (!hasPermission(sender, "time") && !(sender instanceof ConsoleCommandSender)) {
-                        Translation.no_permission.sendMessage(sender);
+                        Messages.no_permission.sendMessage(sender);
                         return true;
                     }
 
@@ -222,10 +222,10 @@ public class EnvoyCommand implements CommandExecutor {
 
                     if (this.crazyManager.isEnvoyActive()) {
                         placeholder.put("{time}", this.crazyManager.getEnvoyRunTimeLeft());
-                        Translation.time_left.sendMessage(sender, placeholder);
+                        Messages.time_left.sendMessage(sender, placeholder);
                     } else {
                         placeholder.put("{time}", this.crazyManager.getNextEnvoyTime());
-                        Translation.time_till_event.sendMessage(sender, placeholder);
+                        Messages.time_till_event.sendMessage(sender, placeholder);
                     }
 
                     return true;
@@ -233,12 +233,12 @@ public class EnvoyCommand implements CommandExecutor {
 
                 case "start", "begin" -> {
                     if (!hasPermission(sender, "start") && !(sender instanceof ConsoleCommandSender)) {
-                        Translation.no_permission.sendMessage(sender);
+                        Messages.no_permission.sendMessage(sender);
                         return true;
                     }
 
                     if (this.crazyManager.isEnvoyActive()) {
-                        Translation.already_started.sendMessage(sender);
+                        Messages.already_started.sendMessage(sender);
                         return true;
                     }
 
@@ -252,19 +252,19 @@ public class EnvoyCommand implements CommandExecutor {
 
                     this.plugin.getServer().getPluginManager().callEvent(event);
 
-                    if (!event.isCancelled() && this.crazyManager.startEnvoyEvent()) Translation.force_start.sendMessage(sender);
+                    if (!event.isCancelled() && this.crazyManager.startEnvoyEvent()) Messages.force_start.sendMessage(sender);
 
                     return true;
                 }
 
                 case "stop", "end" -> {
                     if (!hasPermission(sender, "stop") && !(sender instanceof ConsoleCommandSender)) {
-                        Translation.no_permission.sendMessage(sender);
+                        Messages.no_permission.sendMessage(sender);
                         return true;
                     }
 
                     if (!this.crazyManager.isEnvoyActive()) {
-                        Translation.not_started.sendMessage(sender);
+                        Messages.not_started.sendMessage(sender);
                         return true;
                     }
 
@@ -278,25 +278,25 @@ public class EnvoyCommand implements CommandExecutor {
 
                     this.plugin.getServer().getPluginManager().callEvent(event);
                     this.crazyManager.endEnvoyEvent();
-                    Translation.ended.broadcastMessage(false);
-                    Translation.force_end.sendMessage(sender);
+                    Messages.ended.broadcastMessage(false);
+                    Messages.force_end.sendMessage(sender);
 
                     return true;
                 }
 
                 case "edit" -> {
                     if (!(sender instanceof Player player)) {
-                        Translation.player_only.sendMessage(sender);
+                        Messages.player_only.sendMessage(sender);
                         return true;
                     }
 
                     if (!hasPermission(player, "edit")) {
-                        Translation.no_permission.sendMessage(player);
+                        Messages.no_permission.sendMessage(player);
                         return true;
                     }
 
                     if (!this.crazyManager.isEnvoyActive()) {
-                        Translation.kicked_from_editor_mode.sendMessage(player);
+                        Messages.kicked_from_editor_mode.sendMessage(player);
                         return true;
                     }
 
@@ -304,12 +304,12 @@ public class EnvoyCommand implements CommandExecutor {
                         this.editorSettings.removeEditor(player);
                         this.editorSettings.removeFakeBlocks();
                         player.getInventory().remove(Material.BEDROCK);
-                        Translation.leave_editor_mode.sendMessage(player);
+                        Messages.leave_editor_mode.sendMessage(player);
                     } else {
                         this.editorSettings.addEditor(player);
                         this.editorSettings.showFakeBlocks(player);
                         player.getInventory().addItem(new ItemStack(Material.BEDROCK, 1));
-                        Translation.enter_editor_mode.sendMessage(player);
+                        Messages.enter_editor_mode.sendMessage(player);
                     }
 
                     return true;
@@ -317,29 +317,29 @@ public class EnvoyCommand implements CommandExecutor {
 
                 case "clear" -> {
                     if (!(sender instanceof Player player)) {
-                        Translation.player_only.sendMessage(sender);
+                        Messages.player_only.sendMessage(sender);
                         return true;
                     }
 
                     if (!hasPermission(player, "clear")) {
-                        Translation.no_permission.sendMessage(player);
+                        Messages.no_permission.sendMessage(player);
                         return true;
                     }
 
                     if (this.editorSettings.isEditor(player)) {
                         // User is in editor mode and is able to clear all locations.
                         this.locationSettings.clearSpawnLocations();
-                        Translation.editor_clear_locations.sendMessage(player);
+                        Messages.editor_clear_locations.sendMessage(player);
                     } else {
                         // User must be in editor mode to clear locations. This is to help prevent accidental clears.
-                        Translation.editor_clear_failure.sendMessage(player);
+                        Messages.editor_clear_failure.sendMessage(player);
                     }
 
                     return true;
                 }
             }
 
-            Translation.command_not_found.sendMessage(sender);
+            Messages.command_not_found.sendMessage(sender);
         }
 
         return true;

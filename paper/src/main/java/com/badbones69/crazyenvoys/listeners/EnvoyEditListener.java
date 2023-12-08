@@ -3,7 +3,7 @@ package com.badbones69.crazyenvoys.listeners;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.api.enums.Translation;
+import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import org.bukkit.Material;
@@ -41,7 +41,7 @@ public class EnvoyEditListener implements Listener {
 
         this.locationSettings.addSpawnLocation(block);
 
-        Translation.add_location.sendMessage(player);
+        Messages.add_location.sendMessage(player);
 
         for (UUID uuid : this.editorSettings.getEditors()) {
             if (uuid == player.getUniqueId()) player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
@@ -63,6 +63,6 @@ public class EnvoyEditListener implements Listener {
 
         this.locationSettings.removeSpawnLocation(block);
 
-        Translation.remove_location.sendMessage(player);
+        Messages.remove_location.sendMessage(player);
     }
 }

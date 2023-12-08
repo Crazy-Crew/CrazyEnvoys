@@ -7,9 +7,9 @@ import java.util.List;
 import static ch.jalu.configme.properties.PropertyInitializer.newListProperty;
 import static ch.jalu.configme.properties.PropertyInitializer.newProperty;
 
-public class Messages implements SettingsHolder {
+public class MessageKeys implements SettingsHolder {
 
-    protected Messages() {}
+    protected MessageKeys() {}
 
     @Override
     public void registerComments(CommentsConfiguration conf) {

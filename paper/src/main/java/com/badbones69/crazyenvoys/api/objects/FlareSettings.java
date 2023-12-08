@@ -6,7 +6,7 @@ import com.badbones69.crazyenvoys.Methods;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.types.Config;
+import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 
 public class FlareSettings {
 
@@ -19,9 +19,9 @@ public class FlareSettings {
     public void load() {
         SettingsManager config = this.plugin.getCrazyHandler().getConfigManager().getConfig();
         this.flareItemBuilder = new ItemBuilder()
-                .setMaterial(config.getProperty(Config.envoys_flare_item_type))
-                .setName(config.getProperty(Config.envoys_flare_item_name))
-                .setLore(config.getProperty(Config.envoys_flare_item_lore));
+                .setMaterial(config.getProperty(ConfigKeys.envoys_flare_item_type))
+                .setName(config.getProperty(ConfigKeys.envoys_flare_item_name))
+                .setLore(config.getProperty(ConfigKeys.envoys_flare_item_lore));
     }
     
     public ItemStack getFlare() {

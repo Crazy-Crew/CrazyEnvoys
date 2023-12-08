@@ -2,7 +2,7 @@ package com.badbones69.crazyenvoys;
 
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.api.enums.DataKeys;
-import com.badbones69.crazyenvoys.api.enums.Translation;
+import com.badbones69.crazyenvoys.api.enums.Messages;
 import us.crazycrew.crazyenvoys.other.MsgUtils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -177,13 +177,13 @@ public class Methods {
         second += total;
         String message = "";
 
-        if (day > 0) message += day + Translation.day.getStringMessage() + ", ";
-        if (day > 0 || hour > 0) message += hour + Translation.hour.getStringMessage() + ", ";
-        if (day > 0 || hour > 0 || minute > 0) message += minute + Translation.minute.getStringMessage() + ", ";
-        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + Translation.second.getStringMessage() + ", ";
+        if (day > 0) message += day + Messages.day.getStringMessage() + ", ";
+        if (day > 0 || hour > 0) message += hour + Messages.hour.getStringMessage() + ", ";
+        if (day > 0 || hour > 0 || minute > 0) message += minute + Messages.minute.getStringMessage() + ", ";
+        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + Messages.second.getStringMessage() + ", ";
 
         if (message.length() < 2) {
-            message = "0" + Translation.second.getStringMessage();
+            message = "0" + Messages.second.getStringMessage();
         } else {
             message = message.substring(0, message.length() - 2);
         }
