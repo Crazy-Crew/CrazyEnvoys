@@ -59,6 +59,4 @@ public class PluginConfig implements SettingsHolder {
 
     @Comment("The console prefix you want shown when the logging messages show up!")
     public static final Property<String> console_prefix = PropertyInitializer.newProperty("console_prefix" ,"&8[&cCrazyEnvoys&8] ");
-
-
 }
