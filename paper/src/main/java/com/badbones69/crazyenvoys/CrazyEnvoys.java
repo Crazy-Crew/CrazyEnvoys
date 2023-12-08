@@ -9,7 +9,6 @@ import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
-import com.badbones69.crazyenvoys.commands.EnvoyCommand;
 import com.badbones69.crazyenvoys.commands.EnvoyTab;
 import com.badbones69.crazyenvoys.listeners.EnvoyEditListener;
 import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
@@ -24,8 +23,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
+import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 
 public class CrazyEnvoys extends JavaPlugin {
 
@@ -95,7 +94,7 @@ public class CrazyEnvoys extends JavaPlugin {
     }
 
     public boolean isLogging() {
-        return this.crazyHandler.getConfigManager().getPluginConfig().getProperty(PluginConfig.verbose_logging);
+        return this.crazyHandler.getConfigManager().getConfig().getProperty(ConfigKeys.verbose_logging);
     }
 
     private void enable() {

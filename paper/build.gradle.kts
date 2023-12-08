@@ -49,6 +49,9 @@ val isBeta: Boolean get() = rootProject.extra["isBeta"]?.toString()?.toBoolean()
 val type = if (isBeta) "Beta" else "Release"
 
 val description = """
+## Configs:
+ * Removed plugin-config.yml as it was just weird, Options in there will migrate to config.yml automatically.
+    
 ## Changes:
  * Used instanceof variables to make checks simpler
  * Cleaned up command checks to be more readable
@@ -118,7 +121,7 @@ tasks {
     runServer {
         jvmArgs("-Dnet.kyori.ansi.colorLevel=truecolor")
 
-        minecraftVersion(mcVersion)
+        minecraftVersion("1.20.2")
     }
 
     // Assembles the plugin.

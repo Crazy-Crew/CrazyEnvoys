@@ -44,7 +44,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
 import us.crazycrew.crazyenvoys.support.MetricsHandler;
 import java.util.ArrayList;
@@ -62,7 +61,6 @@ public class CrazyManager {
     private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
     private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
     private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
-    private final @NotNull SettingsManager pluginConfig = this.configManager.getPluginConfig();
     private final @NotNull SettingsManager config = this.configManager.getConfig();
 
     private final @NotNull FileManager fileManager = this.plugin.getFileManager();
@@ -149,7 +147,7 @@ public class CrazyManager {
 
         this.configManager.reload();
 
-        boolean metrics = this.pluginConfig.getProperty(PluginConfig.toggle_metrics);
+        boolean metrics = this.config.getProperty(ConfigKeys.toggle_metrics);
 
         if (metrics) {
             metricsHandler.start();

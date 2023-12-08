@@ -1,15 +1,15 @@
 package us.crazycrew.crazyenvoys.other;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
+import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static java.util.regex.Matcher.quoteReplacement;
 
+@SuppressWarnings("ALL")
 public class MsgUtils {
 
     private static final CrazyEnvoys plugin = CrazyEnvoys.get();
@@ -40,22 +40,6 @@ public class MsgUtils {
     }
 
     public static String getPrefix() {
-        return color(plugin.getCrazyHandler().getConfigManager().getPluginConfig().getProperty(PluginConfig.command_prefix));
-    }
-
-    public static String getPrefix(String msg) {
-        return color(getPrefix() + msg);
-    }
-
-    public static String sanitizeColor(String msg) {
-        return sanitizeFormat(color(msg));
-    }
-
-    public static String sanitizeFormat(String string) {
-        return TextComponent.toLegacyText(TextComponent.fromLegacyText(string));
-    }
-
-    public static String removeColor(String msg) {
-        return ChatColor.stripColor(msg);
+        return color(plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(ConfigKeys.command_prefix));
     }
 }

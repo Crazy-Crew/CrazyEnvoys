@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import us.crazycrew.crazyenvoys.common.config.types.MessageKeys;
-import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -236,7 +236,7 @@ public enum Messages {
     }
 
     public String asString() {
-        return MsgUtils.color(this.message.replaceAll("\\{prefix}", this.configManager.getPluginConfig().getProperty(PluginConfig.command_prefix)));
+        return MsgUtils.color(this.message.replaceAll("\\{prefix}", this.configManager.getConfig().getProperty(ConfigKeys.command_prefix)));
     }
 
     public List<String> toListString() {

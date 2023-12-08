@@ -4,8 +4,8 @@ import com.badbones69.crazyenvoys.api.FileManager;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.CrazyEnvoysPlugin;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import us.crazycrew.crazyenvoys.api.plugin.migration.MigrationService;
+import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import us.crazycrew.crazyenvoys.support.MetricsHandler;
 import java.io.File;
 
@@ -31,7 +31,7 @@ public class CrazyHandler extends CrazyEnvoysPlugin {
                 .registerDefaultGenerateFiles("Titan.yml", "/tiers", "/tiers")
                 .setup();
 
-        boolean metrics = getConfigManager().getPluginConfig().getProperty(PluginConfig.toggle_metrics);
+        boolean metrics = getConfigManager().getConfig().getProperty(ConfigKeys.toggle_metrics);
 
         this.metrics = new MetricsHandler();
         if (metrics) this.metrics.start();

@@ -2,14 +2,13 @@ package us.crazycrew.crazyenvoys.api.plugin.migration;
 
 import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;
+import ch.jalu.configme.resource.YamlFileResourceOptions;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import us.crazycrew.crazyenvoys.common.config.types.MessageKeys;
-import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -17,10 +16,8 @@ public class MigrationService {
 
     private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private SettingsManager pluginConfig;
-
     public void migrate() {
-        // Migrate some options from the config.yml to plugin-config.yml
+        // Migrate some options from the plugin-config.yml back to config.yml
         copyPluginConfig();
 
         // Migrate what's left from Config-Backup.yml to config.yml then delete the backup file.
@@ -35,63 +32,57 @@ public class MigrationService {
     }
 
     private void copyPluginConfig() {
-        File input = new File(this.plugin.getDataFolder(),"config.yml");
+        File input = new File(this.plugin.getDataFolder(), "plugin-config.yml");
 
-        YamlConfiguration file = CompletableFuture.supplyAsync(() -> YamlConfiguration.loadConfiguration(input)).join();
+        if (!input.exists()) return;
 
-        // Check if this exists, and if not we return.
-        if (file.getString("Settings.Prefix") == null) return;
+        YamlConfiguration config = CompletableFuture.supplyAsync(() -> YamlConfiguration.loadConfiguration(input)).join();
 
-        // Fetch the values I want to migrate
-        String oldPrefix = file.getString("Settings.Prefix");
-        boolean oldMetrics = file.getBoolean("Settings.Toggle-Metrics");
+        YamlFileResourceOptions builder = YamlFileResourceOptions.builder().indentationSize(2).build();
 
-        // Create the plugin-config.yml file.
-        File pluginConfigFile = new File(this.plugin.getDataFolder(), "plugin-config.yml");
-
-        // Bind it to settings manager
-        this.pluginConfig = SettingsManagerBuilder
-                .withYamlFile(pluginConfigFile)
+        SettingsManager configKeys = SettingsManagerBuilder
+                .withYamlFile(new File(this.plugin.getDataFolder(), "config.yml"), builder)
                 .useDefaultMigrationService()
-                .configurationData(PluginConfig.class)
+                .configurationData(ConfigKeys.class)
                 .create();
 
-        this.pluginConfig.setProperty(PluginConfig.toggle_metrics, oldMetrics);
+        String language = config.getString("language", "en-US");
 
-        if (oldPrefix != null) {
-            this.pluginConfig.setProperty(PluginConfig.command_prefix, oldPrefix);
-        }
+        boolean verbose = config.getBoolean("verbose_logging", false);
+        boolean metrics = config.getBoolean("toggle_metrics", false);
 
-        file.set("Settings.Prefix", null);
-        file.set("Settings.Toggle-Metrics", null);
+        String prefix = config.getString("command_prefix", "&8[&dCrazyEnvoys&8]: ");
+        String consolePrefix = config.getString("console_prefix", "&8[&cCrazyEnvoys&8] ");
 
-        try {
-            this.pluginConfig.save();
+        configKeys.setProperty(ConfigKeys.locale_file, language);
+        configKeys.setProperty(ConfigKeys.verbose_logging, verbose);
+        configKeys.setProperty(ConfigKeys.toggle_metrics, metrics);
+        configKeys.setProperty(ConfigKeys.command_prefix, prefix);
+        configKeys.setProperty(ConfigKeys.console_prefix, consolePrefix);
 
-            file.save(input);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+        // Save to file.
+        configKeys.save();
+
+        // Delete old file.
+        if (input.delete()) this.plugin.getLogger().warning("Successfully migrated " + input.getName() + ".yml");
     }
 
     private void copyConfig() {
         File input = new File(this.plugin.getDataFolder(), "config.yml");
 
-        YamlConfiguration file = CompletableFuture.supplyAsync(() -> YamlConfiguration.loadConfiguration(input)).join();
+        YamlConfiguration old = CompletableFuture.supplyAsync(() -> YamlConfiguration.loadConfiguration(input)).join();
         
         // If the config configuration doesn't have this. we do nothing.
-        if (file.getString("Settings.Falling-Block-Toggle") == null) return;
+        if (old.getString("Settings.Falling-Block-Toggle") == null) return;
         
         // Rename config.yml to this.
         File backupFile = new File(this.plugin.getDataFolder(), "Config-Backup.yml");
         input.renameTo(backupFile);
 
-        // Bind it to settings manager
-        SettingsManager config = SettingsManagerBuilder
-                .withYamlFile(input)
-                .useDefaultMigrationService()
-                .configurationData(ConfigKeys.class)
-                .create();
+        YamlConfiguration file = CompletableFuture.supplyAsync(() -> YamlConfiguration.loadConfiguration(backupFile)).join();
+
+        String oldPrefix = file.getString("Settings.Prefix", "&8[&cCrazyEnvoys&8]: ");
+        boolean oldMetrics = file.getBoolean("Settings.Toggle-Metrics", false);
 
         boolean fallingBlockToggle = file.getBoolean("Settings.Falling-Block-Toggle");
 
@@ -161,59 +152,70 @@ public class MigrationService {
 
         List<String> envoyFlareWorldGuardRegions = file.getStringList("Settings.Flares.World-Guard.Regions");
 
-        config.setProperty(ConfigKeys.envoy_falling_block_toggle, fallingBlockToggle);
-        config.setProperty(ConfigKeys.envoy_falling_block_type, fallingBlockType);
-        config.setProperty(ConfigKeys.envoy_falling_height, fallingBlockHeight);
+        YamlFileResourceOptions builder = YamlFileResourceOptions.builder().indentationSize(2).build();
 
-        config.setProperty(ConfigKeys.envoys_max_drops_toggle, maxCrateToggle);
-        config.setProperty(ConfigKeys.envoys_max_drops, maxCrates);
-        config.setProperty(ConfigKeys.envoys_min_drops, minCrates);
+        SettingsManager configKeys = SettingsManagerBuilder
+                .withYamlFile(new File(this.plugin.getDataFolder(), "config.yml"), builder)
+                .useDefaultMigrationService()
+                .configurationData(ConfigKeys.class)
+                .create();
 
-        config.setProperty(ConfigKeys.envoys_random_drops, randomAmount);
+        configKeys.setProperty(ConfigKeys.command_prefix, oldPrefix);
+        configKeys.setProperty(ConfigKeys.toggle_metrics, oldMetrics);
 
-        config.setProperty(ConfigKeys.envoys_random_locations, randomLocations);
-        config.setProperty(ConfigKeys.envoys_max_radius, maxRadius);
-        config.setProperty(ConfigKeys.envoys_min_radius, minRadius);
+        configKeys.setProperty(ConfigKeys.envoy_falling_block_toggle, fallingBlockToggle);
+        configKeys.setProperty(ConfigKeys.envoy_falling_block_type, fallingBlockType);
+        configKeys.setProperty(ConfigKeys.envoy_falling_height, fallingBlockHeight);
 
-        config.setProperty(ConfigKeys.envoys_locations_broadcast, envoyLocationsBroadcast);
+        configKeys.setProperty(ConfigKeys.envoys_max_drops_toggle, maxCrateToggle);
+        configKeys.setProperty(ConfigKeys.envoys_max_drops, maxCrates);
+        configKeys.setProperty(ConfigKeys.envoys_min_drops, minCrates);
 
-        config.setProperty(ConfigKeys.envoys_run_time_toggle, envoyTimerToggle);
-        config.setProperty(ConfigKeys.envoys_run_time, envoyRunTime);
+        configKeys.setProperty(ConfigKeys.envoys_random_drops, randomAmount);
 
-        config.setProperty(ConfigKeys.envoys_countdown, envoyCooldownToggle);
-        config.setProperty(ConfigKeys.envoys_cooldown, envoyCooldown);
-        config.setProperty(ConfigKeys.envoys_time, envoyTime);
+        configKeys.setProperty(ConfigKeys.envoys_random_locations, randomLocations);
+        configKeys.setProperty(ConfigKeys.envoys_max_radius, maxRadius);
+        configKeys.setProperty(ConfigKeys.envoys_min_radius, minRadius);
 
-        config.setProperty(ConfigKeys.envoys_ignore_empty_server, envoyFilterPLayers);
+        configKeys.setProperty(ConfigKeys.envoys_locations_broadcast, envoyLocationsBroadcast);
 
-        config.setProperty(ConfigKeys.envoys_minimum_players_toggle, minimumPlayersToggle);
-        config.setProperty(ConfigKeys.envoys_minimum_players_amount, minimumPlayersRequired);
+        configKeys.setProperty(ConfigKeys.envoys_run_time_toggle, envoyTimerToggle);
+        configKeys.setProperty(ConfigKeys.envoys_run_time, envoyRunTime);
 
-        config.setProperty(ConfigKeys.envoys_flare_minimum_players_toggle, minimumFlareToggle);
-        config.setProperty(ConfigKeys.envoys_flare_minimum_players_amount, minimumPlayersRequired);
+        configKeys.setProperty(ConfigKeys.envoys_countdown, envoyCooldownToggle);
+        configKeys.setProperty(ConfigKeys.envoys_cooldown, envoyCooldown);
+        configKeys.setProperty(ConfigKeys.envoys_time, envoyTime);
 
-        config.setProperty(ConfigKeys.envoys_flare_item_name, envoyFlareName);
-        config.setProperty(ConfigKeys.envoys_flare_item_type, envoyFlareItem);
-        config.setProperty(ConfigKeys.envoys_flare_item_lore, envoyFlareItemLore);
-        config.setProperty(ConfigKeys.envoys_flare_world_guard_toggle, envoyFlareWorldGuard);
-        config.setProperty(ConfigKeys.envoys_flare_world_guard_regions, envoyFlareWorldGuardRegions);
+        configKeys.setProperty(ConfigKeys.envoys_ignore_empty_server, envoyFilterPLayers);
 
-        config.setProperty(ConfigKeys.envoys_announce_player_pickup, broadcastEnvoyPickUp);
+        configKeys.setProperty(ConfigKeys.envoys_minimum_players_toggle, minimumPlayersToggle);
+        configKeys.setProperty(ConfigKeys.envoys_minimum_players_amount, minimumPlayersRequired);
 
-        config.setProperty(ConfigKeys.envoys_grab_cooldown_toggle, envoyCollectCooldownToggle);
-        config.setProperty(ConfigKeys.envoys_grab_cooldown_timer, envoyCollectCooldownTime);
+        configKeys.setProperty(ConfigKeys.envoys_flare_minimum_players_toggle, minimumFlareToggle);
+        configKeys.setProperty(ConfigKeys.envoys_flare_minimum_players_amount, minimumPlayersRequired);
 
-        config.setProperty(ConfigKeys.envoys_grace_period_toggle, envoyCountdownToggle);
-        config.setProperty(ConfigKeys.envoys_grace_period_timer, envoyCountdownTime);
-        config.setProperty(ConfigKeys.envoys_grace_period_unlocked, envoyCountdownMessage);
-        config.setProperty(ConfigKeys.envoys_grace_period_time_unit, envoyCountdownMessageOther);
+        configKeys.setProperty(ConfigKeys.envoys_flare_item_name, envoyFlareName);
+        configKeys.setProperty(ConfigKeys.envoys_flare_item_type, envoyFlareItem);
+        configKeys.setProperty(ConfigKeys.envoys_flare_item_lore, envoyFlareItemLore);
+        configKeys.setProperty(ConfigKeys.envoys_flare_world_guard_toggle, envoyFlareWorldGuard);
+        configKeys.setProperty(ConfigKeys.envoys_flare_world_guard_regions, envoyFlareWorldGuardRegions);
 
-        config.setProperty(ConfigKeys.envoys_world_messages, envoyWorldMessages);
-        config.setProperty(ConfigKeys.envoys_allowed_worlds, envoyAllowedWorlds);
-        config.setProperty(ConfigKeys.envoys_warnings, envoyWarnings);
+        configKeys.setProperty(ConfigKeys.envoys_announce_player_pickup, broadcastEnvoyPickUp);
+
+        configKeys.setProperty(ConfigKeys.envoys_grab_cooldown_toggle, envoyCollectCooldownToggle);
+        configKeys.setProperty(ConfigKeys.envoys_grab_cooldown_timer, envoyCollectCooldownTime);
+
+        configKeys.setProperty(ConfigKeys.envoys_grace_period_toggle, envoyCountdownToggle);
+        configKeys.setProperty(ConfigKeys.envoys_grace_period_timer, envoyCountdownTime);
+        configKeys.setProperty(ConfigKeys.envoys_grace_period_unlocked, envoyCountdownMessage);
+        configKeys.setProperty(ConfigKeys.envoys_grace_period_time_unit, envoyCountdownMessageOther);
+
+        configKeys.setProperty(ConfigKeys.envoys_world_messages, envoyWorldMessages);
+        configKeys.setProperty(ConfigKeys.envoys_allowed_worlds, envoyAllowedWorlds);
+        configKeys.setProperty(ConfigKeys.envoys_warnings, envoyWarnings);
 
         // Save new config.
-        config.save();
+        configKeys.save();
 
         // Delete old file.
         backupFile.delete();
@@ -232,8 +234,16 @@ public class MigrationService {
         File localeDir = new File(this.plugin.getDataFolder(), "locale");
         if (!localeDir.exists()) localeDir.mkdirs();
 
+        YamlFileResourceOptions builder = YamlFileResourceOptions.builder().indentationSize(2).build();
+
+        SettingsManager configKeys = SettingsManagerBuilder
+                .withYamlFile(new File(this.plugin.getDataFolder(), "config.yml"), builder)
+                .useDefaultMigrationService()
+                .configurationData(ConfigKeys.class)
+                .create();
+
         // Create messages file.
-        File messagesFile = new File(localeDir, this.pluginConfig.getProperty(PluginConfig.locale_file) + ".yml");
+        File messagesFile = new File(localeDir, configKeys.getProperty(ConfigKeys.locale_file) + ".yml");
         SettingsManager messages = SettingsManagerBuilder
                 .withYamlFile(messagesFile)
                 .useDefaultMigrationService()

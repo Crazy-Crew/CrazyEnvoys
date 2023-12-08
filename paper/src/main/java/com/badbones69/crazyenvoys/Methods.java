@@ -3,6 +3,7 @@ package com.badbones69.crazyenvoys;
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.api.enums.DataKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
+import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import us.crazycrew.crazyenvoys.other.MsgUtils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -19,7 +20,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
 import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,14 +33,14 @@ public class Methods {
 
     private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
     private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
-    private final @NotNull SettingsManager pluginConfig = this.configManager.getPluginConfig();
+    private final @NotNull SettingsManager config = this.configManager.getConfig();
 
     public String getPrefix() {
-        return MsgUtils.color(this.pluginConfig.getProperty(PluginConfig.command_prefix));
+        return MsgUtils.color(this.config.getProperty(ConfigKeys.command_prefix));
     }
 
     public String getPrefix(String message) {
-        return MsgUtils.color(this.pluginConfig.getProperty(PluginConfig.command_prefix) + message);
+        return MsgUtils.color(this.config.getProperty(ConfigKeys.command_prefix) + message);
     }
 
     public ItemStack getItemInHand(Player player) {
