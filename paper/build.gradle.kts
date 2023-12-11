@@ -55,6 +55,8 @@ val description = """
  * Removed plugin-config.yml as it was just weird, Options in there will migrate to config.yml automatically.
     
 ## Changes:
+ * Bumped to 1.20.4
+ * Bumped nbt api
  * Used instanceof variables to make checks simpler
  * Cleaned up command checks to be more readable
  * Actually tell console the envoy event broadcast.
@@ -68,11 +70,11 @@ val description = """
  * [Bug Reports](https://github.com/Crazy-Crew/${rootProject.name}/issues)
 """
 
-val file = project.layout.buildDirectory.file("libs/${rootProject.name}-${rootProject.version}.jar").get().asFile
-
 val component: SoftwareComponent = components["java"]
 
 tasks {
+    val file = project.layout.buildDirectory.file("libs/${rootProject.name}-${rootProject.version}.jar").get()
+
     // Publish to hangar.papermc.io.
     hangarPublish {
         publications.register("plugin") {
