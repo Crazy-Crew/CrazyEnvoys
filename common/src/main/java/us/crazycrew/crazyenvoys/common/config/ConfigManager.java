@@ -2,12 +2,10 @@ package us.crazycrew.crazyenvoys.common.config;
 
 import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;
-import ch.jalu.configme.configurationdata.ConfigurationData;
 import ch.jalu.configme.configurationdata.ConfigurationDataBuilder;
 import ch.jalu.configme.resource.YamlFileResourceOptions;
-import us.crazycrew.crazyenvoys.common.config.types.Config;
-import us.crazycrew.crazyenvoys.common.config.types.Messages;
-import us.crazycrew.crazyenvoys.common.config.types.PluginConfig;
+import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
+import us.crazycrew.crazyenvoys.common.config.types.MessageKeys;
 import java.io.File;
 
 public class ConfigManager {
@@ -18,48 +16,34 @@ public class ConfigManager {
         this.dataFolder = dataFolder;
     }
 
-    private SettingsManager pluginConfig;
     private SettingsManager messages;
     private SettingsManager config;
 
     public void load() {
         YamlFileResourceOptions builder = YamlFileResourceOptions.builder().indentationSize(2).build();
 
-        // Create the plugin-config.yml file.
-        File pluginConfigFile = new File(this.dataFolder, "plugin-config.yml");
+        File configFile = new File(this.dataFolder, "config.yml");
 
-        // Bind it to settings manager
-        this.pluginConfig = SettingsManagerBuilder
-                .withYamlFile(pluginConfigFile, builder)
+        this.config = SettingsManagerBuilder
+                .withYamlFile(configFile, builder)
                 .useDefaultMigrationService()
-                .configurationData(createPluginConfig())
+                .configurationData(ConfigurationDataBuilder.createConfiguration(ConfigKeys.class))
                 .create();
 
         File localeDir = new File(this.dataFolder, "locale");
 
         if (!localeDir.exists()) localeDir.mkdirs();
 
-        File messagesFile = new File(localeDir, this.pluginConfig.getProperty(PluginConfig.locale_file) + ".yml");
+        File messagesFile = new File(localeDir, this.config.getProperty(ConfigKeys.locale_file) + ".yml");
 
         this.messages = SettingsManagerBuilder
                 .withYamlFile(messagesFile, builder)
                 .useDefaultMigrationService()
-                .configurationData(Messages.class)
-                .create();
-
-        File configFile = new File(this.dataFolder, "config.yml");
-
-        this.config = SettingsManagerBuilder
-                .withYamlFile(configFile, builder)
-                .useDefaultMigrationService()
-                .configurationData(ConfigurationDataBuilder.createConfiguration(Config.class))
+                .configurationData(MessageKeys.class)
                 .create();
     }
 
     public void reload() {
-        // Reload plugin-config.yml
-        this.pluginConfig.reload();
-
         // Reload config.yml
         this.config.reload();
 
@@ -71,15 +55,7 @@ public class ConfigManager {
         return this.config;
     }
 
-    public SettingsManager getPluginConfig() {
-        return this.pluginConfig;
-    }
-
     public SettingsManager getMessages() {
         return this.messages;
-    }
-
-    private ConfigurationData createPluginConfig() {
-        return ConfigurationDataBuilder.createConfiguration(PluginConfig.class);
     }
 }

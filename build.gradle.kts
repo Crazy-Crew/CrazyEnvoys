@@ -1,31 +1,69 @@
 plugins {
-    id("root-plugin")
+    `java-library`
 }
-
-defaultTasks("build")
-
-rootProject.group = "com.badbones69.crazyenvoys"
-rootProject.description = "Drop custom envoys with any prize you want all over spawn for players to fight over."
-rootProject.version = "1.7.7"
 
 tasks {
     assemble {
-        val jarsDir = File("$rootDir/jars")
-        if (jarsDir.exists()) jarsDir.delete()
+        subprojects.forEach { project -> dependsOn(":${project.name}:build") }
 
-        subprojects.forEach { project ->
-            dependsOn(":${project.name}:build")
+        doLast {
+            val directory = File(rootDir, "jars");
 
-            doLast {
-                if (!jarsDir.exists()) jarsDir.mkdirs()
+            if (directory.exists()) directory.delete()
 
-                val file = file("${project.layout.buildDirectory.get()}/libs/${rootProject.name}-${rootProject.version}.jar")
+            directory.mkdirs()
 
-                copy {
-                    from(file)
-                    into(jarsDir)
-                }
+            copy {
+                from(project("paper").layout.buildDirectory.file("libs/${rootProject.name}-${rootProject.version}.jar").get())
+                into(directory)
             }
         }
+    }
+}
+
+subprojects {
+    apply(plugin = "java-library")
+
+    repositories {
+        maven("https://repo.crazycrew.us/releases")
+
+        maven("https://jitpack.io/")
+
+        mavenCentral()
+    }
+
+    if (name == "paper") {
+        repositories {
+            maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+
+            maven("https://repo.codemc.io/repository/maven-public/")
+
+            maven("https://repo.triumphteam.dev/snapshots/")
+
+            maven("https://repo.oraxen.com/releases/")
+
+            maven("https://maven.enginehub.org/repo/")
+
+            flatDir { dirs("libs") }
+        }
+    }
+
+    tasks {
+        compileJava {
+            options.encoding = Charsets.UTF_8.name()
+            options.release.set(17)
+        }
+
+        javadoc {
+            options.encoding = Charsets.UTF_8.name()
+        }
+
+        processResources {
+            filteringCharset = Charsets.UTF_8.name()
+        }
+    }
+
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of("17"))
     }
 }
