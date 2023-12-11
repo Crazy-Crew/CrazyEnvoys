@@ -51,19 +51,8 @@ val isBeta: Boolean get() = rootProject.extra["isBeta"]?.toString()?.toBoolean()
 val type = if (isBeta) "Beta" else "Release"
 
 val description = """
-## Configs:
- * Removed plugin-config.yml as it was just weird, Options in there will migrate to config.yml automatically.
-    
 ## Changes:
- * Bumped to 1.20.4
- * Bumped nbt api
- * Used instanceof variables to make checks simpler
- * Cleaned up command checks to be more readable
- * Actually tell console the envoy event broadcast.
- * Enable random drops/locations by default as it not doing anything might confuse people.
-    
-## Fixes:
- * Fixed a few command bugs with invalid casts
+ * N/A
 
 ## Other:
  * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)
