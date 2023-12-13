@@ -295,7 +295,7 @@ public class EnvoyCommand implements CommandExecutor {
                         return true;
                     }
 
-                    if (!this.crazyManager.isEnvoyActive()) {
+                    if (this.crazyManager.isEnvoyActive()) {
                         Messages.kicked_from_editor_mode.sendMessage(player);
                         return true;
                     }

@@ -51,8 +51,8 @@ val isBeta: Boolean get() = rootProject.extra["isBeta"]?.toString()?.toBoolean()
 val type = if (isBeta) "Beta" else "Release"
 
 val description = """
-## Changes:
- * N/A
+## Fixes:
+ * Inversion is so much fun, /envoy edit actually works now
 
 ## Other:
  * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)
