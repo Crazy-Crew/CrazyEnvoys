@@ -52,7 +52,7 @@ val type = if (isBeta) "Beta" else "Release"
 
 val description = """
 ## Fixes:
- * Inversion is so much fun, /envoy edit actually works now
+ * Fix an NPE with item builder
 
 ## Other:
  * [Feature Requests](https://github.com/Crazy-Crew/${rootProject.name}/issues)
