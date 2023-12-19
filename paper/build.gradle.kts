@@ -67,7 +67,7 @@ tasks {
     // Publish to hangar.papermc.io.
     hangarPublish {
         publications.register("plugin") {
-            version.set("$rootProject.version")
+            version.set("${rootProject.version}")
 
             id.set(rootProject.name)
 
