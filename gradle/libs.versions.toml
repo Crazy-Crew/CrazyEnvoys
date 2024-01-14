@@ -1,7 +1,7 @@
 [versions]
 kyori_version = "4.14.0"
 
-cluster_version = "4.1.2"
+cluster_version = "6.3"
 
 [plugins]
 hangar = { id = "io.papermc.hangar-publish-plugin", version = "0.1.0" }
@@ -15,8 +15,8 @@ shadowjar = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 adventure = { module = "net.kyori:adventure-api", version.ref = "kyori_version" }
 minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "kyori_version" }
 
-cluster_paper = { module = "com.ryderbelserion.cluster.paper:cluster-paper", version.ref = "cluster_version" }
-cluster_api = { module = "com.ryderbelserion.cluster.api:cluster-api", version.ref = "cluster_version" }
+cluster_paper = { module = "com.ryderbelserion.cluster:paper", version.ref = "cluster_version" }
+cluster_api = { module = "com.ryderbelserion.cluster:api", version.ref = "cluster_version" }
 
 nbtapi = { module = "de.tr7zw:item-nbt-api", version = "2.12.2" }
 
