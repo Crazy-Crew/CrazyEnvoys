@@ -38,7 +38,7 @@ public class EnvoyCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
         if (args.length == 0) {
-            if (!hasPermission(sender, "time") || !(sender instanceof ConsoleCommandSender)) {
+            if (!hasPermission(sender, "time") && !(sender instanceof ConsoleCommandSender)) {
                 Messages.no_permission.sendMessage(sender);
                 return true;
             }
