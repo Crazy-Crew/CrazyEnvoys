@@ -6,6 +6,7 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.FileManager.CustomFile;
 import com.badbones69.crazyenvoys.api.FileManager.Files;
+import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
@@ -26,6 +27,8 @@ import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
 import com.ryderbelserion.cluster.utils.DyeUtils;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import us.crazycrew.crazyenvoys.other.MsgUtils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -998,7 +1001,9 @@ public class CrazyManager {
         fireworkMeta.setPower(1);
         firework.setFireworkMeta(fireworkMeta);
 
-        this.methods.addFirework(firework);
+        PersistentDataContainer container = firework.getPersistentDataContainer();
+
+        container.set(PersistentKeys.no_firework_damage.getNamespacedKey(), PersistentDataType.BOOLEAN, true);
     }
 
     //TODO find a better away of doing this as it causes crashes with big radius.

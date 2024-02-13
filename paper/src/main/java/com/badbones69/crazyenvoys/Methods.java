@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys;
 
 import ch.jalu.configme.SettingsManager;
-import com.badbones69.crazyenvoys.api.enums.DataKeys;
+import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import us.crazycrew.crazyenvoys.other.MsgUtils;
@@ -98,18 +98,11 @@ public class Methods {
         fireworkMeta.setPower(0);
         firework.setFireworkMeta(fireworkMeta);
 
-        addFirework(firework);
-
-        detonate(firework);
-    }
-
-    /**
-     * @param firework The firework you want to add.
-     */
-    public void addFirework(Entity firework) {
         PersistentDataContainer container = firework.getPersistentDataContainer();
 
-        container.set(DataKeys.NO_FIREWORK_DAMAGE.getKey(), PersistentDataType.BOOLEAN, true);
+        container.set(PersistentKeys.no_firework_damage.getNamespacedKey(), PersistentDataType.BOOLEAN, true);
+
+        detonate(firework);
     }
 
     private void detonate(Firework firework) {
