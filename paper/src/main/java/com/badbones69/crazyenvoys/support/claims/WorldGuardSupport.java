@@ -5,6 +5,7 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Location;
 
@@ -16,10 +17,14 @@ public class WorldGuardSupport implements WorldGuardVersion {
         BlockVector3 vector = BlockVector3.at(loc.getX(), loc.getY(), loc.getZ());
 
         try {
-            ApplicableRegionSet set = WorldGuard.getInstance().getPlatform().getRegionContainer().get(world).getApplicableRegions(vector);
+            RegionManager instance = WorldGuard.getInstance().getPlatform().getRegionContainer().get(world);
 
-            for (ProtectedRegion region : set) {
-                if (regionName.equalsIgnoreCase(region.getId())) return true;
+            if (instance != null) {
+                ApplicableRegionSet regionSet = instance.getApplicableRegions(vector);
+
+                for (ProtectedRegion region : regionSet) {
+                    if (regionName.equalsIgnoreCase(region.getId())) return true;
+                }
             }
         } catch (NullPointerException e) {
             return false;
