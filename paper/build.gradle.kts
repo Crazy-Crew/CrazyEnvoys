@@ -62,6 +62,20 @@ tasks {
         }
     }
 
+    shadowJar {
+        archiveClassifier.set("")
+
+        exclude("META-INF/**")
+
+        listOf(
+            "de.tr7zw.changeme.nbtapi",
+            "dev.triumphteam.cmd",
+            "org.bstats"
+        ).forEach {
+            relocate(it, "libs.$it")
+        }
+    }
+
     processResources {
         val properties = hashMapOf(
                 "name" to rootProject.name,
