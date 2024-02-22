@@ -16,6 +16,8 @@ public class CMIHologramsSupport implements HologramController {
 
     @Override
     public void createHologram(Block block, Tier tier) {
+        if (!tier.isHoloEnabled()) return;
+
         double height = tier.getHoloHeight();
 
         CMILocation location = new CMILocation(block.getLocation().add(0.5, height, 0.5));
