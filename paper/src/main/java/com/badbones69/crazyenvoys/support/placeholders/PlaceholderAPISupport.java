@@ -4,7 +4,7 @@ import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
@@ -13,17 +13,23 @@ import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
 
 public class PlaceholderAPISupport extends PlaceholderExpansion {
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
+    @NotNull
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
-    private final @NotNull SettingsManager config = this.configManager.getConfig();
-    private final @NotNull SettingsManager messages = this.configManager.getMessages();
+    @NotNull
+    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
+    @NotNull
+    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
+    @NotNull
+    private final SettingsManager config = this.configManager.getConfig();
+    @NotNull
+    private final SettingsManager messages = this.configManager.getMessages();
 
-    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
+    @NotNull
+    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
     @Override
-    public String onPlaceholderRequest(Player player, String identifier) {
+    public String onRequest(OfflinePlayer player, @NotNull String identifier) {
         String lower = identifier.toLowerCase();
 
         boolean isEnabled = this.config.getProperty(ConfigKeys.envoys_grace_period_toggle);
@@ -54,19 +60,27 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
     public boolean persist() {
         return true;
     }
-    
+
     @Override
-    public @NotNull String getIdentifier() {
+    public boolean canRegister() {
+        return true;
+    }
+
+    @Override
+    @NotNull
+    public String getIdentifier() {
         return this.plugin.getName().toLowerCase();
     }
     
     @Override
-    public @NotNull String getAuthor() {
-        return "BadBones69";
+    @NotNull
+    public String getAuthor() {
+        return this.plugin.getDescription().getAuthors().toString();
     }
     
     @Override
-    public @NotNull String getVersion() {
+    @NotNull
+    public String getVersion() {
         return this.plugin.getDescription().getVersion();
     }
 }
