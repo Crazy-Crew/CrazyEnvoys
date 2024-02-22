@@ -61,19 +61,32 @@ import java.util.UUID;
 
 public class CrazyManager {
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
-    private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
-    private final @NotNull SettingsManager config = this.configManager.getConfig();
+    @NotNull
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    @NotNull
+    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
+    @NotNull
+    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
+    @NotNull
+    private final SettingsManager config = this.configManager.getConfig();
 
-    private final @NotNull FileManager fileManager = this.plugin.getFileManager();
+    @NotNull
+    private final FileManager fileManager = this.plugin.getFileManager();
 
-    private final @NotNull Methods methods = plugin.getMethods();
+    @NotNull
+    private final Methods methods = this.plugin.getMethods();
 
-    private final @NotNull FlareSettings flareSettings = plugin.getFlareSettings();
-    private final @NotNull EditorSettings editorSettings = plugin.getEditorSettings();
-    private final @NotNull CoolDownSettings coolDownSettings = plugin.getCoolDownSettings();
-    private final @NotNull LocationSettings locationSettings = plugin.getLocationSettings();
+    @NotNull
+    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
+
+    @NotNull
+    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
+
+    @NotNull
+    private final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
+
+    @NotNull
+    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
     
     private CountdownTimer countdownTimer;
 
@@ -88,10 +101,10 @@ public class CrazyManager {
     private Location center;
     private String centerString;
 
-    private final HashMap<Block, Tier> activeEnvoys = new HashMap<>();
-    private final HashMap<Location, BukkitTask> activeSignals = new HashMap<>();
+    private final Map<Block, Tier> activeEnvoys = new HashMap<>();
+    private final Map<Location, BukkitTask> activeSignals = new HashMap<>();
 
-    private final HashMap<Entity, Block> fallingBlocks = new HashMap<>();
+    private final Map<Entity, Block> fallingBlocks = new HashMap<>();
 
     private final List<Tier> tiers = new ArrayList<>();
     private final List<Tier> cachedChances = new ArrayList<>();
@@ -102,11 +115,7 @@ public class CrazyManager {
     /**
      * Run this when you are starting up the server.
      */
-    public void load(boolean serverStart) {
-        if (serverStart) {
-
-        }
-
+    public void load() {
         loadEnvoys();
     }
 
@@ -369,8 +378,10 @@ public class CrazyManager {
                                 HashMap<String, String> placeholder = new HashMap<>();
                                 placeholder.put("{amount}", online + "");
                                 Messages.not_enough_players.broadcastMessage(false, placeholder);
+
                                 setNextEnvoy(getEnvoyCooldown());
                                 resetWarnings();
+
                                 return;
                             }
                         }
@@ -381,6 +392,7 @@ public class CrazyManager {
 
                             setNextEnvoy(getEnvoyCooldown());
                             resetWarnings();
+
                             return;
                         }
 
@@ -865,6 +877,7 @@ public class CrazyManager {
     public void setCenter(Location loc) {
         this.center = loc;
         this.centerString = this.methods.getUnBuiltLocation(this.center);
+
         Files.USERS.getFile().set("Center", this.centerString);
         Files.USERS.saveFile();
     }
@@ -1076,7 +1089,7 @@ public class CrazyManager {
 
     // Get world location.
     private List<String> getBlockList(List<Block> stringList) {
-        ArrayList<String> strings = new ArrayList<>();
+        List<String> strings = new ArrayList<>();
 
         for (Block block : stringList) {
             strings.add(this.methods.getUnBuiltLocation(block.getLocation()));
@@ -1086,7 +1099,7 @@ public class CrazyManager {
     }
 
     private List<Block> getLocationsFromStringList(List<String> locationsList) {
-        ArrayList<Block> locations = new ArrayList<>();
+        List<Block> locations = new ArrayList<>();
 
         for (String location : locationsList) {
             locations.add(this.methods.getBuiltLocation(location).getBlock());

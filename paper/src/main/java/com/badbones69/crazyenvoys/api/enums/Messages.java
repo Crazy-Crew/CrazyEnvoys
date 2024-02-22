@@ -98,22 +98,27 @@ public enum Messages {
 
         this.isList = isList;
     }
+    @NotNull
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    @NotNull
+    private final ConfigManager configManager = this.plugin.getCrazyHandler().getConfigManager();
+    @NotNull
+    private final SettingsManager messages = this.configManager.getMessages();
+    @NotNull
+    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
-    private final @NotNull ConfigManager configManager = this.plugin.getCrazyHandler().getConfigManager();
-    private final @NotNull SettingsManager messages = this.configManager.getMessages();
-    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
-
-    private boolean isList() {
-        return this.isList;
-    }
-
-    private @NotNull List<String> getPropertyList(Property<List<String>> properties) {
+    @NotNull
+    private List<String> getPropertyList(Property<List<String>> properties) {
         return this.messages.getProperty(properties);
     }
 
-    private @NotNull String getProperty(Property<String> property) {
+    @NotNull
+    private String getProperty(Property<String> property) {
         return this.messages.getProperty(property);
+    }
+
+    private boolean isList() {
+        return this.isList;
     }
 
     public String getString() {

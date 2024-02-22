@@ -25,12 +25,12 @@ public class Tier {
     private int spawnChance;
     private boolean useChance;
     private Material placedBlockMaterial;
-    private Short placedBlockMetaData;
+    private short placedBlockMetaData;
     private boolean bulkToggle;
     private boolean bulkRandom;
     private int bulkMax;
     private boolean holoToggle;
-    private Double holoHeight;
+    private double holoHeight;
     private final List<String> holoMessage;
     private boolean fireworkToggle;
     private List<Color> fireworkColors;
@@ -54,29 +54,41 @@ public class Tier {
      */
     public Tier(String name) {
         this.name = name;
+
         FileManager fileManager = this.plugin.getFileManager();
         this.file = fileManager.getFile(name);
+
         this.claimPermission = "";
         this.claimPermissionToggle = false;
+
         this.spawnChance = 100;
         this.useChance = true;
+
         this.placedBlockMaterial = Material.CHEST;
         this.placedBlockMetaData = 0;
+
         this.bulkToggle = false;
         this.bulkRandom = true;
         this.bulkMax = 3;
+
         this.holoToggle = true;
+        this.holoRange = 8;
         this.holoHeight = 1.5;
+
         this.holoMessage = new ArrayList<>();
         this.lorePlaceholders = new HashMap<>();
+
         this.fireworkToggle = true;
         this.fireworkColors = new ArrayList<>();
+
         this.signalFlareToggle = true;
         this.signalFlareTimer = "15s";
         this.signalFlareColors = new ArrayList<>();
+
         this.prizes = new ArrayList<>();
         this.prizeMessage = Collections.emptyList();
-        this.holoMessage.addAll(Collections.singletonList("&7&l(&6&l!&7&l) Envoy Crate"));
+
+        this.holoMessage.add("&7&l(&6&l!&7&l) Envoy Crate");
     }
 
     // Check if the envoy is allowed to require the claim permission.
@@ -87,6 +99,7 @@ public class Tier {
     // Set the boolean toggle.
     public Tier setClaimPermissionToggle(boolean claimPermissionToggle) {
         this.claimPermissionToggle = claimPermissionToggle;
+
         return this;
     }
 
@@ -98,8 +111,10 @@ public class Tier {
     // Set the claim permission.
     public Tier setClaimPermission(String claimPermission) {
         this.claimPermission = claimPermission;
+
         return this;
     }
+
     public List<String> getPrizeMessage() {
         return this.prizeMessage;
     }
@@ -138,6 +153,7 @@ public class Tier {
      */
     public Tier setSpawnChance(int spawnChance) {
         this.spawnChance = spawnChance;
+
         return this;
     }
     
@@ -155,6 +171,7 @@ public class Tier {
      */
     public Tier setUseChance(boolean useChance) {
         this.useChance = useChance;
+
         return this;
     }
     
@@ -172,13 +189,14 @@ public class Tier {
      */
     public Tier setPlacedBlockMaterial(Material placedBlockMaterial) {
         this.placedBlockMaterial = placedBlockMaterial;
+
         return this;
     }
     
     /**
      * Get the metadata of the block that is acts as the crate.
      */
-    public Short getPlacedBlockMetaData() {
+    public short getPlacedBlockMetaData() {
         return this.placedBlockMetaData;
     }
     
@@ -189,6 +207,7 @@ public class Tier {
      */
     public Tier setPlacedBlockMetaData(short placedBlockMetaData) {
         this.placedBlockMetaData = placedBlockMetaData;
+
         return this;
     }
     
@@ -199,6 +218,7 @@ public class Tier {
      */
     public Tier setPlacedBlockMetaData(int placedBlockMetaData) {
         this.placedBlockMetaData = (short) placedBlockMetaData;
+
         return this;
     }
     
@@ -216,12 +236,14 @@ public class Tier {
      */
     public Tier setBulkToggle(boolean bulkToggle) {
         this.bulkToggle = bulkToggle;
+
         return this;
     }
     
     /**
      * Check if it picks a random amount of prizes.
-     * True if it picks from 1-max. False if it picks the max amount of prizes.
+     *
+     * @return true if it picks from 1-max. false if it picks the max amount of prizes.
      */
     public boolean getBulkRandom() {
         return this.bulkRandom;
@@ -234,6 +256,7 @@ public class Tier {
      */
     public Tier setBulkRandom(boolean bulkRandom) {
         this.bulkRandom = bulkRandom;
+
         return this;
     }
     
@@ -251,6 +274,7 @@ public class Tier {
      */
     public Tier setBulkMax(int bulkMax) {
         this.bulkMax = bulkMax;
+
         return this;
     }
     
@@ -268,13 +292,14 @@ public class Tier {
      */
     public Tier setHoloToggle(boolean holoToggle) {
         this.holoToggle = holoToggle;
+
         return this;
     }
     
     /**
      * Get the height of the hologram.
      */
-    public Double getHoloHeight() {
+    public double getHoloHeight() {
         return this.holoHeight;
     }
     
@@ -285,10 +310,11 @@ public class Tier {
      */
     public Tier setHoloHeight(Double holoHeight) {
         this.holoHeight = holoHeight;
+
         return this;
     }
 
-    private int holoRange = 8;
+    private int holoRange;
 
     /**
      * Set the range at which a hologram can be seen.
@@ -366,6 +392,7 @@ public class Tier {
      */
     public Tier setFireworkToggle(boolean fireworkToggle) {
         this.fireworkToggle = fireworkToggle;
+
         return this;
     }
     
@@ -383,6 +410,7 @@ public class Tier {
      */
     public Tier setFireworkColors(List<Color> fireworkColors) {
         this.fireworkColors = fireworkColors;
+
         return this;
     }
     
@@ -393,6 +421,7 @@ public class Tier {
      */
     public Tier addFireworkColor(Color fireworkColor) {
         this.fireworkColors.add(fireworkColor);
+
         return this;
     }
     
@@ -410,6 +439,7 @@ public class Tier {
      */
     public Tier setSignalFlareToggle(boolean signalFlareToggle) {
         this.signalFlareToggle = signalFlareToggle;
+
         return this;
     }
     
@@ -427,6 +457,7 @@ public class Tier {
      */
     public Tier setSignalFlareTimer(String signalFlareTimer) {
         this.signalFlareTimer = signalFlareTimer;
+
         return this;
     }
     
@@ -444,6 +475,7 @@ public class Tier {
      */
     public Tier setSignalFlareColors(List<Color> signalFlareColors) {
         this.signalFlareColors = signalFlareColors;
+
         return this;
     }
     
@@ -454,6 +486,7 @@ public class Tier {
      */
     public Tier addSignalFlareColor(Color signalFlareColors) {
         this.signalFlareColors.add(signalFlareColors);
+
         return this;
     }
     
@@ -471,6 +504,7 @@ public class Tier {
      */
     public Tier setPrizes(List<Prize> prizes) {
         this.prizes = prizes;
+
         return this;
     }
     
@@ -481,6 +515,7 @@ public class Tier {
      */
     public Tier addPrize(Prize prize) {
         this.prizes.add(prize);
+
         return this;
     }
 }

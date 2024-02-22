@@ -18,20 +18,25 @@ import java.util.UUID;
 
 public class EnvoyEditListener implements Listener {
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
+    @NotNull
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final @NotNull Methods methods = this.plugin.getMethods();
+    @NotNull
+    private final Methods methods = this.plugin.getMethods();
 
-    private final @NotNull EditorSettings editorSettings = this.plugin.getEditorSettings();
+    @NotNull
+    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
 
-    private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
+    @NotNull
+    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
+    @NotNull
+    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
     
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent event) {
-        final Player player = event.getPlayer();
-        final Block block = event.getBlock();
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
 
         if (!this.editorSettings.isEditor(player)) return;
 
@@ -50,8 +55,8 @@ public class EnvoyEditListener implements Listener {
     
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        final Player player = event.getPlayer();
-        final Block block = event.getBlock();
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
 
         if (!this.editorSettings.isEditor(player)) return;
 

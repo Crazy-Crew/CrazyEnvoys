@@ -11,9 +11,11 @@ import java.util.List;
 
 public class LocationSettings {
 
-        private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
+    @NotNull
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final @NotNull Methods methods = plugin.getMethods();
+    @NotNull
+    private final Methods methods = this.plugin.getMethods();
 
     private final List<Block> spawnLocations = new ArrayList<>();
 
@@ -130,6 +132,7 @@ public class LocationSettings {
 
     public void removeSpawnLocation(Block block) {
         this.spawnLocations.remove(block);
+
         saveLocations();
     }
 
@@ -166,8 +169,8 @@ public class LocationSettings {
 
     public void fixLocations() {
         if (!getFailedLocations().isEmpty()) {
-            if (this.plugin.isLogging())
-                this.plugin.getLogger().info("Attempting to fix " + getFailedLocations().size() + " locations that failed.");
+            if (this.plugin.isLogging()) this.plugin.getLogger().info("Attempting to fix " + getFailedLocations().size() + " locations that failed.");
+
             int failed = 0;
             int fixed = 0;
 
@@ -182,8 +185,7 @@ public class LocationSettings {
 
             if (fixed > 0) this.plugin.getLogger().info("Was able to fix " + fixed + " locations that failed.");
 
-            if (failed > 0)
-                this.plugin.getLogger().severe("Failed to fix " + failed + " locations and will not reattempt.");
+            if (failed > 0) this.plugin.getLogger().severe("Failed to fix " + failed + " locations and will not reattempt.");
         }
     }
 

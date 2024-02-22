@@ -57,6 +57,7 @@ public class Prize {
      */
     public Prize setChance(int chance) {
         this.chance = chance;
+
         return this;
     }
 
@@ -82,6 +83,7 @@ public class Prize {
      */
     public Prize setDropItems(boolean dropItems) {
         this.dropItems = dropItems;
+
         return this;
     }
     
@@ -123,6 +125,7 @@ public class Prize {
      */
     public Prize setCommands(List<String> commands) {
         this.commands = commands;
+
         return this;
     }
     
@@ -142,6 +145,7 @@ public class Prize {
      */
     public Prize setItems(List<ItemStack> items) {
         this.items = items;
+
         return this;
     }
     

@@ -35,23 +35,32 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import static java.util.regex.Matcher.quoteReplacement;
 
 public class EnvoyClickListener implements Listener {
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
-    private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
-    private final @NotNull SettingsManager config = this.configManager.getConfig();
+    @NotNull
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    @NotNull
+    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
+    @NotNull
+    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
+    @NotNull
+    private final SettingsManager config = this.configManager.getConfig();
 
-    private final @NotNull Methods methods = this.plugin.getMethods();
+    @NotNull
+    private final Methods methods = this.plugin.getMethods();
 
-    private final @NotNull CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
-    private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
+    @NotNull
+    private final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
+    @NotNull
+    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
+    @NotNull
+    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
     
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerClick(PlayerInteractEvent event) {
@@ -59,7 +68,7 @@ public class EnvoyClickListener implements Listener {
 
         if (event.getClickedBlock() == null && !this.crazyManager.isEnvoyActive()) return;
 
-        final Block block = event.getClickedBlock();
+        Block block = event.getClickedBlock();
 
         if (!this.crazyManager.isActiveEnvoy(block)) return;
 
@@ -74,8 +83,9 @@ public class EnvoyClickListener implements Listener {
 
         if (!player.hasPermission("envoy.bypass")) {
             if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle) && this.crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
-                HashMap<String, String> placeholder = new HashMap<>();
+                Map<String, String> placeholder = new HashMap<>();
                 placeholder.put("{time}", String.valueOf(this.crazyManager.getCountdownTimer().getSecondsLeft()));
+
                 Messages.countdown_in_progress.sendMessage(player, placeholder);
                 return;
             }
@@ -89,8 +99,9 @@ public class EnvoyClickListener implements Listener {
                 UUID uuid = player.getUniqueId();
 
                 if (this.coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(this.coolDownSettings.getCooldown().get(uuid))) {
-                    HashMap<String, String> placeholder = new HashMap<>();
+                    Map<String, String> placeholder = new HashMap<>();
                     placeholder.put("{time}", this.methods.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
+
                     Messages.cooldown_left.sendMessage(player, placeholder);
                     return;
                 }
@@ -114,7 +125,7 @@ public class EnvoyClickListener implements Listener {
 
         this.crazyManager.stopSignalFlare(event.getClickedBlock().getLocation());
 
-        HashMap<String, String> placeholder = new HashMap<>();
+        Map<String, String> placeholder = new HashMap<>();
 
         if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) placeholder.put("{tier}", this.crazyManager.getTier(block).getName());
 
@@ -122,6 +133,7 @@ public class EnvoyClickListener implements Listener {
 
         if (tier.getPrizes().isEmpty()) {
             this.plugin.getServer().broadcastMessage(this.methods.getPrefix() + MsgUtils.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+
             return;
         }
 
@@ -188,6 +200,7 @@ public class EnvoyClickListener implements Listener {
         if (!this.crazyManager.getFallingBlocks().containsKey(entity)) return;
 
         event.setCancelled(true);
+
         checkEntity(entity);
     }
 
@@ -199,7 +212,7 @@ public class EnvoyClickListener implements Listener {
 
         block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
 
-        if (tier.isHoloEnabled() && this.crazyManager.hasHologramPlugin()) this.crazyManager.getHologramController().createHologram(block, tier);
+        if (this.crazyManager.hasHologramPlugin()) this.crazyManager.getHologramController().createHologram(block, tier);
 
         this.crazyManager.removeFallingBlock(entity);
         this.crazyManager.addActiveEnvoy(block, tier);
@@ -225,7 +238,8 @@ public class EnvoyClickListener implements Listener {
     }
     
     private List<Prize> pickRandomPrizes(Tier tier) {
-        ArrayList<Prize> prizes = new ArrayList<>();
+        List<Prize> prizes = new ArrayList<>();
+
         int max = tier.getBulkToggle() ? tier.getBulkMax() : 1;
 
         for (int i = 0; prizes.size() < max && i < 500; i++) {
@@ -238,7 +252,8 @@ public class EnvoyClickListener implements Listener {
     }
     
     private List<Prize> pickPrizesByChance(Tier tier) {
-        ArrayList<Prize> prizes = new ArrayList<>();
+        List<Prize> prizes = new ArrayList<>();
+
         int maxBulk = tier.getBulkToggle() ? tier.getBulkMax() : 1;
 
         for (int i = 0; prizes.size() < maxBulk && i < 500; i++) {
@@ -255,7 +270,7 @@ public class EnvoyClickListener implements Listener {
     private Tier pickRandomTier() {
         if (this.crazyManager.getTiers().size() == 1) return this.crazyManager.getTiers().get(0);
 
-        ArrayList<Tier> tiers = new ArrayList<>();
+        List<Tier> tiers = new ArrayList<>();
 
         while (tiers.isEmpty()) {
             for (Tier tier : this.crazyManager.getTiers()) {

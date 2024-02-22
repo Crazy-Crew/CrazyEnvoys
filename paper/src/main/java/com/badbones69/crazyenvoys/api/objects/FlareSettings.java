@@ -10,14 +10,17 @@ import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 
 public class FlareSettings {
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
+    @NotNull
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final @NotNull Methods methods = this.plugin.getMethods();
+    @NotNull
+    private final Methods methods = this.plugin.getMethods();
     
     private ItemBuilder flareItemBuilder;
     
     public void load() {
         SettingsManager config = this.plugin.getCrazyHandler().getConfigManager().getConfig();
+
         this.flareItemBuilder = new ItemBuilder()
                 .setMaterial(config.getProperty(ConfigKeys.envoys_flare_item_type))
                 .setName(config.getProperty(ConfigKeys.envoys_flare_item_name))

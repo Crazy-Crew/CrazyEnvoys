@@ -21,19 +21,27 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class EnvoyCommand implements CommandExecutor {
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
+    @NotNull
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final @NotNull Methods methods = this.plugin.getMethods();
+    @NotNull
+    private final Methods methods = this.plugin.getMethods();
 
-    private final @NotNull EditorSettings editorSettings = this.plugin.getEditorSettings();
-    private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
-    private final @NotNull FlareSettings flareSettings = this.plugin.getFlareSettings();
+    @NotNull
+    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
+    @NotNull
+    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    @NotNull
+    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
+    @NotNull
 
-    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
     
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
@@ -154,9 +162,11 @@ public class EnvoyCommand implements CommandExecutor {
                         }
                     }
 
-                    HashMap<String, String> placeholder = new HashMap<>();
+                    Map<String, String> placeholder = new HashMap<>();
+
                     placeholder.put("{player}", player.getName());
                     placeholder.put("{amount}", amount + "");
+
                     Messages.give_flare.sendMessage(sender, placeholder);
 
                     if (!sender.getName().equalsIgnoreCase(player.getName())) Messages.given_flare.sendMessage(player, placeholder);
@@ -172,7 +182,8 @@ public class EnvoyCommand implements CommandExecutor {
                         return true;
                     }
 
-                    ArrayList<String> locs = new ArrayList<>();
+                    List<String> locs = new ArrayList<>();
+
                     int page = 1;
 
                     if (args.length >= 2) {
@@ -185,7 +196,7 @@ public class EnvoyCommand implements CommandExecutor {
                     }
 
                     int amount = 1;
-                    HashMap<String, String> placeholders = new HashMap<>();
+                    Map<String, String> placeholders = new HashMap<>();
 
                     for (Block block : this.crazyManager.isEnvoyActive() ? this.crazyManager.getActiveEnvoys() : this.locationSettings.getSpawnLocations()) {
                         placeholders.put("{id}", String.valueOf(amount));
@@ -219,7 +230,7 @@ public class EnvoyCommand implements CommandExecutor {
                         return true;
                     }
 
-                    HashMap<String, String> placeholder = new HashMap<>();
+                    Map<String, String> placeholder = new HashMap<>();
 
                     if (this.crazyManager.isEnvoyActive()) {
                         placeholder.put("{time}", this.crazyManager.getEnvoyRunTimeLeft());

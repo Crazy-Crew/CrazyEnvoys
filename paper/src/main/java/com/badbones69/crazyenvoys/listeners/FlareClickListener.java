@@ -19,18 +19,26 @@ import us.crazycrew.crazyenvoys.common.config.ConfigManager;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FlareClickListener implements Listener {
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
-    private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
-    private final @NotNull SettingsManager config = this.configManager.getConfig();
+    @NotNull
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    @NotNull
+    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
+    @NotNull
+    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
+    @NotNull
+    private final SettingsManager config = this.configManager.getConfig();
 
-    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
-    private final @NotNull Methods methods = this.plugin.getMethods();
+    @NotNull
+    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    @NotNull
+    private final Methods methods = this.plugin.getMethods();
 
-    private final @NotNull FlareSettings flareSettings = this.plugin.getFlareSettings();
+    @NotNull
+    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
 
     @EventHandler(ignoreCancelled = true)
     public void onFlareInteract(PlayerInteractEvent event) {
@@ -55,7 +63,7 @@ public class FlareClickListener implements Listener {
                 int online = this.plugin.getServer().getOnlinePlayers().size();
 
                 if (this.config.getProperty(ConfigKeys.envoys_flare_minimum_players_toggle) && online < this.config.getProperty(ConfigKeys.envoys_flare_minimum_players_amount)) {
-                    HashMap<String, String> placeholder = new HashMap<>();
+                    Map<String, String> placeholder = new HashMap<>();
                     placeholder.put("{amount}", String.valueOf(online));
                     Messages.not_enough_players.sendMessage(player, placeholder);
                     return;

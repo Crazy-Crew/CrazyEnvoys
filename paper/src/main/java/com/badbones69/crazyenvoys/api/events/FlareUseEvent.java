@@ -44,7 +44,8 @@ public class FlareUseEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public @NotNull HandlerList getHandlers() {
+    @NotNull
+    public HandlerList getHandlers() {
         return handlers;
     }
 }

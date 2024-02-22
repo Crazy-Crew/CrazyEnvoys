@@ -10,7 +10,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CountdownTimer implements Runnable {
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
+    @NotNull
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
     // Our scheduled task's assigned id, needed for canceling
     private Integer assignedTaskId;

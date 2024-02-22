@@ -15,7 +15,6 @@ import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
 import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
-import com.badbones69.crazyenvoys.support.SkullCreator;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -43,8 +42,6 @@ public class CrazyEnvoys extends JavaPlugin {
 
     private CrazyManager crazyManager;
 
-    private SkullCreator skullCreator;
-
     private CrazyHandler crazyHandler;
 
     @Override
@@ -60,9 +57,8 @@ public class CrazyEnvoys extends JavaPlugin {
         this.flareSettings = new FlareSettings();
 
         this.crazyManager = new CrazyManager();
-        this.skullCreator = new SkullCreator();
 
-        this.crazyManager.load(true);
+        this.crazyManager.load();
 
         enable();
     }
@@ -145,9 +141,5 @@ public class CrazyEnvoys extends JavaPlugin {
 
     public CrazyManager getCrazyManager() {
         return this.crazyManager;
-    }
-
-    public SkullCreator getSkullCreator() {
-        return this.skullCreator;
     }
 }

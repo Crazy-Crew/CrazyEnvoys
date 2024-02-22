@@ -45,7 +45,8 @@ public class EnvoyEndEvent extends Event {
         return handlers;
     }
 
-    public @NotNull HandlerList getHandlers() {
+    @NotNull
+    public HandlerList getHandlers() {
         return handlers;
     }
     

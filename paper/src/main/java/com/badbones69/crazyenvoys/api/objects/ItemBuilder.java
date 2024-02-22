@@ -1,6 +1,7 @@
 package com.badbones69.crazyenvoys.api.objects;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
+import com.badbones69.crazyenvoys.support.SkullCreator;
 import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
 import com.ryderbelserion.cluster.utils.DyeUtils;
 import org.bukkit.Color;
@@ -57,9 +58,6 @@ public class ItemBuilder {
 
     // Player
     private String player;
-
-    // Crates
-    private String crateName;
 
     // Skulls
     private boolean isHash;
@@ -129,8 +127,6 @@ public class ItemBuilder {
         this.itemAmount = 1;
         this.player = "";
 
-        this.crateName = "";
-
         this.isHash = false;
         this.isURL = false;
         this.isHead = false;
@@ -186,8 +182,6 @@ public class ItemBuilder {
         this.referenceItem = itemBuilder.referenceItem;
         this.customModelData = itemBuilder.customModelData;
         this.useCustomModelData = itemBuilder.useCustomModelData;
-
-        this.crateName = itemBuilder.crateName;
 
         this.enchantments = new HashMap<>(itemBuilder.enchantments);
 
@@ -296,13 +290,6 @@ public class ItemBuilder {
     }
 
     /**
-     * Returns the crate name.
-     */
-    public String getCrateName() {
-        return this.crateName;
-    }
-
-    /**
      * Returns the enchantments on the Item.
      */
     public HashMap<Enchantment, Integer> getEnchantments() {
@@ -405,10 +392,10 @@ public class ItemBuilder {
             if (this.isHead) { // Has to go 1st due to it removing all data when finished.
                 if (this.isHash) { // Sauce: https://github.com/deanveloper/SkullCreator
                     if (this.isURL) {
-                        item = this.plugin.getSkullCreator().itemWithUrl(item, this.player);
+                        item = SkullCreator.itemWithUrl(item, this.player);
                         this.itemMeta = item.getItemMeta();
                     } else {
-                        item = this.plugin.getSkullCreator().itemWithBase64(item, this.player);
+                        item = SkullCreator.itemWithBase64(item, this.player);
                         this.itemMeta = item.getItemMeta();
                     }
                 }
@@ -491,8 +478,6 @@ public class ItemBuilder {
             if (this.isMobEgg) {
                 if (this.entityType != null) nbt.addCompound("EntityTag").setString("id", "minecraft:" + this.entityType.name());
             }
-
-            if (!this.crateName.isEmpty()) nbt.setString("CrazyCrates-Crate", this.crateName);
 
             return nbt.getItem();
         } else {
@@ -601,12 +586,6 @@ public class ItemBuilder {
 
         if (this.material.name().contains("BANNER")) this.isBanner = true;
 
-        return this;
-    }
-
-    // Sets the "Crate Name" for the item.
-    public ItemBuilder setCrateName(String crateName) {
-        this.crateName = crateName;
         return this;
     }
 

@@ -16,7 +16,8 @@ public enum PluginSupport {
 
     private final String name;
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
+    @NotNull
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
     PluginSupport(String name) {
         this.name = name;
