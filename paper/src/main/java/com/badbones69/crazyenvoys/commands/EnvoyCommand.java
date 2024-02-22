@@ -69,6 +69,7 @@ public class EnvoyCommand implements CommandExecutor {
                         this.crazyManager.endEnvoyEvent();
                     }
 
+                    this.plugin.getFileManager().reloadAllFiles();
                     this.plugin.getFileManager().setup();
 
                     this.crazyManager.reload(false);
