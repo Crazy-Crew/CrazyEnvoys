@@ -20,7 +20,7 @@ public class HolographicDisplaysSupport implements HologramController {
 
     @Override
     public void createHologram(Block block, Tier tier) {
-        if (tier.isHoloEnabled()) return;
+        if (!tier.isHoloEnabled()) return;
 
         double height = tier.getHoloHeight();
 
