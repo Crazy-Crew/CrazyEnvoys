@@ -222,6 +222,7 @@ public class CrazyManager {
             tier.setBulkRandom(file.getBoolean("Settings.Bulk-Prizes.Random"));
             tier.setBulkMax(file.getInt("Settings.Bulk-Prizes.Max-Bulk"));
             tier.setHoloToggle(file.getBoolean("Settings.Hologram-Toggle"));
+            tier.setHoloRange(file.getInt("Settings.Hologram-Range", 8));
             tier.setHoloHeight(file.getDouble("Settings.Hologram-Height", 1.5));
             tier.setHoloMessage(file.getStringList("Settings.Hologram"));
             ItemBuilder placedBlock = new ItemBuilder().setMaterial(file.getString("Settings.Placed-Block"));

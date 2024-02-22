@@ -21,7 +21,10 @@ public class CMIHologramsSupport implements HologramController {
         CMILocation location = new CMILocation(block.getLocation().add(0.5, height, 0.5));
 
         CMIHologram hologram = new CMIHologram("CrazyEnvoys-" + UUID.randomUUID(), location);
+
         hologram.setLines(tier.getHoloMessage());
+
+        hologram.setShowRange(tier.getHoloRange());
 
         CMI.getInstance().getHologramManager().addHologram(hologram);
 

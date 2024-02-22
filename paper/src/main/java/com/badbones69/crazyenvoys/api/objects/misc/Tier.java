@@ -288,6 +288,28 @@ public class Tier {
         return this;
     }
 
+    private int holoRange = 8;
+
+    /**
+     * Set the range at which a hologram can be seen.
+     *
+     * @param holoRange the range
+     * @return the object with updated information.
+     */
+    public Tier setHoloRange(int holoRange) {
+        this.holoRange = holoRange;
+
+        return this;
+    }
+
+    /**
+     * Gets the range at which a hologram can be seen.
+     *
+     * @return the range
+     */
+    public int getHoloRange() {
+        return this.holoRange;
+    }
 
     /**
      * Add a placeholder to the lore of the item.

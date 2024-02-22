@@ -15,7 +15,10 @@ public class DecentHologramsSupport implements HologramController {
     
     public void createHologram(Block block, Tier tier) {
         double height = tier.getHoloHeight();
+
         Hologram hologram = DHAPI.createHologram("CrazyEnvoys-" + UUID.randomUUID(), block.getLocation().add(.5, height, .5));
+
+        hologram.setDisplayRange(tier.getHoloRange());
 
         tier.getHoloMessage().forEach(line -> DHAPI.addHologramLine(hologram, MsgUtils.color(line)));
 
@@ -28,7 +31,6 @@ public class DecentHologramsSupport implements HologramController {
         Hologram hologram = this.holograms.get(block);
 
         this.holograms.remove(block);
-
         hologram.delete();
     }
     
