@@ -225,7 +225,7 @@ public class CrazyManager {
             tier.setHoloRange(file.getInt("Settings.Hologram-Range", 8));
             tier.setHoloHeight(file.getDouble("Settings.Hologram-Height", 1.5));
             tier.setHoloMessage(file.getStringList("Settings.Hologram"));
-            ItemBuilder placedBlock = new ItemBuilder().setMaterial(file.getString("Settings.Placed-Block"));
+            ItemBuilder placedBlock = new ItemBuilder().setMaterial(file.getString("Settings.Placed-Block", "CHEST"));
             tier.setPlacedBlockMaterial(placedBlock.getMaterial());
             tier.setPlacedBlockMetaData(placedBlock.getDamage());
 
