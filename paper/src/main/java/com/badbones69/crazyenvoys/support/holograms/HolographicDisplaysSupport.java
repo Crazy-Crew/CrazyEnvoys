@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.other.MsgUtils;
 import java.util.HashMap;
+import java.util.Map;
 
 public class HolographicDisplaysSupport implements HologramController {
 
@@ -16,7 +17,7 @@ public class HolographicDisplaysSupport implements HologramController {
 
     private final @NotNull HolographicDisplaysAPI api = HolographicDisplaysAPI.get(this.plugin);
 
-    private final HashMap<Block, Hologram> holograms = new HashMap<>();
+    private final Map<Block, Hologram> holograms = new HashMap<>();
 
     @Override
     public void createHologram(Block block, Tier tier) {

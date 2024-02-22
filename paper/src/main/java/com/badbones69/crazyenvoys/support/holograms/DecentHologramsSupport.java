@@ -7,11 +7,12 @@ import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.block.Block;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class DecentHologramsSupport implements HologramController {
     
-    private final HashMap<Block, Hologram> holograms = new HashMap<>();
+    private final Map<Block, Hologram> holograms = new HashMap<>();
     
     public void createHologram(Block block, Tier tier) {
         if (!tier.isHoloEnabled()) return;

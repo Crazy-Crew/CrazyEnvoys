@@ -7,12 +7,13 @@ import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import net.Zrips.CMILib.Container.CMILocation;
 import org.bukkit.block.Block;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @SuppressWarnings("ALL")
 public class CMIHologramsSupport implements HologramController {
 
-    private final HashMap<Block, CMIHologram> holograms = new HashMap<>();
+    private final Map<Block, CMIHologram> holograms = new HashMap<>();
 
     @Override
     public void createHologram(Block block, Tier tier) {
