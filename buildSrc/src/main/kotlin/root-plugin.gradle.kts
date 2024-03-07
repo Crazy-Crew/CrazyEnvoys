@@ -1,5 +1,4 @@
 import io.papermc.hangarpublishplugin.model.Platforms
-import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 
 plugins {
     id("io.papermc.hangar-publish-plugin")

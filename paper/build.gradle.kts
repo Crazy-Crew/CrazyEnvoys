@@ -32,8 +32,6 @@ dependencies {
     compileOnly(libs.oraxen)
 
     compileOnly(fileTree("libs").include("*.jar"))
-
-    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:$mcVersion-R0.1-SNAPSHOT")
 }
 
 val component: SoftwareComponent = components["java"]
@@ -63,8 +61,6 @@ tasks {
     }
 
     shadowJar {
-        exclude("META-INF/**")
-
         listOf(
             "de.tr7zw.changeme.nbtapi",
             "dev.triumphteam.cmd",

@@ -41,7 +41,7 @@ dependencyResolutionManagement {
             library("metrics", "org.bstats", "bstats-bukkit").version("3.0.2")
             library("nbtapi", "de.tr7zw", "item-nbt-api").version("2.12.2")
             library("oraxen", "io.th0rgal", "oraxen").version("1.164.0")
-            library("config_me", "ch.jalu", "configme").version("1.4.1")
+            library("configme", "ch.jalu", "configme").version("1.4.1")
 
             bundle("adventure", listOf("adventure4", "minimessage4"))
         }
