@@ -2,7 +2,7 @@ plugins {
     id("paper-plugin")
 }
 
-val mcVersion = rootProject.properties["minecraftVersion"] as String
+val mcVersion = providers.gradleProperty("mcVersion").get()
 
 repositories {
     maven("https://maven.enginehub.org/repo/")
@@ -13,7 +13,7 @@ dependencies {
 
     implementation(libs.cluster.paper)
 
-    implementation(libs.triumph.cmds)
+    implementation(libs.triumphcmds)
 
     implementation(libs.metrics)
 
@@ -63,8 +63,6 @@ tasks {
     }
 
     shadowJar {
-        archiveClassifier.set("")
-
         exclude("META-INF/**")
 
         listOf(
