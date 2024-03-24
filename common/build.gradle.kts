@@ -8,4 +8,6 @@ dependencies {
     }
 
     compileOnly(libs.cluster.api)
+
+    compileOnly("org.jetbrains:annotations:24.1.0")
 }

@@ -22,7 +22,7 @@ public enum Messages {
 
     ended(MessageKeys.envoy_ended),
     warning(MessageKeys.envoy_warning),
-    started(MessageKeys.envoy_started),
+    started(MessageKeys.envoy_started, true),
     on_going(MessageKeys.hologram_on_going),
     not_running(MessageKeys.hologram_not_running),
     reloaded(MessageKeys.envoy_plugin_reloaded),

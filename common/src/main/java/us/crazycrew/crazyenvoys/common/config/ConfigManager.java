@@ -4,6 +4,7 @@ import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;
 import ch.jalu.configme.configurationdata.ConfigurationDataBuilder;
 import ch.jalu.configme.resource.YamlFileResourceOptions;
+import us.crazycrew.crazyenvoys.common.config.migrate.LocaleMigrationService;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import us.crazycrew.crazyenvoys.common.config.types.MessageKeys;
 import java.io.File;
@@ -38,7 +39,7 @@ public class ConfigManager {
 
         this.messages = SettingsManagerBuilder
                 .withYamlFile(messagesFile, builder)
-                .useDefaultMigrationService()
+                .migrationService(new LocaleMigrationService())
                 .configurationData(MessageKeys.class)
                 .create();
     }

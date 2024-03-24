@@ -56,7 +56,9 @@ public class MessageKeys implements SettingsHolder {
 
     public static final Property<String> envoy_warning = newProperty("envoys.warning", "{prefix}&c[&4ALERT&c] &7There is an envoy event happening in &6{time}.");
 
-    public static final Property<String> envoy_started = newProperty("envoys.started", "{prefix}&7An envoy event has just started. &6{amount} &7crates have spawned around spawn for 5m.");
+    public static final Property<List<String>> envoy_started = newListProperty("envoys.started.list", List.of(
+            "{prefix}&7An envoy event has just started. &6{amount} &7crates have spawned around spawn for 5m."
+    ));
 
     public static final Property<String> envoys_remaining = newProperty("envoys.left", "{prefix}&6{player} &7has just found a tier envoy. There are now &6{amount} &7left to find.");
 

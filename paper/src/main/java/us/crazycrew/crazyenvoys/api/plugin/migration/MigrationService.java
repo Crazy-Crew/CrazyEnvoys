@@ -335,7 +335,7 @@ public class MigrationService {
         messages.setProperty(MessageKeys.envoy_force_ended, forceEnded);
 
         messages.setProperty(MessageKeys.envoy_warning, warning);
-        messages.setProperty(MessageKeys.envoy_started, started);
+        messages.setProperty(MessageKeys.envoy_started, List.of(started));
         messages.setProperty(MessageKeys.envoys_remaining, left);
         messages.setProperty(MessageKeys.envoy_ended, ended);
 
