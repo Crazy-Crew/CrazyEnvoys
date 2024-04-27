@@ -1,7 +1,8 @@
 package com.badbones69.crazyenvoys.commands;
 
+import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.Methods;
+import com.badbones69.crazyenvoys.platform.config.ConfigManager;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
@@ -9,8 +10,9 @@ import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
+import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import org.bukkit.command.ConsoleCommandSender;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.platform.util.MsgUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -18,6 +20,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,27 +30,20 @@ import java.util.UUID;
 
 public class EnvoyCommand implements CommandExecutor {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
 
-    @NotNull
-    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
-    @NotNull
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
-    @NotNull
-    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
-    @NotNull
-
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private final @NotNull EditorSettings editorSettings = this.plugin.getEditorSettings();
+    private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private final @NotNull FlareSettings flareSettings = this.plugin.getFlareSettings();
     
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
         if (args.length == 0) {
             if (!hasPermission(sender, "time") && !(sender instanceof ConsoleCommandSender)) {
                 Messages.no_permission.sendMessage(sender);
+
                 return true;
             }
 
@@ -57,6 +53,7 @@ public class EnvoyCommand implements CommandExecutor {
                 case "help" -> {
                     if (!hasPermission(sender, "help") && !(sender instanceof ConsoleCommandSender)) {
                         Messages.no_permission.sendMessage(sender);
+
                         return true;
                     }
 
@@ -68,17 +65,18 @@ public class EnvoyCommand implements CommandExecutor {
                 case "reload" -> {
                     if (!hasPermission(sender, "reload") && !(sender instanceof ConsoleCommandSender)) {
                         Messages.no_permission.sendMessage(sender);
+
                         return true;
                     }
 
                     if (this.crazyManager.isEnvoyActive()) {
                         EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.RELOAD);
                         this.plugin.getServer().getPluginManager().callEvent(event);
+
                         this.crazyManager.endEnvoyEvent();
                     }
 
-                    this.plugin.getFileManager().reloadAllFiles();
-                    this.plugin.getFileManager().setup();
+                    this.plugin.getFileManager().create();
 
                     this.crazyManager.reload(false);
 
@@ -90,11 +88,13 @@ public class EnvoyCommand implements CommandExecutor {
                 case "ignore" -> {
                     if (!(sender instanceof Player player)) {
                         Messages.player_only.sendMessage(sender);
+
                         return true;
                     }
 
                     if (!hasPermission(player, "ignore")) {
                         Messages.no_permission.sendMessage(player);
+
                         return true;
                     }
 
@@ -102,9 +102,11 @@ public class EnvoyCommand implements CommandExecutor {
 
                     if (this.crazyManager.isIgnoringMessages(uuid)) {
                         this.crazyManager.removeIgnorePlayer(uuid);
+
                         Messages.stop_ignoring_messages.sendMessage(player);
                     } else {
                         this.crazyManager.addIgnorePlayer(uuid);
+
                         Messages.start_ignoring_messages.sendMessage(player);
                     }
 
@@ -114,15 +116,18 @@ public class EnvoyCommand implements CommandExecutor {
                 case "center" -> {
                     if (!(sender instanceof Player player)) {
                         Messages.player_only.sendMessage(sender);
+
                         return true;
                     }
 
                     if (!hasPermission(player, "center")) {
                         Messages.no_permission.sendMessage(player);
+
                         return true;
                     }
 
                     this.crazyManager.setCenter(player.getLocation());
+
                     Messages.new_center.sendMessage(player);
 
                     return true;
@@ -131,6 +136,7 @@ public class EnvoyCommand implements CommandExecutor {
                 case "flare" -> { // /envoy flare [Amount] [Player]
                     if (!hasPermission(sender, "flare.give") && !(sender instanceof ConsoleCommandSender)) {
                         Messages.no_permission.sendMessage(sender);
+
                         return true;
                     }
 
@@ -138,24 +144,27 @@ public class EnvoyCommand implements CommandExecutor {
                     Player player;
 
                     if (args.length >= 2) {
-                        if (this.methods.isInt(args[1])) {
+                        if (MiscUtil.isInt(args[1])) {
                             amount = Integer.parseInt(args[1]);
                         } else {
                             Messages.not_a_number.sendMessage(sender);
+
                             return true;
                         }
                     }
 
                     if (args.length >= 3) {
-                        if (this.methods.isOnline(args[2])) {
-                            player = this.methods.getPlayer(args[2]);
+                        if (MiscUtil.isOnline(args[2])) {
+                            player = MiscUtil.getPlayer(args[2]);
                         } else {
                             Messages.not_online.sendMessage(sender);
+
                             return true;
                         }
                     } else {
                         if (!(sender instanceof Player)) {
                             Messages.player_only.sendMessage(sender);
+
                             return true;
                         } else {
                             player = (Player) sender;
@@ -179,6 +188,7 @@ public class EnvoyCommand implements CommandExecutor {
                 case "drops", "drop" -> {
                     if (!hasPermission(sender, "drops") && !(sender instanceof ConsoleCommandSender)) {
                         Messages.no_permission.sendMessage(sender);
+
                         return true;
                     }
 
@@ -187,10 +197,11 @@ public class EnvoyCommand implements CommandExecutor {
                     int page = 1;
 
                     if (args.length >= 2) {
-                        if (this.methods.isInt(args[1])) {
+                        if (MiscUtil.isInt(args[1])) {
                             page = Integer.parseInt(args[1]);
                         } else {
                             Messages.not_a_number.sendMessage(sender);
+
                             return true;
                         }
                     }
@@ -204,7 +215,9 @@ public class EnvoyCommand implements CommandExecutor {
                         placeholders.put("{x}", String.valueOf(block.getX()));
                         placeholders.put("{y}", String.valueOf(block.getY()));
                         placeholders.put("{z}", String.valueOf(block.getZ()));
+
                         locs.add(Messages.drops_format.getStringMessage(placeholders));
+
                         amount++;
                         placeholders.clear();
                     }
@@ -215,8 +228,8 @@ public class EnvoyCommand implements CommandExecutor {
                         Messages.drops_possibilities.sendMessage(sender);
                     }
 
-                    for (String dropLocation : this.methods.getPage(locs, page)) {
-                        sender.sendMessage(MsgUtils.color(dropLocation));
+                    for (String dropLocation : MiscUtil.getPage(locs, page)) {
+                        sender.sendMessage(MsgUtil.color(dropLocation));
                     }
 
                     if (!this.crazyManager.isEnvoyActive()) Messages.drops_page.sendMessage(sender);
@@ -227,6 +240,7 @@ public class EnvoyCommand implements CommandExecutor {
                 case "time" -> {
                     if (!hasPermission(sender, "time") && !(sender instanceof ConsoleCommandSender)) {
                         Messages.no_permission.sendMessage(sender);
+
                         return true;
                     }
 
@@ -234,9 +248,11 @@ public class EnvoyCommand implements CommandExecutor {
 
                     if (this.crazyManager.isEnvoyActive()) {
                         placeholder.put("{time}", this.crazyManager.getEnvoyRunTimeLeft());
+
                         Messages.time_left.sendMessage(sender, placeholder);
                     } else {
                         placeholder.put("{time}", this.crazyManager.getNextEnvoyTime());
+
                         Messages.time_till_event.sendMessage(sender, placeholder);
                     }
 
@@ -246,11 +262,13 @@ public class EnvoyCommand implements CommandExecutor {
                 case "start", "begin" -> {
                     if (!hasPermission(sender, "start") && !(sender instanceof ConsoleCommandSender)) {
                         Messages.no_permission.sendMessage(sender);
+
                         return true;
                     }
 
                     if (this.crazyManager.isEnvoyActive()) {
                         Messages.already_started.sendMessage(sender);
+
                         return true;
                     }
 
@@ -272,11 +290,13 @@ public class EnvoyCommand implements CommandExecutor {
                 case "stop", "end" -> {
                     if (!hasPermission(sender, "stop") && !(sender instanceof ConsoleCommandSender)) {
                         Messages.no_permission.sendMessage(sender);
+
                         return true;
                     }
 
                     if (!this.crazyManager.isEnvoyActive()) {
                         Messages.not_started.sendMessage(sender);
+
                         return true;
                     }
 
@@ -289,7 +309,9 @@ public class EnvoyCommand implements CommandExecutor {
                     }
 
                     this.plugin.getServer().getPluginManager().callEvent(event);
+
                     this.crazyManager.endEnvoyEvent();
+
                     Messages.ended.broadcastMessage(false);
                     Messages.force_end.sendMessage(sender);
 
@@ -299,28 +321,35 @@ public class EnvoyCommand implements CommandExecutor {
                 case "edit" -> {
                     if (!(sender instanceof Player player)) {
                         Messages.player_only.sendMessage(sender);
+
                         return true;
                     }
 
                     if (!hasPermission(player, "edit")) {
                         Messages.no_permission.sendMessage(player);
+
                         return true;
                     }
 
                     if (this.crazyManager.isEnvoyActive()) {
                         Messages.kicked_from_editor_mode.sendMessage(player);
+
                         return true;
                     }
 
                     if (this.editorSettings.isEditor(player)) {
                         this.editorSettings.removeEditor(player);
                         this.editorSettings.removeFakeBlocks();
+
                         player.getInventory().remove(Material.BEDROCK);
+
                         Messages.leave_editor_mode.sendMessage(player);
                     } else {
                         this.editorSettings.addEditor(player);
                         this.editorSettings.showFakeBlocks(player);
+
                         player.getInventory().addItem(new ItemStack(Material.BEDROCK, 1));
+
                         Messages.enter_editor_mode.sendMessage(player);
                     }
 
@@ -330,17 +359,20 @@ public class EnvoyCommand implements CommandExecutor {
                 case "clear" -> {
                     if (!(sender instanceof Player player)) {
                         Messages.player_only.sendMessage(sender);
+
                         return true;
                     }
 
                     if (!hasPermission(player, "clear")) {
                         Messages.no_permission.sendMessage(player);
+
                         return true;
                     }
 
                     if (this.editorSettings.isEditor(player)) {
                         // User is in editor mode and is able to clear all locations.
                         this.locationSettings.clearSpawnLocations();
+
                         Messages.editor_clear_locations.sendMessage(player);
                     } else {
                         // User must be in editor mode to clear locations. This is to help prevent accidental clears.

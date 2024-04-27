@@ -7,6 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,7 +23,7 @@ import java.util.UUID;
  */
 public class SkullCreator {
 
-    private static final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
+    private static final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
     /**
      * Creates a player skull with a UUID. 1.13 only.

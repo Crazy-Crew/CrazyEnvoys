@@ -2,52 +2,43 @@ package com.badbones69.crazyenvoys.listeners;
 
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
-import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
+import com.badbones69.crazyenvoys.platform.config.ConfigManager;
+import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
+import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.ryderbelserion.vital.enums.Support;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FlareClickListener implements Listener {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-    @NotNull
-    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    @NotNull
-    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
-    @NotNull
-    private final SettingsManager config = this.configManager.getConfig();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    @NotNull
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private final @NotNull SettingsManager config = ConfigManager.getConfig();
 
-    @NotNull
-    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
+    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
+
+    private final @NotNull FlareSettings flareSettings = this.plugin.getFlareSettings();
 
     @EventHandler(ignoreCancelled = true)
     public void onFlareInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            ItemStack flare = this.methods.getItemInHand(player);
+            ItemStack flare = MiscUtil.getItemInHand(player);
 
-            if (flare != null && this.flareSettings.isFlare(flare)) {
+            if (this.flareSettings.isFlare(flare)) {
                 event.setCancelled(true);
 
                 if (!player.hasPermission("envoy.flare.use")) {
@@ -65,13 +56,15 @@ public class FlareClickListener implements Listener {
                 if (this.config.getProperty(ConfigKeys.envoys_flare_minimum_players_toggle) && online < this.config.getProperty(ConfigKeys.envoys_flare_minimum_players_amount)) {
                     Map<String, String> placeholder = new HashMap<>();
                     placeholder.put("{amount}", String.valueOf(online));
+
                     Messages.not_enough_players.sendMessage(player, placeholder);
+
                     return;
                 }
 
                 boolean toggle = false;
 
-                if (PluginSupport.WORLD_EDIT.isPluginEnabled() && PluginSupport.WORLD_GUARD.isPluginEnabled()) {
+                if (Support.worldedit.isEnabled() && Support.worldguard.isEnabled()) {
                     if (this.config.getProperty(ConfigKeys.envoys_world_messages)) {
                         for (String region : this.config.getProperty(ConfigKeys.envoys_flare_world_guard_regions)) {
                             if (this.crazyManager.getWorldGuardPluginSupport().inRegion(region, player.getLocation())) toggle = true;
@@ -85,6 +78,7 @@ public class FlareClickListener implements Listener {
 
                 if (!toggle) {
                     Messages.not_in_world_guard_region.sendMessage(player);
+
                     return;
                 }
 

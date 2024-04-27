@@ -4,15 +4,15 @@ import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.properties.Property;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import us.crazycrew.crazyenvoys.common.utils.StringUtils;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.platform.config.ConfigManager;
+import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
+import com.badbones69.crazyenvoys.platform.config.types.MessageKeys;
+import com.badbones69.crazyenvoys.platform.util.MsgUtil;
+import com.ryderbelserion.vital.common.util.StringUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.common.config.types.MessageKeys;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,14 +98,13 @@ public enum Messages {
 
         this.isList = isList;
     }
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-    @NotNull
-    private final ConfigManager configManager = this.plugin.getCrazyHandler().getConfigManager();
-    @NotNull
-    private final SettingsManager messages = this.configManager.getMessages();
-    @NotNull
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+
+
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+
+    private final @NotNull SettingsManager messages = ConfigManager.getMessages();
+
+    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
 
     @NotNull
     private List<String> getPropertyList(Property<List<String>> properties) {
@@ -141,7 +140,7 @@ public enum Messages {
         String message;
 
         if (isList()) {
-            message = StringUtils.convertList(getPropertyList(this.listProperty));
+            message = StringUtil.convertList(getPropertyList(this.listProperty));
         } else {
             message = getProperty(this.property);
         }
@@ -162,7 +161,7 @@ public enum Messages {
         String message;
 
         if (isList()) {
-            message = StringUtils.convertList(getPropertyList(this.listProperty));
+            message = StringUtil.convertList(getPropertyList(this.listProperty));
         } else {
             message = getProperty(this.property);
         }
@@ -183,7 +182,7 @@ public enum Messages {
         String message;
 
         if (isList()) {
-            message = StringUtils.convertList(getPropertyList(this.listProperty));
+            message = StringUtil.convertList(getPropertyList(this.listProperty));
         } else {
             message = getProperty(this.property);
         }
@@ -229,9 +228,9 @@ public enum Messages {
         // Send in console because we should lol.
         sendMessage(this.plugin.getServer().getConsoleSender(), placeholder);
 
-        if (this.configManager.getConfig().getProperty(ConfigKeys.envoys_world_messages)) {
+        if (ConfigManager.getConfig().getProperty(ConfigKeys.envoys_world_messages)) {
             for (Player player : this.plugin.getServer().getOnlinePlayers()) {
-                for (String world : this.configManager.getConfig().getProperty(ConfigKeys.envoys_allowed_worlds)) {
+                for (String world : ConfigManager.getConfig().getProperty(ConfigKeys.envoys_allowed_worlds)) {
                     if (player.getWorld().getName().equalsIgnoreCase(world)) {
                         if (ignore) {
                             if (!this.crazyManager.isIgnoringMessages(player.getUniqueId())) sendMessage(player, placeholder);
@@ -253,13 +252,13 @@ public enum Messages {
     }
 
     public String asString() {
-        return MsgUtils.color(this.message.replaceAll("\\{prefix}", this.configManager.getConfig().getProperty(ConfigKeys.command_prefix)));
+        return MsgUtil.color(this.message.replaceAll("\\{prefix}", ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix)));
     }
 
     public List<String> toListString() {
         ArrayList<String> components = new ArrayList<>();
 
-        getPropertyList(this.listProperty).forEach(line -> components.add(MsgUtils.color(line)));
+        getPropertyList(this.listProperty).forEach(line -> components.add(MsgUtil.color(line)));
 
         return components;
     }

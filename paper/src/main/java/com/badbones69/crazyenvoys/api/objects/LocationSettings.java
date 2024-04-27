@@ -1,21 +1,18 @@
 package com.badbones69.crazyenvoys.api.objects;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.Methods;
-import com.badbones69.crazyenvoys.api.FileManager.Files;
+import com.badbones69.crazyenvoys.api.enums.Files;
+import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LocationSettings {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
     private final List<Block> spawnLocations = new ArrayList<>();
 
@@ -154,13 +151,13 @@ public class LocationSettings {
      * Add all values from the DATA file to spawnLocations.
      */
     public void populateMap() {
-        FileConfiguration users = Files.USERS.getFile();
+        FileConfiguration users = Files.users.getFile();
 
         getSpawnLocations().clear();
 
         for (String location : users.getStringList("Locations.Spawns")) {
             try {
-                getSpawnLocations().add(this.methods.getBuiltLocation(location).getBlock());
+                getSpawnLocations().add(MiscUtil.getBuiltLocation(location).getBlock());
             } catch (Exception ignore) {
                 addFailedLocations(location);
             }
@@ -169,14 +166,14 @@ public class LocationSettings {
 
     public void fixLocations() {
         if (!getFailedLocations().isEmpty()) {
-            if (this.plugin.isLogging()) this.plugin.getLogger().info("Attempting to fix " + getFailedLocations().size() + " locations that failed.");
+            if (MiscUtil.isLogging()) this.plugin.getLogger().info("Attempting to fix " + getFailedLocations().size() + " locations that failed.");
 
             int failed = 0;
             int fixed = 0;
 
             for (String location : getFailedLocations()) {
                 try {
-                    getSpawnLocations().add(this.methods.getBuiltLocation(location).getBlock());
+                    getSpawnLocations().add(MiscUtil.getBuiltLocation(location).getBlock());
                     fixed++;
                 } catch (Exception ignore) {
                     failed++;
@@ -194,11 +191,11 @@ public class LocationSettings {
 
         for (Block block : this.spawnLocations) {
             try {
-                locations.add(this.methods.getUnBuiltLocation(block.getLocation()));
+                locations.add(MiscUtil.getUnBuiltLocation(block.getLocation()));
             } catch (Exception ignored) {}
         }
 
-        Files.USERS.getFile().set("Locations.Spawns", locations);
-        Files.USERS.saveFile();
+        Files.users.getFile().set("Locations.Spawns", locations);
+        Files.users.save();
     }
 }

@@ -1,25 +1,19 @@
 package com.badbones69.crazyenvoys.api.objects;
 
 import ch.jalu.configme.SettingsManager;
-import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.Methods;
+import com.badbones69.crazyenvoys.platform.config.ConfigManager;
+import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
+import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.api.builders.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 
 public class FlareSettings {
-
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
     
     private ItemBuilder flareItemBuilder;
     
     public void load() {
-        SettingsManager config = this.plugin.getCrazyHandler().getConfigManager().getConfig();
+        SettingsManager config = ConfigManager.getConfig();
 
         this.flareItemBuilder = new ItemBuilder()
                 .setMaterial(config.getProperty(ConfigKeys.envoys_flare_item_type))
@@ -44,7 +38,7 @@ public class FlareSettings {
     }
     
     public void giveFlare(Player player, int amount) {
-        if (this.methods.isInvFull(player)) {
+        if (MiscUtil.isInvFull(player)) {
             player.getWorld().dropItem(player.getLocation(), getFlare(amount));
         } else {
             player.getInventory().addItem(getFlare(amount));

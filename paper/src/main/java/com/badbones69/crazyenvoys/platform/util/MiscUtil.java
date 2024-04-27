@@ -1,10 +1,13 @@
-package com.badbones69.crazyenvoys;
+package com.badbones69.crazyenvoys.platform.util;
 
-import ch.jalu.configme.SettingsManager;
+import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.platform.config.ConfigManager;
+import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -18,36 +21,31 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class Methods {
+public class MiscUtil {
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
+    private final static @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
-    private final @NotNull SettingsManager config = this.configManager.getConfig();
-
-    public String getPrefix() {
-        return MsgUtils.color(this.config.getProperty(ConfigKeys.command_prefix));
+    public static String getPrefix() {
+        return MsgUtil.color(ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix));
     }
 
-    public String getPrefix(String message) {
-        return MsgUtils.color(this.config.getProperty(ConfigKeys.command_prefix) + message);
+    public static String getPrefix(String message) {
+        return MsgUtil.color(ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix) + message);
     }
 
-    public ItemStack getItemInHand(Player player) {
+    public static ItemStack getItemInHand(Player player) {
         return player.getInventory().getItemInMainHand();
     }
 
-    public Calendar getTimeFromString(String time) {
+    public static Calendar getTimeFromString(String time) {
         Calendar cal = Calendar.getInstance();
 
         for (String i : time.split(" ")) {
@@ -63,7 +61,7 @@ public class Methods {
         return cal;
     }
 
-    public boolean isInt(String s) {
+    public static boolean isInt(String s) {
         try {
             Integer.parseInt(s);
         } catch (NumberFormatException nfe) {
@@ -73,8 +71,8 @@ public class Methods {
         return true;
     }
 
-    public boolean isOnline(String name) {
-        for (Player player : this.plugin.getServer().getOnlinePlayers()) {
+    public static boolean isOnline(String name) {
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
             if (player.getName().equalsIgnoreCase(name)) {
                 return true;
             }
@@ -83,15 +81,15 @@ public class Methods {
         return false;
     }
 
-    public Player getPlayer(String name) {
-        return this.plugin.getServer().getPlayer(name);
+    public static Player getPlayer(String name) {
+        return plugin.getServer().getPlayer(name);
     }
 
-    public boolean isInvFull(Player player) {
+    public static boolean isInvFull(Player player) {
         return player.getInventory().firstEmpty() == -1;
     }
 
-    public void firework(Location loc, List<Color> colors) {
+    public static void firework(Location loc, List<Color> colors) {
         Firework firework = loc.getWorld().spawn(loc, Firework.class);
         FireworkMeta fireworkMeta = firework.getFireworkMeta();
         fireworkMeta.addEffects(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(colors).trail(false).flicker(false).build());
@@ -105,11 +103,11 @@ public class Methods {
         detonate(firework);
     }
 
-    private void detonate(Firework firework) {
-        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, firework::detonate, 2);
+    private static void detonate(Firework firework) {
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, firework::detonate, 2);
     }
 
-    public List<String> getPage(List<String> list, Integer page) {
+    public static List<String> getPage(List<String> list, Integer page) {
         List<String> locations = new ArrayList<>();
 
         if (page <= 0) page = 1;
@@ -136,18 +134,20 @@ public class Methods {
         return locations;
     }
 
-    public boolean isSuccessful(int min, int max) {
+    public static boolean isSuccessful(int min, int max) {
         if (max <= min || max <= 0) return true;
 
         int chance = 1 + new Random().nextInt(max);
+
         return chance <= min;
     }
 
-    public List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
+    public static List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
         List<Entity> out = new ArrayList<>();
 
         if (loc.getWorld() != null) {
             FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), Material.AIR, (byte) 0);
+
             out = ent.getNearbyEntities(x, y, z);
             ent.remove();
         }
@@ -155,7 +155,19 @@ public class Methods {
         return out;
     }
 
-    public String convertTimeToString(Calendar timeTill) {
+    public static boolean isLogging() {
+        return ConfigManager.getConfig().getProperty(ConfigKeys.verbose_logging);
+    }
+
+    public static void registerCommand(PluginCommand pluginCommand, TabCompleter tabCompleter, CommandExecutor commandExecutor) {
+        if (pluginCommand != null) {
+            pluginCommand.setExecutor(commandExecutor);
+
+            if (tabCompleter != null) pluginCommand.setTabCompleter(tabCompleter);
+        }
+    }
+
+    public static String convertTimeToString(Calendar timeTill) {
         Calendar rightNow = Calendar.getInstance();
         int total = ((int) (timeTill.getTimeInMillis() / 1000) - (int) (rightNow.getTimeInMillis() / 1000));
         int day = 0;
@@ -184,19 +196,19 @@ public class Methods {
         return message;
     }
 
-    public String getUnBuiltLocation(Location location) {
+    public static String getUnBuiltLocation(Location location) {
         return "World:" + location.getWorld().getName() + ", X:" + location.getBlockX() + ", Y:" + location.getBlockY() + ", Z:" + location.getBlockZ();
     }
 
-    public Location getBuiltLocation(String locationString) {
-        World w = this.plugin.getServer().getWorlds().get(0);
+    public static Location getBuiltLocation(String locationString) {
+        World w = plugin.getServer().getWorlds().getFirst();
         int x = 0;
         int y = 0;
         int z = 0;
 
         for (String i : locationString.toLowerCase().split(", ")) {
             if (i.startsWith("world:")) {
-                w = this.plugin.getServer().getWorld(i.replace("world:", ""));
+                w = plugin.getServer().getWorld(i.replace("world:", ""));
             } else if (i.startsWith("x:")) {
                 x = Integer.parseInt(i.replace("x:", ""));
             } else if (i.startsWith("y:")) {
@@ -209,7 +221,7 @@ public class Methods {
         return new Location(w, x, y, z);
     }
 
-    public List<String> getPlaceholders(List<String> message, HashMap<String, String> lorePlaceholders) {
+    public static List<String> getPlaceholders(List<String> message, HashMap<String, String> lorePlaceholders) {
         List<String> lore = new ArrayList<>();
 
         for (String msg : message) {

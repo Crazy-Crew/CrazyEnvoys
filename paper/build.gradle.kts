@@ -1,37 +1,33 @@
 plugins {
-    id("paper-plugin")
-}
+    id("io.github.goooler.shadow")
 
-val mcVersion = providers.gradleProperty("mcVersion").get()
+    alias(libs.plugins.run.paper)
 
-repositories {
-    maven("https://maven.enginehub.org/repo/")
+    `paper-plugin`
 }
 
 dependencies {
-    api(project(":common"))
+    compileOnly(fileTree("$rootDir/libs/compile").include("*.jar"))
 
-    implementation(libs.cluster.paper)
+    //implementation(libs.metrics)
 
-    implementation(libs.triumphcmds)
+    implementation(libs.triumph.cmds)
 
-    implementation(libs.metrics)
+    implementation(libs.config.me)
 
-    implementation(libs.nbtapi)
+    implementation(libs.nbt.api)
 
-    compileOnly(libs.holographicdisplays)
+    implementation(libs.vital)
 
-    compileOnly(libs.decentholograms)
+    compileOnly(libs.decent.holograms)
 
-    compileOnly(libs.placeholderapi)
+    compileOnly(libs.placeholder.api)
 
-    compileOnly(libs.itemsadder)
+    compileOnly(libs.itemsadder.api)
+
+    compileOnly(libs.oraxen.api)
 
     compileOnly(libs.worldguard)
-
-    compileOnly(libs.oraxen)
-
-    compileOnly(fileTree("libs").include("*.jar"))
 }
 
 val component: SoftwareComponent = components["java"]
@@ -40,11 +36,11 @@ tasks {
     publishing {
         repositories {
             maven {
-                url = uri("https://repo.crazycrew.us/releases/")
+                url = uri("https://repo.crazycrew.us/releases")
 
                 credentials {
-                    this.username = System.getenv("GRADLE_USERNAME")
-                    this.password = System.getenv("GRADLE_PASSWORD")
+                    this.username = System.getenv("gradle_username")
+                    this.password = System.getenv("gradle_password")
                 }
             }
         }
@@ -60,8 +56,29 @@ tasks {
         }
     }
 
+    runServer {
+        jvmArgs("-Dnet.kyori.ansi.colorLevel=truecolor")
+
+        defaultCharacterEncoding = Charsets.UTF_8.name()
+
+        minecraftVersion("1.20.5")
+    }
+
+    assemble {
+        doLast {
+            copy {
+                from(shadowJar.get())
+                into(rootProject.projectDir.resolve("jars"))
+            }
+        }
+    }
+
     shadowJar {
+        archiveBaseName.set(rootProject.name)
+        archiveClassifier.set("")
+
         listOf(
+            "com.ryderbelserion.vital",
             "de.tr7zw.changeme.nbtapi",
             "dev.triumphteam.cmd",
             "org.bstats"
@@ -71,20 +88,14 @@ tasks {
     }
 
     processResources {
-        val properties = hashMapOf(
-                "name" to rootProject.name,
-                "version" to rootProject.version,
-                "group" to rootProject.group,
-                "description" to rootProject.description,
-                "apiVersion" to rootProject.properties["apiVersion"],
-                "authors" to rootProject.properties["authors"],
-                "website" to rootProject.properties["website"]
-        )
+        inputs.properties("name" to rootProject.name)
+        inputs.properties("version" to project.version)
+        inputs.properties("group" to project.group)
+        inputs.properties("description" to project.properties["description"])
+        inputs.properties("website" to project.properties["website"])
 
-        inputs.properties(properties)
-
-        filesMatching("plugin.yml") {
-            expand(properties)
+        filesMatching("paper-plugin.yml") {
+            expand(inputs.properties)
         }
     }
 }

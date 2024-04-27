@@ -3,9 +3,10 @@ package com.badbones69.crazyenvoys.api;
 import ch.jalu.configme.SettingsManager;
 import com.Zrips.CMI.Modules.ModuleHandling.CMIModule;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.Methods;
-import com.badbones69.crazyenvoys.api.FileManager.CustomFile;
-import com.badbones69.crazyenvoys.api.FileManager.Files;
+import com.badbones69.crazyenvoys.api.enums.Files;
+import com.badbones69.crazyenvoys.platform.config.ConfigManager;
+import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
+import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
@@ -16,20 +17,21 @@ import com.badbones69.crazyenvoys.api.interfaces.HologramController;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
-import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
+import com.badbones69.crazyenvoys.api.builders.ItemBuilder;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.listeners.timer.CountdownTimer;
 import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
-import com.badbones69.crazyenvoys.support.holograms.HolographicDisplaysSupport;
-import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
-import com.ryderbelserion.cluster.utils.DyeUtils;
+import com.ryderbelserion.vital.enums.Support;
+import com.ryderbelserion.vital.files.CustomFile;
+import com.ryderbelserion.vital.files.FileManager;
+import com.ryderbelserion.vital.util.DyeUtil;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.platform.util.MsgUtil;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -42,13 +44,10 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
-import us.crazycrew.crazyenvoys.support.MetricsHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -61,32 +60,17 @@ import java.util.UUID;
 
 public class CrazyManager {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-    @NotNull
-    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    @NotNull
-    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
-    @NotNull
-    private final SettingsManager config = this.configManager.getConfig();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final @NotNull FileManager fileManager = this.plugin.getFileManager();
+    private final @NotNull SettingsManager config = ConfigManager.getConfig();
 
-    @NotNull
-    private final FileManager fileManager = this.plugin.getFileManager();
+    private final @NotNull CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
 
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    @NotNull
-    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
+    private final @NotNull EditorSettings editorSettings = this.plugin.getEditorSettings();
 
-    @NotNull
-    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
-
-    @NotNull
-    private final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
-
-    @NotNull
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private final @NotNull FlareSettings flareSettings = this.plugin.getFlareSettings();
     
     private CountdownTimer countdownTimer;
 
@@ -140,15 +124,13 @@ public class CrazyManager {
      * Run this when you need to reload the plugin or shut it down.
      */
     public void reload(boolean serverStop) {
-        MetricsHandler metricsHandler = this.crazyHandler.getMetrics();
+        FileConfiguration configuration = Files.users.getFile();
 
         if (serverStop) {
-            metricsHandler.stop();
-
             removeAllEnvoys();
 
-            Files.USERS.getFile().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
-            Files.USERS.saveFile();
+            configuration.set("Next-Envoy", getNextEnvoy().getTimeInMillis());
+            Files.users.save();
 
             this.locationSettings.clearSpawnLocations();
 
@@ -157,20 +139,12 @@ public class CrazyManager {
             return;
         }
 
-        this.configManager.reload();
-
-        boolean metrics = this.config.getProperty(ConfigKeys.toggle_metrics);
-
-        if (metrics) {
-            metricsHandler.start();
-        } else {
-            metricsHandler.stop();
-        }
+        ConfigManager.reload();
 
         removeAllEnvoys();
 
-        Files.USERS.getFile().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
-        Files.USERS.saveFile();
+        configuration.set("Next-Envoy", getNextEnvoy().getTimeInMillis());
+        Files.users.save();
 
         this.locationSettings.clearSpawnLocations();
 
@@ -185,13 +159,15 @@ public class CrazyManager {
 
         this.blacklistedBlocks.clear();
         this.cachedChances.clear();
-        FileConfiguration users = Files.USERS.getFile();
+
+        FileConfiguration configuration = Files.users.getFile();
+
         this.envoyTimeLeft = Calendar.getInstance();
 
         // Populate the array list.
         this.locationSettings.populateMap();
 
-        if (this.plugin.isLogging() && !this.locationSettings.getFailedLocations().isEmpty()) this.plugin.getLogger().severe("Failed to load " + this.locationSettings.getFailedLocations().size() + " locations and will reattempt in 10s.");
+        if (MiscUtil.isLogging() && !this.locationSettings.getFailedLocations().isEmpty()) this.plugin.getLogger().severe("Failed to load " + this.locationSettings.getFailedLocations().size() + " locations and will reattempt in 10s.");
 
         if (Calendar.getInstance().after(getNextEnvoy())) setEnvoyActive(false);
 
@@ -202,7 +178,7 @@ public class CrazyManager {
 
             if (this.config.getProperty(ConfigKeys.envoys_countdown)) {
                 this.autoTimer = true;
-                cal.setTimeInMillis(users.getLong("Next-Envoy"));
+                cal.setTimeInMillis(configuration.getLong("Next-Envoy"));
 
                 if (Calendar.getInstance().after(cal)) cal.setTimeInMillis(getEnvoyCooldown().getTimeInMillis());
             } else {
@@ -221,8 +197,8 @@ public class CrazyManager {
         this.tiers.clear();
 
         for (CustomFile tierFile : this.fileManager.getCustomFiles()) {
-            Tier tier = new Tier(tierFile.getName());
-            FileConfiguration file = tierFile.getFile();
+            Tier tier = new Tier(tierFile.getFileName());
+            FileConfiguration file = tierFile.getConfiguration();
             tier.setClaimPermissionToggle(file.getBoolean("Settings.Claim-Permission"));
             tier.setClaimPermission(file.getString("Settings.Claim-Permission-Name"));
             tier.setUseChance(file.getBoolean("Settings.Use-Chance"));
@@ -243,7 +219,7 @@ public class CrazyManager {
             if (file.getStringList("Settings.Firework-Colors").isEmpty()) {
                 tier.setFireworkColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
             } else {
-                file.getStringList("Settings.Firework-Colors").forEach(color -> tier.addFireworkColor(DyeUtils.getColor(color)));
+                file.getStringList("Settings.Firework-Colors").forEach(color -> tier.addFireworkColor(DyeUtil.getColor(color)));
             }
 
             if (file.contains("Settings.Prize-Message") && !file.getStringList("Settings.Prize-Message").isEmpty()) {
@@ -260,7 +236,7 @@ public class CrazyManager {
             if (file.getStringList("Settings.Signal-Flare.Colors").isEmpty()) {
                 tier.setSignalFlareColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
             } else {
-                file.getStringList("Settings.Signal-Flare.Colors").forEach(color -> tier.addSignalFlareColor(DyeUtils.getColor(color)));
+                file.getStringList("Settings.Signal-Flare.Colors").forEach(color -> tier.addSignalFlareColor(DyeUtil.getColor(color)));
             }
 
             for (String prizeID : file.getConfigurationSection("Prizes").getKeys(false)) {
@@ -283,6 +259,7 @@ public class CrazyManager {
                         .replaceAll("%tier%", "{tier}")));
 
                 boolean dropItems = file.getBoolean(path + "Drop-Items");
+
                 List<ItemBuilder> items = ItemBuilder.convertStringList(file.getStringList(path + "Items"));
                 tier.addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
             }
@@ -320,17 +297,15 @@ public class CrazyManager {
             this.blacklistedBlocks.add(Material.STONE_SLAB);
         }
 
-        if (PluginSupport.WORLD_GUARD.isPluginEnabled() && PluginSupport.WORLD_EDIT.isPluginEnabled()) this.worldGuardSupportVersion = new WorldGuardSupport();
+        if (Support.worldedit.isEnabled() && Support.worldguard.isEnabled()) this.worldGuardSupportVersion = new WorldGuardSupport();
 
-        if (PluginSupport.DECENT_HOLOGRAMS.isPluginEnabled()) {
+        if (Support.decent_holograms.isEnabled()) {
             this.hologramController = new DecentHologramsSupport();
+
             this.plugin.getLogger().info("DecentHolograms support has been enabled.");
-        } else if (PluginSupport.CMI.isPluginEnabled() && CMIModule.holograms.isEnabled()) {
+        } else if (Support.cmi.isEnabled() && CMIModule.holograms.isEnabled()) {
             this.hologramController = new CMIHologramsSupport();
             this.plugin.getLogger().info("CMI Hologram support has been enabled.");
-        } else if (PluginSupport.HOLOGRAPHIC_DISPLAYS.isPluginEnabled()) {
-            this.hologramController = new HolographicDisplaysSupport();
-            this.plugin.getLogger().info("Holographic Displays support has been enabled.");
         } else this.plugin.getLogger().warning("No holograms plugin were found. If using CMI, make sure holograms module is enabled.");
 
         this.locationSettings.fixLocations();
@@ -343,6 +318,7 @@ public class CrazyManager {
      */
     public void startEnvoyCountDown() {
         cancelEnvoyCooldownTime();
+
         this.coolDownTask = new BukkitRunnable() {
             @Override
             public void run() {
@@ -362,8 +338,9 @@ public class CrazyManager {
                         check.clear(Calendar.MILLISECOND);
 
                         if (check.compareTo(cal) == 0) {
-                            HashMap<String, String> placeholder = new HashMap<>();
+                            Map<String, String> placeholder = new HashMap<>();
                             placeholder.put("{time}", getNextEnvoyTime());
+
                             Messages.warning.broadcastMessage(false, placeholder);
                         }
                     }
@@ -375,8 +352,9 @@ public class CrazyManager {
                     if (next.compareTo(cal) <= 0 && !isEnvoyActive()) {
                         if (config.getProperty(ConfigKeys.envoys_minimum_players_toggle)) {
                             if (online < config.getProperty(ConfigKeys.envoys_minimum_players_amount)) {
-                                HashMap<String, String> placeholder = new HashMap<>();
+                                Map<String, String> placeholder = new HashMap<>();
                                 placeholder.put("{amount}", online + "");
+
                                 Messages.not_enough_players.broadcastMessage(false, placeholder);
 
                                 setNextEnvoy(getEnvoyCooldown());
@@ -432,6 +410,7 @@ public class CrazyManager {
             if (!block.getChunk().isLoaded()) block.getChunk().load();
 
             block.setType(Material.AIR);
+
             stopSignalFlare(block.getLocation());
         }
 
@@ -502,7 +481,7 @@ public class CrazyManager {
      * @return The time till the next envoy.
      */
     public String getNextEnvoyTime() {
-        String message = this.methods.convertTimeToString(getNextEnvoy());
+        String message = MiscUtil.convertTimeToString(getNextEnvoy());
 
         if (message.equals("0" + Messages.second.getString())) message = Messages.on_going.getString();
 
@@ -572,7 +551,7 @@ public class CrazyManager {
      * @return The time left in the current envoy event.
      */
     public String getEnvoyRunTimeLeft() {
-        String message = this.methods.convertTimeToString(this.envoyTimeLeft);
+        String message = MiscUtil.convertTimeToString(this.envoyTimeLeft);
 
         if (message.equals("0" + Messages.second.getString())) message = Messages.not_running.getString();
 
@@ -638,8 +617,8 @@ public class CrazyManager {
                 this.locationSettings.addDropLocations(block);
             }
 
-            Files.USERS.getFile().set("Locations.Spawned", getBlockList(locationSettings.getDropLocations()));
-            Files.USERS.saveFile();
+            Files.users.getFile().set("Locations.Spawned", getBlockList(locationSettings.getDropLocations()));
+            Files.users.save();
         } else {
             if (this.config.getProperty(ConfigKeys.envoys_max_drops_toggle) || this.config.getProperty(ConfigKeys.envoys_random_drops)) {
                 if (this.locationSettings.getSpawnLocations().size() <= maxSpawns) {
@@ -656,7 +635,7 @@ public class CrazyManager {
             }
         }
 
-        boolean envoyLocationsBroadcast = this.plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(ConfigKeys.envoys_locations_broadcast);
+        boolean envoyLocationsBroadcast = ConfigManager.getConfig().getProperty(ConfigKeys.envoys_locations_broadcast);
 
         if (envoyLocationsBroadcast) {
             StringBuilder locations = getStringBuilder();
@@ -673,7 +652,8 @@ public class CrazyManager {
 
         int x = 1;
         for (Block block : this.locationSettings.getDropLocations()) {
-            HashMap<String, String> placeholders = new HashMap<>();
+            Map<String, String> placeholders = new HashMap<>();
+
             placeholders.put("{id}", String.valueOf(x));
             placeholders.put("{world}", block.getWorld().getName());
             placeholders.put("{x}", String.valueOf(block.getX()));
@@ -697,7 +677,8 @@ public class CrazyManager {
         // crates to spawn in the ground when not using falling blocks.
 
         if (this.tiers.isEmpty()) {
-            this.plugin.getServer().broadcastMessage(this.methods.getPrefix() + MsgUtils.color("&cNo tiers were found. Please delete the Tiers folder to allow it to remake the default tier files."));
+            this.plugin.getServer().broadcastMessage(MiscUtil.getPrefix() + MsgUtil.color("&cNo tiers were found. Please delete the Tiers folder to allow it to remake the default tier files."));
+
             return false;
         }
 
@@ -710,9 +691,12 @@ public class CrazyManager {
         if (dropLocations.isEmpty() || (this.config.getProperty(ConfigKeys.envoys_random_drops) && isCenterLoaded())) {
             setNextEnvoy(getEnvoyCooldown());
             resetWarnings();
+
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.NO_LOCATIONS_FOUND);
             this.plugin.getServer().getPluginManager().callEvent(event);
+
             Messages.no_spawn_locations_found.broadcastMessage(false);
+
             return false;
         }
 
@@ -720,8 +704,10 @@ public class CrazyManager {
             Player player = this.plugin.getServer().getPlayer(uuid);
 
             this.editorSettings.removeFakeBlocks();
+
             if (player != null) {
                 player.getInventory().removeItem(new ItemStack(Material.BEDROCK, 1));
+
                 Messages.kicked_from_editor_mode.sendMessage(player);
             }
         }
@@ -730,8 +716,10 @@ public class CrazyManager {
 
         setEnvoyActive(true);
         int max = dropLocations.size();
-        HashMap<String, String> placeholder = new HashMap<>();
+
+        Map<String, String> placeholder = new HashMap<>();
         placeholder.put("{amount}", String.valueOf(max));
+
         Messages.started.broadcastMessage(false, placeholder);
 
         if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle)) {
@@ -745,7 +733,7 @@ public class CrazyManager {
                 boolean spawnFallingBlock = false;
 
                 if (this.config.getProperty(ConfigKeys.envoy_falling_block_toggle)) {
-                    for (Entity entity : this.methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
+                    for (Entity entity : MiscUtil.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
                         if (entity instanceof Player) {
                             spawnFallingBlock = true;
                             break;
@@ -759,7 +747,6 @@ public class CrazyManager {
                     int fallingHeight = this.config.getProperty(ConfigKeys.envoy_falling_height);
                     Material fallingBlock = Material.valueOf(this.config.getProperty(ConfigKeys.envoy_falling_block_type));
 
-                    //TODO() Test to make sure this works.
                     FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, fallingHeight, .5), fallingBlock.createBlockData());
                     chest.setDropItem(false);
                     chest.setHurtEntities(false);
@@ -775,6 +762,7 @@ public class CrazyManager {
                     if (tier.isHoloEnabled() && hasHologramPlugin()) this.hologramController.createHologram(block, tier);
 
                     addActiveEnvoy(block, tier);
+
                     this.locationSettings.addActiveLocation(block);
 
                     if (tier.getSignalFlareToggle() && block.getChunk().isLoaded()) startSignalFlare(block.getLocation(), tier);
@@ -787,7 +775,9 @@ public class CrazyManager {
             public void run() {
                 EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.OUT_OF_TIME);
                 plugin.getServer().getPluginManager().callEvent(event);
+
                 Messages.ended.broadcastMessage(false);
+
                 endEnvoyEvent();
             }
         }.runTaskLater(this.plugin, getTimeSeconds(this.config.getProperty(ConfigKeys.envoys_run_time)) * 20L);
@@ -807,6 +797,7 @@ public class CrazyManager {
 
         if (this.config.getProperty(ConfigKeys.envoys_run_time_toggle)) {
             setNextEnvoy(getEnvoyCooldown());
+
             resetWarnings();
         }
 
@@ -876,10 +867,10 @@ public class CrazyManager {
      */
     public void setCenter(Location loc) {
         this.center = loc;
-        this.centerString = this.methods.getUnBuiltLocation(this.center);
+        this.centerString = MiscUtil.getUnBuiltLocation(this.center);
 
-        Files.USERS.getFile().set("Center", this.centerString);
-        Files.USERS.saveFile();
+        Files.users.getFile().set("Center", this.centerString);
+        Files.users.save();
     }
 
     /**
@@ -917,7 +908,7 @@ public class CrazyManager {
         List<Block> locations = new ArrayList<>(this.locationSettings.getActiveLocations());
 
         if (this.config.getProperty(ConfigKeys.envoys_random_locations)) {
-            locations.addAll(getLocationsFromStringList(Files.USERS.getFile().getStringList("Locations.Spawned")));
+            locations.addAll(getLocationsFromStringList(Files.users.getFile().getStringList("Locations.Spawned")));
         } else {
             locations.addAll(this.locationSettings.getSpawnLocations());
         }
@@ -936,8 +927,8 @@ public class CrazyManager {
         this.locationSettings.clearActiveLocations();
         this.locationSettings.clearDropLocations();
 
-        Files.USERS.getFile().set("Locations.Spawned", new ArrayList<>());
-        Files.USERS.saveFile();
+        Files.users.getFile().set("Locations.Spawned", new ArrayList<>());
+        Files.users.save();
     }
 
     private boolean testCenter() {
@@ -962,17 +953,17 @@ public class CrazyManager {
     }
 
     private void loadCenter() {
-        FileConfiguration users = Files.USERS.getFile();
+        FileConfiguration configuration = Files.users.getFile();
 
-        if (users.contains("Center")) {
-            this.centerString = users.getString("Center");
-            if (this.centerString != null) this.center = this.methods.getBuiltLocation(centerString);
+        if (configuration.contains("Center")) {
+            this.centerString = configuration.getString("Center");
+            if (this.centerString != null) this.center = MiscUtil.getBuiltLocation(centerString);
         } else {
             this.center = this.plugin.getServer().getWorlds().get(0).getSpawnLocation();
         }
 
         if (this.center.getWorld() == null) {
-            if (this.plugin.isLogging()) this.plugin.getLogger().severe("Failed to fix Center. Will try again next event.");
+            if (MiscUtil.isLogging()) this.plugin.getLogger().severe("Failed to fix Center. Will try again next event.");
         }
     }
 
@@ -990,7 +981,7 @@ public class CrazyManager {
         if (this.config.getProperty(ConfigKeys.envoys_countdown)) {
             String time = this.config.getProperty(ConfigKeys.envoys_cooldown);
 
-            cal = this.methods.getTimeFromString(time);
+            cal = MiscUtil.getTimeFromString(time);
         } else {
             getEnvoyTime(cal);
         }
@@ -1001,7 +992,7 @@ public class CrazyManager {
     private Calendar getEnvoyRunTimeCalendar() {
         String time = this.config.getProperty(ConfigKeys.envoys_run_time).toLowerCase();
 
-        return this.methods.getTimeFromString(time);
+        return MiscUtil.getTimeFromString(time);
     }
 
     private void firework(Location loc, Tier tier) {
@@ -1092,7 +1083,7 @@ public class CrazyManager {
         List<String> strings = new ArrayList<>();
 
         for (Block block : stringList) {
-            strings.add(this.methods.getUnBuiltLocation(block.getLocation()));
+            strings.add(MiscUtil.getUnBuiltLocation(block.getLocation()));
         }
 
         return strings;
@@ -1102,7 +1093,7 @@ public class CrazyManager {
         List<Block> locations = new ArrayList<>();
 
         for (String location : locationsList) {
-            locations.add(this.methods.getBuiltLocation(location).getBlock());
+            locations.add(MiscUtil.getBuiltLocation(location).getBlock());
         }
 
         return locations;

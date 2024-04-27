@@ -1,12 +1,13 @@
 package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.Methods;
-import com.badbones69.crazyenvoys.api.FileManager;
-import com.badbones69.crazyenvoys.api.FileManager.CustomFile;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.platform.util.MsgUtil;
+import com.ryderbelserion.vital.files.CustomFile;
+import com.ryderbelserion.vital.files.FileManager;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,10 +44,6 @@ public class Tier {
     // Placeholders,
     private final HashMap<String, String> lorePlaceholders;
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
-
-    private final @NotNull Methods methods = this.plugin.getMethods();
-    
     /**
      * Create a new tier.
      *
@@ -55,8 +52,9 @@ public class Tier {
     public Tier(String name) {
         this.name = name;
 
-        FileManager fileManager = this.plugin.getFileManager();
-        this.file = fileManager.getFile(name);
+        CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+        FileManager fileManager = plugin.getFileManager();
+        this.file = fileManager.getCustomFile(this.name);
 
         this.claimPermission = "";
         this.claimPermissionToggle = false;
@@ -360,7 +358,7 @@ public class Tier {
      * @return The hologram with all placeholders in it.
      */
     public List<String> getHoloMessage() {
-        return this.methods.getPlaceholders(this.holoMessage, this.lorePlaceholders);
+        return MiscUtil.getPlaceholders(this.holoMessage, this.lorePlaceholders);
     }
 
     /**
@@ -372,7 +370,7 @@ public class Tier {
         this.holoMessage.clear();
 
         for (String message : holoMessage) {
-            this.holoMessage.add(MsgUtils.color(message));
+            this.holoMessage.add(MsgUtil.color(message));
         }
 
         return this;

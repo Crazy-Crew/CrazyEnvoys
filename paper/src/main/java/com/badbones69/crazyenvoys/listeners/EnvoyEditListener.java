@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.listeners;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.Methods;
+import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
@@ -13,25 +13,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public class EnvoyEditListener implements Listener {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
 
-    @NotNull
-    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
+    private final @NotNull EditorSettings editorSettings = this.plugin.getEditorSettings();
 
-    @NotNull
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
-
-    @NotNull
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
     
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent event) {
@@ -42,7 +36,7 @@ public class EnvoyEditListener implements Listener {
 
         event.setCancelled(true);
 
-        if (this.methods.getItemInHand(player).getType() != Material.BEDROCK) return;
+        if (MiscUtil.getItemInHand(player).getType() != Material.BEDROCK) return;
 
         this.locationSettings.addSpawnLocation(block);
 

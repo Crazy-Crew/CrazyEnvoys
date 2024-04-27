@@ -1,6 +1,7 @@
 package com.badbones69.crazyenvoys.listeners.timer;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -10,8 +11,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CountdownTimer implements Runnable {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
     // Our scheduled task's assigned id, needed for canceling
     private Integer assignedTaskId;

@@ -2,14 +2,13 @@ plugins {
     `kotlin-dsl`
 }
 
+repositories {
+    gradlePluginPortal()
+    mavenCentral()
+}
+
 dependencies {
-    implementation(libs.paperweight)
+    implementation("io.papermc.paperweight", "paperweight-userdev", "1.6.0")
 
-    implementation(libs.shadow)
-
-    implementation(libs.runpaper)
-
-    implementation(libs.modrinth)
-
-    implementation(libs.hangar)
+    implementation("io.github.goooler.shadow", "shadow-gradle-plugin", "8.1.7")
 }

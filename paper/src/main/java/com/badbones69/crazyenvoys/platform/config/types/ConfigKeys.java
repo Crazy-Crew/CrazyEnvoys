@@ -1,4 +1,4 @@
-package us.crazycrew.crazyenvoys.common.config.types;
+package com.badbones69.crazyenvoys.platform.config.types;
 
 import ch.jalu.configme.Comment;
 import ch.jalu.configme.SettingsHolder;

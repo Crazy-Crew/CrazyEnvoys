@@ -2,18 +2,20 @@ package com.badbones69.crazyenvoys.listeners;
 
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyOpenEvent;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
-import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
+import com.badbones69.crazyenvoys.api.builders.ItemBuilder;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
-import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.platform.config.ConfigManager;
+import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
+import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.platform.util.MsgUtil;
+import com.ryderbelserion.vital.enums.Support;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -27,10 +29,8 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -42,25 +42,14 @@ import static java.util.regex.Matcher.quoteReplacement;
 
 public class EnvoyClickListener implements Listener {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-    @NotNull
-    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    @NotNull
-    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
-    @NotNull
-    private final SettingsManager config = this.configManager.getConfig();
+    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private final @NotNull SettingsManager config = ConfigManager.getConfig();
 
-    @NotNull
-    private final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
-    @NotNull
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
 
-    @NotNull
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private final @NotNull CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
+    private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
     
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerClick(PlayerInteractEvent event) {
@@ -84,6 +73,7 @@ public class EnvoyClickListener implements Listener {
         if (!player.hasPermission("envoy.bypass")) {
             if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle) && this.crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
                 Map<String, String> placeholder = new HashMap<>();
+
                 placeholder.put("{time}", String.valueOf(this.crazyManager.getCountdownTimer().getSecondsLeft()));
 
                 Messages.countdown_in_progress.sendMessage(player, placeholder);
@@ -100,7 +90,7 @@ public class EnvoyClickListener implements Listener {
 
                 if (this.coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(this.coolDownSettings.getCooldown().get(uuid))) {
                     Map<String, String> placeholder = new HashMap<>();
-                    placeholder.put("{time}", this.methods.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
+                    placeholder.put("{time}", MiscUtil.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
 
                     Messages.cooldown_left.sendMessage(player, placeholder);
                     return;
@@ -117,7 +107,7 @@ public class EnvoyClickListener implements Listener {
 
         if (envoyOpenEvent.isCancelled()) return;
 
-        if (tier.getFireworkToggle()) this.methods.firework(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
+        if (tier.getFireworkToggle()) MiscUtil.firework(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
 
         event.getClickedBlock().setType(Material.AIR);
 
@@ -132,7 +122,7 @@ public class EnvoyClickListener implements Listener {
         this.crazyManager.removeActiveEnvoy(block);
 
         if (tier.getPrizes().isEmpty()) {
-            this.plugin.getServer().broadcastMessage(this.methods.getPrefix() + MsgUtils.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+            this.plugin.getServer().broadcastMessage(MiscUtil.getPrefix() + MsgUtil.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
 
             return;
         }
@@ -140,24 +130,24 @@ public class EnvoyClickListener implements Listener {
         for (Prize prize : envoyOpenEvent.getPrizes()) {
             if (!tier.getPrizeMessage().isEmpty() && prize.getMessages().isEmpty()) {
                 for (String message : tier.getPrizeMessage()) {
-                    if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
+                    if (Support.placeholder_api.isEnabled()) {
                         message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
-                    player.sendMessage(MsgUtils.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
+                    player.sendMessage(MsgUtil.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
                 }
             } else {
                 for (String message : prize.getMessages()) {
-                    if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
+                    if (Support.placeholder_api.isEnabled()) {
                         message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
-                    player.sendMessage(MsgUtils.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
+                    player.sendMessage(MsgUtil.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
                 }
             }
 
             for (String cmd : prize.getCommands()) {
-                if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
+                if (Support.placeholder_api.isEnabled()) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
 
                 this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), cmd.replace("{player}", player.getName()).replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
             }
@@ -166,7 +156,7 @@ public class EnvoyClickListener implements Listener {
                 if (prize.getDropItems()) {
                     event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                 } else {
-                    if (this.methods.isInvFull(player)) {
+                    if (MiscUtil.isInvFull(player)) {
                         event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                     } else {
                         player.getInventory().addItem(item);
@@ -181,12 +171,15 @@ public class EnvoyClickListener implements Listener {
             if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) {
                 placeholder.put("{player}", player.getName());
                 placeholder.put("{amount}", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
+
                 Messages.envoys_remaining.broadcastMessage(true, placeholder);
             }
         } else {
             EnvoyEndEvent envoyEndEvent = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);
             this.plugin.getServer().getPluginManager().callEvent(envoyEndEvent);
+
             this.crazyManager.endEnvoyEvent();
+
             Messages.ended.broadcastMessage(false);
         }
     }
@@ -258,7 +251,7 @@ public class EnvoyClickListener implements Listener {
 
         for (int i = 0; prizes.size() < maxBulk && i < 500; i++) {
             for (Prize prize : tier.getPrizes()) {
-                if (!prizes.contains(prize) && this.methods.isSuccessful(prize.getChance(), 100)) prizes.add(prize);
+                if (!prizes.contains(prize) && MiscUtil.isSuccessful(prize.getChance(), 100)) prizes.add(prize);
 
                 if (prizes.size() == maxBulk) break;
             }
@@ -274,7 +267,7 @@ public class EnvoyClickListener implements Listener {
 
         while (tiers.isEmpty()) {
             for (Tier tier : this.crazyManager.getTiers()) {
-                if (this.methods.isSuccessful(tier.getSpawnChance(), 100)) tiers.add(tier);
+                if (MiscUtil.isSuccessful(tier.getSpawnChance(), 100)) tiers.add(tier);
             }
         }
 
