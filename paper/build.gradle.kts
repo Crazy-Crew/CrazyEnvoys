@@ -93,7 +93,7 @@ tasks {
             "version" to project.version,
             "group" to project.group,
             "description" to rootProject.description,
-            "apiVersion" to rootProject.properties["apiVersion"],
+            "apiVersion" to "1.20",
             "authors" to rootProject.properties["authors"],
             "website" to rootProject.properties["website"]
         )
