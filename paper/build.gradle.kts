@@ -88,14 +88,20 @@ tasks {
     }
 
     processResources {
-        inputs.properties("name" to rootProject.name)
-        inputs.properties("version" to project.version)
-        inputs.properties("group" to project.group)
-        inputs.properties("description" to project.properties["description"])
-        inputs.properties("website" to project.properties["website"])
+        val properties = hashMapOf(
+            "name" to rootProject.name,
+            "version" to project.version,
+            "group" to project.group,
+            "description" to rootProject.description,
+            "apiVersion" to rootProject.properties["apiVersion"],
+            "authors" to rootProject.properties["authors"],
+            "website" to rootProject.properties["website"]
+        )
 
-        filesMatching("paper-plugin.yml") {
-            expand(inputs.properties)
+        inputs.properties(properties)
+
+        filesMatching("plugin.yml") {
+            expand(properties)
         }
     }
 }
