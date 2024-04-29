@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static java.util.regex.Matcher.quoteReplacement;
 
-@SuppressWarnings("ALL")
 public class MsgUtil {
 
     public static String color(String message) {

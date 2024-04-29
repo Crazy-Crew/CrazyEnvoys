@@ -29,6 +29,8 @@ import com.ryderbelserion.vital.enums.Support;
 import com.ryderbelserion.vital.files.CustomFile;
 import com.ryderbelserion.vital.files.FileManager;
 import com.ryderbelserion.vital.util.DyeUtil;
+import com.ryderbelserion.vital.util.scheduler.FoliaRunnable;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import com.badbones69.crazyenvoys.platform.util.MsgUtil;
@@ -45,8 +47,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,8 +74,8 @@ public class CrazyManager {
     
     private CountdownTimer countdownTimer;
 
-    private BukkitTask runTimeTask;
-    private BukkitTask coolDownTask;
+    private ScheduledTask runTimeTask;
+    private ScheduledTask coolDownTask;
     private Calendar nextEnvoy;
     private Calendar envoyTimeLeft;
     private boolean envoyActive = false;
@@ -86,7 +86,7 @@ public class CrazyManager {
     private String centerString;
 
     private final Map<Block, Tier> activeEnvoys = new HashMap<>();
-    private final Map<Location, BukkitTask> activeSignals = new HashMap<>();
+    private final Map<Location, ScheduledTask> activeSignals = new HashMap<>();
 
     private final Map<Entity, Block> fallingBlocks = new HashMap<>();
 
@@ -319,7 +319,7 @@ public class CrazyManager {
     public void startEnvoyCountDown() {
         cancelEnvoyCooldownTime();
 
-        this.coolDownTask = new BukkitRunnable() {
+        this.coolDownTask = new FoliaRunnable(this.plugin.getServer().getGlobalRegionScheduler()) {
             @Override
             public void run() {
                 if (!isEnvoyActive()) {
@@ -381,7 +381,7 @@ public class CrazyManager {
                     }
                 }
             }
-        }.runTaskTimer(this.plugin, 20, 20);
+        }.runAtFixedRate(this.plugin, 20, 20);
     }
 
     /**
@@ -723,8 +723,7 @@ public class CrazyManager {
         Messages.started.broadcastMessage(false, placeholder);
 
         if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle)) {
-            this.countdownTimer = new CountdownTimer(this.config.getProperty(ConfigKeys.envoys_grace_period_timer));
-
+            this.countdownTimer = new CountdownTimer(this.config.getProperty(ConfigKeys.envoys_grace_period_timer), this.plugin);
             this.countdownTimer.scheduleTimer();
         }
 
@@ -770,7 +769,7 @@ public class CrazyManager {
             }
         }
 
-        this.runTimeTask = new BukkitRunnable() {
+        this.runTimeTask = new FoliaRunnable(this.plugin.getServer().getGlobalRegionScheduler()) {
             @Override
             public void run() {
                 EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.OUT_OF_TIME);
@@ -780,7 +779,7 @@ public class CrazyManager {
 
                 endEnvoyEvent();
             }
-        }.runTaskLater(this.plugin, getTimeSeconds(this.config.getProperty(ConfigKeys.envoys_run_time)) * 20L);
+        }.runAtFixedRate(this.plugin, 0L, getTimeSeconds(this.config.getProperty(ConfigKeys.envoys_run_time)) * 20L);
 
         this.envoyTimeLeft = getEnvoyRunTimeCalendar();
 
@@ -832,12 +831,12 @@ public class CrazyManager {
      * @param tier The tier the signal is.
      */
     public void startSignalFlare(final Location loc, final Tier tier) {
-        BukkitTask task = new BukkitRunnable() {
+        @NotNull ScheduledTask task = new FoliaRunnable(this.plugin.getServer().getRegionScheduler(), loc) {
             @Override
             public void run() {
-                firework(loc.clone().add(.5, 0, .5), tier);
+
             }
-        }.runTaskTimer(this.plugin, getTimeSeconds(tier.getSignalFlareTimer()) * 20L, getTimeSeconds(tier.getSignalFlareTimer()) * 20L);
+        }.runAtFixedRate(this.plugin, getTimeSeconds(tier.getSignalFlareTimer()) * 20L, getTimeSeconds(tier.getSignalFlareTimer()) * 20L);
 
         this.activeSignals.put(loc, task);
     }

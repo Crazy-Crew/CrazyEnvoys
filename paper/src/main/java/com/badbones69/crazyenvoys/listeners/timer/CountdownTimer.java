@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.listeners.timer;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import org.bukkit.plugin.java.JavaPlugin;
+import com.ryderbelserion.vital.util.scheduler.FoliaRunnable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -9,18 +9,18 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author ExpDev
  */
-public class CountdownTimer implements Runnable {
+public class CountdownTimer extends FoliaRunnable {
 
-    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
-
-    // Our scheduled task's assigned id, needed for canceling
-    private Integer assignedTaskId;
+    private final @NotNull CrazyEnvoys plugin;
 
     // Seconds and shiz
     private final int seconds;
     private int secondsLeft;
 
-    public CountdownTimer(int seconds) {
+    public CountdownTimer(int seconds, CrazyEnvoys plugin) {
+        super(plugin.getServer().getGlobalRegionScheduler());
+
+        this.plugin = plugin;
         this.seconds = seconds;
         this.secondsLeft = seconds;
     }
@@ -33,7 +33,7 @@ public class CountdownTimer implements Runnable {
     public void run() {
         // Is the timer up?
         if (this.secondsLeft < 1) {
-            if (this.assignedTaskId != null) this.plugin.getServer().getScheduler().cancelTask(this.assignedTaskId);
+            cancel();
 
             return;
         }
@@ -64,7 +64,6 @@ public class CountdownTimer implements Runnable {
      * Schedules this instance to "run" every second.
      */
     public void scheduleTimer() {
-        // Initialize our assigned task's id, for later use, so we can cancel.
-        this.assignedTaskId = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, this, 0L, 20L);
+        runAtFixedRate(plugin, 0, 20);
     }
 }
