@@ -146,10 +146,11 @@ public class MiscUtil {
         List<Entity> out = new ArrayList<>();
 
         if (loc.getWorld() != null) {
-            FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), Material.AIR, (byte) 0);
+            //todo() this needs testing and clarification on if Marker.class is even correct.
+            Marker entity = loc.getWorld().spawn(loc.subtract(0, 0, 0), Marker.class, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
-            out = ent.getNearbyEntities(x, y, z);
-            ent.remove();
+            out = entity.getNearbyEntities(x, y, z);
+            entity.remove();
         }
 
         return out;
