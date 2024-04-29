@@ -38,7 +38,7 @@ public class MiscUtil {
     }
 
     public static String getPrefix(String message) {
-        return MsgUtil.color(ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix) + message);
+        return MsgUtil.color(getPrefix() + message);
     }
 
     public static ItemStack getItemInHand(Player player) {
