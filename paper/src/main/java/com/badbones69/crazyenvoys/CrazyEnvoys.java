@@ -83,6 +83,10 @@ public class CrazyEnvoys extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        // Cancel the tasks
+        getServer().getGlobalRegionScheduler().cancelTasks(this);
+        getServer().getAsyncScheduler().cancelTasks(this);
+
         for (Player player : getServer().getOnlinePlayers()) {
             if (this.editorSettings.isEditor(player)) {
                 this.editorSettings.removeEditor(player);
