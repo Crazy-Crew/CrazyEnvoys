@@ -59,6 +59,7 @@ A list of things necessary to make sure you can build CrazyEnvoys properly.
 * Intellij IDEA
     * > https://www.jetbrains.com/idea/download/
 * Gradle
+* Java 21
 
 ### Installation
 1. Clone the repo
@@ -73,6 +74,17 @@ A list of things necessary to make sure you can build CrazyEnvoys properly.
 
 ## Roadmap
 Check our public [trello board](https://trello.com/b/BGDNUdaj) for our current plans, any bugs and general tracking of the project progress.
+
+## Support the Developers
+Ryder Belserion on:
+* [Github Sponsors](https://github.com/sponsors/ryderbelserion)
+* [Kofi](https://ko-fi.com/ryderbelserion)
+
+TDL on:
+* [Kofi](https://ko-fi.com/truedarklord)
+
+BadBones on:
+* [Paypal](https://www.paypal.me/joewojcik/)
 
 ## Contributing
 1. Fork the Project
