@@ -18,12 +18,12 @@
   <p align="center">
     Drop custom crates with any prize you want all over spawn for players to fight over.
     <br />
-    <a href="https://docs.crazycrew.us/crazyenvoys/home"><strong>Explore the docs »</strong></a>
+    <a href="https://docs.crazycrew.us/docs/category/crazyenvoys"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/Crazy-Crew/CrazyEnvoys/issues/new?assignees=ryderbelserion&labels=bug&projects=&template=bugs.yml&title=%5BBug+Report%5D%3A+">Report Bug</a>
     ·
-    <a href="https://github.com/Crazy-Crew/CrazyEnvoys/issues/new?assignees=&labels=feature&template=feature_request.md&title=%5BFeature%5D+">Request Feature</a>
+    <a href="https://github.com/Crazy-Crew/CrazyEnvoys/discussions/new?category=features">Request Feature</a>
     ·
     <a href="https://discord.gg/badbones-s-live-chat-182615261403283459">Get Support</a>
   </p>
