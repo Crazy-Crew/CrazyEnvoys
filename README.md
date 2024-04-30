@@ -67,10 +67,12 @@ A list of things necessary to make sure you can build CrazyEnvoys properly.
    git clone https://github.com/Crazy-Crew/CrazyEnvoys.git
    ```
 2. Open the repository using Intellij IDEA & wait until it finishes downloading/indexing.
-3. Run the build task.
+3. Run the assemble task.
    ```gradle
    ./gradlew assemble
    ```
+4. Open the `jars` directory in your root folder.
+5. Profit!
 
 ## Roadmap
 Check our public [trello board](https://trello.com/b/BGDNUdaj) for our current plans, any bugs and general tracking of the project progress.
@@ -85,13 +87,6 @@ TDL on:
 
 BadBones on:
 * [Paypal](https://www.paypal.me/joewojcik/)
-
-## Contributing
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/yourfeature`)
-3. Commit your Changes (`git commit -m 'your amazing feature.'`)
-4. Push to the Branch (`git push`)
-5. Open a Pull Request to the `main` branch to add your feature/fix.
 
 ## License
 Distributed under the MIT License. See [`LICENSE`](/LICENSE) for more information.
