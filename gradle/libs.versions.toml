@@ -1,8 +1,5 @@
 [plugins]
-run-paper = { id = "xyz.jpenilla.run-paper", version = "2.2.3" }
-
-[versions]
-minecraftVersion = "1.20.4"
+run-paper = { id = "xyz.jpenilla.run-paper", version = "2.2.4" }
 
 [libraries]
 itemsadder-api = { group = "com.github.LoneDev6", name = "api-itemsadder", version = "3.6.1" }
@@ -21,7 +18,7 @@ triumph-gui = { group = "dev.triumphteam", name = "triumph-gui", version = "3.1.
 vault = { group = "com.github.MilkBowl", name = "VaultAPI", version = "1.7.1" }
 metrics = { group = "org.bstats", name = "bstats-bukkit", version = "3.0.2" }
 config-me = { group = "ch.jalu", name = "configme", version = "1.4.1" }
-nbt-api = { group = "de.tr7zw", name = "item-nbt-api", version = "2.12.3" }
+nbt-api = { group = "de.tr7zw", name = "item-nbt-api", version = "2.12.4" }
 
 worldguard = { group = "com.sk89q.worldguard", name = "worldguard-bukkit", version = "7.1.0-SNAPSHOT" }
 
