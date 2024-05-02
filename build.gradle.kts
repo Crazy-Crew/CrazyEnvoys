@@ -52,9 +52,9 @@ modrinth {
     autoAddDependsOn.set(false)
     detectLoaders.set(false)
 
-    dependencies {
-        optional.version("fancyholograms", "2.0.6")
-    }
+    //dependencies {
+    //    optional.version("fancyholograms", "2.0.6")
+    //}
 }
 
 hangarPublish {
@@ -82,9 +82,9 @@ hangarPublish {
                         required = false
                     }
 
-                    hangar("FancyHolograms") {
-                        required = false
-                    }
+                    //hangar("FancyHolograms") {
+                    //    required = false
+                    //}
 
                     url("Oraxen", "https://www.spigotmc.org/resources/%E2%98%84%EF%B8%8F-oraxen-custom-items-blocks-emotes-furniture-resourcepack-and-gui-1-18-1-20-4.72448/") {
                         required = false

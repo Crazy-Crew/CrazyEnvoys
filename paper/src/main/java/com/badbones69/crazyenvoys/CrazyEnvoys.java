@@ -20,7 +20,6 @@ import com.ryderbelserion.vital.enums.Support;
 import com.ryderbelserion.vital.files.FileManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import java.util.List;
 
 public class CrazyEnvoys extends JavaPlugin {
 
@@ -34,24 +33,6 @@ public class CrazyEnvoys extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        String version = getServer().getMinecraftVersion();
-
-        if (!version.equals("1.20.6")) {
-            List.of(
-                    "You are not running 1.20.6, Please download Paper or Purpur 1.20.6",
-                    "Paper Downloads: https://papermc.io/downloads/paper",
-                    "Purpur Downloads: https://purpurmc.org/downloads",
-                    "",
-                    "We only support 1.20.6, If you need older versions. You can downgrade versions of the plugin.",
-                    "All our older versions can be found in the versions tab on Modrinth",
-                    "The older versions do not get updates or fixes."
-            ).forEach(getLogger()::severe);
-
-            getServer().getPluginManager().disablePlugin(this);
-
-            return;
-        }
-
         ConfigManager.load(getDataFolder());
 
         this.locationSettings = new LocationSettings();
