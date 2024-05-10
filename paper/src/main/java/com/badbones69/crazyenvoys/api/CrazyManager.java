@@ -17,23 +17,20 @@ import com.badbones69.crazyenvoys.api.interfaces.HologramController;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
-import com.badbones69.crazyenvoys.api.builders.ItemBuilder;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
-import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.listeners.timer.CountdownTimer;
 import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
 import com.ryderbelserion.vital.enums.Support;
-import com.ryderbelserion.vital.files.CustomFile;
-import com.ryderbelserion.vital.files.FileManager;
+import com.ryderbelserion.vital.files.yaml.CustomFile;
+import com.ryderbelserion.vital.files.yaml.FileManager;
 import com.ryderbelserion.vital.util.DyeUtil;
 import com.ryderbelserion.vital.util.scheduler.FoliaRunnable;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import com.badbones69.crazyenvoys.platform.util.MsgUtil;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -210,9 +207,11 @@ public class CrazyManager {
             tier.setHoloRange(file.getInt("Settings.Hologram-Range", 8));
             tier.setHoloHeight(file.getDouble("Settings.Hologram-Height", 1.5));
             tier.setHoloMessage(file.getStringList("Settings.Hologram"));
-            ItemBuilder placedBlock = new ItemBuilder().setMaterial(file.getString("Settings.Placed-Block", "CHEST"));
-            tier.setPlacedBlockMaterial(placedBlock.getMaterial());
-            tier.setPlacedBlockMetaData(placedBlock.getDamage());
+
+            //todo() rework this.
+            //ItemBuilder placedBlock = new ItemBuilder().setMaterial(file.getString("Settings.Placed-Block", "CHEST"));
+            //tier.setPlacedBlockMaterial(placedBlock.getMaterial());
+            //tier.setPlacedBlockMetaData(placedBlock.getDamage());
 
             tier.setFireworkToggle(file.getBoolean("Settings.Firework-Toggle"));
 
@@ -260,8 +259,9 @@ public class CrazyManager {
 
                 boolean dropItems = file.getBoolean(path + "Drop-Items");
 
-                List<ItemBuilder> items = ItemBuilder.convertStringList(file.getStringList(path + "Items"));
-                tier.addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
+                //todo() rework items
+                //List<ItemBuilder> items = ItemBuilder.convertStringList(file.getStringList(path + "Items"));
+                //tier.addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
             }
 
             this.tiers.add(tier);
@@ -677,7 +677,7 @@ public class CrazyManager {
         // crates to spawn in the ground when not using falling blocks.
 
         if (this.tiers.isEmpty()) {
-            this.plugin.getServer().broadcastMessage(MiscUtil.getPrefix() + MsgUtil.color("&cNo tiers were found. Please delete the Tiers folder to allow it to remake the default tier files."));
+            this.plugin.getServer().broadcastMessage(MiscUtil.getPrefix() + "<red>No tiers were found. Please delete the Tiers folder to allow it to remake the default tier files.");
 
             return false;
         }

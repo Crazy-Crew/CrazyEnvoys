@@ -17,9 +17,10 @@ import com.badbones69.crazyenvoys.platform.config.ConfigManager;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import com.ryderbelserion.vital.enums.Support;
-import com.ryderbelserion.vital.files.FileManager;
+import com.ryderbelserion.vital.files.yaml.FileManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public class CrazyEnvoys extends JavaPlugin {
 
@@ -40,12 +41,12 @@ public class CrazyEnvoys extends JavaPlugin {
         this.coolDownSettings = new CoolDownSettings();
         this.flareSettings = new FlareSettings();
 
-        this.fileManager = new FileManager();
+        this.fileManager = new FileManager(getDataFolder().toPath(), getLogger());
         this.fileManager
                 .addDefaultFile("tiers", "Basic.yml")
                 .addDefaultFile("tiers", "Lucky.yml")
                 .addDefaultFile("tiers", "Titan.yml")
-                .create();
+                .apply();;
 
         this.crazyManager = new CrazyManager();
         this.crazyManager.load();
@@ -86,24 +87,24 @@ public class CrazyEnvoys extends JavaPlugin {
         this.crazyManager.reload(true);
     }
 
-    public LocationSettings getLocationSettings() {
+    public @NotNull final LocationSettings getLocationSettings() {
         return this.locationSettings;
     }
-    public CoolDownSettings getCoolDownSettings() {
+    public @NotNull final CoolDownSettings getCoolDownSettings() {
         return this.coolDownSettings;
     }
-    public EditorSettings getEditorSettings() {
+    public @NotNull final EditorSettings getEditorSettings() {
         return this.editorSettings;
     }
-    public FlareSettings getFlareSettings() {
+    public @NotNull final FlareSettings getFlareSettings() {
         return this.flareSettings;
     }
 
-    public CrazyManager getCrazyManager() {
+    public @NotNull final CrazyManager getCrazyManager() {
         return this.crazyManager;
     }
 
-    public FileManager getFileManager() {
+    public @NotNull final FileManager getFileManager() {
         return this.fileManager;
     }
 }

@@ -35,11 +35,8 @@ public class MiscUtil {
     private final static @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
     public static String getPrefix() {
-        return MsgUtil.color(ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix));
-    }
-
-    public static String getPrefix(String message) {
-        return MsgUtil.color(getPrefix() + message);
+        return "";
+        //return MsgUtil.color(ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix));
     }
 
     public static ItemStack getItemInHand(Player player) {

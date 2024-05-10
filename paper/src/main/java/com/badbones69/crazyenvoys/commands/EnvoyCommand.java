@@ -1,8 +1,6 @@
 package com.badbones69.crazyenvoys.commands;
 
-import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.platform.config.ConfigManager;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
@@ -12,7 +10,6 @@ import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import org.bukkit.command.ConsoleCommandSender;
-import com.badbones69.crazyenvoys.platform.util.MsgUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -76,7 +73,7 @@ public class EnvoyCommand implements CommandExecutor {
                         this.crazyManager.endEnvoyEvent();
                     }
 
-                    this.plugin.getFileManager().create();
+                    this.plugin.getFileManager().apply();;
 
                     this.crazyManager.reload(false);
 
@@ -229,7 +226,7 @@ public class EnvoyCommand implements CommandExecutor {
                     }
 
                     for (String dropLocation : MiscUtil.getPage(locs, page)) {
-                        sender.sendMessage(MsgUtil.color(dropLocation));
+                        sender.sendRichMessage(dropLocation);
                     }
 
                     if (!this.crazyManager.isEnvoyActive()) Messages.drops_page.sendMessage(sender);
@@ -390,6 +387,6 @@ public class EnvoyCommand implements CommandExecutor {
     }
     
     private boolean hasPermission(CommandSender sender, String node) {
-        return sender.hasPermission("envoy." + node) || sender.hasPermission("envoy.admin");
+        return sender.hasPermission("crazyenvoys." + node) || sender.hasPermission("crazyenvoys.admin");
     }
 }

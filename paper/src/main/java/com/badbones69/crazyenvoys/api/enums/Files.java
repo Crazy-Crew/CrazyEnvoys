@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.api.enums;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.ryderbelserion.vital.files.FileManager;
+import com.ryderbelserion.vital.files.yaml.FileManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;

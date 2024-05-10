@@ -1,7 +1,6 @@
 package com.badbones69.crazyenvoys.api.objects.misc;
 
-import com.badbones69.crazyenvoys.api.builders.ItemBuilder;
-import com.badbones69.crazyenvoys.platform.util.MsgUtil;
+import com.ryderbelserion.vital.util.builders.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,9 +103,7 @@ public class Prize {
     public Prize setMessages(List<String> messages) {
         this.messages.clear();
 
-        for (String message : messages) {
-            this.messages.add(MsgUtil.color(message));
-        }
+        this.messages.addAll(messages);
 
         return this;
     }
@@ -156,7 +153,7 @@ public class Prize {
     public Prize setItemBuilders(List<ItemBuilder> itemBuilders) {
         this.itemBuilders = itemBuilders;
 
-        itemBuilders.forEach(itemBuilder -> items.add(itemBuilder.build()));
+        itemBuilders.forEach(itemBuilder -> items.add(itemBuilder.getStack()));
 
         return this;
     }

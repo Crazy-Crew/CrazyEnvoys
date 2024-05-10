@@ -41,7 +41,7 @@ public class FlareClickListener implements Listener {
             if (this.flareSettings.isFlare(flare)) {
                 event.setCancelled(true);
 
-                if (!player.hasPermission("envoy.flare.use")) {
+                if (!player.hasPermission("crazyenvoys.flare.use")) {
                     Messages.cant_use_flares.sendMessage(player);
                     return;
                 }

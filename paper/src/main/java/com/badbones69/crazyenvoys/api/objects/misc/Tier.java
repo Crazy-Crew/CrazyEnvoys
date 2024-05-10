@@ -2,13 +2,11 @@ package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
-import com.badbones69.crazyenvoys.platform.util.MsgUtil;
-import com.ryderbelserion.vital.files.CustomFile;
-import com.ryderbelserion.vital.files.FileManager;
+import com.ryderbelserion.vital.files.yaml.CustomFile;
+import com.ryderbelserion.vital.files.yaml.FileManager;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -369,9 +367,10 @@ public class Tier {
     public Tier setHoloMessage(List<String> holoMessage) {
         this.holoMessage.clear();
 
-        for (String message : holoMessage) {
-            this.holoMessage.add(MsgUtil.color(message));
-        }
+        //todo() rework holograms
+        //for (String message : holoMessage) {
+        //    this.holoMessage.add(MsgUtil.color(message));
+        //}
 
         return this;
     }

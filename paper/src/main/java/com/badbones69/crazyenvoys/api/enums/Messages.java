@@ -7,13 +7,11 @@ import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.platform.config.ConfigManager;
 import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.platform.config.types.MessageKeys;
-import com.badbones69.crazyenvoys.platform.util.MsgUtil;
 import com.ryderbelserion.vital.common.util.StringUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,7 +201,7 @@ public enum Messages {
             return;
         }
 
-        player.sendMessage(message);
+        player.sendRichMessage(message);
     }
 
     public void sendMessage(CommandSender sender) {
@@ -217,7 +215,7 @@ public enum Messages {
             return;
         }
 
-        sender.sendMessage(message);
+        sender.sendRichMessage(message);
     }
 
     public void broadcastMessage(boolean ignore) {
@@ -252,14 +250,6 @@ public enum Messages {
     }
 
     public String asString() {
-        return MsgUtil.color(this.message.replaceAll("\\{prefix}", ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix)));
-    }
-
-    public List<String> toListString() {
-        ArrayList<String> components = new ArrayList<>();
-
-        getPropertyList(this.listProperty).forEach(line -> components.add(MsgUtil.color(line)));
-
-        return components;
+        return this.message.replaceAll("\\{prefix}", ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix));
     }
 }

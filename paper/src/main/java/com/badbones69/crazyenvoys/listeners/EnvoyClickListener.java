@@ -7,14 +7,12 @@ import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyOpenEvent;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
-import com.badbones69.crazyenvoys.api.builders.ItemBuilder;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.platform.config.ConfigManager;
 import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
-import com.badbones69.crazyenvoys.platform.util.MsgUtil;
 import com.ryderbelserion.vital.enums.Support;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
@@ -63,14 +61,14 @@ public class EnvoyClickListener implements Listener {
 
         if (player.getGameMode() == GameMode.valueOf("SPECTATOR")) return;
 
-        if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission("envoy.gamemode-bypass")) return;
+        if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission("crazyenvoys.gamemode-bypass")) return;
 
         event.setCancelled(true);
 
         // Ryder Start
         Tier tier = this.crazyManager.getTier(event.getClickedBlock());
 
-        if (!player.hasPermission("envoy.bypass")) {
+        if (!player.hasPermission("crazyenvoys.bypass")) {
             if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle) && this.crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
                 Map<String, String> placeholder = new HashMap<>();
 
@@ -122,7 +120,7 @@ public class EnvoyClickListener implements Listener {
         this.crazyManager.removeActiveEnvoy(block);
 
         if (tier.getPrizes().isEmpty()) {
-            this.plugin.getServer().broadcastMessage(MiscUtil.getPrefix() + MsgUtil.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+            this.plugin.getServer().broadcast(com.ryderbelserion.vital.util.MiscUtil.parse(MiscUtil.getPrefix() + "<red>No prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
 
             return;
         }
@@ -134,7 +132,7 @@ public class EnvoyClickListener implements Listener {
                         message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
-                    player.sendMessage(MsgUtil.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
+                    player.sendRichMessage(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName()));
                 }
             } else {
                 for (String message : prize.getMessages()) {
@@ -142,7 +140,7 @@ public class EnvoyClickListener implements Listener {
                         message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
-                    player.sendMessage(MsgUtil.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
+                    player.sendRichMessage(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName()));
                 }
             }
 
@@ -203,7 +201,8 @@ public class EnvoyClickListener implements Listener {
 
         if (block.getType() != Material.AIR) block = block.getLocation().add(0, 1, 0).getBlock();
 
-        block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
+        //todo() rework this
+        //block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
 
         if (this.crazyManager.hasHologramPlugin()) this.crazyManager.getHologramController().createHologram(block, tier);
 

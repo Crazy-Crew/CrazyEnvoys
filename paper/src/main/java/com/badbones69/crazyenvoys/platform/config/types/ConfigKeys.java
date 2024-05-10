@@ -20,7 +20,7 @@ public class ConfigKeys implements SettingsHolder {
                 "Github: https://github.com/Crazy-Crew",
                 "",
                 "Issues: https://github.com/Crazy-Crew/CrazyEnvoys/issues",
-                "Features: https://github.com/Crazy-Crew/CrazyEnvoys/issues",
+                "Features: https://github.com/Crazy-Crew/CrazyEnvoys/discussions/categories/features",
                 ""
         };
 
@@ -58,16 +58,16 @@ public class ConfigKeys implements SettingsHolder {
     public static final Property<Boolean> toggle_metrics = PropertyInitializer.newProperty("root.toggle_metrics", true);
 
     @Comment("The command prefix you want shown in front of commands!")
-    public static final Property<String> command_prefix = PropertyInitializer.newProperty("root.command_prefix", "&8[&dCrazyEnvoys&8]: ");
+    public static final Property<String> command_prefix = PropertyInitializer.newProperty("root.command_prefix", "<dark_gray>[<light_purple>CrazyEnvoys<dark_gray>]: ");
 
     @Comment("The console prefix you want shown when the logging messages show up!")
-    public static final Property<String> console_prefix = PropertyInitializer.newProperty("root.console_prefix" ,"&8[&cCrazyEnvoys&8] ");
+    public static final Property<String> console_prefix = PropertyInitializer.newProperty("root.console_prefix" ,"<dark_gray>[<red>CrazyEnvoys<dark_gray>] ");
 
     @Comment("Whether or not a block should fall when an envoy spawns.")
     public static final Property<Boolean> envoy_falling_block_toggle = newProperty("envoys.falling-blocks.toggle", true);
 
     @Comment("The block type falling when an envoy spawns.")
-    public static final Property<String> envoy_falling_block_type = newProperty("envoys.falling-blocks.type", "BEACON");
+    public static final Property<String> envoy_falling_block_type = newProperty("envoys.falling-blocks.type", "beacon");
 
     @Comment("How high should the block spawn when an envoy spawns?")
     public static final Property<Integer> envoy_falling_height = newProperty("envoys.falling-blocks.height", 15);
@@ -140,15 +140,15 @@ public class ConfigKeys implements SettingsHolder {
     public static final Property<Integer> envoys_flare_minimum_players_amount = newProperty("flare.required-players.amount", 6);
 
     @Comment("The name of the flare item.")
-    public static final Property<String> envoys_flare_item_name = newProperty("flare.item.name", "&7&l(&4&l!&7&l) &cFlare");
+    public static final Property<String> envoys_flare_item_name = newProperty("flare.item.name", "<bold><gray>(<dark_red>!<gray>)</bold> <red>Flare");
 
     @Comment("The material of the flare item.")
     public static final Property<String> envoys_flare_item_type = newProperty("flare.item.type", "REDSTONE_TORCH");
 
     @Comment("The lore of the flare item.")
     public static final Property<List<String>> envoys_flare_item_lore = newListProperty("flare.item.lore", List.of(
-            "&7Right click me to",
-            "&7start an envoy event."
+            "<gray>Right click me to",
+            "<gray>start an envoy event."
     ));
 
     @Comment("If they are limited to use flares only in specified regions.")
@@ -175,7 +175,7 @@ public class ConfigKeys implements SettingsHolder {
     public static final Property<Integer> envoys_grace_period_timer = newProperty("envoys.grace-period.timer", 120);
 
     @Comment("The message shown above the envoy when the grace period is over.")
-    public static final Property<String> envoys_grace_period_unlocked = newProperty("envoys.grace-period.message", "&cReady to claim.");
+    public static final Property<String> envoys_grace_period_unlocked = newProperty("envoys.grace-period.message", "<red>Ready to claim.");
 
     @Comment("The unit of time to show at the end of the countdown since it's in seconds. The space is required!")
     public static final Property<String> envoys_grace_period_time_unit = newProperty("envoys.grace-period.time-unit", " seconds.");

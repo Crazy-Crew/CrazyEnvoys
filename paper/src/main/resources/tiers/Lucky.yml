@@ -3,27 +3,42 @@ Settings:
   Claim-Permission: false
   # What permission they need.
   Claim-Permission-Name: 'lucky.envoy.use'
+  # A default message if the prize doesn't have any Messages
+  # i.e. Messages: [] or the value isn't there.
   Prize-Message:
-    - '&7You have won &c{reward} &7from &c{tier}.'
+    - '<gray>You have won <red>{reward} <gray>from <red>{tier}.'
+  # The chance that this tier will spawn.
   Spawn-Chance: 25
+  # If true then it uses the chance option in the prizes and if false then each prize has a 1/(Amount of Prizes) chance of winning.
   Use-Chance: true
-  Placed-Block: 'ENDER_CHEST'
+  # The block that will be clicked when they land.
+  Placed-Block: 'ender_chest'
+  # This allows players to win multiple prizes from one crate.
   Bulk-Prizes:
+    # Toggle if players can win multiple prizes.
     Toggle: false
+    # If true then it will pick a random bulk from 1-MaxBulk.
     Random: true
+    # The max amount of prizes.
     Max-Bulk: 3
+  # Toggle on and off holograms.
   Hologram-Toggle: true
+  # How high the hologram will be from the crate.
   Hologram-Height: 1.5
+  # The distance the hologram can be seen. Only works with CMI and DecentHolograms
   Hologram-Range: 8
-  Hologram: #Requires 3rd party plugins such as DecentHolograms to function. https://github.com/Crazy-Crew/CrazyEnvoys/blob/main/platforms/paper/src/main/java/com/badbones69/crazyenvoys/support/libraries/PluginSupport.java
-    # %crazyenvoys_crates_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
-    - '&7&l(&e&l!&7&l) &e&lLucky Crate'
+  # Available placeholders:
+  # %crazyenvoys_crates_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
+  Hologram:
+    - '<bold><gray>(<yellow>!<gray>) <yellow>Lucky Crate</bold>'
     - '%crazyenvoys_crates_time%'
+  # Toggle on or off fireworks.
   Firework-Toggle: true
+  # The colors the fireworks will be.
   Firework-Colors:
     - 'Gray'
     - 'Black'
-    - 'Yellow'
+    - 'Orange'
   Signal-Flare:
     Toggle: true
     Time: '25s'
@@ -33,40 +48,40 @@ Settings:
       - 'Yellow'
 ###################################
 #             Items: Options
-# Item:<ID:MD> - You can choose the item with its id and meta data.
+# Item:<ID:MD> - You can choose the item with its id.
 # Amount:<Number> - Choose how many of the item you get.
 # Name:<Name> - The display name that goes on the item.
 # Lore:<Line 1>,<Line 2>,<Line 3>,<Line 4> - The lore that will go under the enchantments. Split lines with a ','
-# Glowing:<True/False> - Will make the item have a glowing effect without having an enchantment on the item. (Only supports 1.8 - 1.11)
+# Glowing:<True/False> - Will make the item have a glowing effect without having an enchantment on the item.
 # Unbreakable-Item:<True/False> - Will add the Unbreaking NBT tag to the item to allow custom textured items to be gained through the envoys.
 # <Enchantment>:<Level> - Choose the enchantment you want to add to the item. You can use the in-game names of the enchantment if you want. Replace the spaces in the name with "_".
 ###################################
 Prizes:
   '1':
-    DisplayName: '&a$10,000'
+    DisplayName: '<green>$10,000'
     Chance: 50
     Messages:
-      - '&7You have just found {reward}.'
+      - '<gray>You have found {reward}.'
     Commands:
       - 'eco give {player} 10000'
   '2':
-    DisplayName: '&eLucky &7Sword.'
+    DisplayName: '&eLucky <gray>Sword.'
     Chance: 25
     Drop-Items: false
     Messages:
-      - '&7Congratulations you have just won a {reward}.'
+      - '<gray>Congratulations you have won a {reward}.'
     Items:
-      - 'Item:DIAMOND_SWORD, Amount:1, Name:&eLucky Sword, Sharpness:2, Unbreaking:1, Knockback:1, Fire_Aspect:1, Looting:1'
+      - 'Item:diamond_sword, Amount:1, Name:&eLucky Sword, sharpness:2, unbreaking:1, knockback:1, fire_aspect:1, looting:1'
   '3':
-    DisplayName: '&eLucky &7Armor'
+    DisplayName: '<yellow>Lucky <gray>Armor'
     Chance: 10
     Drop-Items: false
     Messages:
-      - '&7Congratulations you have just won a {reward} set.'
+      - '<gray>Congratulations you have won a {reward} set.'
     # Available Materials: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimMaterial.html
     # Available Patterns: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimPattern.html
     Items:
-      - 'Item:DIAMOND_HELMET, Damage:50, Trim-Pattern:SENTRY, Trim-Material:QUARTZ, Amount:1, Name:&eLucky Helmet, Protection:2, Unbreaking:1'
-      - 'Item:DIAMOND_CHESTPLATE, Damage:50, Trim-Pattern:DUNE, Trim-Material:REDSTONE, Amount:1, Name:&eLucky Chestplate, Protection:2, Unbreaking:1'
-      - 'Item:DIAMOND_LEGGINGS, Damage:50, Trim-Pattern:HOST, Trim-Material:COPPER, Amount:1, Name:&eLucky Leggings, Protection:2, Unbreaking:1'
-      - 'Item:DIAMOND_BOOTS, Damage:50, Trim-Pattern:SHAPER, Trim-Material:GOLD, Amount:1, Name:&eLucky Boots, Protection:2, Unbreaking:1'
+      - 'Item:diamond_helmet, Damage:50, Trim-Pattern:sentry, Trim-Material:quartz, Amount:1, Name:&eLucky Helmet, protection:2, unbreaking:1'
+      - 'Item:diamond_chestplate, Damage:50, Trim-Pattern:dune, Trim-Material:redstone, Amount:1, Name:&eLucky Chestplate, protection:2, unbreaking:1'
+      - 'Item:diamond_leggings, Damage:50, Trim-Pattern:host, Trim-Material:copper, Amount:1, Name:&eLucky Leggings, protection:2, unbreaking:1'
+      - 'Item:diamond_boots, Damage:50, Trim-Pattern:shaper, Trim-Material:gold, Amount:1, Name:&eLucky Boots, protection:2, unbreaking:1'

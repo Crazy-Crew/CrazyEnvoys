@@ -3,25 +3,39 @@ Settings:
   Claim-Permission: false
   # What permission they need.
   Claim-Permission-Name: 'basic.envoy.use'
+  # A default message if the prize doesn't have any Messages
+  # i.e. Messages: [] or the value isn't there.
   Prize-Message:
-    - '&7You have won &c{reward} &7from &c{tier}.'
-  Spawn-Chance: 85 #The chance that this tier will spawn.
-  Use-Chance: true #If true then it uses the chance option in the prizes and if false then each prize has a 1/(Amount of Prizes) chance of winning.
-  Placed-Block: 'CHEST' #The block that will be clicked when they land.
-  Bulk-Prizes: #This allows players to win multiple prizes from one crate.
-    Toggle: false #Toggle if players can win multiple prizes.
-    Random: true #If true then it will pick a random bulk from 1-MaxBulk.
-    Max-Bulk: 3 #The max amount of prizes.
-  Hologram-Toggle: true #Toggle on and off holograms.
-  Hologram-Height: 1.5 #How high the hologram will be from the crate.
-  Hologram-Range: 8 # The distance the hologram can be seen. Only works with CMI and DecentHolograms
-  Hologram: #Requires 3rd party plugins such as DecentHolograms to function. https://github.com/Crazy-Crew/CrazyEnvoys/blob/main/platforms/paper/src/main/java/com/badbones69/crazyenvoys/support/libraries/PluginSupport.java
+    - '<gray>You have won <red>{reward} <gray>from <red>{tier}.'
+  # The chance that this tier will spawn.
+  Spawn-Chance: 85
+  # If true then it uses the chance option in the prizes and if false then each prize has a 1/(Amount of Prizes) chance of winning.
+  Use-Chance: true
+  # The block that will be clicked when they land.
+  Placed-Block: 'chest'
+  # This allows players to win multiple prizes from one crate.
+  Bulk-Prizes:
+    # Toggle if players can win multiple prizes.
+    Toggle: false
+    # If true then it will pick a random bulk from 1-MaxBulk.
+    Random: true
+    # The max amount of prizes.
+    Max-Bulk: 3
+  # Toggle on and off holograms.
+  Hologram-Toggle: true
+  # How high the hologram will be from the crate.
+  Hologram-Height: 1.5
+  # The distance the hologram can be seen. Only works with CMI and DecentHolograms
+  Hologram-Range: 8
   # Available placeholders:
   # %crazyenvoys_crates_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
-    - '&7&l(&6&l!&7&l) Basic Crate'
+  Hologram:
+    - '<bold><gray>(<gold>!<gray>) Basic Crate</bold>'
     - '%crazyenvoys_crates_time%'
-  Firework-Toggle: true #Toggle on or off fireworks.
-  Firework-Colors: #The colors the fireworks will be.
+  # Toggle on or off fireworks.
+  Firework-Toggle: true
+  # The colors the fireworks will be.
+  Firework-Colors:
     - 'Gray'
     - 'Black'
     - 'Orange'
@@ -34,41 +48,46 @@ Settings:
       - 'Orange'
 ###################################
 #             Items: Options
-# Item:<ID:MD> - You can choose the item with its id and meta data.
+# Item:<ID:MD> - You can choose the item with its id.
 # Amount:<Number> - Choose how many of the item you get.
 # Name:<Name> - The display name that goes on the item.
 # Lore:<Line 1>,<Line 2>,<Line 3>,<Line 4> - The lore that will go under the enchantments. Split lines with a ','
-# Glowing:<True/False> - Will make the item have a glowing effect without having an enchantment on the item. (Only supports 1.8 - 1.11)
+# Glowing:<True/False> - Will make the item have a glowing effect without having an enchantment on the item.
 # Unbreakable-Item:<True/False> - Will add the Unbreaking NBT tag to the item to allow custom textured items to be gained through the envoys.
 # <Enchantment>:<Level> - Choose the enchantment you want to add to the item. You can use the in-game names of the enchantment if you want. Replace the spaces in the name with "_".
 ###################################
-Prizes: #The prizes that can be won.
-  '1': #Prize number
-    DisplayName: '&a$1,000' #The display name used in {reward}
-    Chance: 10 #The chance that it will be won.
-    Drop-Items: false #Drop all items in the Items: option on the ground instead of into their inventory.
-    Messages: #The message that will be sent to the player if won.
-      - '&7You have just won {reward}.'
-    Commands: #The commands that will be run when this prize is won.
+Prizes:
+  '1':
+    # The display name used in {reward}
+    DisplayName: '<green>$1,000'
+    # The chance that it will be won.
+    Chance: 10
+    # Drop all items in the Items: option on the ground instead of into their inventory.
+    Drop-Items: false
+    # The message that will be sent to the player if won.
+    Messages:
+      - '<gray>You have won {reward}.'
+    # The commands that will be run when this prize is won.
+    Commands:
       - 'eco give {player} 1000'
   '2':
-    DisplayName: '&616 Gold Apples' #The display name used in %reward%
+    DisplayName: '<gold>16 Gold Apples'
     Chance: 75
     Drop-Items: false
     Messages:
-      - '&7You have just won {reward}.'
+      - '<gray>You have won {reward}.'
     Items:
-      - 'Item:GOLDEN_APPLE, Amount:16, Name:&dJuicy Golden Apple, Lore:&7I am a yummy apple,&7Make sure to savor my flavor.'
+      - 'Item:golden_apple, Amount:16, Name:&dJuicy Golden Apple, Lore:<gray>I am a yummy apple,<gray>Make sure to savor my flavor.'
   '3':
-    DisplayName: '&dFood Pack' #The display name used in {reward}
+    DisplayName: '&dFood Pack'
     Chance: 40
     Drop-Items: false
     Messages:
-      - '&7You have just had a great harvest.'
+      - '<gray>You have had a great harvest.'
     Items:
-      - 'Item:COOKED_BEEF, Amount:16'
-      - 'Item:APPLE, Amount:16'
-      - 'Item:COOKED_COD, Amount:16'
-      - 'Item:COOKED_SALMON, Amount:16'
-      - 'Item:CARROT, Amount:16'
-      - 'Item:BREAD, Amount:16'
+      - 'Item:cooked_beef, Amount:16'
+      - 'Item:apple, Amount:16'
+      - 'Item:cooked_cod, Amount:16'
+      - 'Item:cooked_salmon, Amount:16'
+      - 'Item:carrot, Amount:16'
+      - 'Item:bread, Amount:16'
