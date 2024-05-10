@@ -9,25 +9,23 @@ plugins {
 dependencies {
     compileOnly(fileTree("$rootDir/libs/compile").include("*.jar"))
 
-    //implementation(libs.metrics)
+    implementation("dev.triumphteam", "triumph-cmd-bukkit", "2.0.0-ALPHA-10")
 
-    implementation(libs.triumph.cmds)
+    implementation("com.ryderbelserion", "vital-paper", "1.0")
 
-    implementation(libs.config.me)
+    implementation("ch.jalu", "configme", "1.4.1") {
+        exclude("org.yaml")
+    }
 
     implementation(libs.nbt.api)
 
-    implementation(libs.vital)
+    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.1.0-SNAPSHOT")
 
-    compileOnly(libs.decent.holograms)
+    compileOnly("com.github.decentsoftware-eu", "decentholograms", "2.8.6")
 
-    compileOnly(libs.placeholder.api)
+    compileOnly("me.clip", "placeholderapi", "2.11.5")
 
-    compileOnly(libs.itemsadder.api)
-
-    compileOnly(libs.oraxen.api)
-
-    compileOnly(libs.worldguard)
+    compileOnly("io.th0rgal", "oraxen", "1.171.0")
 }
 
 val component: SoftwareComponent = components["java"]
@@ -36,7 +34,7 @@ tasks {
     publishing {
         repositories {
             maven {
-                url = uri("https://repo.crazycrew.us/releases")
+                url = uri("https://repo.crazycrew.us/releases/")
 
                 credentials {
                     this.username = System.getenv("gradle_username")
@@ -81,7 +79,7 @@ tasks {
             "com.ryderbelserion.vital",
             "de.tr7zw.changeme.nbtapi",
             "dev.triumphteam.cmd",
-            "org.bstats"
+            "ch.jalu"
         ).forEach {
             relocate(it, "libs.$it")
         }
@@ -100,7 +98,7 @@ tasks {
 
         inputs.properties(properties)
 
-        filesMatching("plugin.yml") {
+        filesMatching("paper-plugin.yml") {
             expand(properties)
         }
     }
