@@ -17,8 +17,6 @@ dependencies {
         exclude("org.yaml")
     }
 
-    implementation(libs.nbt.api)
-
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.1.0-SNAPSHOT")
 
     compileOnly("com.github.decentsoftware-eu", "decentholograms", "2.8.6")
@@ -77,7 +75,6 @@ tasks {
 
         listOf(
             "com.ryderbelserion.vital",
-            "de.tr7zw.changeme.nbtapi",
             "dev.triumphteam.cmd",
             "ch.jalu"
         ).forEach {
