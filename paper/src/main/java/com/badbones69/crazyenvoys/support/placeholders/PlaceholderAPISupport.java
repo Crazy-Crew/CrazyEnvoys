@@ -3,7 +3,6 @@ package com.badbones69.crazyenvoys.support.placeholders;
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.platform.config.ConfigManager;
 import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.platform.config.types.MessageKeys;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;

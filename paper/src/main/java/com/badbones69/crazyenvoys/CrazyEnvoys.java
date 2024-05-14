@@ -13,7 +13,6 @@ import com.badbones69.crazyenvoys.listeners.EnvoyEditListener;
 import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
 import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
-import com.badbones69.crazyenvoys.platform.config.ConfigManager;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import com.ryderbelserion.vital.enums.Support;

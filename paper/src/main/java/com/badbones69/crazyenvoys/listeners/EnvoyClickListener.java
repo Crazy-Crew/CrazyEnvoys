@@ -10,7 +10,6 @@ import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
-import com.badbones69.crazyenvoys.platform.config.ConfigManager;
 import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import com.ryderbelserion.vital.enums.Support;

@@ -1,7 +1,6 @@
 package com.badbones69.crazyenvoys.api.objects;
 
 import ch.jalu.configme.SettingsManager;
-import com.badbones69.crazyenvoys.platform.config.ConfigManager;
 import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import com.ryderbelserion.vital.util.builders.ItemBuilder;
