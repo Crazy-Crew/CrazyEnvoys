@@ -7,23 +7,19 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.triumph.cmds)
+
+    implementation(libs.vital.paper)
+
     compileOnly(fileTree("$rootDir/libs/compile").include("*.jar"))
 
-    implementation("dev.triumphteam", "triumph-cmd-bukkit", "2.0.0-ALPHA-10")
+    compileOnly(libs.decent.holograms)
 
-    implementation("com.ryderbelserion", "vital-paper", "1.0")
+    compileOnly(libs.placeholder.api)
 
-    implementation("ch.jalu", "configme", "1.4.1") {
-        exclude("org.yaml")
-    }
+    compileOnly(libs.oraxen.api)
 
-    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.1.0-SNAPSHOT")
-
-    compileOnly("com.github.decentsoftware-eu", "decentholograms", "2.8.6")
-
-    compileOnly("me.clip", "placeholderapi", "2.11.5")
-
-    compileOnly("io.th0rgal", "oraxen", "1.171.0")
+    compileOnly(libs.worldguard)
 }
 
 val component: SoftwareComponent = components["java"]
@@ -74,8 +70,8 @@ tasks {
         archiveClassifier.set("")
 
         listOf(
-            "com.ryderbelserion.vital",
-            "dev.triumphteam.cmd",
+            "com.ryderbelserion",
+            "dev.triumphteam",
             "ch.jalu"
         ).forEach {
             relocate(it, "libs.$it")
@@ -83,20 +79,14 @@ tasks {
     }
 
     processResources {
-        val properties = hashMapOf(
-            "name" to rootProject.name,
-            "version" to project.version,
-            "group" to project.group,
-            "description" to rootProject.description,
-            "apiVersion" to "1.20",
-            "authors" to rootProject.properties["authors"],
-            "website" to rootProject.properties["website"]
-        )
-
-        inputs.properties(properties)
+        inputs.properties("name" to rootProject.name)
+        inputs.properties("version" to project.version)
+        inputs.properties("group" to project.group)
+        inputs.properties("description" to project.properties["description"])
+        inputs.properties("website" to project.properties["website"])
 
         filesMatching("paper-plugin.yml") {
-            expand(properties)
+            expand(inputs.properties)
         }
     }
 }

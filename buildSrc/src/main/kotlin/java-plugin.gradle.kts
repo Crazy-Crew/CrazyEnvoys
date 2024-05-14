@@ -4,10 +4,6 @@ plugins {
     `maven-publish`
 }
 
-base {
-    archivesName.set(rootProject.name)
-}
-
 repositories {
     maven("https://repo.codemc.io/repository/maven-public/")
 
