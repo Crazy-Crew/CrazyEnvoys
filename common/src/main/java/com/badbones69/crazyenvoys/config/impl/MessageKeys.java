@@ -1,4 +1,4 @@
-package com.badbones69.crazyenvoys.platform.config.types;
+package com.badbones69.crazyenvoys.config.impl;
 
 import ch.jalu.configme.SettingsHolder;
 import ch.jalu.configme.configurationdata.CommentsConfiguration;
