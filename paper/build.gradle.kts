@@ -11,6 +11,8 @@ dependencies {
 
     implementation(libs.vital.paper)
 
+    implementation(project(":crazyenvoys-common"))
+
     compileOnly(fileTree("$rootDir/libs/compile").include("*.jar"))
 
     compileOnly(libs.decent.holograms)
