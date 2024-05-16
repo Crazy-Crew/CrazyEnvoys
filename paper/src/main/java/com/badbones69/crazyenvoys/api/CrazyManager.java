@@ -259,9 +259,8 @@ public class CrazyManager {
 
                 boolean dropItems = file.getBoolean(path + "Drop-Items");
 
-                //todo() rework items
-                //List<ItemBuilder> items = ItemBuilder.convertStringList(file.getStringList(path + "Items"));
-                //tier.addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
+                List<ItemBuilder> items = ItemUtils.convertStringList(file.getStringList(path + "Items"), prizeID);
+                tier.addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
             }
 
             this.tiers.add(tier);

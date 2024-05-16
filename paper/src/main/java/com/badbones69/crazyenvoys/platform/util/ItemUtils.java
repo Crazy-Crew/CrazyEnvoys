@@ -1,9 +1,7 @@
 package com.badbones69.crazyenvoys.platform.util;
 
-import com.badbones69.crazycrates.CrazyCrates;
-import com.badbones69.crazycrates.api.enums.PersistentKeys;
-import com.badbones69.crazycrates.api.objects.Crate;
-import com.badbones69.crazycrates.tasks.crates.CrateManager;
+import com.badbones69.crazyenvoys.CrazyEnvoys;
+import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.ryderbelserion.vital.common.configuration.YamlFile;
 import com.ryderbelserion.vital.common.util.StringUtil;
 import com.ryderbelserion.vital.util.DyeUtil;
@@ -15,12 +13,8 @@ import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.simpleyaml.configuration.ConfigurationSection;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -30,9 +24,9 @@ import static com.ryderbelserion.vital.util.ItemUtil.getEnchantment;
 
 public class ItemUtils {
 
-    private static @NotNull final CrazyCrates plugin = JavaPlugin.getPlugin(CrazyCrates.class);
+    private static @NotNull final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private static @NotNull final CrateManager crateManager = plugin.getCrateManager();
+    private static @NotNull final CrazyManager crateManager = plugin.getCrazyManager();
 
     /**
      * Removes an {@link ItemStack} from a {@link Player}'s inventory.
@@ -48,86 +42,6 @@ public class ItemUtils {
                 item.setAmount(item.getAmount() - 1);
             }
         } catch (Exception ignored) {}
-    }
-
-    /**
-     * Checks if the {@link ItemStack} is a {@link Crate}.
-     *
-     * @param itemStack the {@link ItemStack}
-     * @param crate the {@link Crate}
-     * @return true or false
-     */
-    public static boolean isSimilar(@NotNull final ItemStack itemStack, @NotNull final Crate crate) {
-        return crateManager.isKeyFromCrate(itemStack, crate);
-    }
-
-    /**
-     * @param itemMeta the {@link ItemMeta}
-     * @return the {@link String}
-     */
-    public static String getKey(@NotNull final ItemMeta itemMeta) {
-        return itemMeta.getPersistentDataContainer().get(PersistentKeys.crate_key.getNamespacedKey(), PersistentDataType.STRING);
-    }
-
-    /**
-     * Updates the {@link ItemBuilder} from a {@link ConfigurationSection} with a {@link Player} attached.
-     *
-     * @param section the section in the {@link YamlFile}
-     * @param builder the {@link ItemBuilder}
-     * @param player the {@link Player}
-     * @return the {@link ItemBuilder}
-     */
-    public static @NotNull ItemBuilder getItem(@NotNull final ConfigurationSection section, @NotNull final ItemBuilder builder, @NotNull final Player player) {
-        return getItem(section, builder.setPlayer(player));
-    }
-
-    /**
-     * Updates the {@link ItemBuilder} from a {@link ConfigurationSection}.
-     *
-     * @param section the section in the {@link YamlFile}
-     * @param builder the {@link ItemBuilder}
-     * @return the {@link ItemBuilder}
-     */
-    public static @NotNull ItemBuilder getItem(@NotNull final ConfigurationSection section, @NotNull final ItemBuilder builder) {
-        builder.setGlowing(section.contains("Glowing") ? section.getBoolean("Glowing") : null);
-        
-        builder.setDamage(section.getInt("DisplayDamage", 0));
-        
-        builder.setDisplayLore(section.getStringList("Lore"));
-
-        builder.addPatterns(section.getStringList("Patterns"));
-
-        builder.setItemFlags(section.getStringList("Flags"));
-
-        builder.setHidingItemFlags(section.getBoolean("HideItemFlags", false));
-
-        builder.setUnbreakable(section.getBoolean("Unbreakable", false));
-        
-        //if (section.contains("Skull")) {
-        //    builder.setSkull(section.getString("Skull", ""), HeadDatabaseListener.getHeads());
-        //}
-        
-        if (section.contains("Player") && builder.isPlayerHead()) {
-            builder.setPlayer(section.getString("Player", ""));
-        }
-        
-        if (section.contains("DisplayTrim.Pattern") && builder.isArmor()) {
-            builder.applyTrimPattern(section.getString("DisplayTrim.Pattern", "sentry"));
-        }
-        
-        if (section.contains("DisplayTrim.Material") && builder.isArmor()) {
-            builder.applyTrimMaterial(section.getString("DisplayTrim.Material", "quartz"));
-        }
-        
-        if (section.contains("DisplayEnchantments")) {
-            for (String ench : section.getStringList("DisplayEnchantments")) {
-                String[] value = ench.split(":");
-
-                builder.addEnchantment(value[0], Integer.parseInt(value[1]), true);
-            }
-        }
-        
-        return builder;
     }
 
     /**
