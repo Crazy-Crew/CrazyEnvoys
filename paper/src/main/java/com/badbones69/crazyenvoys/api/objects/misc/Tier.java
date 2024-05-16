@@ -24,7 +24,6 @@ public class Tier {
     private int spawnChance;
     private boolean useChance;
     private Material placedBlockMaterial;
-    private short placedBlockMetaData;
     private boolean bulkToggle;
     private boolean bulkRandom;
     private int bulkMax;
@@ -61,7 +60,6 @@ public class Tier {
         this.useChance = true;
 
         this.placedBlockMaterial = Material.CHEST;
-        this.placedBlockMetaData = 0;
 
         this.bulkToggle = false;
         this.bulkRandom = true;
@@ -185,35 +183,6 @@ public class Tier {
      */
     public Tier setPlacedBlockMaterial(Material placedBlockMaterial) {
         this.placedBlockMaterial = placedBlockMaterial;
-
-        return this;
-    }
-    
-    /**
-     * Get the metadata of the block that is acts as the crate.
-     */
-    public short getPlacedBlockMetaData() {
-        return this.placedBlockMetaData;
-    }
-    
-    /**
-     * Set the metadata of the block that acts as the crate.
-     *
-     * @param placedBlockMetaData The metadata as a Short.
-     */
-    public Tier setPlacedBlockMetaData(short placedBlockMetaData) {
-        this.placedBlockMetaData = placedBlockMetaData;
-
-        return this;
-    }
-    
-    /**
-     * Set the metadata of the block that acts as the crate.
-     *
-     * @param placedBlockMetaData The metadata as a Short.
-     */
-    public Tier setPlacedBlockMetaData(int placedBlockMetaData) {
-        this.placedBlockMetaData = (short) placedBlockMetaData;
 
         return this;
     }
