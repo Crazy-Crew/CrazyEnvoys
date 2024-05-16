@@ -4,8 +4,10 @@ import ch.jalu.configme.SettingsManager;
 import com.Zrips.CMI.Modules.ModuleHandling.CMIModule;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.enums.DataFiles;
+import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
+import com.badbones69.crazyenvoys.platform.util.ItemUtils;
 import com.badbones69.crazyenvoys.platform.util.MiscUtils;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
@@ -29,6 +31,7 @@ import com.ryderbelserion.vital.common.configuration.objects.CustomFile;
 import com.ryderbelserion.vital.common.util.AdvUtil;
 import com.ryderbelserion.vital.enums.Support;
 import com.ryderbelserion.vital.util.DyeUtil;
+import com.ryderbelserion.vital.util.builders.items.ItemBuilder;
 import com.ryderbelserion.vital.util.scheduler.FoliaRunnable;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -38,7 +41,6 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
@@ -406,6 +408,7 @@ public class CrazyManager {
         cleanLocations();
 
         for (Block block : getActiveEnvoys()) {
+            //todo() load chunk async
             if (!block.getChunk().isLoaded()) block.getChunk().load();
 
             block.setType(Material.AIR);
@@ -603,6 +606,7 @@ public class CrazyManager {
                 location.add(-(maxRadius) + new Random().nextInt(maxRadius * 2), 0, -(maxRadius) + new Random().nextInt(maxRadius * 2));
                 location = location.getWorld().getHighestBlockAt(location).getLocation();
 
+                //todo() load chunk async
                 if (!location.getChunk().isLoaded() && !location.getChunk().load()) continue;
 
                 if (location.getBlockY() <= location.getWorld().getMinHeight() ||
@@ -740,6 +744,7 @@ public class CrazyManager {
                 }
 
                 if (spawnFallingBlock) {
+                    //todo() load chunk async
                     if (!block.getChunk().isLoaded()) block.getChunk().load();
 
                     int fallingHeight = this.config.getProperty(ConfigKeys.envoy_falling_height);
@@ -755,6 +760,7 @@ public class CrazyManager {
                 } else {
                     Tier tier = pickRandomTier();
 
+                    //todo() load chunk async
                     if (!block.getChunk().isLoaded()) block.getChunk().load();
 
                     block.setType(tier.getPlacedBlockMaterial());
@@ -915,6 +921,7 @@ public class CrazyManager {
 
         for (Block spawnedLocation : locations) {
             if (spawnedLocation != null) {
+                //todo() load chunk async
                 if (!spawnedLocation.getChunk().isLoaded()) spawnedLocation.getChunk().load();
 
                 spawnedLocation.setType(Material.AIR);
@@ -981,7 +988,7 @@ public class CrazyManager {
         if (this.config.getProperty(ConfigKeys.envoys_countdown)) {
             String time = this.config.getProperty(ConfigKeys.envoys_cooldown);
 
-            cal = MiscUtil.getTimeFromString(time);
+            cal = MiscUtils.getTimeFromString(time);
         } else {
             getEnvoyTime(cal);
         }
@@ -1011,7 +1018,7 @@ public class CrazyManager {
         container.set(PersistentKeys.no_firework_damage.getNamespacedKey(), PersistentDataType.BOOLEAN, true);
     }
 
-    //TODO find a better away of doing this as it causes crashes with big radius.
+    //todo find a better away of doing this as it causes crashes with big radius.
     private List<Block> getBlocks(Location location, int radius) {
         Location locations2 = location.clone();
         location.add(-radius, 0, -radius);
