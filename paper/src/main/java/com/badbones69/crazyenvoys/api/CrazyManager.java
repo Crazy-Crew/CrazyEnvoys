@@ -959,7 +959,7 @@ public class CrazyManager {
             this.centerString = configuration.getString("Center");
             if (this.centerString != null) this.center = MiscUtils.getBuiltLocation(centerString);
         } else {
-            this.center = this.plugin.getServer().getWorlds().get(0).getSpawnLocation();
+            this.center = this.plugin.getServer().getWorlds().getFirst().getSpawnLocation();
         }
 
         if (this.center.getWorld() == null) {
