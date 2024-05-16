@@ -1,0 +1,33 @@
+# The bundle of prizes to pick from.
+prizes:
+  '1':
+    # The display name used in {reward}
+    displayname: '<gold>16 Gold Apples'
+    # The chance that it will be won.
+    chance: 75
+    # Drop all items in the Items: option on the ground instead of into their inventory.
+    drop-items: false
+    # The message that will be sent to the player if won.
+    messages:
+      - '<gray>You have won {reward}.'
+    # The items you will win.
+    items:
+      - 'Item:golden_apple, Amount:16, Name:&dJuicy Golden Apple, Lore:<gray>I am a yummy apple,<gray>Make sure to savor my flavor.'
+  '2':
+    # The display name used in {reward}
+    displayname: '<light_purple>Food Pack'
+    # The chance that it will be won.
+    chance: 40
+    # Drop all items in the Items: option on the ground instead of into their inventory.
+    drop-items: false
+    # The message that will be sent to the player if won.
+    messages:
+      - '<gray>You have had a great harvest.'
+    # The items you will win.
+    items:
+      - 'Item:cooked_beef, Amount:16'
+      - 'Item:apple, Amount:16'
+      - 'Item:cooked_cod, Amount:16'
+      - 'Item:cooked_salmon, Amount:16'
+      - 'Item:carrot, Amount:16'
+      - 'Item:bread, Amount:16'

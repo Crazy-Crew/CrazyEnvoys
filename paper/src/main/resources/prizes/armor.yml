@@ -1,0 +1,31 @@
+# The bundle of prizes to pick from.
+prizes:
+  "1":
+    # The display name used in {reward}
+    DisplayName: "<dark_red>Titan <gray>Sword."
+    # The chance that it will be won.
+    Chance: 25
+    # Drop all items in the Items: option on the ground instead of into their inventory.
+    Drop-Items: false
+    # The message that will be sent to the player if won.
+    Messages:
+      - '<gray>Congratulations you have won a {reward}.'
+    # The items you will win.
+    Items:
+      - "Item:diamond_sword, Amount:1, Name:&4Titan Sword, sharpness:5, unbreaking:3, knockback:2, fire_aspect:2, looting:3"
+  "2":
+    # The display name used in {reward}
+    DisplayName: "<dark_red>Titan <gray>Armor"
+    # The chance that it will be won.
+    Chance: 10
+    # Drop all items in the Items: option on the ground instead of into their inventory.
+    Drop-Items: false
+    # The message that will be sent to the player if won.
+    Messages:
+      - "<gray>Congratulations you have won a {reward} set."
+    # The items you will win.
+    Items:
+      - "Item:diamond_helmet, Damage:50, Trim-Pattern:sentry, Trim-Material:quartz, Amount:1, Name:<dark_red>Titan Helmet, protection:4, unbreaking:3"
+      - "Item:diamond_chestplate, Damage:50, Trim-Pattern:dune, Trim-Material:redstone, Amount:1, Name:<dark_red>Titan Chestplate, protection:4, unbreaking:3"
+      - "Item:diamond_leggings, Damage:50, Trim-Pattern:host, Trim-Material:copper, Amount:1, Name:<dark_red>Titan Leggings, protection:4, unbreaking:3"
+      - "Item:diamond_boots, Damage:50, Trim-Pattern:shaper, Trim-Material:gold, Amount:1, Name:<dark_red>Titan Boots, protection:4, unbreaking:3"
