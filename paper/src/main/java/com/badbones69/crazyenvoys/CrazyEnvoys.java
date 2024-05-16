@@ -9,14 +9,15 @@ import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.commands.EnvoyTab;
+import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.listeners.EnvoyEditListener;
 import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
 import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
+import com.ryderbelserion.vital.common.configuration.YamlManager;
 import com.ryderbelserion.vital.enums.Support;
-import com.ryderbelserion.vital.files.yaml.FileManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -29,23 +30,18 @@ public class CrazyEnvoys extends JavaPlugin {
     private FlareSettings flareSettings;
 
     private CrazyManager crazyManager;
-    private FileManager fileManager;
+    private YamlManager yamlManager;
 
     @Override
     public void onEnable() {
-        ConfigManager.load(getDataFolder());
+        ConfigManager.load();
+
+        this.yamlManager = ConfigManager.getYamlManager();
 
         this.locationSettings = new LocationSettings();
         this.editorSettings = new EditorSettings();
         this.coolDownSettings = new CoolDownSettings();
         this.flareSettings = new FlareSettings();
-
-        this.fileManager = new FileManager(getDataFolder().toPath(), getLogger());
-        this.fileManager
-                .addDefaultFile("tiers", "Basic.yml")
-                .addDefaultFile("tiers", "Lucky.yml")
-                .addDefaultFile("tiers", "Titan.yml")
-                .apply();;
 
         this.crazyManager = new CrazyManager();
         this.crazyManager.load();
@@ -103,7 +99,7 @@ public class CrazyEnvoys extends JavaPlugin {
         return this.crazyManager;
     }
 
-    public @NotNull final FileManager getFileManager() {
-        return this.fileManager;
+    public @NotNull final YamlManager getFileManager() {
+        return this.yamlManager;
     }
 }

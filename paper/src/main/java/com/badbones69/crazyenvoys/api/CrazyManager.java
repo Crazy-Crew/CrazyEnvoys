@@ -3,8 +3,9 @@ package com.badbones69.crazyenvoys.api;
 import ch.jalu.configme.SettingsManager;
 import com.Zrips.CMI.Modules.ModuleHandling.CMIModule;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.api.enums.Files;
-import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
+import com.badbones69.crazyenvoys.api.enums.DataFiles;
+import com.badbones69.crazyenvoys.config.ConfigManager;
+import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
@@ -22,9 +23,11 @@ import com.badbones69.crazyenvoys.listeners.timer.CountdownTimer;
 import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
+import com.ryderbelserion.vital.common.configuration.YamlFile;
+import com.ryderbelserion.vital.common.configuration.YamlManager;
+import com.ryderbelserion.vital.common.configuration.objects.CustomFile;
+import com.ryderbelserion.vital.common.util.AdvUtil;
 import com.ryderbelserion.vital.enums.Support;
-import com.ryderbelserion.vital.files.yaml.CustomFile;
-import com.ryderbelserion.vital.files.yaml.FileManager;
 import com.ryderbelserion.vital.util.DyeUtil;
 import com.ryderbelserion.vital.util.scheduler.FoliaRunnable;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
@@ -57,7 +60,7 @@ import java.util.UUID;
 public class CrazyManager {
 
     private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
-    private final @NotNull FileManager fileManager = this.plugin.getFileManager();
+    private final @NotNull YamlManager fileManager = this.plugin.getFileManager();
     private final @NotNull SettingsManager config = ConfigManager.getConfig();
 
     private final @NotNull CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
@@ -120,13 +123,13 @@ public class CrazyManager {
      * Run this when you need to reload the plugin or shut it down.
      */
     public void reload(boolean serverStop) {
-        FileConfiguration configuration = Files.users.getFile();
+        YamlFile configuration = DataFiles.data.getYamlFile();
 
         if (serverStop) {
             removeAllEnvoys();
 
             configuration.set("Next-Envoy", getNextEnvoy().getTimeInMillis());
-            Files.users.save();
+            DataFiles.data.save();
 
             this.locationSettings.clearSpawnLocations();
 
@@ -135,12 +138,12 @@ public class CrazyManager {
             return;
         }
 
-        ConfigManager.reload();
+        ConfigManager.refresh();
 
         removeAllEnvoys();
 
         configuration.set("Next-Envoy", getNextEnvoy().getTimeInMillis());
-        Files.users.save();
+        DataFiles.data.save();
 
         this.locationSettings.clearSpawnLocations();
 
@@ -156,7 +159,7 @@ public class CrazyManager {
         this.blacklistedBlocks.clear();
         this.cachedChances.clear();
 
-        FileConfiguration configuration = Files.users.getFile();
+        YamlFile configuration = DataFiles.data.getYamlFile();
 
         this.envoyTimeLeft = Calendar.getInstance();
 
@@ -193,8 +196,8 @@ public class CrazyManager {
         this.tiers.clear();
 
         for (CustomFile tierFile : this.fileManager.getCustomFiles()) {
-            Tier tier = new Tier(tierFile.getFileName());
-            FileConfiguration file = tierFile.getConfiguration();
+            Tier tier = new Tier(tierFile.getStrippedName());
+            YamlFile file = tierFile.getYamlFile();
             tier.setClaimPermissionToggle(file.getBoolean("Settings.Claim-Permission"));
             tier.setClaimPermission(file.getString("Settings.Claim-Permission-Name"));
             tier.setUseChance(file.getBoolean("Settings.Use-Chance"));
@@ -616,8 +619,8 @@ public class CrazyManager {
                 this.locationSettings.addDropLocations(block);
             }
 
-            Files.users.getFile().set("Locations.Spawned", getBlockList(locationSettings.getDropLocations()));
-            Files.users.save();
+            DataFiles.data.getYamlFile().set("Locations.Spawned", getBlockList(locationSettings.getDropLocations()));
+            DataFiles.data.save();
         } else {
             if (this.config.getProperty(ConfigKeys.envoys_max_drops_toggle) || this.config.getProperty(ConfigKeys.envoys_random_drops)) {
                 if (this.locationSettings.getSpawnLocations().size() <= maxSpawns) {
@@ -639,7 +642,7 @@ public class CrazyManager {
         if (envoyLocationsBroadcast) {
             StringBuilder locations = getStringBuilder();
 
-            this.plugin.getServer().broadcast(Messages.envoy_locations.getMessage("{locations}", locations.toString().translateEscapes()).asString().translateEscapes(), "envoy.locations");
+            this.plugin.getServer().broadcast(AdvUtil.parse(Messages.envoy_locations.getMessage("{locations}", locations.toString().translateEscapes()).asString().translateEscapes()), "envoy.locations");
         }
 
         return this.locationSettings.getDropLocations();
@@ -676,7 +679,7 @@ public class CrazyManager {
         // crates to spawn in the ground when not using falling blocks.
 
         if (this.tiers.isEmpty()) {
-            this.plugin.getServer().broadcastMessage(MiscUtil.getPrefix() + "<red>No tiers were found. Please delete the Tiers folder to allow it to remake the default tier files.");
+            this.plugin.getServer().broadcast(AdvUtil.parse(MiscUtil.getPrefix() + "<red>No tiers were found. Please delete the Tiers folder to allow it to remake the default tier files."));
 
             return false;
         }
@@ -867,8 +870,8 @@ public class CrazyManager {
         this.center = loc;
         this.centerString = MiscUtil.getUnBuiltLocation(this.center);
 
-        Files.users.getFile().set("Center", this.centerString);
-        Files.users.save();
+        DataFiles.data.getYamlFile().set("Center", this.centerString);
+        DataFiles.data.save();
     }
 
     /**
@@ -906,7 +909,7 @@ public class CrazyManager {
         List<Block> locations = new ArrayList<>(this.locationSettings.getActiveLocations());
 
         if (this.config.getProperty(ConfigKeys.envoys_random_locations)) {
-            locations.addAll(getLocationsFromStringList(Files.users.getFile().getStringList("Locations.Spawned")));
+            locations.addAll(getLocationsFromStringList(DataFiles.data.getYamlFile().getStringList("Locations.Spawned")));
         } else {
             locations.addAll(this.locationSettings.getSpawnLocations());
         }
@@ -925,8 +928,8 @@ public class CrazyManager {
         this.locationSettings.clearActiveLocations();
         this.locationSettings.clearDropLocations();
 
-        Files.users.getFile().set("Locations.Spawned", new ArrayList<>());
-        Files.users.save();
+        DataFiles.data.getYamlFile().set("Locations.Spawned", new ArrayList<>());
+        DataFiles.data.save();
     }
 
     private boolean testCenter() {
@@ -951,7 +954,7 @@ public class CrazyManager {
     }
 
     private void loadCenter() {
-        FileConfiguration configuration = Files.users.getFile();
+        YamlFile configuration = DataFiles.data.getYamlFile();
 
         if (configuration.contains("Center")) {
             this.centerString = configuration.getString("Center");

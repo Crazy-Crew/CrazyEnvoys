@@ -3,6 +3,9 @@ package com.badbones69.crazyenvoys.platform.util;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
+import com.badbones69.crazyenvoys.config.ConfigManager;
+import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
+import com.ryderbelserion.vital.common.util.AdvUtil;
 import com.ryderbelserion.vital.util.scheduler.FoliaRunnable;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -33,8 +36,7 @@ public class MiscUtil {
     private final static @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
     public static String getPrefix() {
-        return "";
-        //return MsgUtil.color(ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix));
+        return ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix);
     }
 
     public static ItemStack getItemInHand(Player player) {

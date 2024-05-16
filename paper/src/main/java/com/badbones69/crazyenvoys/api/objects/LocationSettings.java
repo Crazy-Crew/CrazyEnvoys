@@ -1,8 +1,9 @@
 package com.badbones69.crazyenvoys.api.objects;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.api.enums.Files;
+import com.badbones69.crazyenvoys.api.enums.DataFiles;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.ryderbelserion.vital.common.configuration.YamlFile;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -151,7 +152,7 @@ public class LocationSettings {
      * Add all values from the DATA file to spawnLocations.
      */
     public void populateMap() {
-        FileConfiguration users = Files.users.getFile();
+        @NotNull YamlFile users = DataFiles.data.getYamlFile();
 
         getSpawnLocations().clear();
 
@@ -195,7 +196,7 @@ public class LocationSettings {
             } catch (Exception ignored) {}
         }
 
-        Files.users.getFile().set("Locations.Spawns", locations);
-        Files.users.save();
+        DataFiles.data.getYamlFile().set("Locations.Spawns", locations);
+        DataFiles.data.save();
     }
 }

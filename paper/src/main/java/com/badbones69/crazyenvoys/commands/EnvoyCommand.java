@@ -8,6 +8,7 @@ import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
+import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.Material;
@@ -73,7 +74,7 @@ public class EnvoyCommand implements CommandExecutor {
                         this.crazyManager.endEnvoyEvent();
                     }
 
-                    this.plugin.getFileManager().apply();;
+                    ConfigManager.refresh();
 
                     this.crazyManager.reload(false);
 

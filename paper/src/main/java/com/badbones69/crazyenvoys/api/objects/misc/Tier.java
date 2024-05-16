@@ -2,8 +2,8 @@ package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
-import com.ryderbelserion.vital.files.yaml.CustomFile;
-import com.ryderbelserion.vital.files.yaml.FileManager;
+import com.ryderbelserion.vital.common.configuration.YamlManager;
+import com.ryderbelserion.vital.common.configuration.objects.CustomFile;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,7 +51,7 @@ public class Tier {
         this.name = name;
 
         CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
-        FileManager fileManager = plugin.getFileManager();
+        YamlManager fileManager = plugin.getFileManager();
         this.file = fileManager.getCustomFile(this.name);
 
         this.claimPermission = "";
