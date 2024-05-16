@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.platform.util.MiscUtils;
 import com.ryderbelserion.vital.common.configuration.YamlManager;
 import com.ryderbelserion.vital.common.configuration.objects.CustomFile;
 import org.bukkit.Color;
@@ -356,7 +356,7 @@ public class Tier {
      * @return The hologram with all placeholders in it.
      */
     public List<String> getHoloMessage() {
-        return MiscUtil.getPlaceholders(this.holoMessage, this.lorePlaceholders);
+        return MiscUtils.getPlaceholders(this.holoMessage, this.lorePlaceholders);
     }
 
     /**

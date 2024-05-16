@@ -5,7 +5,6 @@ import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
-import com.ryderbelserion.vital.common.util.AdvUtil;
 import com.ryderbelserion.vital.util.scheduler.FoliaRunnable;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -31,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class MiscUtil {
+public class MiscUtils {
 
     private final static @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 

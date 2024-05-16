@@ -2,10 +2,9 @@ package com.badbones69.crazyenvoys.api.objects;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.enums.DataFiles;
-import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.platform.util.MiscUtils;
 import com.ryderbelserion.vital.common.configuration.YamlFile;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
@@ -158,7 +157,7 @@ public class LocationSettings {
 
         for (String location : users.getStringList("Locations.Spawns")) {
             try {
-                getSpawnLocations().add(MiscUtil.getBuiltLocation(location).getBlock());
+                getSpawnLocations().add(MiscUtils.getBuiltLocation(location).getBlock());
             } catch (Exception ignore) {
                 addFailedLocations(location);
             }
@@ -167,14 +166,14 @@ public class LocationSettings {
 
     public void fixLocations() {
         if (!getFailedLocations().isEmpty()) {
-            if (MiscUtil.isLogging()) this.plugin.getLogger().info("Attempting to fix " + getFailedLocations().size() + " locations that failed.");
+            if (MiscUtils.isLogging()) this.plugin.getLogger().info("Attempting to fix " + getFailedLocations().size() + " locations that failed.");
 
             int failed = 0;
             int fixed = 0;
 
             for (String location : getFailedLocations()) {
                 try {
-                    getSpawnLocations().add(MiscUtil.getBuiltLocation(location).getBlock());
+                    getSpawnLocations().add(MiscUtils.getBuiltLocation(location).getBlock());
                     fixed++;
                 } catch (Exception ignore) {
                     failed++;
@@ -192,7 +191,7 @@ public class LocationSettings {
 
         for (Block block : this.spawnLocations) {
             try {
-                locations.add(MiscUtil.getUnBuiltLocation(block.getLocation()));
+                locations.add(MiscUtils.getUnBuiltLocation(block.getLocation()));
             } catch (Exception ignored) {}
         }
 

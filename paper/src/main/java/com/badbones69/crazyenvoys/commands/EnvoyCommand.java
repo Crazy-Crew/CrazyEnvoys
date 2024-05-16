@@ -9,7 +9,7 @@ import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.config.ConfigManager;
-import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.platform.util.MiscUtils;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -142,7 +142,7 @@ public class EnvoyCommand implements CommandExecutor {
                     Player player;
 
                     if (args.length >= 2) {
-                        if (MiscUtil.isInt(args[1])) {
+                        if (MiscUtils.isInt(args[1])) {
                             amount = Integer.parseInt(args[1]);
                         } else {
                             Messages.not_a_number.sendMessage(sender);
@@ -152,8 +152,8 @@ public class EnvoyCommand implements CommandExecutor {
                     }
 
                     if (args.length >= 3) {
-                        if (MiscUtil.isOnline(args[2])) {
-                            player = MiscUtil.getPlayer(args[2]);
+                        if (MiscUtils.isOnline(args[2])) {
+                            player = MiscUtils.getPlayer(args[2]);
                         } else {
                             Messages.not_online.sendMessage(sender);
 
@@ -195,7 +195,7 @@ public class EnvoyCommand implements CommandExecutor {
                     int page = 1;
 
                     if (args.length >= 2) {
-                        if (MiscUtil.isInt(args[1])) {
+                        if (MiscUtils.isInt(args[1])) {
                             page = Integer.parseInt(args[1]);
                         } else {
                             Messages.not_a_number.sendMessage(sender);
@@ -226,7 +226,7 @@ public class EnvoyCommand implements CommandExecutor {
                         Messages.drops_possibilities.sendMessage(sender);
                     }
 
-                    for (String dropLocation : MiscUtil.getPage(locs, page)) {
+                    for (String dropLocation : MiscUtils.getPage(locs, page)) {
                         sender.sendRichMessage(dropLocation);
                     }
 

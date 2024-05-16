@@ -14,7 +14,7 @@ import com.badbones69.crazyenvoys.listeners.EnvoyEditListener;
 import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
 import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
-import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.platform.util.MiscUtils;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import com.ryderbelserion.vital.common.configuration.YamlManager;
 import com.ryderbelserion.vital.enums.Support;
@@ -55,7 +55,7 @@ public class CrazyEnvoys extends JavaPlugin {
             new PlaceholderAPISupport().register();
         }
 
-        MiscUtil.registerCommand(getCommand("crazyenvoys"), new EnvoyTab(), new EnvoyCommand());
+        MiscUtils.registerCommand(getCommand("crazyenvoys"), new EnvoyTab(), new EnvoyCommand());
     }
 
     @Override

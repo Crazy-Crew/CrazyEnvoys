@@ -3,7 +3,7 @@ package com.badbones69.crazyenvoys.api.objects;
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
-import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.platform.util.MiscUtils;
 import com.ryderbelserion.vital.util.builders.items.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -40,7 +40,7 @@ public class FlareSettings {
     }
     
     public void giveFlare(Player player, int amount) {
-        if (MiscUtil.isInvFull(player)) {
+        if (MiscUtils.isInvFull(player)) {
             player.getWorld().dropItem(player.getLocation(), getFlare(amount));
         } else {
             player.getInventory().addItem(getFlare(amount));

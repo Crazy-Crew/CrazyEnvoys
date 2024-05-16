@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.listeners;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.platform.util.MiscUtils;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
@@ -36,7 +36,7 @@ public class EnvoyEditListener implements Listener {
 
         event.setCancelled(true);
 
-        if (MiscUtil.getItemInHand(player).getType() != Material.BEDROCK) return;
+        if (MiscUtils.getItemInHand(player).getType() != Material.BEDROCK) return;
 
         this.locationSettings.addSpawnLocation(block);
 

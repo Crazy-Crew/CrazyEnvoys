@@ -12,7 +12,7 @@ import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
-import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.platform.util.MiscUtils;
 import com.ryderbelserion.vital.enums.Support;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
@@ -88,7 +88,7 @@ public class EnvoyClickListener implements Listener {
 
                 if (this.coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(this.coolDownSettings.getCooldown().get(uuid))) {
                     Map<String, String> placeholder = new HashMap<>();
-                    placeholder.put("{time}", MiscUtil.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
+                    placeholder.put("{time}", MiscUtils.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
 
                     Messages.cooldown_left.sendMessage(player, placeholder);
                     return;
@@ -105,7 +105,7 @@ public class EnvoyClickListener implements Listener {
 
         if (envoyOpenEvent.isCancelled()) return;
 
-        if (tier.getFireworkToggle()) MiscUtil.firework(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
+        if (tier.getFireworkToggle()) MiscUtils.firework(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
 
         event.getClickedBlock().setType(Material.AIR);
 
@@ -120,7 +120,7 @@ public class EnvoyClickListener implements Listener {
         this.crazyManager.removeActiveEnvoy(block);
 
         if (tier.getPrizes().isEmpty()) {
-            this.plugin.getServer().broadcast(com.ryderbelserion.vital.util.MiscUtil.parse(MiscUtil.getPrefix() + "<red>No prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+            this.plugin.getServer().broadcast(com.ryderbelserion.vital.util.MiscUtil.parse(MiscUtils.getPrefix() + "<red>No prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
 
             return;
         }
@@ -154,7 +154,7 @@ public class EnvoyClickListener implements Listener {
                 if (prize.getDropItems()) {
                     event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                 } else {
-                    if (MiscUtil.isInvFull(player)) {
+                    if (MiscUtils.isInvFull(player)) {
                         event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                     } else {
                         player.getInventory().addItem(item);
@@ -250,7 +250,7 @@ public class EnvoyClickListener implements Listener {
 
         for (int i = 0; prizes.size() < maxBulk && i < 500; i++) {
             for (Prize prize : tier.getPrizes()) {
-                if (!prizes.contains(prize) && MiscUtil.isSuccessful(prize.getChance(), 100)) prizes.add(prize);
+                if (!prizes.contains(prize) && MiscUtils.isSuccessful(prize.getChance(), 100)) prizes.add(prize);
 
                 if (prizes.size() == maxBulk) break;
             }
@@ -266,7 +266,7 @@ public class EnvoyClickListener implements Listener {
 
         while (tiers.isEmpty()) {
             for (Tier tier : this.crazyManager.getTiers()) {
-                if (MiscUtil.isSuccessful(tier.getSpawnChance(), 100)) tiers.add(tier);
+                if (MiscUtils.isSuccessful(tier.getSpawnChance(), 100)) tiers.add(tier);
             }
         }
 

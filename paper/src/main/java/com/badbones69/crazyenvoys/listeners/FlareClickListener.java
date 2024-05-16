@@ -8,7 +8,7 @@ import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
-import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.platform.util.MiscUtils;
 import com.ryderbelserion.vital.enums.Support;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,7 +36,7 @@ public class FlareClickListener implements Listener {
         Player player = event.getPlayer();
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            ItemStack flare = MiscUtil.getItemInHand(player);
+            ItemStack flare = MiscUtils.getItemInHand(player);
 
             if (this.flareSettings.isFlare(flare)) {
                 event.setCancelled(true);

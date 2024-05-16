@@ -6,7 +6,7 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.enums.DataFiles;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
-import com.badbones69.crazyenvoys.platform.util.MiscUtil;
+import com.badbones69.crazyenvoys.platform.util.MiscUtils;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
@@ -166,7 +166,7 @@ public class CrazyManager {
         // Populate the array list.
         this.locationSettings.populateMap();
 
-        if (MiscUtil.isLogging() && !this.locationSettings.getFailedLocations().isEmpty()) this.plugin.getLogger().severe("Failed to load " + this.locationSettings.getFailedLocations().size() + " locations and will reattempt in 10s.");
+        if (MiscUtils.isLogging() && !this.locationSettings.getFailedLocations().isEmpty()) this.plugin.getLogger().severe("Failed to load " + this.locationSettings.getFailedLocations().size() + " locations and will reattempt in 10s.");
 
         if (Calendar.getInstance().after(getNextEnvoy())) setEnvoyActive(false);
 
@@ -483,7 +483,7 @@ public class CrazyManager {
      * @return The time till the next envoy.
      */
     public String getNextEnvoyTime() {
-        String message = MiscUtil.convertTimeToString(getNextEnvoy());
+        String message = MiscUtils.convertTimeToString(getNextEnvoy());
 
         if (message.equals("0" + Messages.second.getString())) message = Messages.on_going.getString();
 
@@ -553,7 +553,7 @@ public class CrazyManager {
      * @return The time left in the current envoy event.
      */
     public String getEnvoyRunTimeLeft() {
-        String message = MiscUtil.convertTimeToString(this.envoyTimeLeft);
+        String message = MiscUtils.convertTimeToString(this.envoyTimeLeft);
 
         if (message.equals("0" + Messages.second.getString())) message = Messages.not_running.getString();
 
@@ -679,7 +679,7 @@ public class CrazyManager {
         // crates to spawn in the ground when not using falling blocks.
 
         if (this.tiers.isEmpty()) {
-            this.plugin.getServer().broadcast(AdvUtil.parse(MiscUtil.getPrefix() + "<red>No tiers were found. Please delete the Tiers folder to allow it to remake the default tier files."));
+            this.plugin.getServer().broadcast(AdvUtil.parse(MiscUtils.getPrefix() + "<red>No tiers were found. Please delete the Tiers folder to allow it to remake the default tier files."));
 
             return false;
         }
@@ -734,7 +734,7 @@ public class CrazyManager {
                 boolean spawnFallingBlock = false;
 
                 if (this.config.getProperty(ConfigKeys.envoy_falling_block_toggle)) {
-                    for (Entity entity : MiscUtil.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
+                    for (Entity entity : MiscUtils.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
                         if (entity instanceof Player) {
                             spawnFallingBlock = true;
                             break;
@@ -868,7 +868,7 @@ public class CrazyManager {
      */
     public void setCenter(Location loc) {
         this.center = loc;
-        this.centerString = MiscUtil.getUnBuiltLocation(this.center);
+        this.centerString = MiscUtils.getUnBuiltLocation(this.center);
 
         DataFiles.data.getYamlFile().set("Center", this.centerString);
         DataFiles.data.save();
@@ -958,13 +958,13 @@ public class CrazyManager {
 
         if (configuration.contains("Center")) {
             this.centerString = configuration.getString("Center");
-            if (this.centerString != null) this.center = MiscUtil.getBuiltLocation(centerString);
+            if (this.centerString != null) this.center = MiscUtils.getBuiltLocation(centerString);
         } else {
             this.center = this.plugin.getServer().getWorlds().get(0).getSpawnLocation();
         }
 
         if (this.center.getWorld() == null) {
-            if (MiscUtil.isLogging()) this.plugin.getLogger().severe("Failed to fix Center. Will try again next event.");
+            if (MiscUtils.isLogging()) this.plugin.getLogger().severe("Failed to fix Center. Will try again next event.");
         }
     }
 
@@ -993,7 +993,7 @@ public class CrazyManager {
     private Calendar getEnvoyRunTimeCalendar() {
         String time = this.config.getProperty(ConfigKeys.envoys_run_time).toLowerCase();
 
-        return MiscUtil.getTimeFromString(time);
+        return MiscUtils.getTimeFromString(time);
     }
 
     private void firework(Location loc, Tier tier) {
@@ -1084,7 +1084,7 @@ public class CrazyManager {
         List<String> strings = new ArrayList<>();
 
         for (Block block : stringList) {
-            strings.add(MiscUtil.getUnBuiltLocation(block.getLocation()));
+            strings.add(MiscUtils.getUnBuiltLocation(block.getLocation()));
         }
 
         return strings;
@@ -1094,7 +1094,7 @@ public class CrazyManager {
         List<Block> locations = new ArrayList<>();
 
         for (String location : locationsList) {
-            locations.add(MiscUtil.getBuiltLocation(location).getBlock());
+            locations.add(MiscUtils.getBuiltLocation(location).getBlock());
         }
 
         return locations;
