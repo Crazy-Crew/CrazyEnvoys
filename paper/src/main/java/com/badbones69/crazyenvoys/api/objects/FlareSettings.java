@@ -1,23 +1,25 @@
 package com.badbones69.crazyenvoys.api.objects;
 
 import ch.jalu.configme.SettingsManager;
-import com.badbones69.crazyenvoys.platform.config.types.ConfigKeys;
+import com.badbones69.crazyenvoys.config.ConfigManager;
+import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
 import com.badbones69.crazyenvoys.platform.util.MiscUtil;
-import com.ryderbelserion.vital.util.builders.ItemBuilder;
+import com.ryderbelserion.vital.util.builders.items.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+//todo() add papi support and other shit
 public class FlareSettings {
     
     private ItemBuilder flareItemBuilder;
     
     public void load() {
         SettingsManager config = ConfigManager.getConfig();
-        //todo() rework this.
-        //this.flareItemBuilder = new ItemBuilder()
-                //.setMaterial(config.getProperty(ConfigKeys.envoys_flare_item_type))
-                //.setName(config.getProperty(ConfigKeys.envoys_flare_item_name))
-                //.setLore(config.getProperty(ConfigKeys.envoys_flare_item_lore));
+
+        this.flareItemBuilder = new ItemBuilder()
+                .withType(config.getProperty(ConfigKeys.envoys_flare_item_type))
+                .setDisplayName(config.getProperty(ConfigKeys.envoys_flare_item_name))
+                .setDisplayLore(config.getProperty(ConfigKeys.envoys_flare_item_lore));
     }
     
     public ItemStack getFlare() {
@@ -25,10 +27,10 @@ public class FlareSettings {
     }
     
     public ItemStack getFlare(int amount) {
-        return null;
-        //return this.flareItemBuilder.setAmount(amount).build();
+        return this.flareItemBuilder.setAmount(amount).getStack();
     }
-    
+
+    //todo() switch this to a pdc check.
     public boolean isFlare(ItemStack item) {
         return getFlare().isSimilar(item);
     }

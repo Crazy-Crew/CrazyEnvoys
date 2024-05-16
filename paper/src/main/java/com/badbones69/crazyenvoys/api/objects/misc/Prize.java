@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoys.api.objects.misc;
 
-import com.ryderbelserion.vital.util.builders.ItemBuilder;
+import com.ryderbelserion.vital.util.builders.items.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
