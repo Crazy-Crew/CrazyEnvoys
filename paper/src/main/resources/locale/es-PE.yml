@@ -1,0 +1,91 @@
+# Support: https://discord.gg/badbones-s-live-chat-182615261403283459
+# Github: https://github.com/Crazy-Crew
+# 
+# Issues: https://github.com/Crazy-Crew/CrazyEnvoys/issues
+# Features: https://github.com/Crazy-Crew/CrazyEnvoys/issues
+# 
+# Tips:
+#  1. Make sure to use the {prefix} to add the prefix in front of messages.
+#  2. If you wish to use more than one line for a message just go from a line to a list.
+# Examples:
+#   Line:
+#     No-Permission: '{prefix}&cYou do not have permission to use that command.'
+#   List:
+#     No-Permission:
+#       - '{prefix}&cYou do not have permission'
+#       - '&cto use that command. Please try another.'
+player:
+  no-permission: '{prefix}&cTu no tienes permisos para esto.'
+  no-permission-to-claim: '{prefix}&cTu no tienes permisos para reclamar este cofre!'
+envoys:
+  already-started: '{prefix}&cYa hay un evento en marcha. Por favor,
+    deténgalo para comenzar uno nuevo.'
+  force-start: '{prefix}&7Acabas de iniciar un evento.'
+  not-started: '{prefix}&cNo hay ningún evento de enviado en este momento.'
+  force-ended: '{prefix}&cAcabas de parar el evento.'
+  warning: '&c&lATENCIÓN &6≫ &ehabrá una lluvia de cofres en &b/warp minapvp &een &6{time}.'
+  started: '{prefix}&aEl evento ha comenzado! &6Se acaban de crear {amount} &6cofres en la
+    &b/warp minapvp &6que luego desaparecerán en 5 minutos!'
+  left: '{prefix} &b{player} &eencontró un cofre! &bAhora quedan &6{amount}
+    &bcofres por encontrar!'
+  ended: '{prefix}&cEl evento ha terminado. &fGracias a todos por venir! Atentos para el
+    proximo evento!'
+  not-enough-players: '{prefix}&cEl evento fue cancelado ya que no hubo los jugadores suficientes 
+    para ser activado (┬┬﹏┬┬). Se necesita &6{amount} &cjugadores para activarse.'
+  enter-editor-mode: '{prefix}&aAhora mismo estas en modo editor.'
+  leave-editor-mode: '{prefix}&cAcabas de salir del modo editor.'
+  editor-clear-locations: '{prefix}&cAcabas de eliminar todas las locaciones en el modo editor.'
+  editor-clear-failure: '{prefix}&cTu necesitas estar en el modo editor para borrar todas las locaciones'
+  kicked-from-editor-mode: '{prefix}&cLo siento pero el evento esta activo ahora mismo. Por favor paralo
+    o espera a que se acabe el evento.'
+  add-location: '{prefix}&aAcabas de añadir una nueva locación.'
+  remove-location: '{prefix}&cAcabas de elminar una locación.'
+  time-left: '{prefix}&eEl evento actual le quedan &6{time}&7.'
+  time-till-event: '{prefix}&eEl próximo evento comenzará en &6{time}&7.'
+  flare:
+    used-flare: '{prefix}&aAcabas de iniciar el evento con una bandera!'
+    cant-use-flares: '{prefix}&cTu no tienes permisos para usar banderas.'
+    sent-flare: '{prefix}&6Acabas de darle a &6{player} {amount} &6banderas.'
+    received-flare: '{prefix}&aTe han dado &6{amount} &7banderas.'
+  new-center: '{prefix}&7Acaba de configurar un nuevo centro para los envios aleatorios de los cofres!'
+  not-in-world-guard-region: '{prefix}&cDebes estar en World para usar una bengala.'
+  start-ignoring-messages: '{prefix}&cAhora estás ignorando los mensajes del evento.'
+  stop-ignoring-messages: '{prefix}&aAhora verás los mensajes del evento.'
+  cooldown-left: '{prefix}&7Aún tienes &6{time} &7hasta que puedas recoger otro
+     cofre.'
+  countdown-in-progress: '{prefix}&7No puedes reclamar otras cajas hasta dentro de &6{time}
+    segundos.'
+  drops-available: '{prefix}&7Lista de todos los cofres disponibles.'
+  drops-possibilities: '{prefix}&7Lista de ubicaciones en las que los cofres se generarán.'
+  drops-page: '{prefix}&7Usa /crazyenvoys drops [page] para ver más.'
+  drops-format: '&7[&6{id}&7]: {world}, {x}, {y}, {z}'
+  no-spawn-locations-found: '{prefix}&cNo se encontraron lugares de generación, por lo que el evento
+    se ha cancelado y el tiempo de reutilización se ha reiniciado.'
+  hologram-placeholders:
+    on-going: En curso
+    not-running: No esta en funcionamiento
+  time-placeholders:
+    day: d
+    hour: h
+    minute: m
+    second: s
+  envoy-locations: '&e&lTodas las locaciones de los cofres: \n&c[ID], [World]: [X], [Y], [Z] &r{locations}'
+  location-format: '\n&8[&3{id}&8] &c{world}: {x}, {y}, {z}'
+misc:
+  command-not-found: '{prefix}&cPor favor usa /crazyenvoys help para más información.'
+  player-only: '{prefix}&cSolo los jugadores pueden usar este comando.'
+  not-online: '{prefix}&cEste jugador no está en línea en este momento.'
+  not-a-number: '{prefix}&cEsto no es un número.'
+  config-reload: '{prefix}&7Se ha recargado todos los archivos.'
+  help:
+  - '&6/crazyenvoys help &7- Muestra este menu de ayuda.'
+  - '&6/crazyenvoys reload &7- Recargar el plugin.'
+  - '&6/crazyenvoys time &7- Muestra el tiempo hasta que el evento comienza o termina.'
+  - '&6/crazyenvoys drops [page] &7- Muestra las locaciones actuales de los cofres.'
+  - '&6/crazyenvoys ignore &7- Silenciar los mensajes del evento.'
+  - '&6/crazyenvoys flare [amount] [player] &7- Dale una bengala a un jugador para empezar el.
+     evento.'
+  - '&6/crazyenvoys edit &7- Edita las locaciones de los cofres con la &lBedrock&7.'
+  - '&6/crazyenvoys start &7- Forzar inicio del evento.'
+  - '&6/crazyenvoys stop &7- Forzar la detención del evento.'
+  - '&6/crazyenvoys center &7- Establecer el centro de los dropeos aleatorios.'
