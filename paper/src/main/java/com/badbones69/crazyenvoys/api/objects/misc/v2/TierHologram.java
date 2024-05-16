@@ -1,4 +1,4 @@
-package com.badbones69.crazyenvoys.api.objects.misc;
+package com.badbones69.crazyenvoys.api.objects.misc.v2;
 
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;

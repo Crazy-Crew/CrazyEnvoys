@@ -2,7 +2,7 @@ package com.badbones69.crazyenvoys.support.holograms;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
-import com.badbones69.crazyenvoys.api.objects.misc.TierHologram;
+import com.badbones69.crazyenvoys.api.objects.misc.v2.TierHologram;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
