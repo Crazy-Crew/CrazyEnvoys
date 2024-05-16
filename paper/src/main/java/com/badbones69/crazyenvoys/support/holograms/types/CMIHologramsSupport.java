@@ -1,4 +1,4 @@
-package com.badbones69.crazyenvoys.support.holograms;
+package com.badbones69.crazyenvoys.support.holograms.types;
 
 import com.Zrips.CMI.CMI;
 import com.Zrips.CMI.Modules.Holograms.CMIHologram;

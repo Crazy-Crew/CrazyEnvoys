@@ -1,4 +1,4 @@
-package com.badbones69.crazyenvoys.support.holograms;
+package com.badbones69.crazyenvoys.support.holograms.types;
 
 import com.badbones69.crazyenvoys.api.interfaces.HologramController;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
