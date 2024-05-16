@@ -22,8 +22,7 @@ public class ConfigManager {
         yamlManager.createPluginDirectory();
 
         // Add files
-        yamlManager
-                .addFile("config.yml", ConfigKeys.class)
+        yamlManager.addFile("config.yml", ConfigKeys.class)
                 .addFile("locale", CustomFiles.config.getSettingsManager().getProperty(ConfigKeys.locale_file) + ".yml", MessageKeys.class)
                 .addStaticFile("users.yml")
                 .addFolder("tiers")
@@ -34,12 +33,25 @@ public class ConfigManager {
      * Refreshes configuration files.
      */
     public static void refresh() {
-        yamlManager.removeFile(CustomFiles.config.getSettingsManager().getProperty(ConfigKeys.locale_file) + ".yml", false);
+        // Save the changes to file.
+        SettingsManager config = CustomFiles.config.getSettingsManager();
 
-        // Refresh configme files.
+        // Get old locale file.
+        String oldLocale = config.getProperty(ConfigKeys.locale_file) + ".yml";
+
+        // Refresh ConfigMe files.
         getYamlManager().reloadFiles();
 
-        yamlManager.addFile("locale", CustomFiles.config.getSettingsManager().getProperty(ConfigKeys.locale_file) + ".yml", MessageKeys.class);
+        // Get new locale file.
+        String newLocale = config.getProperty(ConfigKeys.locale_file) + ".yml";
+
+        if (!oldLocale.equals(newLocale)) {
+            // Remove old file.
+            yamlManager.removeFile(oldLocale, false);
+
+            // Add new file.
+            yamlManager.addFile("locale", newLocale, MessageKeys.class);
+        }
 
         // Refresh custom files.
         getYamlManager().reloadCustomFiles();
