@@ -21,7 +21,7 @@ dependencies {
 
     compileOnly(libs.oraxen.api)
 
-    compileOnly(libs.worldguard)
+    //compileOnly(libs.worldguard)
 }
 
 val component: SoftwareComponent = components["java"]
