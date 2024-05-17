@@ -25,6 +25,7 @@ public class ConfigManager {
         yamlManager.addFile("config.yml", ConfigKeys.class)
                 .addFile("locale", CustomFiles.config.getSettingsManager().getProperty(ConfigKeys.locale_file) + ".yml", MessageKeys.class)
                 .addStaticFile("users.yml")
+                .addFolder("rewards")
                 .addFolder("tiers")
                 .init();
     }
