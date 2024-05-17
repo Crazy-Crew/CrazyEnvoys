@@ -1,9 +1,9 @@
 # This only configures how this specific tier will function.
 # If you wish to configure prizes, Please go to the prize''s folder!
 envoy:
-  # The list of prize files to use for this envoy.
-  # These can be found in the prize''s folder!
-  prizes:
+  # The list of bundles to use for this envoy as rewards.
+  # These can be found in the reward's folder!
+  bundles:
     - "armor"
     - "food"
   # Settings related to claim permissions.
@@ -21,7 +21,7 @@ envoy:
     # The chance for the envoy tier to spawn i.e. 85%.
     chance: 85
   # The settings to define what the envoy looks like or how it functions or safety settings!
-  envoy-settings:
+  cosmetic-settings:
     # The block the chest will look like.
     block: 'chest'
     # The prize settings
