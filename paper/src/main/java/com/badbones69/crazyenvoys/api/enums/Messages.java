@@ -7,140 +7,187 @@ import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
 import com.badbones69.crazyenvoys.config.impl.MessageKeys;
+import com.badbones69.crazyenvoys.config.impl.locale.ErrorKeys;
+import com.badbones69.crazyenvoys.config.impl.locale.MiscKeys;
+import com.badbones69.crazyenvoys.config.impl.locale.PlayerKeys;
 import com.ryderbelserion.vital.common.util.StringUtil;
+import com.ryderbelserion.vital.enums.Support;
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public enum Messages {
 
-    ended(MessageKeys.envoy_ended),
-    warning(MessageKeys.envoy_warning),
-    started(MessageKeys.envoy_started, true),
-    on_going(MessageKeys.hologram_on_going),
-    not_running(MessageKeys.hologram_not_running),
-    reloaded(MessageKeys.envoy_plugin_reloaded),
-    time_left(MessageKeys.envoy_time_left),
-    used_flare(MessageKeys.envoy_used_flare),
-    give_flare(MessageKeys.envoy_give_flare),
-    new_center(MessageKeys.envoy_new_center),
-    not_online(MessageKeys.not_online),
-    given_flare(MessageKeys.envoy_received_flare),
-    force_start(MessageKeys.envoy_force_start),
-    not_started(MessageKeys.envoy_not_started),
-    envoys_remaining(MessageKeys.envoys_remaining),
-    force_end(MessageKeys.envoy_force_ended),
-    drops_page(MessageKeys.drops_page),
-    drops_format(MessageKeys.drops_format),
-    drops_available(MessageKeys.drops_available),
-    drops_possibilities(MessageKeys.drops_possibilities),
-    player_only(MessageKeys.player_only),
-    not_a_number(MessageKeys.not_a_number),
-    add_location(MessageKeys.envoy_add_location),
-    remove_location(MessageKeys.envoy_remove_location),
-    cooldown_left(MessageKeys.cooldown_left),
-    countdown_in_progress(MessageKeys.countdown_in_progress),
-    no_permission(MessageKeys.no_permission),
-    no_claim_permission(MessageKeys.no_claim_permission),
-    time_till_event(MessageKeys.envoy_time_till_event),
-    cant_use_flares(MessageKeys.envoy_cant_use_flare),
-    already_started(MessageKeys.envoy_already_started),
-    enter_editor_mode(MessageKeys.enter_editor_mode),
-    leave_editor_mode(MessageKeys.exit_editor_mode),
-    editor_clear_locations(MessageKeys.envoy_clear_locations),
-    editor_clear_failure(MessageKeys.envoy_clear_failure),
-    not_enough_players(MessageKeys.not_enough_players),
-    stop_ignoring_messages(MessageKeys.stop_ignoring_messages),
-    start_ignoring_messages(MessageKeys.start_ignoring_messages),
+    feature_disabled(MiscKeys.feature_disabled),
+    cannot_be_empty(ErrorKeys.cannot_be_empty),
+    unknown_command(MiscKeys.unknown_command),
+    internal_error(ErrorKeys.internal_error),
+    cannot_be_air(ErrorKeys.cannot_be_air),
+    correct_usage(MiscKeys.correct_usage),
+    reward_error(ErrorKeys.reward_error),
+
+    must_be_console_sender(PlayerKeys.must_be_console_sender),
+    no_claim_permission(PlayerKeys.no_claim_permission),
+    inventory_not_empty(PlayerKeys.inventory_not_empty),
+    must_be_a_player(PlayerKeys.must_be_a_player),
+    no_permission(PlayerKeys.no_permission),
+    same_player(PlayerKeys.same_player),
+
+    command_not_found(MiscKeys.unknown_command),
+    not_a_number(MiscKeys.not_a_number),
+    reloaded(MiscKeys.plugin_reloaded),
+    player_only(MiscKeys.player_only),
+    not_online(MiscKeys.not_online),
+    help(MiscKeys.help, true),
+
     kicked_from_editor_mode(MessageKeys.envoy_kicked_from_editor_mode),
     not_in_world_guard_region(MessageKeys.not_in_world_guard_region),
     no_spawn_locations_found(MessageKeys.no_spawn_locations_found),
-    command_not_found(MessageKeys.command_not_found),
-    day(MessageKeys.time_placeholder_day),
-    hour(MessageKeys.time_placeholder_hour),
+    start_ignoring_messages(MessageKeys.start_ignoring_messages),
+    stop_ignoring_messages(MessageKeys.stop_ignoring_messages),
+    editor_clear_locations(MessageKeys.envoy_clear_locations),
+    countdown_in_progress(MessageKeys.countdown_in_progress),
+    editor_clear_failure(MessageKeys.envoy_clear_failure),
+    drops_possibilities(MessageKeys.drops_possibilities),
+    not_enough_players(MessageKeys.not_enough_players),
+
+    remove_location(MessageKeys.envoy_remove_location),
+    enter_editor_mode(MessageKeys.enter_editor_mode),
+    leave_editor_mode(MessageKeys.exit_editor_mode),
+
+    not_running(MessageKeys.hologram_not_running),
+    on_going(MessageKeys.hologram_on_going),
+
+    location_format(MessageKeys.location_format),
+    drops_available(MessageKeys.drops_available),
+    add_location(MessageKeys.envoy_add_location),
+    envoy_locations(MessageKeys.envoy_locations),
+
     minute(MessageKeys.time_placeholder_minute),
     second(MessageKeys.time_placeholder_second),
-    envoy_locations(MessageKeys.envoy_locations),
-    location_format(MessageKeys.location_format),
-    help(MessageKeys.help, true);
+    hour(MessageKeys.time_placeholder_hour),
+    day(MessageKeys.time_placeholder_day),
+
+    force_start(MessageKeys.envoy_force_start),
+    not_started(MessageKeys.envoy_not_started),
+    force_end(MessageKeys.envoy_force_ended),
+
+    cant_use_flares(MessageKeys.envoy_cant_use_flare),
+    given_flare(MessageKeys.envoy_received_flare),
+    used_flare(MessageKeys.envoy_used_flare),
+    give_flare(MessageKeys.envoy_give_flare),
+
+    new_center(MessageKeys.envoy_new_center),
+
+    drops_page(MessageKeys.drops_page),
+    drops_format(MessageKeys.drops_format),
+
+    already_started(MessageKeys.envoy_already_started),
+    time_till_event(MessageKeys.envoy_time_till_event),
+    envoys_remaining(MessageKeys.envoys_remaining),
+    started(MessageKeys.envoy_started, true),
+    warning(MessageKeys.envoy_warning),
+    ended(MessageKeys.envoy_ended),
+
+    time_left(MessageKeys.envoy_time_left),
+    cooldown_left(MessageKeys.cooldown_left);
 
     private Property<String> property;
 
-    private Property<List<String>> listProperty;
-
+    private Property<List<String>> properties;
     private boolean isList = false;
 
-    private String message;
-
-    /**
-     * Used for strings
-     *
-     * @param property the property
-     */
-    Messages(Property<String> property) {
+    Messages(@NotNull final Property<String> property) {
         this.property = property;
     }
 
-    /**
-     * Used for string lists
-     *
-     * @param listProperty the list property
-     * @param isList Defines if it's a list or not.
-     */
-    Messages(Property<List<String>> listProperty, boolean isList) {
-        this.listProperty = listProperty;
-
+    Messages(@NotNull final Property<List<String>> properties, final boolean isList) {
+        this.properties = properties;
         this.isList = isList;
     }
 
+    private final SettingsManager config = ConfigManager.getConfig();
 
-    private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
-
-    private final @NotNull SettingsManager messages = ConfigManager.getMessages();
-
-    private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
-
-    @NotNull
-    private List<String> getPropertyList(Property<List<String>> properties) {
-        return this.messages.getProperty(properties);
-    }
-
-    @NotNull
-    private String getProperty(Property<String> property) {
-        return this.messages.getProperty(property);
-    }
+    private final SettingsManager messages = ConfigManager.getMessages();
 
     private boolean isList() {
         return this.isList;
     }
 
     public String getString() {
-        return getMessage().toString();
+        return this.messages.getProperty(this.property);
     }
 
-    public Messages getMessage() {
-        return getMessage(new HashMap<>());
+    public List<String> getList() {
+        return this.messages.getProperty(this.properties);
     }
 
-    public Messages getMessage(String placeholder, String replacement) {
-        Map<String, String> placeholders = new HashMap<>();
-        placeholders.put(placeholder, replacement);
-
-        return getMessage(placeholders);
+    public String getMessage() {
+        return getMessage(null, new HashMap<>());
     }
 
-    public Messages getMessage(Map<String, String> placeholders) {
-        // Get the string first.
+    public String getMessage(@Nullable final CommandSender sender) {
+        if (sender instanceof Player player) {
+            return getMessage(player, new HashMap<>());
+        }
+
+        return getMessage(null, new HashMap<>());
+    }
+
+    public String getMessage(@NotNull final Map<String, String> placeholders) {
+        return getMessage(null, placeholders);
+    }
+
+    public String getMessage(@NotNull final String placeholder, @NotNull final String replacement) {
+        return getMessage(null, placeholder, replacement);
+    }
+
+    public String getMessage(@Nullable final CommandSender sender, @NotNull final String placeholder, @NotNull final String replacement) {
+        Map<String, String> placeholders = new HashMap<>() {{
+            put(placeholder, replacement);
+        }};
+
+        if (sender instanceof Player player) {
+            return getMessage(player, placeholders);
+        }
+
+        return getMessage(null, placeholders);
+    }
+
+    public String getMessage(@Nullable final CommandSender sender, @NotNull final Map<String, String> placeholders) {
+        if (sender instanceof Player player) {
+            return getMessage(player, placeholders);
+        }
+
+        return getMessage(null, placeholders);
+    }
+
+    public String getMessage(@Nullable final Player player, @NotNull final Map<String, String> placeholders) {
+        String prefix = this.config.getProperty(ConfigKeys.command_prefix);
+
+        String message = parse(placeholders);
+
+        if (Support.placeholder_api.isEnabled() && player != null) {
+            return PlaceholderAPI.setPlaceholders(player, message.replaceAll("\\{prefix}", prefix));
+        }
+
+        return message.replaceAll("\\{prefix}", prefix);
+    }
+
+    private @NotNull String parse(@NotNull final Map<String, String> placeholders) {
         String message;
 
         if (isList()) {
-            message = StringUtil.convertList(getPropertyList(this.listProperty));
+            message = StringUtils.chomp(StringUtil.convertList(getList()));
         } else {
-            message = getProperty(this.property);
+            message = getString();
         }
 
         if (!placeholders.isEmpty()) {
@@ -149,45 +196,7 @@ public enum Messages {
             }
         }
 
-        this.message = message;
-
-        return this;
-    }
-
-    public String getStringMessage(Map<String, String> placeholders) {
-        // Get the string first.
-        String message;
-
-        if (isList()) {
-            message = StringUtil.convertList(getPropertyList(this.listProperty));
-        } else {
-            message = getProperty(this.property);
-        }
-
-        if (!placeholders.isEmpty()) {
-            for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
-                message = message.replace(placeholder.getKey(), placeholder.getValue()).replace(placeholder.getKey().toLowerCase(), placeholder.getValue());
-            }
-        }
-
-        this.message = message;
-
-        return this.message;
-    }
-
-    public String getStringMessage() {
-        // Get the string first.
-        String message;
-
-        if (isList()) {
-            message = StringUtil.convertList(getPropertyList(this.listProperty));
-        } else {
-            message = getProperty(this.property);
-        }
-
-        this.message = message;
-
-        return this.message;
+        return message;
     }
 
     public void sendMessage(Player player) {
@@ -195,7 +204,7 @@ public enum Messages {
     }
 
     public void sendMessage(Player player, Map<String, String> placeholder) {
-        String message = getMessage(placeholder).asString();
+        String message = getMessage(placeholder);
 
         if (message.isEmpty() || message.isBlank()) {
             return;
@@ -209,7 +218,7 @@ public enum Messages {
     }
 
     public void sendMessage(CommandSender sender, Map<String, String> placeholder) {
-        String message = getMessage(placeholder).asString();
+        String message = getMessage(placeholder);
 
         if (message.isEmpty() || message.isBlank()) {
             return;
@@ -221,6 +230,9 @@ public enum Messages {
     public void broadcastMessage(boolean ignore) {
         broadcastMessage(ignore, new HashMap<>());
     }
+
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
     public void broadcastMessage(boolean ignore, Map<String, String> placeholder) {
         // Send in console because we should lol.
@@ -247,9 +259,5 @@ public enum Messages {
                 }
             }
         }
-    }
-
-    public String asString() {
-        return this.message.replaceAll("\\{prefix}", ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix));
     }
 }

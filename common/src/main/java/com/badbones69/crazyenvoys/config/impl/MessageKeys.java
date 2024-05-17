@@ -17,8 +17,8 @@ public class MessageKeys implements SettingsHolder {
                 "Support: https://discord.gg/badbones-s-live-chat-182615261403283459",
                 "Github: https://github.com/Crazy-Crew",
                 "",
+                "Features: https://github.com/Crazy-Crew/CrazyEnvoys/discussions/categories/features",
                 "Issues: https://github.com/Crazy-Crew/CrazyEnvoys/issues",
-                "Features: https://github.com/Crazy-Crew/CrazyEnvoys/issues",
                 "",
                 "Tips:",
                 " 1. Make sure to use the {prefix} to add the prefix in front of messages.",
@@ -41,10 +41,6 @@ public class MessageKeys implements SettingsHolder {
         
         conf.setComment("player", header);
     }
-
-    public static final Property<String> no_permission = newProperty("player.no-permission", "{prefix}<red>You do not have permission to use that command.");
-
-    public static final Property<String> no_claim_permission = newProperty("player.no-permission-to-claim", "{prefix}<red>You do not have permission to claim that envoy.");
 
     public static final Property<String> envoy_already_started = newProperty("envoys.already-started", "{prefix}<red>There is already an envoy event running. Please stop it to start a new one.");
 
@@ -127,26 +123,4 @@ public class MessageKeys implements SettingsHolder {
 
     public static final Property<String> location_format = newProperty("envoys.location-format", "\\n<dark_gray>[<dark_aqua>{id}<dark_gray>] <red>{world}: {x}, {y}, {z}");
 
-    public static final Property<String> command_not_found = newProperty("misc.command-not-found", "{prefix}<red>Please do /crazyenvoys help for more information.");
-
-    public static final Property<String> player_only = newProperty("misc.player-only", "{prefix}<red>Only players can use that command.");
-
-    public static final Property<String> not_online = newProperty("misc.not-online", "{prefix}<red>That player is not online at this time.");
-
-    public static final Property<String> not_a_number = newProperty("misc.not-a-number", "{prefix}<red>That is not a number.");
-
-    public static final Property<String> envoy_plugin_reloaded = newProperty("misc.config-reload", "{prefix}<gray>You have reloaded all the files.");
-
-    public static final Property<List<String>> help = newListProperty("misc.help", List.of(
-            "<gold>/crazyenvoys help <gray>- Shows the envoy help menu.",
-            "<gold>/crazyenvoys reload <gray>- Reloads all the config files.",
-            "<gold>/crazyenvoys time <gray>- Shows the time till the envoy starts or ends.",
-            "<gold>/crazyenvoys drops [page] <gray>- Shows all current crate locations.",
-            "<gold>/crazyenvoys ignore <gray>- Shuts up the envoy collecting message.",
-            "<gold>/crazyenvoys flare [amount] [player] <gray>- Give a player a flare to call an envoy event.",
-            "<gold>/crazyenvoys edit <gray>- Edit the crate locations with bedrock.",
-            "<gold>/crazyenvoys start <gray>- Force starts the envoy.",
-            "<gold>/crazyenvoys stop <gray>- Force stops the envoy.",
-            "<gold>/crazyenvoys center <gray>- Set the center of the random crate drops."
-    ));
 }
