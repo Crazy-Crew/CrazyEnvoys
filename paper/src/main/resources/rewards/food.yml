@@ -1,5 +1,5 @@
-# The bundle of prizes to pick from.
-prizes:
+# The bundle of rewards to pick from.
+rewards:
   '1':
     # The display name used in {reward}
     displayname: '<gold>16 Gold Apples'
@@ -12,7 +12,7 @@ prizes:
       - '<gray>You have won {reward}.'
     # The items you will win.
     items:
-      - 'Item:golden_apple, Amount:16, Name:&dJuicy Golden Apple, Lore:<gray>I am a yummy apple,<gray>Make sure to savor my flavor.'
+      - 'Item:golden_apple, Amount:16, Name:<light_purple>Juicy Golden Apple, Lore:<gray>I am a yummy apple,<gray>Make sure to savor my flavor.'
   '2':
     # The display name used in {reward}
     displayname: '<light_purple>Food Pack'
