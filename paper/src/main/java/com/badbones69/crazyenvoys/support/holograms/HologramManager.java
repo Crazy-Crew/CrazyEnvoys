@@ -2,7 +2,7 @@ package com.badbones69.crazyenvoys.support.holograms;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
-import com.badbones69.crazyenvoys.api.objects.misc.v2.TierHologram;
+import com.badbones69.crazyenvoys.api.objects.misc.v2.records.HologramSettings;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,12 +50,12 @@ public abstract class HologramManager {
         return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
     }
 
-    protected @NotNull final List<String> lines(@NotNull final TierHologram tierHologram) {
-        if (tierHologram.getMessages().isEmpty()) return Collections.emptyList();
+    protected @NotNull final List<String> lines(@NotNull final HologramSettings hologramSettings) {
+        if (hologramSettings.messages().isEmpty()) return Collections.emptyList();
 
         final List<String> lines = new ArrayList<>();
 
-        tierHologram.getMessages().forEach(line -> lines.add(color(line)));
+        hologramSettings.messages().forEach(line -> lines.add(color(line)));
 
         return lines;
     }

@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.api;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.api.objects.misc.v2.Reward;
+import com.badbones69.crazyenvoys.api.objects.misc.v2.records.RewardSettings;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.ryderbelserion.vital.common.configuration.YamlFile;
 import com.ryderbelserion.vital.common.configuration.YamlManager;
@@ -21,7 +21,7 @@ public class CrazyHandler {
 
     private final YamlManager manager = ConfigManager.getYamlManager();
 
-    private final Map<String, ArrayList<Reward>> rewards = new HashMap<>();
+    private final Map<String, ArrayList<RewardSettings>> rewards = new HashMap<>();
 
     /**
      * Loads rewards into memory.
@@ -55,18 +55,18 @@ public class CrazyHandler {
      * @param bundleName the name of the bundle
      * @return a list of rewards
      */
-    public List<Reward> getRewards(String bundleName) {
+    public List<RewardSettings> getRewards(String bundleName) {
         return this.rewards.getOrDefault(bundleName, new ArrayList<>());
     }
 
     /**
-     * Adds a {@link Reward} to the {@link java.util.HashMap}.
+     * Adds a {@link RewardSettings} to the {@link java.util.HashMap}.
      *
      * @param bundleName the name of the bundle
      * @param key the configuration section
      */
     public void addReward(String bundleName, ConfigurationSection key) {
-        Reward reward = new Reward(
+        RewardSettings reward = new RewardSettings(
                 key.getName(),
                 key.getString("displayname", "N/A"),
                 key.getInt("chance", 10),

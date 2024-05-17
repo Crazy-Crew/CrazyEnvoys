@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoys.commands.v2.envoys.types.admin;
 
-import com.badbones69.crazyenvoys.api.objects.misc.v2.Reward;
+import com.badbones69.crazyenvoys.api.objects.misc.v2.records.RewardSettings;
 import com.badbones69.crazyenvoys.commands.v2.envoys.BaseCommand;
 import dev.triumphteam.cmd.bukkit.annotation.Permission;
 import dev.triumphteam.cmd.core.annotations.Command;
@@ -14,7 +14,7 @@ public class CommandDebug extends BaseCommand {
     @Command("debug")
     @Permission(value = "crazyenvoys.debug", def = PermissionDefault.OP)
     public void debug(final Player player, @Suggestion("rewards") final String key) {
-        List<Reward> reward = this.crazyHandler.getRewards(key);
+        List<RewardSettings> reward = this.crazyHandler.getRewards(key);
 
         if (reward.isEmpty()) return;
 
