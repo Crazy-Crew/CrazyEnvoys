@@ -1,24 +1,14 @@
 package com.badbones69.crazyenvoys;
 
-import com.badbones69.crazyenvoys.commands.EnvoyCommand;
+import com.badbones69.crazyenvoys.api.CrazyHandler;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
-import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
-import com.badbones69.crazyenvoys.commands.EnvoyTab;
+import com.badbones69.crazyenvoys.commands.v2.CommandManager;
 import com.badbones69.crazyenvoys.config.ConfigManager;
-import com.badbones69.crazyenvoys.listeners.EnvoyEditListener;
-import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
-import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
-import com.badbones69.crazyenvoys.listeners.FlareClickListener;
-import com.badbones69.crazyenvoys.platform.util.MiscUtils;
-import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import com.ryderbelserion.vital.common.configuration.YamlManager;
-import com.ryderbelserion.vital.enums.Support;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,32 +20,41 @@ public class CrazyEnvoys extends JavaPlugin {
     private FlareSettings flareSettings;
 
     private CrazyManager crazyManager;
+    private CrazyHandler crazyHandler;
     private YamlManager yamlManager;
+
+    private Server paperServer;
 
     @Override
     public void onEnable() {
-        ConfigManager.load();
+        this.paperServer = new Server(getDataFolder(), getLogger());
+        this.paperServer.apply();
 
         this.yamlManager = ConfigManager.getYamlManager();
 
-        this.locationSettings = new LocationSettings();
-        this.editorSettings = new EditorSettings();
-        this.coolDownSettings = new CoolDownSettings();
-        this.flareSettings = new FlareSettings();
+        this.crazyHandler = new CrazyHandler();
+        this.crazyHandler.apply();
 
-        this.crazyManager = new CrazyManager();
-        this.crazyManager.load();
+        CommandManager.load();
 
-        getServer().getPluginManager().registerEvents(new EnvoyEditListener(), this);
-        getServer().getPluginManager().registerEvents(new EnvoyClickListener(), this);
-        getServer().getPluginManager().registerEvents(new FlareClickListener(), this);
-        getServer().getPluginManager().registerEvents(new FireworkDamageListener(), this);
+        //this.locationSettings = new LocationSettings();
+        //this.editorSettings = new EditorSettings();
+        //this.coolDownSettings = new CoolDownSettings();
+        //this.flareSettings = new FlareSettings();
 
-        if (Support.placeholder_api.isEnabled()) {
-            new PlaceholderAPISupport().register();
-        }
+        //this.crazyManager = new CrazyManager();
+        //this.crazyManager.load();
 
-        MiscUtils.registerCommand(getCommand("crazyenvoys"), new EnvoyTab(), new EnvoyCommand());
+        //getServer().getPluginManager().registerEvents(new EnvoyEditListener(), this);
+        //getServer().getPluginManager().registerEvents(new EnvoyClickListener(), this);
+        //getServer().getPluginManager().registerEvents(new FlareClickListener(), this);
+        //getServer().getPluginManager().registerEvents(new FireworkDamageListener(), this);
+
+        //if (Support.placeholder_api.isEnabled()) {
+        //    new PlaceholderAPISupport().register();
+        //}
+
+        //MiscUtils.registerCommand(getCommand("crazyenvoys"), new EnvoyTab(), new EnvoyCommand());
     }
 
     @Override
@@ -64,7 +63,7 @@ public class CrazyEnvoys extends JavaPlugin {
         getServer().getGlobalRegionScheduler().cancelTasks(this);
         getServer().getAsyncScheduler().cancelTasks(this);
 
-        for (Player player : getServer().getOnlinePlayers()) {
+        /*for (Player player : getServer().getOnlinePlayers()) {
             if (this.editorSettings.isEditor(player)) {
                 this.editorSettings.removeEditor(player);
                 this.editorSettings.removeFakeBlocks();
@@ -79,7 +78,7 @@ public class CrazyEnvoys extends JavaPlugin {
             this.crazyManager.endEnvoyEvent();
         }
 
-        this.crazyManager.reload(true);
+        this.crazyManager.reload(true);*/
     }
 
     public @NotNull final LocationSettings getLocationSettings() {
@@ -93,6 +92,14 @@ public class CrazyEnvoys extends JavaPlugin {
     }
     public @NotNull final FlareSettings getFlareSettings() {
         return this.flareSettings;
+    }
+
+    public @NotNull final Server getPaperServer() {
+        return this.paperServer;
+    }
+
+    public @NotNull final CrazyHandler getCrazyHandler() {
+        return this.crazyHandler;
     }
 
     public @NotNull final CrazyManager getCrazyManager() {
