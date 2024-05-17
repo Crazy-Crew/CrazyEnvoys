@@ -214,7 +214,7 @@ public class EnvoyCommand implements CommandExecutor {
                         placeholders.put("{y}", String.valueOf(block.getY()));
                         placeholders.put("{z}", String.valueOf(block.getZ()));
 
-                        locs.add(Messages.drops_format.getStringMessage(placeholders));
+                        locs.add(Messages.drops_format.getMessage(placeholders));
 
                         amount++;
                         placeholders.clear();
