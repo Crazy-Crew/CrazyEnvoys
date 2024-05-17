@@ -19,8 +19,8 @@ public class ConfigKeys implements SettingsHolder {
                 "Support: https://discord.gg/badbones-s-live-chat-182615261403283459",
                 "Github: https://github.com/Crazy-Crew",
                 "",
-                "Issues: https://github.com/Crazy-Crew/CrazyEnvoys/issues",
                 "Features: https://github.com/Crazy-Crew/CrazyEnvoys/discussions/categories/features",
+                "Issues: https://github.com/Crazy-Crew/CrazyEnvoys/issues",
                 ""
         };
 
