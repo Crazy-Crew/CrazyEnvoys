@@ -15,6 +15,7 @@ public class Tier {
 
     private final String tierName;
 
+    private final List<String> messages = new ArrayList<>();
     private final List<String> bundles = new ArrayList<>();
 
     private final boolean requirePermission;
@@ -28,9 +29,10 @@ public class Tier {
 
     private final Material block;
 
-    public Tier(final ConfigurationSection section) {
     public Tier(final String tierName, final ConfigurationSection section) {
         this.tierName = tierName;
+
+        this.messages.addAll(section.getStringList("messages"));
         this.bundles.addAll(section.getStringList("bundles"));
 
         this.requirePermission = section.getBoolean("claim-permission.toggle", false);
@@ -85,6 +87,10 @@ public class Tier {
 
     public final BulkSettings getBulkSettings() {
         return this.bulkSettings;
+    }
+
+    public final List<String> getMessages() {
+        return this.messages;
     }
 
     public final List<String> getBundles() {
