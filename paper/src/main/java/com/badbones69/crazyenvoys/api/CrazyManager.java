@@ -4,10 +4,8 @@ import ch.jalu.configme.SettingsManager;
 import com.Zrips.CMI.Modules.ModuleHandling.CMIModule;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.enums.DataFiles;
-import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
-import com.badbones69.crazyenvoys.platform.util.ItemUtils;
 import com.badbones69.crazyenvoys.platform.util.MiscUtils;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
@@ -26,12 +24,8 @@ import com.badbones69.crazyenvoys.support.holograms.types.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.types.DecentHologramsSupport;
 import com.ryderbelserion.vital.core.config.YamlFile;
-import com.ryderbelserion.vital.core.config.YamlManager;
-import com.ryderbelserion.vital.core.config.objects.CustomFile;
 import com.ryderbelserion.vital.core.util.AdvUtil;
-import com.ryderbelserion.vital.paper.builders.items.ItemBuilder;
 import com.ryderbelserion.vital.paper.enums.Support;
-import com.ryderbelserion.vital.paper.util.DyeUtil;
 import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -50,7 +44,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +55,6 @@ import java.util.UUID;
 public class CrazyManager {
 
     private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
-    private final @NotNull YamlManager fileManager = this.plugin.getFileManager();
     private final @NotNull SettingsManager config = ConfigManager.getConfig();
 
     private final @NotNull CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
@@ -194,109 +186,34 @@ public class CrazyManager {
             this.nextEnvoy = Calendar.getInstance();
         }
 
-        //================================== Tiers Load ==================================//
-        this.tiers.clear();
-
-        for (CustomFile tierFile : this.fileManager.getCustomFiles()) {
-            Tier tier = new Tier(tierFile.getStrippedName());
-            YamlFile file = tierFile.getYamlFile();
-            tier.setClaimPermissionToggle(file.getBoolean("Settings.Claim-Permission"));
-            tier.setClaimPermission(file.getString("Settings.Claim-Permission-Name"));
-            tier.setUseChance(file.getBoolean("Settings.Use-Chance"));
-            tier.setSpawnChance(file.getInt("Settings.Spawn-Chance"));
-            tier.setBulkToggle(file.getBoolean("Settings.Bulk-Prizes.Toggle"));
-            tier.setBulkRandom(file.getBoolean("Settings.Bulk-Prizes.Random"));
-            tier.setBulkMax(file.getInt("Settings.Bulk-Prizes.Max-Bulk"));
-            tier.setHoloToggle(file.getBoolean("Settings.Hologram-Toggle"));
-            tier.setHoloRange(file.getInt("Settings.Hologram-Range", 8));
-            tier.setHoloHeight(file.getDouble("Settings.Hologram-Height", 1.5));
-            tier.setHoloMessage(file.getStringList("Settings.Hologram"));
-
-            ItemBuilder placedBlock = new ItemBuilder().withType(file.getString("Settings.Placed-Block", "chest"));
-            tier.setPlacedBlockMaterial(placedBlock.getType());
-
-            tier.setFireworkToggle(file.getBoolean("Settings.Firework-Toggle"));
-
-            if (file.getStringList("Settings.Firework-Colors").isEmpty()) {
-                tier.setFireworkColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
-            } else {
-                file.getStringList("Settings.Firework-Colors").forEach(color -> tier.addFireworkColor(DyeUtil.getColor(color)));
-            }
-
-            if (file.contains("Settings.Prize-Message") && !file.getStringList("Settings.Prize-Message").isEmpty()) {
-                List<String> array = new ArrayList<>();
-
-                file.getStringList("Settings.Prize-Message").forEach(line -> array.add(line.replaceAll("%reward%", "{reward}").replaceAll("%tier%", "{tier}")));
-
-                tier.setPrizeMessage(array);
-            }
-
-            tier.setSignalFlareToggle(file.getBoolean("Settings.Signal-Flare.Toggle"));
-            tier.setSignalFlareTimer(file.getString("Settings.Signal-Flare.Time"));
-
-            if (file.getStringList("Settings.Signal-Flare.Colors").isEmpty()) {
-                tier.setSignalFlareColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
-            } else {
-                file.getStringList("Settings.Signal-Flare.Colors").forEach(color -> tier.addSignalFlareColor(DyeUtil.getColor(color)));
-            }
-
-            for (String prizeID : file.getConfigurationSection("Prizes").getKeys(false)) {
-                String path = "Prizes." + prizeID + ".";
-                int chance = file.getInt(path + "Chance");
-                String displayName = file.contains(path + "DisplayName") ? file.getString(path + "DisplayName") : "";
-
-                List<String> commands = new ArrayList<>();
-
-                file.getStringList(path + "Commands").forEach(line -> commands.add(line.replaceAll("%reward%", "{reward}")
-                        .replaceAll("%player%", "{player}")
-                        .replaceAll("%Player%", "{player}")
-                        .replaceAll("%tier%", "{tier}")));
-
-                List<String> messages = new ArrayList<>();
-
-                file.getStringList(path + "Messages").forEach(line -> messages.add(line.replaceAll("%reward%", "{reward}")
-                        .replaceAll("%player%", "{player}")
-                        .replaceAll("%Player%", "{player}")
-                        .replaceAll("%tier%", "{tier}")));
-
-                boolean dropItems = file.getBoolean(path + "Drop-Items");
-
-                List<ItemBuilder> items = ItemUtils.convertStringList(file.getStringList(path + "Items"), prizeID);
-                tier.addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
-            }
-
-            this.tiers.add(tier);
-            cleanLocations();
-
-            // Loading the blacklisted blocks.
-            this.blacklistedBlocks.add(Material.WATER);
-            this.blacklistedBlocks.add(Material.LILY_PAD);
-            this.blacklistedBlocks.add(Material.LAVA);
-            this.blacklistedBlocks.add(Material.CHORUS_PLANT);
-            this.blacklistedBlocks.add(Material.KELP_PLANT);
-            this.blacklistedBlocks.add(Material.TALL_GRASS);
-            this.blacklistedBlocks.add(Material.CHORUS_FLOWER);
-            this.blacklistedBlocks.add(Material.SUNFLOWER);
-            this.blacklistedBlocks.add(Material.IRON_BARS);
-            this.blacklistedBlocks.add(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
-            this.blacklistedBlocks.add(Material.IRON_TRAPDOOR);
-            this.blacklistedBlocks.add(Material.OAK_TRAPDOOR);
-            this.blacklistedBlocks.add(Material.OAK_FENCE);
-            this.blacklistedBlocks.add(Material.OAK_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.ACACIA_FENCE);
-            this.blacklistedBlocks.add(Material.BIRCH_FENCE);
-            this.blacklistedBlocks.add(Material.DARK_OAK_FENCE);
-            this.blacklistedBlocks.add(Material.JUNGLE_FENCE);
-            this.blacklistedBlocks.add(Material.NETHER_BRICK_FENCE);
-            this.blacklistedBlocks.add(Material.SPRUCE_FENCE);
-            this.blacklistedBlocks.add(Material.ACACIA_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.BIRCH_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.DARK_OAK_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.JUNGLE_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.SPRUCE_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.GLASS_PANE);
-            this.blacklistedBlocks.add(Material.STONE_SLAB);
-        }
+        // Loading the blacklisted blocks.
+        this.blacklistedBlocks.add(Material.WATER);
+        this.blacklistedBlocks.add(Material.LILY_PAD);
+        this.blacklistedBlocks.add(Material.LAVA);
+        this.blacklistedBlocks.add(Material.CHORUS_PLANT);
+        this.blacklistedBlocks.add(Material.KELP_PLANT);
+        this.blacklistedBlocks.add(Material.TALL_GRASS);
+        this.blacklistedBlocks.add(Material.CHORUS_FLOWER);
+        this.blacklistedBlocks.add(Material.SUNFLOWER);
+        this.blacklistedBlocks.add(Material.IRON_BARS);
+        this.blacklistedBlocks.add(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
+        this.blacklistedBlocks.add(Material.IRON_TRAPDOOR);
+        this.blacklistedBlocks.add(Material.OAK_TRAPDOOR);
+        this.blacklistedBlocks.add(Material.OAK_FENCE);
+        this.blacklistedBlocks.add(Material.OAK_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.ACACIA_FENCE);
+        this.blacklistedBlocks.add(Material.BIRCH_FENCE);
+        this.blacklistedBlocks.add(Material.DARK_OAK_FENCE);
+        this.blacklistedBlocks.add(Material.JUNGLE_FENCE);
+        this.blacklistedBlocks.add(Material.NETHER_BRICK_FENCE);
+        this.blacklistedBlocks.add(Material.SPRUCE_FENCE);
+        this.blacklistedBlocks.add(Material.ACACIA_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.BIRCH_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.DARK_OAK_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.JUNGLE_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.SPRUCE_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.GLASS_PANE);
+        this.blacklistedBlocks.add(Material.STONE_SLAB);
 
         if (Support.worldedit.isEnabled() && Support.worldguard.isEnabled()) this.worldGuardSupportVersion = new WorldGuardSupport();
 
