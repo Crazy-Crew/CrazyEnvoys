@@ -2,6 +2,8 @@ package com.badbones69.crazyenvoys.commands.v2;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyHandler;
+import com.badbones69.crazyenvoys.api.CrazyManager;
+import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.commands.v2.envoys.types.admin.CommandDebug;
 import com.badbones69.crazyenvoys.commands.v2.relations.ArgumentRelations;
 import com.ryderbelserion.vital.paper.builders.PlayerBuilder;
@@ -17,6 +19,8 @@ import java.util.List;
 public class CommandManager {
 
     private final static @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final static @NotNull LocationSettings locationSettings = plugin.getLocationSettings();
+    private final static @NotNull CrazyManager crazyManager = plugin.getCrazyManager();
     private final static @NotNull CrazyHandler crazyHandler = plugin.getCrazyHandler();
 
     private final static @NotNull BukkitCommandManager<CommandSender> commandManager = BukkitCommandManager.create(plugin);
@@ -27,8 +31,6 @@ public class CommandManager {
     public static void load() {
         new ArgumentRelations().build();
 
-        commandManager.registerSuggestion(SuggestionKey.of("keys"), (sender, context) -> List.of("virtual", "v", "physical", "p"));
-
         commandManager.registerSuggestion(SuggestionKey.of("players"), (sender, context) -> plugin.getServer().getOnlinePlayers().stream().map(Player::getName).toList());
 
         commandManager.registerSuggestion(SuggestionKey.of("rewards"), (sender, context) -> crazyHandler.getRewardFiles());
@@ -36,7 +38,19 @@ public class CommandManager {
         commandManager.registerSuggestion(SuggestionKey.of("numbers"), (sender, context) -> {
             final List<String> numbers = new ArrayList<>();
 
-            for (int i = 1; i <= 100; i++) numbers.add(String.valueOf(i));
+            for (int i = 1; i <= 64; i++) numbers.add(String.valueOf(i));
+
+            return numbers;
+        });
+
+        commandManager.registerSuggestion(SuggestionKey.of("drops"), (sender, context) -> {
+            final List<String> numbers = new ArrayList<>();
+
+            int size = crazyManager.isEnvoyActive() ? crazyManager.getActiveEnvoys().size() : locationSettings.getSpawnLocations().size();
+
+            if ((size % 10) > 0) size++;
+
+            for (int i = 1; i <= size; i++) numbers.add(String.valueOf(i));
 
             return numbers;
         });
