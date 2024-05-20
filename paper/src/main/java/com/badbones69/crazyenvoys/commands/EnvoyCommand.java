@@ -74,7 +74,7 @@ public class EnvoyCommand implements CommandExecutor {
                         this.crazyManager.endEnvoyEvent();
                     }
 
-                    ConfigManager.refresh();
+                    ConfigManager.refresh(this.plugin.getDataFolder());
 
                     this.crazyManager.reload(false);
 

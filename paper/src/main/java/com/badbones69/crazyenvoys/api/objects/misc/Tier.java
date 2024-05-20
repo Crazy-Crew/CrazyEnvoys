@@ -2,8 +2,8 @@ package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.platform.util.MiscUtils;
-import com.ryderbelserion.vital.common.configuration.YamlManager;
-import com.ryderbelserion.vital.common.configuration.objects.CustomFile;
+import com.ryderbelserion.vital.core.config.YamlManager;
+import com.ryderbelserion.vital.core.config.objects.CustomFile;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;

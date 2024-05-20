@@ -8,7 +8,7 @@ import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.commands.v2.CommandManager;
 import com.badbones69.crazyenvoys.config.ConfigManager;
-import com.ryderbelserion.vital.common.configuration.YamlManager;
+import com.ryderbelserion.vital.core.config.YamlManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 

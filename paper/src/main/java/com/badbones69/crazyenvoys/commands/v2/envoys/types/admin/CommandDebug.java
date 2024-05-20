@@ -18,6 +18,6 @@ public class CommandDebug extends BaseCommand {
 
         if (reward.isEmpty()) return;
 
-        reward.forEach(type -> type.getItemStacks().forEach(builder -> player.getInventory().setItem(player.getInventory().firstEmpty(), builder.getStack())));
+        reward.forEach(type -> type.getItems(player).forEach(builder -> player.getInventory().setItem(player.getInventory().firstEmpty(), builder.getStack())));
     }
 }

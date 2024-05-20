@@ -3,7 +3,7 @@ package com.badbones69.crazyenvoys.api.objects;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.enums.DataFiles;
 import com.badbones69.crazyenvoys.platform.util.MiscUtils;
-import com.ryderbelserion.vital.common.configuration.YamlFile;
+import com.ryderbelserion.vital.core.config.YamlFile;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;

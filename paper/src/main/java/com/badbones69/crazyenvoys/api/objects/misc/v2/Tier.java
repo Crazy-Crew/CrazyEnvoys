@@ -2,7 +2,7 @@ package com.badbones69.crazyenvoys.api.objects.misc.v2;
 
 import com.badbones69.crazyenvoys.api.objects.misc.v2.records.ChanceSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.v2.records.HologramSettings;
-import com.ryderbelserion.vital.util.ItemUtil;
+import com.ryderbelserion.vital.paper.util.ItemUtil;
 import org.bukkit.Material;
 import org.simpleyaml.configuration.ConfigurationSection;
 import java.util.ArrayList;

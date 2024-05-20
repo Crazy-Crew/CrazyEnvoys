@@ -118,10 +118,10 @@ timings:
   url: https://timings.aikar.co/
   verbose: false
 unsupported-settings:
-  allow-grindstone-overstacking: false
   allow-headless-pistons: false
   allow-permanent-block-break-exploits: false
   allow-piston-duplication: false
+  allow-tripwire-disarming-exploits: false
   allow-unsafe-end-portal-teleportation: false
   compression-format: ZLIB
   perform-username-validation: true

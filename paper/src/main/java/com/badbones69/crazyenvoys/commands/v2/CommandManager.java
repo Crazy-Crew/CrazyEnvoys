@@ -4,7 +4,7 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyHandler;
 import com.badbones69.crazyenvoys.commands.v2.envoys.types.admin.CommandDebug;
 import com.badbones69.crazyenvoys.commands.v2.relations.ArgumentRelations;
-import com.ryderbelserion.vital.util.builders.PlayerBuilder;
+import com.ryderbelserion.vital.paper.builders.PlayerBuilder;
 import dev.triumphteam.cmd.bukkit.BukkitCommandManager;
 import dev.triumphteam.cmd.core.suggestion.SuggestionKey;
 import org.bukkit.command.CommandSender;

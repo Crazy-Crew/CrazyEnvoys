@@ -9,7 +9,7 @@ import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
 import com.badbones69.crazyenvoys.platform.util.MiscUtils;
-import com.ryderbelserion.vital.enums.Support;
+import com.ryderbelserion.vital.paper.enums.Support;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

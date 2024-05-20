@@ -1,8 +1,8 @@
 package com.badbones69.crazyenvoys;
 
 import com.badbones69.crazyenvoys.config.ConfigManager;
-import com.ryderbelserion.vital.common.AbstractPlugin;
-import com.ryderbelserion.vital.common.util.FileUtil;
+import com.ryderbelserion.vital.core.AbstractPlugin;
+import com.ryderbelserion.vital.core.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.List;
@@ -24,14 +24,14 @@ public class Server extends AbstractPlugin {
      * Loads the plugin.
      */
     public void apply() {
-        ConfigManager.load();
+        ConfigManager.load(this.directory);
     }
 
     /**
      * Reloads the plugin.
      */
     public void reload() {
-        ConfigManager.refresh();
+        ConfigManager.refresh(this.directory);
     }
 
     /**

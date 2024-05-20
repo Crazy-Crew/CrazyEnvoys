@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.listeners.timer;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.ryderbelserion.vital.util.scheduler.FoliaRunnable;
+import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
 import org.jetbrains.annotations.NotNull;
 
 /**

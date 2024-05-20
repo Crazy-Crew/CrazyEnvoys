@@ -13,7 +13,8 @@ import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
 import com.badbones69.crazyenvoys.platform.util.MiscUtils;
-import com.ryderbelserion.vital.enums.Support;
+import com.ryderbelserion.vital.paper.enums.Support;
+import com.ryderbelserion.vital.paper.util.MiscUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -120,7 +121,7 @@ public class EnvoyClickListener implements Listener {
         this.crazyManager.removeActiveEnvoy(block);
 
         if (tier.getPrizes().isEmpty()) {
-            this.plugin.getServer().broadcast(com.ryderbelserion.vital.util.MiscUtil.parse(MiscUtils.getPrefix() + "<red>No prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+            this.plugin.getServer().broadcast(MiscUtil.parse(MiscUtils.getPrefix() + "<red>No prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
 
             return;
         }

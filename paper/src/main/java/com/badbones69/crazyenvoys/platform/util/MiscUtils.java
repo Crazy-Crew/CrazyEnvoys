@@ -5,7 +5,7 @@ import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
-import com.ryderbelserion.vital.util.scheduler.FoliaRunnable;
+import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;

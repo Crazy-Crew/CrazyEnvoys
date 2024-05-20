@@ -25,14 +25,14 @@ import com.badbones69.crazyenvoys.listeners.timer.CountdownTimer;
 import com.badbones69.crazyenvoys.support.holograms.types.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.types.DecentHologramsSupport;
-import com.ryderbelserion.vital.common.configuration.YamlFile;
-import com.ryderbelserion.vital.common.configuration.YamlManager;
-import com.ryderbelserion.vital.common.configuration.objects.CustomFile;
-import com.ryderbelserion.vital.common.util.AdvUtil;
-import com.ryderbelserion.vital.enums.Support;
-import com.ryderbelserion.vital.util.DyeUtil;
-import com.ryderbelserion.vital.util.builders.items.ItemBuilder;
-import com.ryderbelserion.vital.util.scheduler.FoliaRunnable;
+import com.ryderbelserion.vital.core.config.YamlFile;
+import com.ryderbelserion.vital.core.config.YamlManager;
+import com.ryderbelserion.vital.core.config.objects.CustomFile;
+import com.ryderbelserion.vital.core.util.AdvUtil;
+import com.ryderbelserion.vital.paper.builders.items.ItemBuilder;
+import com.ryderbelserion.vital.paper.enums.Support;
+import com.ryderbelserion.vital.paper.util.DyeUtil;
+import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -140,7 +140,7 @@ public class CrazyManager {
             return;
         }
 
-        ConfigManager.refresh();
+        ConfigManager.refresh(this.plugin.getDataFolder());
 
         removeAllEnvoys();
 
