@@ -1,6 +1,9 @@
 # This only configures how this specific tier will function.
 # If you wish to configure prizes, Please go to the prize''s folder!
 envoy:
+  # A list of messages to send on envoy claim!
+  messages:
+    - '<gray>You have won <red>{reward} <gray>from <red>{tier}.'
   # The list of bundles to use for this envoy as rewards.
   # These can be found in the reward's folder!
   bundles:
