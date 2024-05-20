@@ -97,6 +97,10 @@ public class Tier {
         return this.bundles;
     }
 
+    public final String getTierName() {
+        return this.tierName;
+    }
+
     public final Material getBlock() {
         return this.block;
     }
