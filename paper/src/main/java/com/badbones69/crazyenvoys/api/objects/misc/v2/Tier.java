@@ -27,7 +27,7 @@ public class Tier {
         this.permissionToggle = section.getBoolean("claim-permission.toggle", false);
         this.permissionValue = section.getString("claim-permission.value", "");
 
-        this.chanceSettings = new ChanceSettings(section.getBoolean("chance-settings.use-chance", true), section.getInt("chance-settings.max-range", 100), section.getInt("chance-settings.chance"));
+        this.chanceSettings = new ChanceSettings(section.getBoolean("chance-settings.use-chance", true), section.getInt("chance-settings.max-range", 100), section.getInt("chance-settings.chance", 5));
 
         final ConfigurationSection settings = section.getConfigurationSection("envoy-settings");
 
