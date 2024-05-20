@@ -1,14 +1,24 @@
 package com.badbones69.crazyenvoys.api;
 
+import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
+import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
+import com.badbones69.crazyenvoys.api.objects.misc.v2.Tier;
 import com.badbones69.crazyenvoys.api.objects.misc.v2.records.RewardSettings;
 import com.badbones69.crazyenvoys.config.ConfigManager;
+import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
 import com.ryderbelserion.vital.core.config.YamlFile;
 import com.ryderbelserion.vital.core.config.YamlManager;
 import com.ryderbelserion.vital.core.config.objects.CustomFile;
 import com.ryderbelserion.vital.core.util.FileUtil;
+import com.ryderbelserion.vital.paper.builders.items.ItemBuilder;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.simpleyaml.configuration.ConfigurationSection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,14 +27,15 @@ import java.util.Map;
 
 public class CrazyHandler {
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
-
-    private final YamlManager manager = ConfigManager.getYamlManager();
+    private @NotNull final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private @NotNull final YamlManager manager = ConfigManager.getYamlManager();
+    private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
     private final Map<String, ArrayList<RewardSettings>> rewards = new HashMap<>();
+    private final Map<String, Tier> tiers = new HashMap<>();
 
     /**
-     * Loads rewards into memory.
+     * Loads rewards/tiers into memory.
      */
     public void apply() {
         // Clears the rewards
@@ -51,15 +62,54 @@ public class CrazyHandler {
                 addReward(bundleName, reward);
             });
         });
+
+        // Clears the tiers
+        this.tiers.clear();
+
+        // Re-populate the arraylist
+        List<String> tiers = getTierFiles();
+
+        tiers.forEach(tierName -> {
+            if (tierName.isEmpty() || tierName.isBlank()) return;
+
+            CustomFile customFile = this.manager.getCustomFile(tierName);
+
+            if (customFile == null) return;
+
+            YamlFile file = customFile.getYamlFile();
+
+            ConfigurationSection section = file.getConfigurationSection("envoy");
+
+            Tier tier = new Tier(tierName, section);
+
+            this.tiers.put(tierName, tier);
+        });
     }
 
     /**
-     * Returns a list of rewards.
+     * Gets a {@link Tier} from the {@link Map}
+     *
+     * @param tierName the name of the {@link Tier}
+     * @return the {@link Tier}
+     */
+    public @Nullable final Tier getTier(@NotNull final String tierName) {
+        return getTiers().getOrDefault(tierName, null);
+    }
+
+    /**
+     * @return a map of {@link Tier}
+     */
+    public final Map<String, Tier> getTiers() {
+        return this.tiers;
+    }
+
+    /**
+     * Returns a list of {@link RewardSettings}
      *
      * @param bundleName the name of the bundle
-     * @return a list of rewards
+     * @return a list of {@link RewardSettings}
      */
-    public List<RewardSettings> getRewards(String bundleName) {
+    public final List<RewardSettings> getRewards(@NotNull final String bundleName) {
         return this.rewards.getOrDefault(bundleName, new ArrayList<>());
     }
 
@@ -69,7 +119,7 @@ public class CrazyHandler {
      * @param bundleName the name of the bundle
      * @param key the configuration section
      */
-    public void addReward(String bundleName, ConfigurationSection key) {
+    public void addReward(@NotNull final String bundleName, @NotNull final ConfigurationSection key) {
         RewardSettings reward = new RewardSettings(
                 key.getName(),
                 key.getString("displayname", "N/A"),
@@ -94,7 +144,7 @@ public class CrazyHandler {
      *
      * @param bundleName the name of the bundle
      */
-    public void removeReward(String bundleName) {
+    public void removeReward(@NotNull final String bundleName) {
         this.rewards.remove(bundleName);
     }
 
