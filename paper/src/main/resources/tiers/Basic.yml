@@ -4,14 +4,14 @@ envoy:
   # The list of bundles to use for this envoy as rewards.
   # These can be found in the reward's folder!
   bundles:
-    - "armor"
-    - "food"
+    - 'armor'
+    - 'food'
   # Settings related to claim permissions.
   claim-permission:
     # If they need a permission to claim this envoy. Set this too false to disable.
     toggle: true
     # The permission required to claim an envoy.
-    value: "basic.envoy.use"
+    value: 'basic.envoy.use'
   # Settings related to chance
   chance-settings:
     # If true then it uses the chance option in the prizes and if false then each prize has a 1/(Amount of Prizes) chance of winning.
@@ -43,29 +43,29 @@ envoy:
       range: 8
       # The background color of the hologram. It uses hex colors. This only works with CMI/FancyHolograms
       # Set the color to transparent if you don't want any color.
-      color: "transparent"
+      color: 'transparent'
       # The message that will be displayed above the crate.
       # Note: MiniMessage or Color Codes being supported is depending on the 'holograms' plugin.
       messages:
-        - "<bold><gray>(<gold>!<gray>) Basic Crate</bold>"
-        - "%crazyenvoys_crates_time%"
+        - '<bold><gray>(<gold>!<gray>) Basic Crate</bold>'
+        - '%crazyenvoys_crates_time%'
     # The firework settings.
     fireworks:
       # Toggle on or off fireworks.
       toggle: true
       # The colors the fireworks will be.
       colors:
-        - "Gray"
-        - "Black"
-        - "Orange"
+        - 'Gray'
+        - 'Black'
+        - 'Orange'
     # The signal flare settings.
     signal-flare:
       # Should signal flares be enabled?
       toggle: true
       # The timer for signal flares.
-      time: "15s"
+      time: '15s'
       # The colors the fireworks will be.
       colors:
-        - "Gray"
-        - "Black"
-        - "Orange"
+        - 'Gray'
+        - 'Black'
+        - 'Orange'

@@ -1,8 +1,8 @@
 # The bundle of rewards to pick from.
 rewards:
-  "1":
+  '1':
     # The display name used in {reward}
-    displayname: "<dark_red>Titan Sword."
+    displayname: '<dark_red>Titan Sword.'
     # The chance that it will be won.
     chance: 25
     # Drop all items in the Items: option on the ground instead of into their inventory.
@@ -12,24 +12,24 @@ rewards:
       - '<gray>Congratulations you have won a {reward}.'
     # The items you will win.
     items:
-      - "Item:diamond_sword, Amount:1, Name:<dark_red>Titan Sword, sharpness:5, unbreaking:3, knockback:2, fire_aspect:2, looting:3"
-  "2":
+      - 'Item:diamond_sword, Amount:1, Name:<dark_red>Titan Sword, sharpness:5, unbreaking:3, knockback:2, fire_aspect:2, looting:3'
+  '2':
     # The display name used in {reward}
-    displayname: "<dark_red>Titan Armor"
+    displayname: '<dark_red>Titan Armor'
     # The chance that it will be won.
     chance: 10
     # Drop all items in the Items: option on the ground instead of into their inventory.
     drop-items: false
     # The message that will be sent to the player if won.
     messages:
-      - "<gray>Congratulations you have won a {reward} set."
+      - '<gray>Congratulations you have won a {reward} set.'
     # The items you will win.
     items:
-      - "Item:diamond_helmet, Damage:50, Trim-Pattern:sentry, Trim-Material:quartz, Amount:1, Name:<dark_red>Titan Helmet, protection:4, unbreaking:3"
-      - "Item:diamond_chestplate, Damage:50, Trim-Pattern:dune, Trim-Material:redstone, Amount:1, Name:<dark_red>Titan Chestplate, protection:4, unbreaking:3"
-      - "Item:diamond_leggings, Damage:50, Trim-Pattern:host, Trim-Material:copper, Amount:1, Name:<dark_red>Titan Leggings, protection:4, unbreaking:3"
-      - "Item:diamond_boots, Damage:50, Trim-Pattern:shaper, Trim-Material:gold, Amount:1, Name:<dark_red>Titan Boots, protection:4, unbreaking:3"
-  "3":
+      - 'Item:diamond_helmet, Damage:50, Trim-Pattern:sentry, Trim-Material:quartz, Amount:1, Name:<dark_red>Titan Helmet, protection:4, unbreaking:3'
+      - 'Item:diamond_chestplate, Damage:50, Trim-Pattern:dune, Trim-Material:redstone, Amount:1, Name:<dark_red>Titan Chestplate, protection:4, unbreaking:3'
+      - 'Item:diamond_leggings, Damage:50, Trim-Pattern:host, Trim-Material:copper, Amount:1, Name:<dark_red>Titan Leggings, protection:4, unbreaking:3'
+      - 'Item:diamond_boots, Damage:50, Trim-Pattern:shaper, Trim-Material:gold, Amount:1, Name:<dark_red>Titan Boots, protection:4, unbreaking:3'
+  '3':
     # The display name used in {reward}
     displayname: "<dark_red>Titan Helmet."
     # The chance that it will be won.
@@ -41,4 +41,20 @@ rewards:
       - '<gray>Congratulations you have won a {reward}.'
     # The items you will win.
     items:
-      - "Item:leather_helmet:RED, Amount:1, Name:<dark_red>Titan Helmet, sharpness:5, unbreaking:3, knockback:2, fire_aspect:2, looting:3"
+      - 'Item:leather_helmet:RED, Amount:1, Name:<dark_red>Titan Helmet, sharpness:5, unbreaking:3, knockback:2, fire_aspect:2, looting:3'
+  '4':
+    # The display name used in {reward}
+    displayname: "<dark_red>Titan Helmet."
+    # The chance that it will be won.
+    chance: 5
+    # Drop all items in the Items: option on the ground instead of into their inventory.
+    drop-items: false
+    # The message that will be sent to the player if won.
+    messages:
+      - '<gray>Congratulations you have won a {reward}.'
+    # The commands that will run.
+    commands:
+      - 'eco give {player} 10000'
+    # The items you will win.
+    items:
+      - 'Item:leather_helmet:RED, Amount:1, Name:<dark_red>Titan Helmet, sharpness:5, unbreaking:3, knockback:2, fire_aspect:2, looting:3'

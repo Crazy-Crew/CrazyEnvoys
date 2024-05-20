@@ -70,7 +70,7 @@ public class CrazyHandler {
                 key.getName(),
                 key.getString("displayname", "N/A"),
                 key.getInt("chance", 10),
-                key.getBoolean("drop-items", false), key.getStringList("messages"), key.getStringList("items"));
+                key.getBoolean("drop-items", false), key.getStringList("messages"), key.getStringList("commands"), key.getStringList("items"));
 
         // If it contains the bundle name, just simply add
         if (this.rewards.containsKey(bundleName)) {
