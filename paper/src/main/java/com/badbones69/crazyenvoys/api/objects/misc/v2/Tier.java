@@ -1,6 +1,9 @@
 package com.badbones69.crazyenvoys.api.objects.misc.v2;
 
+import com.badbones69.crazyenvoys.api.objects.misc.v2.records.BulkSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.v2.records.ChanceSettings;
+import com.badbones69.crazyenvoys.api.objects.misc.v2.records.FireworkSettings;
+import com.badbones69.crazyenvoys.api.objects.misc.v2.records.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.v2.records.HologramSettings;
 import com.ryderbelserion.vital.paper.util.ItemUtil;
 import org.bukkit.Material;
@@ -12,26 +15,28 @@ public class Tier {
 
     private final List<String> bundles = new ArrayList<>();
 
-    private final boolean permissionToggle;
-    private final String permissionValue;
+    private final boolean requirePermission;
+    private final String requiredPermission;
 
+    private final FireworkSettings fireworkSettings;
+    private final HologramSettings hologramSettings;
     private final ChanceSettings chanceSettings;
+    private final FlareSettings flareSettings;
+    private final BulkSettings bulkSettings;
 
-    // Envoy settings
-    private final HologramSettings hologram;
     private final Material block;
 
     public Tier(final ConfigurationSection section) {
         this.bundles.addAll(section.getStringList("bundles"));
 
-        this.permissionToggle = section.getBoolean("claim-permission.toggle", false);
-        this.permissionValue = section.getString("claim-permission.value", "");
+        this.requirePermission = section.getBoolean("claim-permission.toggle", false);
+        this.requiredPermission = section.getString("claim-permission.value", "");
 
         this.chanceSettings = new ChanceSettings(section.getBoolean("chance-settings.use-chance", true), section.getInt("chance-settings.max-range", 100), section.getInt("chance-settings.chance", 5));
 
-        final ConfigurationSection settings = section.getConfigurationSection("envoy-settings");
+        final ConfigurationSection settings = section.getConfigurationSection("cosmetic-settings");
 
-        this.hologram = new HologramSettings(
+        this.hologramSettings = new HologramSettings(
                 settings.getBoolean("holograms.toggle", true),
                 settings.getDouble("holograms.height", 1.5),
                 settings.getInt("holograms.range", 8),
@@ -40,26 +45,46 @@ public class Tier {
         );
 
         this.block = ItemUtil.getMaterial(settings.getString("block", "chest"));
+
+        final ConfigurationSection prizes = settings.getConfigurationSection("prizes");
+
+        this.bulkSettings = new BulkSettings(prizes.getBoolean("bulk.toggle", false), prizes.getBoolean("bulk.random", true), prizes.getInt("bulk.max", 3));
+
+        this.fireworkSettings = new FireworkSettings(prizes.getBoolean("fireworks.toggle", true), prizes.getStringList("fireworks.colors"));
+
+        this.flareSettings = new FlareSettings(prizes.getBoolean("signal-flare.toggle", true), prizes.getInt("signal-flare.time", 15), prizes.getStringList("signal-flare.colors"));
     }
 
-    public final List<String> getBundles() {
-        return this.bundles;
+    public final FireworkSettings getFireworkSettings() {
+        return fireworkSettings;
     }
 
-    public final boolean isPermissionToggle() {
-        return this.permissionToggle;
-    }
-
-    public final String getPermissionValue() {
-        return this.permissionValue;
+    public final HologramSettings getHologramSettings() {
+        return this.hologramSettings;
     }
 
     public final ChanceSettings getChanceSettings() {
         return this.chanceSettings;
     }
 
-    public final HologramSettings getHologram() {
-        return this.hologram;
+    public final FlareSettings getFlareSettings() {
+        return this.flareSettings;
+    }
+
+    public final boolean isPermissionRequired() {
+        return this.requirePermission;
+    }
+
+    public final String getRequiredPermission() {
+        return this.requiredPermission;
+    }
+
+    public final BulkSettings getBulkSettings() {
+        return this.bulkSettings;
+    }
+
+    public final List<String> getBundles() {
+        return this.bundles;
     }
 
     public final Material getBlock() {
