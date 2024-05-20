@@ -27,9 +27,13 @@ public class CrazyHandler {
      * Loads rewards into memory.
      */
     public void apply() {
-        List<String> files = getRewardFiles();
+        // Clears the rewards
+        this.rewards.clear();
 
-        files.forEach(bundleName -> {
+        // Re-populate the map
+        List<String> rewards = getRewardFiles();
+
+        rewards.forEach(bundleName -> {
             if (bundleName.isEmpty() || bundleName.isBlank()) return;
 
             CustomFile customFile = this.manager.getCustomFile(bundleName);
