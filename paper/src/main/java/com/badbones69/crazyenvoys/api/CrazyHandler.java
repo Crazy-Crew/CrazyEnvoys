@@ -98,6 +98,99 @@ public class CrazyHandler {
         this.rewards.remove(bundleName);
     }
 
+    private ItemBuilder signalFlare;
+
+    public void buildSignalFlare() {
+        this.signalFlare = new ItemBuilder().withType(this.config.getProperty(ConfigKeys.envoys_flare_item_type))
+                .setDisplayName(this.config.getProperty(ConfigKeys.envoys_flare_item_name))
+                .setDisplayLore(this.config.getProperty(ConfigKeys.envoys_flare_item_lore))
+                .setPersistentString(PersistentKeys.envoy_flare.getNamespacedKey(), "1");
+    }
+
+    /**
+     * Gives a signal flare to a {@link Player}.
+     *
+     * @param player the {@link Player}
+     */
+    public void give(@NotNull final Player player) {
+        give(player, 1);
+    }
+
+    /**
+     * Gives a signal flare to a {@link Player}.
+     *
+     * @param player the {@link Player}
+     * @param amount the amount to give
+     */
+    public void give(@NotNull final Player player, final int amount) {
+        PlayerInventory inventory = player.getInventory();
+
+        if (!inventory.isEmpty()) {
+            player.getWorld().dropItem(player.getLocation(), build(player, amount));
+
+            return;
+        }
+
+        inventory.setItem(inventory.firstEmpty(), build(player, amount));
+    }
+
+    /**
+     * Builds a signal flare to give it to a player.
+     *
+     * @param player the {@link Player}
+     * @return the {@link ItemStack}
+     */
+    public ItemStack build(@NotNull final Player player) {
+        return build(player, 1);
+    }
+
+    /**
+     * Builds a signal flare to give it to a player.
+     *
+     * @param player the {@link Player}
+     * @param amount the amount of signal flares to give
+     * @return the {@link ItemStack}
+     */
+    public ItemStack build(@NotNull final Player player, final int amount) {
+        return this.signalFlare.setPlayer(player).setAmount(amount).getStack();
+    }
+
+    /**
+     * Checks if an {@link ItemStack} is a flare!
+     *
+     * @param itemStack the {@link ItemStack} to check
+     * @return true or false
+     */
+    public boolean isFlare(@NotNull final ItemStack itemStack) {
+        if (!itemStack.hasItemMeta()) return false;
+
+        PersistentDataContainer container = itemStack.getItemMeta().getPersistentDataContainer();
+
+        return container.has(PersistentKeys.envoy_flare.getNamespacedKey());
+    }
+
+    /**
+     * Take a flare out of the {@link Player} {@link PlayerInventory}.
+     *
+     * @param player the {@link Player}
+     */
+    public void takeFlare(@NotNull final Player player) {
+        PlayerInventory inventory = player.getInventory();
+
+        // We don't need to remove anything if inventory is empty.
+        if (inventory.isEmpty()) return;
+
+        // Remove item from any slot
+        inventory.removeItemAnySlot(build(player));
+    }
+
+    /**
+     * @return a list of bundles from the rewards directory
+     */
+    public @NotNull final List<String> getTierFiles() {
+        return FileUtil.getFiles(this.plugin.getDataFolder().toPath().resolve("tiers"), ".yml", true);
+    }
+
     /**
      * @return a list of bundles from the rewards directory
      */
