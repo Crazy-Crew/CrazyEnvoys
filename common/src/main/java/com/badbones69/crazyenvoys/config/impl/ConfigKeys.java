@@ -90,6 +90,12 @@ public class ConfigKeys implements SettingsHolder {
     })
     public static final Property<Boolean> envoys_random_drops = newProperty("envoys.generation.random-drops", true);
 
+    @Comment("A list of blocks that envoys cannot be spawned on.")
+    public static final Property<List<String>> envoys_blacklist_blocks = newListProperty("envoys.blacklisted-blocks", List.of(
+            "water",
+            "lava"
+    ));
+
     @Comment({
             "This option will spawn envoys at complete random",
             "Note: You need to use /envoy center at wherever you want the center to be.",
