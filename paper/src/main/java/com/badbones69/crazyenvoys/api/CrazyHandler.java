@@ -37,7 +37,7 @@ public class CrazyHandler {
     /**
      * Loads rewards/tiers into memory.
      */
-    public void refresh() {
+    public void load() {
         // Clears the rewards
         this.rewards.clear();
 
@@ -87,6 +87,12 @@ public class CrazyHandler {
 
         // Create the signal flare item
         buildSignalFlare();
+    }
+
+    public void reload() {
+        this.plugin.getPaperServer().reload();
+
+        load();
     }
 
     /**

@@ -1,66 +1,109 @@
 # Support: https://discord.gg/badbones-s-live-chat-182615261403283459
 # Github: https://github.com/Crazy-Crew
-# 
+#
+# Features: https://github.com/Crazy-Crew/CrazyEnvoys/discussions/categories/features
 # Issues: https://github.com/Crazy-Crew/CrazyEnvoys/issues
-# Features: https://github.com/Crazy-Crew/CrazyEnvoys/issues
-# 
+#
 # Tips:
 #  1. Make sure to use the {prefix} to add the prefix in front of messages.
 #  2. If you wish to use more than one line for a message just go from a line to a list.
 # Examples:
 #   Line:
-#     No-Permission: '{prefix}&cYou do not have permission to use that command.'
+#     No-Permission: '{prefix}<red>You do not have permission to use that command.'
 #   List:
 #     No-Permission:
-#       - '{prefix}&cYou do not have permission'
-#       - '&cto use that command. Please try another.'
+#       - '{prefix}<red>You do not have permission'
+#       - '<red>to use that command. Please try another.'
 player:
-  no-permission: '{prefix}&cTu no tienes permisos para esto.'
-  no-permission-to-claim: '{prefix}&cTu no tienes permisos para reclamar este cofre!'
+  requirements:
+    # A list of available placeholders: {prefix}
+    must-be-player: '{prefix}<red>You must be a player to use this command.'
+    # A list of available placeholders: {prefix}
+    must-be-console-sender: '{prefix}<red>You must be using console to use this command.'
+  no-permission-to-claim: '{prefix}<red>Tu no tienes permisos para reclamar este cofre!'
+  # A list of available placeholders: {prefix}, {player}
+  target-not-online: '{prefix}<red>{player} <gray>is not online.'
+  # A list of available placeholders: {prefix}
+  target-same-player: '{prefix}<red>You can''''t use this command on yourself.'
+  # A list of available placeholders: {prefix}
+  no-permission: '{prefix}<red>Tu no tienes permisos para esto.'
+  # A list of available placeholders: {prefix}, {crate}
+  inventory-not-empty: '{prefix}<red>Inventory is not empty, Please make room before opening <gold>{crate}.'
+# All messages related to errors.
+errors:
+  # A list of available placeholders: {prefix}
+  internal-error: '{prefix}<red>An internal error has occurred. Please check the console
+    for the full error.'
+  # A list of available placeholders: {prefix}, {value}
+  cannot-be-empty: '{prefix}<red>{value} cannot be empty!'
+  # A list of available placeholders: {prefix}
+  cannot-be-air: '{prefix}<red>You can''t use air silly!~'
+  # A list of available placeholders: {prefix}, {envoy}, {reward}
+  reward-error: '{prefix}<red>An error has occurred while trying to give you the prize called <gold>{reward}<red> in crate called <gold>{envoy}<red>. Please contact the server owner and show them this error.'
+# All messages related to misc things.
+misc:
+  # A list of available placeholders: {prefix}, {usage}
+  correct-usage: '{prefix}<red>The correct usage for this command is <yellow>{usage}'
+  # A list of available placeholders: {prefix}
+  feature-disabled: '{prefix}<red>This feature is disabled.'
+  # A list of available placeholders: {prefix}, {command}
+  command-not-found: '{prefix}<red>Por favor usa /crazyenvoys help para más información.'
+  # A list of available placeholders: {prefix}
+  player-only: '{prefix}<red>Solo los jugadores pueden usar este comando.'
+  # A list of available placeholders: {prefix}
+  not-online: '{prefix}<red>Este jugador no está en línea en este momento.'
+  # A list of available placeholders: {prefix}
+  not-a-number: '{prefix}<red>Esto no es un número.'
+  # A list of available placeholders: {prefix}
+  config-reload: '{prefix}<gray>Se ha recargado todos los archivos.'
+  help:
+  - '<gold>/crazyenvoys help <gray>- Muestra este menu de ayuda.'
+  - '<gold>/crazyenvoys reload <gray>- Recargar el plugin.'
+  - '<gold>/crazyenvoys time <gray>- Muestra el tiempo hasta que el evento comienza o termina.'
+  - '<gold>/crazyenvoys drops [page] <gray>- Muestra las locaciones actuales de los cofres.'
+  - '<gold>/crazyenvoys ignore <gray>- Silenciar los mensajes del evento.'
+  - '<gold>/crazyenvoys flare [amount] [player] <gray>- Dale una bengala a un jugador para empezar el. evento.'
+  - '<gold>/crazyenvoys edit <gray>- Edita las locaciones de los cofres con la Bedrock<gray>.'
+  - '<gold>/crazyenvoys start <gray>- Forzar inicio del evento.'
+  - '<gold>/crazyenvoys stop <gray>- Forzar la detención del evento.'
+  - '<gold>/crazyenvoys center <gray>- Establecer el centro de los dropeos aleatorios.'
 envoys:
-  already-started: '{prefix}&cYa hay un evento en marcha. Por favor,
-    deténgalo para comenzar uno nuevo.'
-  force-start: '{prefix}&7Acabas de iniciar un evento.'
-  not-started: '{prefix}&cNo hay ningún evento de enviado en este momento.'
-  force-ended: '{prefix}&cAcabas de parar el evento.'
-  warning: '&c&lATENCIÓN &6≫ &ehabrá una lluvia de cofres en &b/warp minapvp &een &6{time}.'
-  started: '{prefix}&aEl evento ha comenzado! &6Se acaban de crear {amount} &6cofres en la
-    &b/warp minapvp &6que luego desaparecerán en 5 minutos!'
-  left: '{prefix} &b{player} &eencontró un cofre! &bAhora quedan &6{amount}
-    &bcofres por encontrar!'
-  ended: '{prefix}&cEl evento ha terminado. &fGracias a todos por venir! Atentos para el
-    proximo evento!'
-  not-enough-players: '{prefix}&cEl evento fue cancelado ya que no hubo los jugadores suficientes 
-    para ser activado (┬┬﹏┬┬). Se necesita &6{amount} &cjugadores para activarse.'
-  enter-editor-mode: '{prefix}&aAhora mismo estas en modo editor.'
-  leave-editor-mode: '{prefix}&cAcabas de salir del modo editor.'
-  editor-clear-locations: '{prefix}&cAcabas de eliminar todas las locaciones en el modo editor.'
-  editor-clear-failure: '{prefix}&cTu necesitas estar en el modo editor para borrar todas las locaciones'
-  kicked-from-editor-mode: '{prefix}&cLo siento pero el evento esta activo ahora mismo. Por favor paralo
-    o espera a que se acabe el evento.'
-  add-location: '{prefix}&aAcabas de añadir una nueva locación.'
-  remove-location: '{prefix}&cAcabas de elminar una locación.'
-  time-left: '{prefix}&eEl evento actual le quedan &6{time}&7.'
-  time-till-event: '{prefix}&eEl próximo evento comenzará en &6{time}&7.'
+  already-started: '{prefix}<red>Ya hay un evento en marcha. Por favor, deténgalo para comenzar uno nuevo.'
+  force-start: '{prefix}<gray>Acabas de iniciar un evento.'
+  not-started: '{prefix}<red>No hay ningún evento de enviado en este momento.'
+  force-ended: '{prefix}<red>Acabas de parar el evento.'
+  warning: '<red>ATENCIÓN <gold>≫ <yellow>habrá una lluvia de cofres en <blue>/warp minapvp <yellow>en <gold>{time}.'
+  started:
+    list:
+      - '{prefix}<gray>An envoy event has started. <gold>{amount} <gray>crates have spawned around spawn for 5m.'
+  left: '{prefix} <blue>{player} <yellow>encontró un cofre! <blue>Ahora quedan <gold>{amount} <blue>cofres por encontrar!'
+  ended: '{prefix}<red>El evento ha terminado. <white>Gracias a todos por venir! Atentos para el proximo evento!'
+  not-enough-players: '{prefix}<red>El evento fue cancelado ya que no hubo los jugadores suficientes para ser activado (┬┬﹏┬┬). Se necesita <gold>{amount} <red>jugadores para activarse.'
+  enter-editor-mode: '{prefix}<green>Ahora mismo estas en modo editor.'
+  leave-editor-mode: '{prefix}<red>Acabas de salir del modo editor.'
+  editor-clear-locations: '{prefix}<red>Acabas de eliminar todas las locaciones en el modo editor.'
+  editor-clear-failure: '{prefix}<red>Tu necesitas estar en el modo editor para borrar todas las locaciones'
+  kicked-from-editor-mode: '{prefix}<red>Lo siento pero el evento esta activo ahora mismo. Por favor paralo o espera a que se acabe el evento.'
+  add-location: '{prefix}<green>Acabas de añadir una nueva locación.'
+  remove-location: '{prefix}<red>Acabas de elminar una locación.'
+  time-left: '{prefix}<yellow>El evento actual le quedan <gold>{time}<gray>.'
+  time-till-event: '{prefix}<yellow>El próximo evento comenzará en <gold>{time}<gray>.'
   flare:
-    used-flare: '{prefix}&aAcabas de iniciar el evento con una bandera!'
-    cant-use-flares: '{prefix}&cTu no tienes permisos para usar banderas.'
-    sent-flare: '{prefix}&6Acabas de darle a &6{player} {amount} &6banderas.'
-    received-flare: '{prefix}&aTe han dado &6{amount} &7banderas.'
-  new-center: '{prefix}&7Acaba de configurar un nuevo centro para los envios aleatorios de los cofres!'
-  not-in-world-guard-region: '{prefix}&cDebes estar en World para usar una bengala.'
-  start-ignoring-messages: '{prefix}&cAhora estás ignorando los mensajes del evento.'
-  stop-ignoring-messages: '{prefix}&aAhora verás los mensajes del evento.'
-  cooldown-left: '{prefix}&7Aún tienes &6{time} &7hasta que puedas recoger otro
-     cofre.'
-  countdown-in-progress: '{prefix}&7No puedes reclamar otras cajas hasta dentro de &6{time}
-    segundos.'
-  drops-available: '{prefix}&7Lista de todos los cofres disponibles.'
-  drops-possibilities: '{prefix}&7Lista de ubicaciones en las que los cofres se generarán.'
-  drops-page: '{prefix}&7Usa /crazyenvoys drops [page] para ver más.'
-  drops-format: '&7[&6{id}&7]: {world}, {x}, {y}, {z}'
-  no-spawn-locations-found: '{prefix}&cNo se encontraron lugares de generación, por lo que el evento
-    se ha cancelado y el tiempo de reutilización se ha reiniciado.'
+    used-flare: '{prefix}<green>Acabas de iniciar el evento con una bandera!'
+    cant-use-flares: '{prefix}<red>Tu no tienes permisos para usar banderas.'
+    sent-flare: '{prefix}<gold>Acabas de darle a <gold>{player} {amount} <gold>banderas.'
+    received-flare: '{prefix}<green>Te han dado <gold>{amount} <gray>banderas.'
+  new-center: '{prefix}<gray>Acaba de configurar un nuevo centro para los envios aleatorios de los cofres!'
+  not-in-world-guard-region: '{prefix}<red>Debes estar en World para usar una bengala.'
+  start-ignoring-messages: '{prefix}<red>Ahora estás ignorando los mensajes del evento.'
+  stop-ignoring-messages: '{prefix}<green>Ahora verás los mensajes del evento.'
+  cooldown-left: '{prefix}<gray>Aún tienes <gold>{time} <gray>hasta que puedas recoger otro cofre.'
+  countdown-in-progress: '{prefix}<gray>No puedes reclamar otras cajas hasta dentro de <gold>{time} segundos.'
+  drops-available: '{prefix}<gray>Lista de todos los cofres disponibles.'
+  drops-possibilities: '{prefix}<gray>Lista de ubicaciones en las que los cofres se generarán.'
+  drops-page: '{prefix}<gray>Usa /crazyenvoys drops [page] para ver más.'
+  drops-format: '<gray>[<gold>{id}<gray>]: {world}, {x}, {y}, {z}'
+  no-spawn-locations-found: '{prefix}<red>No se encontraron lugares de generación, por lo que el evento se ha cancelado y el tiempo de reutilización se ha reiniciado.'
   hologram-placeholders:
     on-going: En curso
     not-running: No esta en funcionamiento
@@ -69,23 +112,5 @@ envoys:
     hour: h
     minute: m
     second: s
-  envoy-locations: '&e&lTodas las locaciones de los cofres: \n&c[ID], [World]: [X], [Y], [Z] &r{locations}'
-  location-format: '\n&8[&3{id}&8] &c{world}: {x}, {y}, {z}'
-misc:
-  command-not-found: '{prefix}&cPor favor usa /crazyenvoys help para más información.'
-  player-only: '{prefix}&cSolo los jugadores pueden usar este comando.'
-  not-online: '{prefix}&cEste jugador no está en línea en este momento.'
-  not-a-number: '{prefix}&cEsto no es un número.'
-  config-reload: '{prefix}&7Se ha recargado todos los archivos.'
-  help:
-  - '&6/crazyenvoys help &7- Muestra este menu de ayuda.'
-  - '&6/crazyenvoys reload &7- Recargar el plugin.'
-  - '&6/crazyenvoys time &7- Muestra el tiempo hasta que el evento comienza o termina.'
-  - '&6/crazyenvoys drops [page] &7- Muestra las locaciones actuales de los cofres.'
-  - '&6/crazyenvoys ignore &7- Silenciar los mensajes del evento.'
-  - '&6/crazyenvoys flare [amount] [player] &7- Dale una bengala a un jugador para empezar el.
-     evento.'
-  - '&6/crazyenvoys edit &7- Edita las locaciones de los cofres con la &lBedrock&7.'
-  - '&6/crazyenvoys start &7- Forzar inicio del evento.'
-  - '&6/crazyenvoys stop &7- Forzar la detención del evento.'
-  - '&6/crazyenvoys center &7- Establecer el centro de los dropeos aleatorios.'
+  envoy-locations: '<yellow>Todas las locaciones de los cofres: \n<red>[ID], [World]: [X], [Y], [Z] <reset>{locations}'
+  location-format: '\n<dark_gray>[<dark_aqua>{id}<dark_gray>] <red>{world}: {x}, {y}, {z}'

@@ -17,12 +17,12 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 
     private final @NotNull SettingsManager config = ConfigManager.getConfig();
 
-    private final @NotNull SettingsManager messages = ConfigManager.getMessages();
-
     private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
 
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String identifier) {
+        SettingsManager messages = ConfigManager.getMessages();
+
         String lower = identifier.toLowerCase();
 
         boolean isEnabled = this.config.getProperty(ConfigKeys.envoys_grace_period_toggle);
@@ -42,8 +42,8 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
         }
 
         return switch (lower) {
-            case "cooldown" -> this.crazyManager.isEnvoyActive() ? this.messages.getProperty(MessageKeys.hologram_on_going) : this.crazyManager.getNextEnvoyTime();
-            case "time_left" -> this.crazyManager.isEnvoyActive() ? this.crazyManager.getEnvoyRunTimeLeft() : this.messages.getProperty(MessageKeys.hologram_not_running);
+            case "cooldown" -> this.crazyManager.isEnvoyActive() ? messages.getProperty(MessageKeys.hologram_on_going) : this.crazyManager.getNextEnvoyTime();
+            case "time_left" -> this.crazyManager.isEnvoyActive() ? this.crazyManager.getEnvoyRunTimeLeft() : messages.getProperty(MessageKeys.hologram_not_running);
             case "envoys_left" -> String.valueOf(this.crazyManager.getActiveEnvoys().size());
             default -> "";
         };

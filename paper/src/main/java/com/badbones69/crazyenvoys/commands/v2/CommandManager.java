@@ -5,6 +5,17 @@ import com.badbones69.crazyenvoys.api.CrazyHandler;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.commands.v2.envoys.types.admin.CommandDebug;
+import com.badbones69.crazyenvoys.commands.v2.envoys.types.admin.CommandFlare;
+import com.badbones69.crazyenvoys.commands.v2.envoys.types.admin.CommandReload;
+import com.badbones69.crazyenvoys.commands.v2.envoys.types.admin.editor.CommandClear;
+import com.badbones69.crazyenvoys.commands.v2.envoys.types.admin.editor.CommandEditor;
+import com.badbones69.crazyenvoys.commands.v2.envoys.types.admin.envoys.CommandCenter;
+import com.badbones69.crazyenvoys.commands.v2.envoys.types.admin.envoys.CommandStart;
+import com.badbones69.crazyenvoys.commands.v2.envoys.types.admin.envoys.CommandStop;
+import com.badbones69.crazyenvoys.commands.v2.envoys.types.player.CommandDrops;
+import com.badbones69.crazyenvoys.commands.v2.envoys.types.player.CommandHelp;
+import com.badbones69.crazyenvoys.commands.v2.envoys.types.player.CommandIgnore;
+import com.badbones69.crazyenvoys.commands.v2.envoys.types.player.CommandTIme;
 import com.badbones69.crazyenvoys.commands.v2.relations.ArgumentRelations;
 import com.ryderbelserion.vital.paper.builders.PlayerBuilder;
 import dev.triumphteam.cmd.bukkit.BukkitCommandManager;
@@ -58,7 +69,18 @@ public class CommandManager {
         commandManager.registerArgument(PlayerBuilder.class, (sender, context) -> new PlayerBuilder(context));
 
         List.of(
-                new CommandDebug()
+                new CommandDebug(),
+                new CommandReload(),
+                new CommandClear(),
+                new CommandEditor(),
+                new CommandCenter(),
+                new CommandStart(),
+                new CommandStop(),
+                new CommandFlare(),
+                new CommandDrops(),
+                new CommandHelp(),
+                new CommandIgnore(),
+                new CommandTIme()
         ).forEach(commandManager::registerCommand);
     }
 

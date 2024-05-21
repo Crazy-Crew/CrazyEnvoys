@@ -39,6 +39,7 @@ public class ConfigKeys implements SettingsHolder {
             "",
             "Currently Available:",
             " > en-US ( English )",
+            " > es-PE ( Portuguese )",
             "",
             "If you do not see your language above, You can contribute by modifying the current en-US.yml",
             "https://github.com/Crazy-Crew/CrazyEnvoys/blob/main/paper/src/main/resources/locale/en-US.yml",
@@ -63,7 +64,7 @@ public class ConfigKeys implements SettingsHolder {
     @Comment("The console prefix you want shown when the logging messages show up!")
     public static final Property<String> console_prefix = PropertyInitializer.newProperty("root.console_prefix" ,"<dark_gray>[<red>CrazyEnvoys<dark_gray>] ");
 
-    @Comment("Whether or not a block should fall when an envoy spawns.")
+    @Comment("Whether a block should fall when an envoy spawns.")
     public static final Property<Boolean> envoy_falling_block_toggle = newProperty("envoys.falling-blocks.toggle", true);
 
     @Comment("The block type falling when an envoy spawns.")

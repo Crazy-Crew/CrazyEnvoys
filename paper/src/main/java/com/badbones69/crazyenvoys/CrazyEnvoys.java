@@ -33,7 +33,7 @@ public class CrazyEnvoys extends JavaPlugin {
         this.yamlManager = ConfigManager.getYamlManager();
 
         this.crazyHandler = new CrazyHandler();
-        this.crazyHandler.refresh();
+        this.crazyHandler.load();
 
         CommandManager.load();
 

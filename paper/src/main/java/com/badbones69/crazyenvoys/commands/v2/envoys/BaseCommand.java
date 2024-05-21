@@ -10,7 +10,6 @@ import dev.triumphteam.cmd.core.annotations.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,5 +37,4 @@ public abstract class BaseCommand {
             Messages.time_till_event.sendMessage(sender, placeholder);
         }
     }
-
 }

@@ -115,18 +115,16 @@ public enum Messages {
 
     private final SettingsManager config = ConfigManager.getConfig();
 
-    private final SettingsManager messages = ConfigManager.getMessages();
-
     private boolean isList() {
         return this.isList;
     }
 
     public String getString() {
-        return this.messages.getProperty(this.property);
+        return ConfigManager.getMessages().getProperty(this.property);
     }
 
     public List<String> getList() {
-        return this.messages.getProperty(this.properties);
+        return ConfigManager.getMessages().getProperty(this.properties);
     }
 
     public String getMessage() {

@@ -24,14 +24,14 @@ public class Server extends AbstractPlugin {
      * Loads the plugin.
      */
     public void apply() {
-        ConfigManager.load(this.directory);
+        ConfigManager.load();
     }
 
     /**
      * Reloads the plugin.
      */
     public void reload() {
-        ConfigManager.refresh(this.directory);
+        ConfigManager.refresh();
     }
 
     /**

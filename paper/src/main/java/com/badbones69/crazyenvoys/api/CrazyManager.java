@@ -132,7 +132,7 @@ public class CrazyManager {
             return;
         }
 
-        ConfigManager.refresh(this.plugin.getDataFolder());
+        ConfigManager.refresh();
 
         removeAllEnvoys();
 
