@@ -6,10 +6,13 @@ import ch.jalu.configme.resource.YamlFileResourceOptions;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
 import com.badbones69.crazyenvoys.config.impl.MessageKeys;
 import com.ryderbelserion.vital.core.config.YamlManager;
+import com.ryderbelserion.vital.core.util.FileUtil;
 import org.jetbrains.annotations.ApiStatus;
 import java.io.File;
 
 public class ConfigManager {
+
+    private static final YamlFileResourceOptions builder = YamlFileResourceOptions.builder().indentationSize(2).build();
 
     private static YamlManager yamlManager;
 
@@ -22,20 +25,24 @@ public class ConfigManager {
      */
     @ApiStatus.Internal
     public static void load(File dataFolder) {
-        YamlFileResourceOptions builder = YamlFileResourceOptions.builder().indentationSize(2).build();
+        if (yamlManager == null) {
+            yamlManager = new YamlManager();
+        }
 
+        // Create plugin directory
+        yamlManager.createPluginDirectory();
+
+        // Create config.yml
         config = SettingsManagerBuilder
                 .withYamlFile(new File(dataFolder, "config.yml"), builder)
                 //.migrationService(new ConfigMigration())
                 .configurationData(ConfigKeys.class)
                 .create();
 
-        locale(dataFolder);
+        File localeDir = new File(dataFolder, "locale");
 
-        if (yamlManager == null) yamlManager = new YamlManager();
-
-        // Create directory
-        yamlManager.createPluginDirectory();
+        // Update locale file
+        locale(localeDir);
 
         // Add files
         yamlManager.addFile("users.yml")
@@ -51,6 +58,7 @@ public class ConfigManager {
         // Get old locale file.
         String oldLocale = config.getProperty(ConfigKeys.locale_file) + ".yml";
 
+        // Reload the files
         config.reload();
         messages.reload();
 
@@ -58,7 +66,9 @@ public class ConfigManager {
         String newLocale = config.getProperty(ConfigKeys.locale_file) + ".yml";
 
         if (!oldLocale.equals(newLocale)) {
-            locale(dataFolder);
+            File localeDir = new File(dataFolder, "locale");
+
+            locale(localeDir);
         }
 
         // Refresh files.
@@ -68,11 +78,15 @@ public class ConfigManager {
         getYamlManager().reloadCustomFiles();
     }
 
-    private static void locale(File dataFolder) {
-        YamlFileResourceOptions builder = YamlFileResourceOptions.builder().indentationSize(2).build();
+    private static void locale(File localeDir) {
+        if (!localeDir.exists()) {
+            FileUtil.extracts(ConfigManager.class, "/locale/", localeDir.toPath(), true);
+
+            localeDir.mkdirs();
+        }
 
         messages = SettingsManagerBuilder
-                .withYamlFile(new File(dataFolder, config.getProperty(ConfigKeys.locale_file) + ".yml"), builder)
+                .withYamlFile(new File(localeDir, config.getProperty(ConfigKeys.locale_file) + ".yml"), builder)
                 //.migrationService(new LocaleMigration())
                 .configurationData(MessageKeys.class)
                 .create();
