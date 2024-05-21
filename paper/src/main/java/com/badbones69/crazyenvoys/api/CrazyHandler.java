@@ -84,6 +84,9 @@ public class CrazyHandler {
 
             this.tiers.put(tierName, tier);
         });
+
+        // Create the signal flare item
+        buildSignalFlare();
     }
 
     /**
