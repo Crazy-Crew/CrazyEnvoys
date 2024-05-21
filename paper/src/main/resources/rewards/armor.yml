@@ -42,19 +42,3 @@ rewards:
     # The items you will win.
     items:
       - 'Item:leather_helmet:RED, Amount:1, Name:<dark_red>Titan Helmet, sharpness:5, unbreaking:3, knockback:2, fire_aspect:2, looting:3'
-  '4':
-    # The display name used in {reward}
-    displayname: "<dark_red>Titan Helmet."
-    # The chance that it will be won.
-    chance: 5
-    # Drop all items in the Items: option on the ground instead of into their inventory.
-    drop-items: false
-    # The message that will be sent to the player if won.
-    messages:
-      - '<gray>Congratulations you have won a {reward}.'
-    # The commands that will run.
-    commands:
-      - 'eco give {player} 10000'
-    # The items you will win.
-    items:
-      - 'Item:leather_helmet:RED, Amount:1, Name:<dark_red>Titan Helmet, sharpness:5, unbreaking:3, knockback:2, fire_aspect:2, looting:3'
