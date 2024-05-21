@@ -16,6 +16,7 @@ public class CommandReload extends BaseCommand {
     public void debug(final CommandSender sender) {
         if (this.crazyManager.isEnvoyActive()) {
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.RELOAD);
+
             this.plugin.getServer().getPluginManager().callEvent(event);
 
             this.crazyManager.endEnvoyEvent();
@@ -23,7 +24,7 @@ public class CommandReload extends BaseCommand {
 
         ConfigManager.refresh(this.plugin.getDataFolder());
 
-        this.crazyManager.reload(false);
+        this.crazyHandler.refresh();
 
         Messages.reloaded.sendMessage(sender);
     }
