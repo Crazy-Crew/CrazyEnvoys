@@ -66,11 +66,7 @@ public class ConfigManager {
         // Get new locale file.
         String newLocale = config.getProperty(ConfigKeys.locale_file) + ".yml";
 
-        if (!oldLocale.equals(newLocale)) {
-            locale(newLocale);
-        } else {
-            messages.reload();
-        }
+        if (!oldLocale.equals(newLocale)) locale(newLocale); else messages.reload();
 
         // Refresh files.
         getYamlManager().reloadFiles();
