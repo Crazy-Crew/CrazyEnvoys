@@ -37,7 +37,7 @@ public class CrazyHandler {
     /**
      * Loads rewards/tiers into memory.
      */
-    public void apply() {
+    public void refresh() {
         // Clears the rewards
         this.rewards.clear();
 
