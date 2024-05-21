@@ -69,10 +69,10 @@ public class ConfigManager {
         if (!oldLocale.equals(newLocale)) locale(newLocale); else messages.reload();
 
         // Refresh files.
-        getYamlManager().reloadFiles();
+        yamlManager.reloadFiles();
 
         // Refresh custom files.
-        getYamlManager().reloadCustomFiles();
+        yamlManager.reloadCustomFiles();
     }
 
     private static void locale(String path) {
