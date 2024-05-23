@@ -28,7 +28,7 @@ jobs:
           java-version: 21
           check-latest: true
 
-      - name: Gradle Properties Import.
+      - name: Import gradle properties
         id: properties
         shell: bash
         run: cat gradle.properties >> $GITHUB_ENV

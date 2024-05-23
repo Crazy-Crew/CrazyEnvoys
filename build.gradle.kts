@@ -1,7 +1,3 @@
-import com.ryderbelserion.feather.tools.formatLog
-import com.ryderbelserion.feather.tools.latestCommitHash
-import com.ryderbelserion.feather.tools.latestCommitMessage
-
 plugins {
     alias(libs.plugins.minotaur)
     alias(libs.plugins.hangar)
@@ -11,15 +7,11 @@ plugins {
 
 val buildNumber: String = System.getenv("NEXT_BUILD_NUMBER") ?: "SNAPSHOT"
 
-val isSnapshot = true
+val isSnapshot = false
 
-rootProject.version = if (isSnapshot) "1.9-$buildNumber" else "1.9"
+rootProject.version = "1.9"
 
-val content: String = if (isSnapshot) {
-    formatLog(latestCommitHash(), latestCommitMessage(), rootProject.name, "Crazy-Crew")
-} else {
-    rootProject.file("CHANGELOG.md").readText(Charsets.UTF_8)
-}
+val content: String = rootProject.file("CHANGELOG.md").readText(Charsets.UTF_8)
 
 subprojects.filter { it.name != "api" }.forEach {
     it.project.version = rootProject.version
@@ -50,9 +42,9 @@ modrinth {
     autoAddDependsOn.set(false)
     detectLoaders.set(false)
 
-    //dependencies {
-    //    optional.version("fancyholograms", "2.0.6")
-    //}
+    dependencies {
+        optional.version("fancyholograms", "2.0.6")
+    }
 }
 
 hangarPublish {
@@ -80,9 +72,9 @@ hangarPublish {
                         required = false
                     }
 
-                    //hangar("FancyHolograms") {
-                    //    required = false
-                    //}
+                    hangar("FancyHolograms") {
+                        required = false
+                    }
 
                     url("Oraxen", "https://www.spigotmc.org/resources/%E2%98%84%EF%B8%8F-oraxen-custom-items-blocks-emotes-furniture-resourcepack-and-gui-1-18-1-20-4.72448/") {
                         required = false
