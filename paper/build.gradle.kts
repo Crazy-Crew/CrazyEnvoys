@@ -56,6 +56,8 @@ tasks {
     }
 
     assemble {
+        dependsOn(shadowJar)
+
         doLast {
             copy {
                 from(shadowJar.get())
