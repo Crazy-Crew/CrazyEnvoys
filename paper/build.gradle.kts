@@ -1,7 +1,6 @@
 plugins {
-    id("io.github.goooler.shadow")
-
-    alias(libs.plugins.run.paper)
+    alias(libs.plugins.shadowJar)
+    alias(libs.plugins.runPaper)
 
     `paper-plugin`
 }
@@ -13,13 +12,9 @@ dependencies {
 
     compileOnly(fileTree("$projectDir/libs/compile").include("*.jar"))
 
-    compileOnly(fileTree("$rootDir/libs/compile").include("*.jar"))
-
     compileOnly(libs.decent.holograms)
 
-    compileOnly(libs.placeholder.api)
-
-    compileOnly(libs.oraxen.api)
+    compileOnly(libs.placeholderapi)
 
     //compileOnly(libs.worldguard)
 
@@ -32,7 +27,7 @@ tasks {
     publishing {
         repositories {
             maven {
-                url = uri("https://repo.crazycrew.us/releases/")
+                url = uri("https://repo.crazycrew.us/releases")
 
                 credentials {
                     this.username = System.getenv("gradle_username")
