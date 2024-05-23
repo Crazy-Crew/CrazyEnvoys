@@ -22,6 +22,8 @@ dependencies {
     compileOnly(libs.oraxen.api)
 
     //compileOnly(libs.worldguard)
+
+    api(projects.crazyenvoysCore)
 }
 
 val component: SoftwareComponent = components["java"]

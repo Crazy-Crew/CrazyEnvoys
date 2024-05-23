@@ -12,3 +12,4 @@ fun include(name: String, block: ProjectDescriptor.() -> Unit) {
     include(name)
     project(":$name").apply(block)
 }
+listOf("paper", "core").forEach(::includeProject)
