@@ -8,7 +8,10 @@ plugins {
 dependencies {
     implementation(libs.triumph.cmds)
 
-    implementation(libs.vital.paper)
+    // org.yaml is already bundled with Paper
+    implementation(libs.vital.paper) {
+        exclude("org.yaml")
+    }
 
     compileOnly(fileTree("$projectDir/libs/compile").include("*.jar"))
 
