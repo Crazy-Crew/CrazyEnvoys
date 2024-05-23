@@ -1,40 +1,36 @@
+import com.ryderbelserion.feather.enums.Repository
+import org.gradle.accessors.dm.LibrariesForLibs
+
+val libs = the<LibrariesForLibs>()
+
 plugins {
-    `java-library`
+    id("com.ryderbelserion.feather-core")
 
     `maven-publish`
+
+    `java-library`
 }
 
 repositories {
-    maven("https://repo.codemc.io/repository/maven-public/")
-
-    maven("https://repo.crazycrew.us/snapshots/")
-
-    maven("https://repo.crazycrew.us/releases/")
-
-    maven("https://jitpack.io/")
-
     flatDir { dirs("libs") }
 
     mavenCentral()
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
+dependencies {
+    compileOnlyApi(libs.annotations)
 }
 
-tasks {
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        options.release.set(21)
-    }
+feather {
+    repository("https://repo.codemc.io/repository/maven-public")
 
-    javadoc {
-        options.encoding = Charsets.UTF_8.name()
-    }
+    repository(Repository.CrazyCrewReleases.url)
 
-    processResources {
-        filteringCharset = Charsets.UTF_8.name()
+    repository(Repository.Jitpack.url)
+
+    configureJava {
+        javaSource(JvmVendorSpec.AMAZON)
+
+        javaVersion(21)
     }
 }
