@@ -29,7 +29,7 @@ feather {
     repository(Repository.Jitpack.url)
 
     configureJava {
-        javaSource(JvmVendorSpec.AMAZON)
+        javaSource(JvmVendorSpec.ADOPTIUM)
 
         javaVersion(21)
     }
