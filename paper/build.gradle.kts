@@ -11,7 +11,7 @@ dependencies {
 
     implementation(libs.vital.paper)
 
-    implementation(project(":crazyenvoys-common"))
+    compileOnly(fileTree("$projectDir/libs/compile").include("*.jar"))
 
     compileOnly(fileTree("$rootDir/libs/compile").include("*.jar"))
 
