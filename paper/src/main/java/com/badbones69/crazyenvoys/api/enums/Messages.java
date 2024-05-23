@@ -13,7 +13,6 @@ import com.badbones69.crazyenvoys.config.impl.locale.PlayerKeys;
 import com.ryderbelserion.vital.core.util.StringUtil;
 import com.ryderbelserion.vital.paper.enums.Support;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -183,7 +182,7 @@ public enum Messages {
         String message;
 
         if (isList()) {
-            message = StringUtils.chomp(StringUtil.convertList(getList()));
+            message = StringUtil.chomp(StringUtil.convertList(getList()));
         } else {
             message = getString();
         }
