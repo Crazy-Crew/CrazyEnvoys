@@ -1,47 +1,22 @@
+import com.ryderbelserion.feather.enums.Repository
+import org.gradle.accessors.dm.LibrariesForLibs
+
+val libs = the<LibrariesForLibs>()
+
 plugins {
-    id("io.papermc.paperweight.userdev")
-
-    id("xyz.jpenilla.run-paper")
-
-    id("root-plugin")
+    id("java-plugin")
 }
-
-repositories {
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-
-    maven("https://repo.papermc.io/repository/maven-public/")
-
-    maven("https://repo.codemc.io/repository/maven-public/")
-
-    maven("https://repo.triumphteam.dev/snapshots/")
-
-    maven("https://repo.oraxen.com/releases/")
-
-    flatDir { dirs("libs") }
-}
-
-val mcVersion = providers.gradleProperty("mcVersion").get()
-
-project.version = if (System.getenv("BUILD_NUMBER") != null) "${rootProject.version}-${System.getenv("BUILD_NUMBER")}" else rootProject.version
 
 dependencies {
-    paperweight.paperDevBundle("$mcVersion-R0.1-SNAPSHOT")
+    compileOnly(libs.paper)
 }
 
-tasks {
-    assemble {
-        dependsOn(reobfJar)
-    }
+feather {
+    repository("https://repo.extendedclip.com/content/repositories/placeholderapi")
 
-    runServer {
-        jvmArgs("-Dnet.kyori.ansi.colorLevel=truecolor")
+    repository("https://repo.triumphteam.dev/snapshots")
 
-        defaultCharacterEncoding = Charsets.UTF_8.name()
+    repository("https://maven.enginehub.org/repo")
 
-        minecraftVersion(mcVersion)
-    }
-
-    modrinth {
-        loaders.addAll("paper", "purpur")
-    }
+    repository(Repository.Paper.url)
 }

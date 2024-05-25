@@ -2,8 +2,8 @@ package com.badbones69.crazyenvoys.api.objects;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.support.SkullCreator;
-import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
-import com.ryderbelserion.cluster.utils.DyeUtils;
+import com.ryderbelserion.vital.paper.enums.Support;
+import com.ryderbelserion.vital.paper.util.DyeUtil;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -33,8 +33,7 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
-
+import com.badbones69.crazyenvoys.util.MsgUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -379,7 +378,7 @@ public class ItemBuilder {
 
         ItemStack item = this.itemStack;
 
-        if (PluginSupport.ORAXEN.isPluginEnabled()) {
+        if (Support.oraxen.isEnabled()) {
             io.th0rgal.oraxen.items.ItemBuilder oraxenItem = OraxenItems.getItemById(this.customMaterial);
 
             if (oraxenItem != null && OraxenItems.exists(this.customMaterial)) {
@@ -551,9 +550,9 @@ public class ItemBuilder {
                     this.potionType = getPotionType(PotionEffectType.getByName(metaData));
                 } catch (Exception ignored) {}
 
-                this.potionColor = DyeUtils.getColor(metaData);
-                this.armorColor = DyeUtils.getColor(metaData);
-                this.mapColor = DyeUtils.getColor(metaData);
+                this.potionColor = DyeUtil.getColor(metaData);
+                this.armorColor = DyeUtil.getColor(metaData);
+                this.mapColor = DyeUtil.getColor(metaData);
             }
         } else if (material.contains("#")) {
             String[] b = material.split("#");
@@ -752,7 +751,7 @@ public class ItemBuilder {
             for (PatternType pattern : PatternType.values()) {
 
                 if (split[0].equalsIgnoreCase(pattern.name()) || split[0].equalsIgnoreCase(pattern.getIdentifier())) {
-                    DyeColor color = DyeUtils.getDyeColor(split[1]);
+                    DyeColor color = DyeUtil.getDyeColor(split[1]);
 
                     if (color != null) addPattern(new Pattern(color, pattern));
 
@@ -1068,7 +1067,7 @@ public class ItemBuilder {
                         try {
                             for (PatternType pattern : PatternType.values()) {
                                 if (option.equalsIgnoreCase(pattern.name()) || value.equalsIgnoreCase(pattern.getIdentifier())) {
-                                    DyeColor color = DyeUtils.getDyeColor(value);
+                                    DyeColor color = DyeUtil.getDyeColor(value);
                                     if (color != null) itemBuilder.addPattern(new Pattern(color, pattern));
                                     break;
                                 }
@@ -1116,8 +1115,7 @@ public class ItemBuilder {
     private void addGlow() {
         if (this.glowing) {
             try {
-                this.itemMeta.addEnchant(Enchantment.LUCK, 1, false);
-                this.itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                this.itemMeta.setEnchantmentGlintOverride(true);
                 this.itemStack.setItemMeta(this.itemMeta);
             } catch (NoClassDefFoundError ignored) {}
         }
@@ -1133,27 +1131,27 @@ public class ItemBuilder {
         if (type != null) {
             if (type.equals(PotionEffectType.FIRE_RESISTANCE)) {
                 return PotionType.FIRE_RESISTANCE;
-            } else if (type.equals(PotionEffectType.HARM)) {
-                return PotionType.INSTANT_DAMAGE;
-            } else if (type.equals(PotionEffectType.HEAL)) {
-                return PotionType.INSTANT_HEAL;
+            } else if (type.equals(PotionEffectType.INSTANT_DAMAGE)) {
+                return PotionType.STRONG_HARMING;
+            } else if (type.equals(PotionEffectType.INSTANT_HEALTH)) {
+                return PotionType.HEALING;
             } else if (type.equals(PotionEffectType.INVISIBILITY)) {
                 return PotionType.INVISIBILITY;
-            } else if (type.equals(PotionEffectType.JUMP)) {
-                return PotionType.JUMP;
-            } else if (type.equals(PotionEffectType.getByName("LUCK"))) {
-                return PotionType.valueOf("LUCK");
+            } else if (type.equals(PotionEffectType.JUMP_BOOST)) {
+                return PotionType.LEAPING;
+            } else if (type.equals(PotionEffectType.LUCK)) {
+                return PotionType.LUCK;
             } else if (type.equals(PotionEffectType.NIGHT_VISION)) {
                 return PotionType.NIGHT_VISION;
             } else if (type.equals(PotionEffectType.POISON)) {
                 return PotionType.POISON;
             } else if (type.equals(PotionEffectType.REGENERATION)) {
-                return PotionType.REGEN;
-            } else if (type.equals(PotionEffectType.SLOW)) {
+                return PotionType.REGENERATION;
+            } else if (type.equals(PotionEffectType.SLOWNESS)) {
                 return PotionType.SLOWNESS;
             } else if (type.equals(PotionEffectType.SPEED)) {
-                return PotionType.SPEED;
-            } else if (type.equals(PotionEffectType.INCREASE_DAMAGE)) {
+                return PotionType.SWIFTNESS;
+            } else if (type.equals(PotionEffectType.STRENGTH)) {
                 return PotionType.STRENGTH;
             } else if (type.equals(PotionEffectType.WATER_BREATHING)) {
                 return PotionType.WATER_BREATHING;

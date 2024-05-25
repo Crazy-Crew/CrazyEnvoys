@@ -3,8 +3,9 @@ package com.badbones69.crazyenvoys;
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
+import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -20,7 +21,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
+import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -106,7 +107,12 @@ public class Methods {
     }
 
     private void detonate(Firework firework) {
-        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, firework::detonate, 2);
+        new FoliaRunnable(this.plugin.getServer().getRegionScheduler(), firework.getLocation()) {
+            @Override
+            public void run() {
+                firework.detonate();
+            }
+        }.runDelayed(this.plugin, 2);
     }
 
     public List<String> getPage(List<String> list, Integer page) {

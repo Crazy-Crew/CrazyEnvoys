@@ -1,17 +1,15 @@
-package us.crazycrew.crazyenvoys.api.plugin;
+package com.badbones69.crazyenvoys.api.plugin;
 
 import com.badbones69.crazyenvoys.api.FileManager;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.CrazyEnvoysPlugin;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.api.plugin.migration.MigrationService;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.support.MetricsHandler;
+import com.badbones69.crazyenvoys.api.plugin.migration.MigrationService;
+
 import java.io.File;
 
 public class CrazyHandler extends CrazyEnvoysPlugin {
 
-    private MetricsHandler metrics;
     private FileManager fileManager;
 
     public CrazyHandler(File dataFolder) {
@@ -30,11 +28,6 @@ public class CrazyHandler extends CrazyEnvoysPlugin {
                 .registerDefaultGenerateFiles("Lucky.yml", "/tiers", "/tiers")
                 .registerDefaultGenerateFiles("Titan.yml", "/tiers", "/tiers")
                 .setup();
-
-        boolean metrics = getConfigManager().getConfig().getProperty(ConfigKeys.toggle_metrics);
-
-        this.metrics = new MetricsHandler();
-        if (metrics) this.metrics.start();
     }
 
     public void uninstall() {
@@ -52,9 +45,5 @@ public class CrazyHandler extends CrazyEnvoysPlugin {
 
     public @NotNull FileManager getFileManager() {
         return this.fileManager;
-    }
-
-    public @NotNull MetricsHandler getMetrics() {
-        return this.metrics;
     }
 }

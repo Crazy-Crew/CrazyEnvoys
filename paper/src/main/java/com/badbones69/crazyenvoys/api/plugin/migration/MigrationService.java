@@ -1,4 +1,4 @@
-package us.crazycrew.crazyenvoys.api.plugin.migration;
+package com.badbones69.crazyenvoys.api.plugin.migration;
 
 import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;
@@ -49,14 +49,12 @@ public class MigrationService {
         String language = config.getString("language", "en-US");
 
         boolean verbose = config.getBoolean("verbose_logging", false);
-        boolean metrics = config.getBoolean("toggle_metrics", false);
 
         String prefix = config.getString("command_prefix", "&8[&dCrazyEnvoys&8]: ");
         String consolePrefix = config.getString("console_prefix", "&8[&cCrazyEnvoys&8] ");
 
         configKeys.setProperty(ConfigKeys.locale_file, language);
         configKeys.setProperty(ConfigKeys.verbose_logging, verbose);
-        configKeys.setProperty(ConfigKeys.toggle_metrics, metrics);
         configKeys.setProperty(ConfigKeys.command_prefix, prefix);
         configKeys.setProperty(ConfigKeys.console_prefix, consolePrefix);
 
@@ -161,7 +159,6 @@ public class MigrationService {
                 .create();
 
         configKeys.setProperty(ConfigKeys.command_prefix, oldPrefix);
-        configKeys.setProperty(ConfigKeys.toggle_metrics, oldMetrics);
 
         configKeys.setProperty(ConfigKeys.envoy_falling_block_toggle, fallingBlockToggle);
         configKeys.setProperty(ConfigKeys.envoy_falling_block_type, fallingBlockType);

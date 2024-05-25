@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import us.crazycrew.crazyenvoys.common.config.types.MessageKeys;
-import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
+import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
 
 public class PlaceholderAPISupport extends PlaceholderExpansion {
 

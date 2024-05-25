@@ -1,37 +1,35 @@
 plugins {
-    id("paper-plugin")
+    alias(libs.plugins.shadowJar)
+    alias(libs.plugins.runPaper)
+
+    `paper-plugin`
 }
 
-val mcVersion = providers.gradleProperty("mcVersion").get()
-
-repositories {
-    maven("https://maven.enginehub.org/repo/")
+feather {
+    repository("https://repo.oraxen.com/releases")
 }
 
 dependencies {
-    api(project(":common"))
+    implementation(libs.triumph.cmds)
 
-    implementation(libs.cluster.paper)
-
-    implementation(libs.triumphcmds)
-
-    implementation(libs.metrics)
+    // org.yaml is already bundled with Paper
+    implementation(libs.vital.paper) {
+        exclude("org.yaml")
+    }
 
     implementation(libs.nbtapi)
 
-    compileOnly(libs.holographicdisplays)
+    compileOnly(fileTree("$projectDir/libs/compile").include("*.jar"))
 
-    compileOnly(libs.decentholograms)
+    compileOnly(libs.decent.holograms)
 
     compileOnly(libs.placeholderapi)
-
-    compileOnly(libs.itemsadder)
 
     compileOnly(libs.worldguard)
 
     compileOnly(libs.oraxen)
 
-    compileOnly(fileTree("libs").include("*.jar"))
+    api(projects.crazyenvoysCore)
 }
 
 val component: SoftwareComponent = components["java"]
@@ -40,11 +38,11 @@ tasks {
     publishing {
         repositories {
             maven {
-                url = uri("https://repo.crazycrew.us/releases/")
+                url = uri("https://repo.crazycrew.us/releases")
 
                 credentials {
-                    this.username = System.getenv("GRADLE_USERNAME")
-                    this.password = System.getenv("GRADLE_PASSWORD")
+                    this.username = System.getenv("gradle_username")
+                    this.password = System.getenv("gradle_password")
                 }
             }
         }
@@ -60,31 +58,50 @@ tasks {
         }
     }
 
+    runServer {
+        jvmArgs("-Dnet.kyori.ansi.colorLevel=truecolor")
+
+        defaultCharacterEncoding = Charsets.UTF_8.name()
+
+        minecraftVersion("1.20.6")
+    }
+
+    assemble {
+        dependsOn(shadowJar)
+
+        doLast {
+            copy {
+                from(shadowJar.get())
+                into(rootProject.projectDir.resolve("jars"))
+            }
+        }
+    }
+
     shadowJar {
+        archiveBaseName.set(rootProject.name)
+        archiveClassifier.set("")
+
         listOf(
             "de.tr7zw.changeme.nbtapi",
-            "dev.triumphteam.cmd",
-            "org.bstats"
+            "com.ryderbelserion",
+            "dev.triumphteam",
+            "ch.jalu"
         ).forEach {
             relocate(it, "libs.$it")
         }
     }
 
     processResources {
-        val properties = hashMapOf(
-                "name" to rootProject.name,
-                "version" to rootProject.version,
-                "group" to rootProject.group,
-                "description" to rootProject.description,
-                "apiVersion" to rootProject.properties["apiVersion"],
-                "authors" to rootProject.properties["authors"],
-                "website" to rootProject.properties["website"]
-        )
-
-        inputs.properties(properties)
+        inputs.properties("name" to rootProject.name)
+        inputs.properties("version" to project.version)
+        inputs.properties("group" to project.group)
+        inputs.properties("description" to project.properties["description"])
+        inputs.properties("apiVersion" to libs.versions.minecraft.get())
+        inputs.properties("authors" to project.properties["authors"])
+        inputs.properties("website" to project.properties["website"])
 
         filesMatching("plugin.yml") {
-            expand(properties)
+            expand(inputs.properties)
         }
     }
 }

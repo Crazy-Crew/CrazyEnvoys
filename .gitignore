@@ -3,11 +3,11 @@ build
 .idea
 jars
 
-common/build
+core/build
 paper/build
 api/build
 
-common/.gradle
+core/.gradle
 api/.gradle
 paper/.gradle
 

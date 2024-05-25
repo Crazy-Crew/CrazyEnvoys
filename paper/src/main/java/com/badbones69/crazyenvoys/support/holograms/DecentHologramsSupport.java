@@ -2,7 +2,7 @@ package com.badbones69.crazyenvoys.support.holograms;
 
 import com.badbones69.crazyenvoys.api.interfaces.HologramController;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.util.MsgUtils;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.block.Block;

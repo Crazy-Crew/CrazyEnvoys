@@ -1,15 +1,13 @@
+import com.ryderbelserion.feather.feather
+
 plugins {
+    id("com.ryderbelserion.feather-logic") version "0.0.1"
+
     `kotlin-dsl`
 }
 
 dependencies {
-    implementation(libs.paperweight)
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 
-    implementation(libs.shadow)
-
-    implementation(libs.runpaper)
-
-    implementation(libs.modrinth)
-
-    implementation(libs.hangar)
+    feather("0.0.1")
 }

@@ -14,16 +14,18 @@ import com.badbones69.crazyenvoys.listeners.EnvoyEditListener;
 import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
 import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
-import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
+import com.ryderbelserion.vital.paper.VitalPaper;
+import com.ryderbelserion.vital.paper.enums.Support;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
+import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
+import com.badbones69.crazyenvoys.support.MetricsWrapper;
 
 public class CrazyEnvoys extends JavaPlugin {
 
@@ -46,6 +48,10 @@ public class CrazyEnvoys extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new VitalPaper(this).setLogging(false);
+
+        new MetricsWrapper(this, 4514);
+
         this.crazyHandler = new CrazyHandler(getDataFolder());
         this.crazyHandler.install();
 
@@ -99,7 +105,7 @@ public class CrazyEnvoys extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FlareClickListener(), this);
         getServer().getPluginManager().registerEvents(new FireworkDamageListener(), this);
 
-        if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
+        if (Support.placeholder_api.isEnabled()) {
             new PlaceholderAPISupport().register();
         }
 
