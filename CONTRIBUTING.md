@@ -8,8 +8,8 @@ that we have a tick about.
 If you do not use a personal fork, We have to manually merge your pull request which means it's marked as closed instead of merged.
 
 ## Requirements
- * `git`
- * Java 17 ( Adoptium is recommended )
+* `git`
+* Java 21 ( Adoptium or Corretto is recommended )
 
 Pull Requests must be labeled properly according to if it's a bug fix, a new feature or enhancements to the code base.
  * `git checkout -b fix/your_fix`
