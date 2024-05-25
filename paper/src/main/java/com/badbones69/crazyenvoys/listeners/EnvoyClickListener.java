@@ -12,8 +12,8 @@ import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
-import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.util.MsgUtils;
+import com.ryderbelserion.vital.paper.enums.Support;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -30,7 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
+import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -140,7 +140,7 @@ public class EnvoyClickListener implements Listener {
         for (Prize prize : envoyOpenEvent.getPrizes()) {
             if (!tier.getPrizeMessage().isEmpty() && prize.getMessages().isEmpty()) {
                 for (String message : tier.getPrizeMessage()) {
-                    if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
+                    if (Support.placeholder_api.isEnabled()) {
                         message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
@@ -148,7 +148,7 @@ public class EnvoyClickListener implements Listener {
                 }
             } else {
                 for (String message : prize.getMessages()) {
-                    if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) {
+                    if (Support.placeholder_api.isEnabled()) {
                         message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
@@ -157,7 +157,7 @@ public class EnvoyClickListener implements Listener {
             }
 
             for (String cmd : prize.getCommands()) {
-                if (PluginSupport.PLACEHOLDER_API.isPluginEnabled()) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
+                if (Support.placeholder_api.isEnabled()) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
 
                 this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), cmd.replace("{player}", player.getName()).replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
             }

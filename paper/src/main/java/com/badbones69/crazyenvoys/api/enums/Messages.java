@@ -5,7 +5,7 @@ import ch.jalu.configme.properties.Property;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import us.crazycrew.crazyenvoys.common.utils.StringUtils;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

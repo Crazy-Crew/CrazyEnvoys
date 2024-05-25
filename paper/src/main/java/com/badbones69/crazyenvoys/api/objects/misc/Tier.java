@@ -4,7 +4,7 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.FileManager;
 import com.badbones69.crazyenvoys.api.FileManager.CustomFile;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;

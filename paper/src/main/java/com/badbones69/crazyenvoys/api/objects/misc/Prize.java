@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;

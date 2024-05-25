@@ -1,4 +1,4 @@
-package us.crazycrew.crazyenvoys.other;
+package com.badbones69.crazyenvoys.util;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import org.bukkit.ChatColor;

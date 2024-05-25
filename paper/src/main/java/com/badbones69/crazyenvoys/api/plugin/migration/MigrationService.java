@@ -1,4 +1,4 @@
-package us.crazycrew.crazyenvoys.api.plugin.migration;
+package com.badbones69.crazyenvoys.api.plugin.migration;
 
 import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;

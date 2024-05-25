@@ -243,7 +243,7 @@ public class CrazyManager {
             if (file.getStringList("Settings.Firework-Colors").isEmpty()) {
                 tier.setFireworkColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
             } else {
-                file.getStringList("Settings.Firework-Colors").forEach(color -> tier.addFireworkColor(DyeUtils.getColor(color)));
+                file.getStringList("Settings.Firework-Colors").forEach(color -> tier.addFireworkColor(DyeUtil.getDefaultColor(color)));
             }
 
             if (file.contains("Settings.Prize-Message") && !file.getStringList("Settings.Prize-Message").isEmpty()) {
@@ -260,7 +260,7 @@ public class CrazyManager {
             if (file.getStringList("Settings.Signal-Flare.Colors").isEmpty()) {
                 tier.setSignalFlareColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
             } else {
-                file.getStringList("Settings.Signal-Flare.Colors").forEach(color -> tier.addSignalFlareColor(DyeUtils.getColor(color)));
+                file.getStringList("Settings.Signal-Flare.Colors").forEach(color -> tier.addSignalFlareColor(DyeUtil.getDefaultColor(color)));
             }
 
             for (String prizeID : file.getConfigurationSection("Prizes").getKeys(false)) {
