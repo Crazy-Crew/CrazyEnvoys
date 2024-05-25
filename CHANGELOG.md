@@ -1,5 +1,11 @@
 ## Changes:
-* Removed example sub-folder which caused initial runtime error on first install
+* Updated to 1.20.6
+* Added folia support
+
+## Removal:
+* HolographicDisplays support has been removed
+* Removed the metrics toggle from `config.yml`
+  * To disable `metrics`, You can go in the `bStats` folder!
 
 ## Other:
 * [Feature Requests](https://github.com/Crazy-Crew/CrazyEnvoys/issues)
