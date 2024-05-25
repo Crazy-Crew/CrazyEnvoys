@@ -16,9 +16,6 @@ public class LocationSettings {
 
     private final List<Block> spawnLocations = new ArrayList<>();
 
-    /**
-     * Ryder Note: This used to be "spawnedLocations".
-     */
     private final List<Block> activeLocations = new ArrayList<>();
 
     private final List<String> failedLocations = new ArrayList<>();

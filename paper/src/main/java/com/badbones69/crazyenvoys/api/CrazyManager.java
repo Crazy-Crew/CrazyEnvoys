@@ -78,9 +78,6 @@ public class CrazyManager {
     private Location center;
     private String centerString;
 
-    private final Map<Block, Tier> activeEnvoys = new HashMap<>();
-    private final Map<Location, ScheduledTask> activeSignals = new HashMap<>();
-
     private final Map<Entity, Block> fallingBlocks = new HashMap<>();
 
     private final List<Tier> tiers = new ArrayList<>();
@@ -94,23 +91,6 @@ public class CrazyManager {
      */
     public void load() {
         loadEnvoys();
-    }
-
-    private void getEnvoyTime(Calendar cal) {
-        String time = this.config.getProperty(ConfigKeys.envoys_time);
-        int hour = Integer.parseInt(time.split(" ")[0].split(":")[0]);
-        int min = Integer.parseInt(time.split(" ")[0].split(":")[1]);
-        int calender = Calendar.AM;
-
-        if (time.split(" ")[1].equalsIgnoreCase("PM")) calender = Calendar.PM;
-
-        cal.set(Calendar.HOUR_OF_DAY, hour);
-        cal.getTime(); // Without this makes the hours not change for some reason.
-        cal.set(Calendar.MINUTE, min);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.AM_PM, calender);
-
-        if (cal.before(Calendar.getInstance())) cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1);
     }
 
     /**
@@ -185,46 +165,6 @@ public class CrazyManager {
         } else {
             this.nextEnvoy = Calendar.getInstance();
         }
-
-        // Loading the blacklisted blocks.
-        this.blacklistedBlocks.add(Material.WATER);
-        this.blacklistedBlocks.add(Material.LILY_PAD);
-        this.blacklistedBlocks.add(Material.LAVA);
-        this.blacklistedBlocks.add(Material.CHORUS_PLANT);
-        this.blacklistedBlocks.add(Material.KELP_PLANT);
-        this.blacklistedBlocks.add(Material.TALL_GRASS);
-        this.blacklistedBlocks.add(Material.CHORUS_FLOWER);
-        this.blacklistedBlocks.add(Material.SUNFLOWER);
-        this.blacklistedBlocks.add(Material.IRON_BARS);
-        this.blacklistedBlocks.add(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
-        this.blacklistedBlocks.add(Material.IRON_TRAPDOOR);
-        this.blacklistedBlocks.add(Material.OAK_TRAPDOOR);
-        this.blacklistedBlocks.add(Material.OAK_FENCE);
-        this.blacklistedBlocks.add(Material.OAK_FENCE_GATE);
-        this.blacklistedBlocks.add(Material.ACACIA_FENCE);
-        this.blacklistedBlocks.add(Material.BIRCH_FENCE);
-        this.blacklistedBlocks.add(Material.DARK_OAK_FENCE);
-        this.blacklistedBlocks.add(Material.JUNGLE_FENCE);
-        this.blacklistedBlocks.add(Material.NETHER_BRICK_FENCE);
-        this.blacklistedBlocks.add(Material.SPRUCE_FENCE);
-        this.blacklistedBlocks.add(Material.ACACIA_FENCE_GATE);
-        this.blacklistedBlocks.add(Material.BIRCH_FENCE_GATE);
-        this.blacklistedBlocks.add(Material.DARK_OAK_FENCE_GATE);
-        this.blacklistedBlocks.add(Material.JUNGLE_FENCE_GATE);
-        this.blacklistedBlocks.add(Material.SPRUCE_FENCE_GATE);
-        this.blacklistedBlocks.add(Material.GLASS_PANE);
-        this.blacklistedBlocks.add(Material.STONE_SLAB);
-
-        if (Support.worldedit.isEnabled() && Support.worldguard.isEnabled()) this.worldGuardSupportVersion = new WorldGuardSupport();
-
-        if (Support.decent_holograms.isEnabled()) {
-            this.hologramController = new DecentHologramsSupport();
-
-            this.plugin.getLogger().info("DecentHolograms support has been enabled.");
-        } else if (Support.cmi.isEnabled() && CMIModule.holograms.isEnabled()) {
-            this.hologramController = new CMIHologramsSupport();
-            this.plugin.getLogger().info("CMI Hologram support has been enabled.");
-        } else this.plugin.getLogger().warning("No holograms plugin were found. If using CMI, make sure holograms module is enabled.");
 
         this.locationSettings.fixLocations();
 
@@ -311,89 +251,10 @@ public class CrazyManager {
     }
 
     /**
-     * @return True if the envoy event is currently happening and false if not.
-     */
-    public boolean isEnvoyActive() {
-        return this.envoyActive;
-    }
-
-    /**
      * Despawns all the active crates.
      */
     public void removeAllEnvoys() {
-        this.envoyActive = false;
         cleanLocations();
-
-        for (Block block : getActiveEnvoys()) {
-            //todo() load chunk async
-            if (!block.getChunk().isLoaded()) block.getChunk().load();
-
-            block.setType(Material.AIR);
-
-            stopSignalFlare(block.getLocation());
-        }
-
-        this.fallingBlocks.keySet().forEach(Entity :: remove);
-
-        if (hasHologramPlugin()) this.hologramController.removeAllHolograms();
-
-        this.fallingBlocks.clear();
-        this.activeEnvoys.clear();
-    }
-
-    public WorldGuardSupport getWorldGuardPluginSupport() {
-        return this.worldGuardSupportVersion;
-    }
-
-    public HologramController getHologramController() {
-        return this.hologramController;
-    }
-
-    public boolean hasHologramPlugin() {
-        return this.hologramController != null;
-    }
-
-    /**
-     * @return All the envoys that are active.
-     */
-    public Set<Block> getActiveEnvoys() {
-        return this.activeEnvoys.keySet();
-    }
-
-    /**
-     * @param block The location you are checking.
-     * @return Turn if it is and false if not.
-     */
-    public boolean isActiveEnvoy(Block block) {
-        return this.activeEnvoys.containsKey(block);
-    }
-
-    /**
-     * @param block The location you wish to add.
-     */
-    public void addActiveEnvoy(Block block, Tier tier) {
-        this.activeEnvoys.put(block, tier);
-    }
-
-    /**
-     * @param block The location you wish to remove.
-     */
-    public void removeActiveEnvoy(Block block) {
-        this.activeEnvoys.remove(block);
-    }
-
-    /**
-     * @return The next envoy time as a calendar.
-     */
-    public Calendar getNextEnvoy() {
-        return this.nextEnvoy;
-    }
-
-    /**
-     * @param cal A calendar that has the next time the envoy will happen.
-     */
-    public void setNextEnvoy(Calendar cal) {
-        this.nextEnvoy = cal;
     }
 
     /**
@@ -751,32 +612,6 @@ public class CrazyManager {
     }
 
     /**
-     * @param loc The location the signals will be at.
-     * @param tier The tier the signal is.
-     */
-    public void startSignalFlare(final Location loc, final Tier tier) {
-        @NotNull ScheduledTask task = new FoliaRunnable(this.plugin.getServer().getRegionScheduler(), loc) {
-            @Override
-            public void run() {
-
-            }
-        }.runAtFixedRate(this.plugin, getTimeSeconds(tier.getSignalFlareTimer()) * 20L, getTimeSeconds(tier.getSignalFlareTimer()) * 20L);
-
-        this.activeSignals.put(loc, task);
-    }
-
-    /**
-     * @param loc The location that the signal is stopping.
-     */
-    public void stopSignalFlare(Location loc) {
-        try {
-            this.activeSignals.get(loc).cancel();
-        } catch (Exception ignored) {}
-
-        this.activeSignals.remove(loc);
-    }
-
-    /**
      * @return The center location for the random crates.
      */
     public Location getCenter() {
@@ -822,37 +657,6 @@ public class CrazyManager {
      */
     public void removeIgnorePlayer(UUID uuid) {
         this.ignoreMessages.remove(uuid);
-    }
-
-    /**
-     * Used to clean all spawn locations and set them back to air.
-     */
-    public void cleanLocations() {
-        List<Block> locations = new ArrayList<>(this.locationSettings.getActiveLocations());
-
-        if (this.config.getProperty(ConfigKeys.envoys_random_locations)) {
-            locations.addAll(getLocationsFromStringList(DataFiles.data.getYamlFile().getStringList("Locations.Spawned")));
-        } else {
-            locations.addAll(this.locationSettings.getSpawnLocations());
-        }
-
-        for (Block spawnedLocation : locations) {
-            if (spawnedLocation != null) {
-                //todo() load chunk async
-                if (!spawnedLocation.getChunk().isLoaded()) spawnedLocation.getChunk().load();
-
-                spawnedLocation.setType(Material.AIR);
-                stopSignalFlare(spawnedLocation.getLocation());
-
-                if (hasHologramPlugin()) this.hologramController.removeAllHolograms();
-            }
-        }
-
-        this.locationSettings.clearActiveLocations();
-        this.locationSettings.clearDropLocations();
-
-        DataFiles.data.getYamlFile().set("Locations.Spawned", new ArrayList<>());
-        DataFiles.data.save();
     }
 
     private boolean testCenter() {
@@ -935,46 +739,6 @@ public class CrazyManager {
         container.set(PersistentKeys.no_firework_damage.getNamespacedKey(), PersistentDataType.BOOLEAN, true);
     }
 
-    //todo find a better away of doing this as it causes crashes with big radius.
-    private List<Block> getBlocks(Location location, int radius) {
-        Location locations2 = location.clone();
-        location.add(-radius, 0, -radius);
-        locations2.add(radius, 0, radius);
-        List<Block> locations = new ArrayList<>();
-        int topBlockX = (Math.max(location.getBlockX(), locations2.getBlockX()));
-        int bottomBlockX = (Math.min(location.getBlockX(), locations2.getBlockX()));
-        int topBlockZ = (Math.max(location.getBlockZ(), locations2.getBlockZ()));
-        int bottomBlockZ = (Math.min(location.getBlockZ(), locations2.getBlockZ()));
-
-        if (location.getWorld() != null) {
-            for (int x = bottomBlockX; x <= topBlockX; x++) {
-                for (int z = bottomBlockZ; z <= topBlockZ; z++) {
-                    locations.add(location.getWorld().getHighestBlockAt(x, z));
-                }
-            }
-        }
-
-        return locations;
-    }
-
-    private int getTimeSeconds(String time) {
-        int seconds = 0;
-
-        for (String i : time.split(" ")) {
-            if (i.contains("d")) {
-                seconds += Integer.parseInt(i.replace("d", "")) * 86400;
-            } else if (i.contains("h")) {
-                seconds += Integer.parseInt(i.replace("h", "")) * 3600;
-            } else if (i.contains("m")) {
-                seconds += Integer.parseInt(i.replace("m", "")) * 60;
-            } else if (i.contains("s")) {
-                seconds += Integer.parseInt(i.replace("s", ""));
-            }
-        }
-
-        return seconds;
-    }
-
     private Tier pickRandomTier() {
         if (this.cachedChances.isEmpty()) {
             for (Tier tier : this.tiers) {
@@ -1000,26 +764,5 @@ public class CrazyManager {
 
     public CountdownTimer getCountdownTimer() {
         return this.countdownTimer;
-    }
-
-    // Get world location.
-    private List<String> getBlockList(List<Block> stringList) {
-        List<String> strings = new ArrayList<>();
-
-        for (Block block : stringList) {
-            strings.add(MiscUtils.getUnBuiltLocation(block.getLocation()));
-        }
-
-        return strings;
-    }
-
-    private List<Block> getLocationsFromStringList(List<String> locationsList) {
-        List<Block> locations = new ArrayList<>();
-
-        for (String location : locationsList) {
-            locations.add(MiscUtils.getBuiltLocation(location).getBlock());
-        }
-
-        return locations;
     }
 }

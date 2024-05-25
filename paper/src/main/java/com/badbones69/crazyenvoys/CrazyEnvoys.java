@@ -2,7 +2,6 @@ package com.badbones69.crazyenvoys;
 
 import com.badbones69.crazyenvoys.api.CrazyHandler;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
@@ -14,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class CrazyEnvoys extends JavaPlugin {
 
-    private CoolDownSettings coolDownSettings;
     private LocationSettings locationSettings;
     private EditorSettings editorSettings;
     private FlareSettings flareSettings;
@@ -53,8 +51,6 @@ public class CrazyEnvoys extends JavaPlugin {
         //if (Support.placeholder_api.isEnabled()) {
         //    new PlaceholderAPISupport().register();
         //}
-
-        //MiscUtils.registerCommand(getCommand("crazyenvoys"), new EnvoyTab(), new EnvoyCommand());
     }
 
     @Override
@@ -84,12 +80,11 @@ public class CrazyEnvoys extends JavaPlugin {
     public @NotNull final LocationSettings getLocationSettings() {
         return this.locationSettings;
     }
-    public @NotNull final CoolDownSettings getCoolDownSettings() {
-        return this.coolDownSettings;
-    }
+
     public @NotNull final EditorSettings getEditorSettings() {
         return this.editorSettings;
     }
+
     public @NotNull final FlareSettings getFlareSettings() {
         return this.flareSettings;
     }

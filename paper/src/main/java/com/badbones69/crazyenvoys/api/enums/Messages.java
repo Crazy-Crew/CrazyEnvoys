@@ -39,7 +39,6 @@ public enum Messages {
     no_permission(PlayerKeys.no_permission),
     same_player(PlayerKeys.same_player),
 
-    command_not_found(MiscKeys.unknown_command),
     not_a_number(MiscKeys.not_a_number),
     reloaded(MiscKeys.plugin_reloaded),
     player_only(MiscKeys.player_only),

@@ -7,11 +7,14 @@ import com.badbones69.crazyenvoys.api.objects.misc.v2.Tier;
 import com.badbones69.crazyenvoys.api.objects.misc.v2.records.RewardSettings;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.impl.ConfigKeys;
+import com.badbones69.crazyenvoys.platform.util.MiscUtils;
+import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.ryderbelserion.vital.core.config.YamlFile;
 import com.ryderbelserion.vital.core.config.YamlManager;
 import com.ryderbelserion.vital.core.config.objects.CustomFile;
 import com.ryderbelserion.vital.core.util.FileUtil;
 import com.ryderbelserion.vital.paper.builders.items.ItemBuilder;
+import com.ryderbelserion.vital.paper.enums.Support;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -21,9 +24,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.simpleyaml.configuration.ConfigurationSection;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class CrazyHandler {
 
@@ -34,10 +40,14 @@ public class CrazyHandler {
     private final Map<String, ArrayList<RewardSettings>> rewards = new HashMap<>();
     private final Map<String, Tier> tiers = new HashMap<>();
 
+    private WorldGuardSupport worldguard;
+
     /**
      * Loads rewards/tiers into memory.
      */
     public void load() {
+        if (Support.worldedit.isEnabled() && Support.worldguard.isEnabled()) this.worldguard = new WorldGuardSupport();
+
         // Clears the rewards
         this.rewards.clear();
 
@@ -89,6 +99,9 @@ public class CrazyHandler {
         buildSignalFlare();
     }
 
+    /**
+     * Reloads the plugin data.
+     */
     public void reload() {
         this.plugin.getPaperServer().reload();
 
@@ -96,7 +109,14 @@ public class CrazyHandler {
     }
 
     /**
-     * Gets a {@link Tier} from the {@link Map}
+     * @return the {@link WorldGuardSupport}
+     */
+    public final WorldGuardSupport getWorldguard() {
+        return this.worldguard;
+    }
+
+    /**
+     * Gets a {@link Tier} from the {@link Map}.
      *
      * @param tierName the name of the {@link Tier}
      * @return the {@link Tier}
@@ -241,6 +261,59 @@ public class CrazyHandler {
 
         // Remove item from any slot
         inventory.removeItemAnySlot(build(player));
+    }
+
+    private final Map<UUID, Calendar> cooldowns = new HashMap<>();
+
+    /**
+     * Add a cooldown.
+     *
+     * @param uuid the {@link UUID} of the {@link Player}
+     * @param timer the time to wait
+     */
+    public void addCooldown(UUID uuid, String timer) {
+        this.cooldowns.put(uuid, MiscUtils.getTimeFromString(timer));
+    }
+
+    /**
+     * Fetches a calendar instance.
+     *
+     * @param uuid the {@link UUID} of the {@link Player}
+     * @return the calendar instance
+     */
+    public Calendar getCooldown(UUID uuid) {
+        return this.cooldowns.get(uuid);
+    }
+
+    /**
+     * Remove a cooldown.
+     *
+     * @param uuid the {@link UUID} of the {@link Player}
+     */
+    public void removeCooldown(UUID uuid) {
+        this.cooldowns.remove(uuid);
+    }
+
+    /**
+     * @param uuid the {@link UUID} of the {@link Player}
+     * @return true or false
+     */
+    public boolean containsCooldown(UUID uuid) {
+        return this.cooldowns.containsKey(uuid);
+    }
+
+    /**
+     * @return the map of cooldowns
+     */
+    public Map<UUID, Calendar> getCooldowns() {
+        return Collections.unmodifiableMap(this.cooldowns);
+    }
+
+    /**
+     * Purge all cooldowns.
+     */
+    public void purgeCooldowns() {
+        this.cooldowns.clear();
     }
 
     /**

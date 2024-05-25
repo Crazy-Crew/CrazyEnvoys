@@ -2,11 +2,11 @@ package com.badbones69.crazyenvoys.listeners;
 
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
+import com.badbones69.crazyenvoys.api.CrazyHandler;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyOpenEvent;
-import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
@@ -43,11 +43,12 @@ public class EnvoyClickListener implements Listener {
 
     private final @NotNull CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private final @NotNull SettingsManager config = ConfigManager.getConfig();
+    private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
 
     private final @NotNull CrazyManager crazyManager = this.plugin.getCrazyManager();
 
-    private final @NotNull CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
+    private final @NotNull SettingsManager config = ConfigManager.getConfig();
+
     private final @NotNull LocationSettings locationSettings = this.plugin.getLocationSettings();
     
     @EventHandler(priority = EventPriority.HIGH)
@@ -87,20 +88,23 @@ public class EnvoyClickListener implements Listener {
             if (this.config.getProperty(ConfigKeys.envoys_grab_cooldown_toggle)) {
                 UUID uuid = player.getUniqueId();
 
-                if (this.coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(this.coolDownSettings.getCooldown().get(uuid))) {
+                if (this.crazyHandler.containsCooldown(uuid) && Calendar.getInstance().before(this.crazyHandler.getCooldown(uuid))) {
                     Map<String, String> placeholder = new HashMap<>();
-                    placeholder.put("{time}", MiscUtils.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
+
+                    placeholder.put("{time}", MiscUtils.convertTimeToString(this.crazyHandler.getCooldown(uuid)));
 
                     Messages.cooldown_left.sendMessage(player, placeholder);
+
                     return;
                 }
 
-                this.coolDownSettings.addCooldown(uuid, this.config.getProperty(ConfigKeys.envoys_grab_cooldown_timer));
+                this.crazyHandler.addCooldown(uuid, this.config.getProperty(ConfigKeys.envoys_grab_cooldown_timer));
             }
         }
         // Ryder End
 
         List<Prize> prizes = tier.getUseChance() ? pickPrizesByChance(tier) : pickRandomPrizes(tier);
+
         EnvoyOpenEvent envoyOpenEvent = new EnvoyOpenEvent(player, block, tier, prizes);
         this.plugin.getServer().getPluginManager().callEvent(envoyOpenEvent);
 

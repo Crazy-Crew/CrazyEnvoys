@@ -58,7 +58,7 @@ public class Tier {
 
         this.fireworkSettings = new FireworkSettings(prizes.getBoolean("fireworks.toggle", true), prizes.getStringList("fireworks.colors"));
 
-        this.flareSettings = new FlareSettings(prizes.getBoolean("signal-flare.toggle", true), prizes.getInt("signal-flare.time", 15), prizes.getStringList("signal-flare.colors"));
+        this.flareSettings = new FlareSettings(prizes.getBoolean("signal-flare.toggle", true), prizes.getString("signal-flare.time", "15s"), prizes.getStringList("signal-flare.colors"));
     }
 
     public final FireworkSettings getFireworkSettings() {
