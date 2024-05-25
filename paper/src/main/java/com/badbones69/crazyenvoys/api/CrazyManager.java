@@ -22,14 +22,15 @@ import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.listeners.timer.CountdownTimer;
 import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
-import com.badbones69.crazyenvoys.support.holograms.HolographicDisplaysSupport;
-import com.badbones69.crazyenvoys.support.libraries.PluginSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
-import com.ryderbelserion.cluster.utils.DyeUtils;
+import com.ryderbelserion.vital.paper.enums.Support;
+import com.ryderbelserion.vital.paper.util.DyeUtil;
+import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import us.crazycrew.crazyenvoys.other.MsgUtils;
+import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -42,13 +43,10 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.common.config.ConfigManager;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.api.plugin.CrazyHandler;
-import us.crazycrew.crazyenvoys.support.MetricsHandler;
+import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -90,8 +88,8 @@ public class CrazyManager {
     
     private CountdownTimer countdownTimer;
 
-    private BukkitTask runTimeTask;
-    private BukkitTask coolDownTask;
+    private ScheduledTask runTimeTask;
+    private ScheduledTask coolDownTask;
     private Calendar nextEnvoy;
     private Calendar envoyTimeLeft;
     private boolean envoyActive = false;
@@ -102,7 +100,7 @@ public class CrazyManager {
     private String centerString;
 
     private final Map<Block, Tier> activeEnvoys = new HashMap<>();
-    private final Map<Location, BukkitTask> activeSignals = new HashMap<>();
+    private final Map<Location, ScheduledTask> activeSignals = new HashMap<>();
 
     private final Map<Entity, Block> fallingBlocks = new HashMap<>();
 
@@ -140,11 +138,7 @@ public class CrazyManager {
      * Run this when you need to reload the plugin or shut it down.
      */
     public void reload(boolean serverStop) {
-        MetricsHandler metricsHandler = this.crazyHandler.getMetrics();
-
         if (serverStop) {
-            metricsHandler.stop();
-
             removeAllEnvoys();
 
             Files.USERS.getFile().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
@@ -158,14 +152,6 @@ public class CrazyManager {
         }
 
         this.configManager.reload();
-
-        boolean metrics = this.config.getProperty(ConfigKeys.toggle_metrics);
-
-        if (metrics) {
-            metricsHandler.start();
-        } else {
-            metricsHandler.stop();
-        }
 
         removeAllEnvoys();
 
@@ -341,7 +327,7 @@ public class CrazyManager {
      */
     public void startEnvoyCountDown() {
         cancelEnvoyCooldownTime();
-        this.coolDownTask = new BukkitRunnable() {
+        this.coolDownTask = new FoliaRunnable(this.plugin.getServer().getGlobalRegionScheduler()) {
             @Override
             public void run() {
                 if (!isEnvoyActive()) {
@@ -401,7 +387,7 @@ public class CrazyManager {
                     }
                 }
             }
-        }.runTaskTimer(this.plugin, 20, 20);
+        }.runAtFixedRate(this.plugin, 20, 20);
     }
 
     /**
@@ -780,7 +766,7 @@ public class CrazyManager {
             }
         }
 
-        this.runTimeTask = new BukkitRunnable() {
+        this.runTimeTask = new FoliaRunnable(this.plugin.getServer().getGlobalRegionScheduler()) {
             @Override
             public void run() {
                 EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.OUT_OF_TIME);
@@ -788,7 +774,7 @@ public class CrazyManager {
                 Messages.ended.broadcastMessage(false);
                 endEnvoyEvent();
             }
-        }.runTaskLater(this.plugin, getTimeSeconds(this.config.getProperty(ConfigKeys.envoys_run_time)) * 20L);
+        }.runDelayed(this.plugin, getTimeSeconds(this.config.getProperty(ConfigKeys.envoys_run_time)) * 20L);
 
         this.envoyTimeLeft = getEnvoyRunTimeCalendar();
 
@@ -839,12 +825,12 @@ public class CrazyManager {
      * @param tier The tier the signal is.
      */
     public void startSignalFlare(final Location loc, final Tier tier) {
-        BukkitTask task = new BukkitRunnable() {
+        ScheduledTask task = new FoliaRunnable(this.plugin.getServer().getRegionScheduler(), loc) {
             @Override
             public void run() {
                 firework(loc.clone().add(.5, 0, .5), tier);
             }
-        }.runTaskTimer(this.plugin, getTimeSeconds(tier.getSignalFlareTimer()) * 20L, getTimeSeconds(tier.getSignalFlareTimer()) * 20L);
+        }.runAtFixedRate(this.plugin, getTimeSeconds(tier.getSignalFlareTimer()) * 20L, getTimeSeconds(tier.getSignalFlareTimer()) * 20L);
 
         this.activeSignals.put(loc, task);
     }

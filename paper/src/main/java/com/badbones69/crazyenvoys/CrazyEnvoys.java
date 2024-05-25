@@ -48,6 +48,10 @@ public class CrazyEnvoys extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new VitalPaper(this).setLogging(false);
+
+        new MetricsWrapper(this, 4514);
+
         this.crazyHandler = new CrazyHandler(getDataFolder());
         this.crazyHandler.install();
 

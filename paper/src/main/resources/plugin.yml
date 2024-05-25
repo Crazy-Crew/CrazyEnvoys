@@ -8,6 +8,8 @@ api-version: '${apiVersion}'
 description: '${description}'
 website: '${website}'
 
+folia-supported: true
+
 softdepend:
   - CMI
   - DecentHolograms
