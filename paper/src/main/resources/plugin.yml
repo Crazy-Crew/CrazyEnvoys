@@ -10,7 +10,6 @@ website: '${website}'
 
 softdepend:
   - CMI
-  - HolographicDisplays
   - DecentHolograms
   - PlaceholderAPI
   - MVdWPlaceholderAPI

@@ -320,17 +320,15 @@ public class CrazyManager {
             this.blacklistedBlocks.add(Material.STONE_SLAB);
         }
 
-        if (PluginSupport.WORLD_GUARD.isPluginEnabled() && PluginSupport.WORLD_EDIT.isPluginEnabled()) this.worldGuardSupportVersion = new WorldGuardSupport();
+        if (Support.worldguard.isEnabled() && Support.worldedit.isEnabled()) this.worldGuardSupportVersion = new WorldGuardSupport();
 
-        if (PluginSupport.DECENT_HOLOGRAMS.isPluginEnabled()) {
+
+        if (Support.decent_holograms.isEnabled()) {
             this.hologramController = new DecentHologramsSupport();
             this.plugin.getLogger().info("DecentHolograms support has been enabled.");
-        } else if (PluginSupport.CMI.isPluginEnabled() && CMIModule.holograms.isEnabled()) {
+        } else if (Support.cmi.isEnabled() && CMIModule.holograms.isEnabled()) {
             this.hologramController = new CMIHologramsSupport();
             this.plugin.getLogger().info("CMI Hologram support has been enabled.");
-        } else if (PluginSupport.HOLOGRAPHIC_DISPLAYS.isPluginEnabled()) {
-            this.hologramController = new HolographicDisplaysSupport();
-            this.plugin.getLogger().info("Holographic Displays support has been enabled.");
         } else this.plugin.getLogger().warning("No holograms plugin were found. If using CMI, make sure holograms module is enabled.");
 
         this.locationSettings.fixLocations();
