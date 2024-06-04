@@ -197,7 +197,7 @@ public class Methods {
     }
 
     public Location getBuiltLocation(String locationString) {
-        World w = this.plugin.getServer().getWorlds().get(0);
+        World w = this.plugin.getServer().getWorlds().getFirst();
         int x = 0;
         int y = 0;
         int z = 0;

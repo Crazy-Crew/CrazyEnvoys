@@ -268,7 +268,7 @@ public class EnvoyClickListener implements Listener {
     }
     
     private Tier pickRandomTier() {
-        if (this.crazyManager.getTiers().size() == 1) return this.crazyManager.getTiers().get(0);
+        if (this.crazyManager.getTiers().size() == 1) return this.crazyManager.getTiers().getFirst();
 
         List<Tier> tiers = new ArrayList<>();
 
