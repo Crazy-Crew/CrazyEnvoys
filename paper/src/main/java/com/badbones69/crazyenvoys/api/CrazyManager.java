@@ -306,8 +306,7 @@ public class CrazyManager {
             this.blacklistedBlocks.add(Material.STONE_SLAB);
         }
 
-        if (Support.worldguard.isEnabled() && Support.worldedit.isEnabled()) this.worldGuardSupportVersion = new WorldGuardSupport();
-
+        if (Support.worldedit.isEnabled() && Support.worldguard.isEnabled()) this.worldGuardSupportVersion = new WorldGuardSupport();
 
         if (Support.decent_holograms.isEnabled()) {
             this.hologramController = new DecentHologramsSupport();
@@ -327,6 +326,7 @@ public class CrazyManager {
      */
     public void startEnvoyCountDown() {
         cancelEnvoyCooldownTime();
+
         this.coolDownTask = new FoliaRunnable(this.plugin.getServer().getGlobalRegionScheduler()) {
             @Override
             public void run() {
