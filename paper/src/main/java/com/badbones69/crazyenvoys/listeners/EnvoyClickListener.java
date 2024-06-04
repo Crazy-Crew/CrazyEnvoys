@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
 import static java.util.regex.Matcher.quoteReplacement;
 
 public class EnvoyClickListener implements Listener {
@@ -243,7 +245,7 @@ public class EnvoyClickListener implements Listener {
         int max = tier.getBulkToggle() ? tier.getBulkMax() : 1;
 
         for (int i = 0; prizes.size() < max && i < 500; i++) {
-            Prize prize = tier.getPrizes().get(new Random().nextInt(tier.getPrizes().size()));
+            Prize prize = tier.getPrizes().get(ThreadLocalRandom.current().nextInt(tier.getPrizes().size()));
 
             if (!prizes.contains(prize)) prizes.add(prize);
         }
@@ -268,7 +270,7 @@ public class EnvoyClickListener implements Listener {
     }
     
     private Tier pickRandomTier() {
-        if (this.crazyManager.getTiers().size() == 1) return this.crazyManager.getTiers().get(0);
+        if (this.crazyManager.getTiers().size() == 1) return this.crazyManager.getTiers().getFirst();
 
         List<Tier> tiers = new ArrayList<>();
 
@@ -278,6 +280,6 @@ public class EnvoyClickListener implements Listener {
             }
         }
 
-        return tiers.get(new Random().nextInt(tiers.size()));
+        return tiers.get(ThreadLocalRandom.current().nextInt(tiers.size()));
     }
 }

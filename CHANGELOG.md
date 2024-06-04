@@ -1,11 +1,7 @@
 ## Changes:
-* Updated to 1.20.6
-* Added folia support
-
-## Removal:
-* HolographicDisplays support has been removed
-* Removed the metrics toggle from `config.yml`
-  * To disable `metrics`, You can go in the `bStats` folder!
+* Check if WorldEdit is enabled first instead of WorldGuard, WorldGuard won't be enabled if WorldEdit isn't.
+* Update methods used to create falling blocks, The previous methods were deprecated.
+* Using ThreadLocalRandom() instead of creating a new Random() every method call.
 
 ## Other:
 * [Feature Requests](https://github.com/Crazy-Crew/CrazyEnvoys/issues)

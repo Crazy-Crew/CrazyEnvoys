@@ -4,6 +4,8 @@ import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
+import org.bukkit.entity.Marker;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.Color;
@@ -27,6 +29,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Methods {
 
@@ -142,10 +145,11 @@ public class Methods {
         return locations;
     }
 
-    public boolean isSuccessful(int min, int max) {
+    public boolean isSuccessful(final int min, final int max) {
         if (max <= min || max <= 0) return true;
 
-        int chance = 1 + new Random().nextInt(max);
+        final int chance = 1 + ThreadLocalRandom.current().nextInt(max);
+
         return chance <= min;
     }
 
@@ -153,9 +157,11 @@ public class Methods {
         List<Entity> out = new ArrayList<>();
 
         if (loc.getWorld() != null) {
-            FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), Material.AIR, (byte) 0);
-            out = ent.getNearbyEntities(x, y, z);
-            ent.remove();
+            Marker entity = loc.getWorld().spawn(loc.subtract(0, 0, 0), Marker.class, CreatureSpawnEvent.SpawnReason.CUSTOM);
+
+            out = entity.getNearbyEntities(x, y, z);
+
+            entity.remove();
         }
 
         return out;
@@ -195,7 +201,7 @@ public class Methods {
     }
 
     public Location getBuiltLocation(String locationString) {
-        World w = this.plugin.getServer().getWorlds().get(0);
+        World w = this.plugin.getServer().getWorlds().getFirst();
         int x = 0;
         int y = 0;
         int z = 0;
