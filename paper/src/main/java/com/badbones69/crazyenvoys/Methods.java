@@ -153,9 +153,11 @@ public class Methods {
         List<Entity> out = new ArrayList<>();
 
         if (loc.getWorld() != null) {
-            FallingBlock ent = loc.getWorld().spawnFallingBlock(loc.subtract(0, 0, 0), Material.AIR, (byte) 0);
-            out = ent.getNearbyEntities(x, y, z);
-            ent.remove();
+            Marker entity = loc.getWorld().spawn(loc.subtract(0, 0, 0), Marker.class, CreatureSpawnEvent.SpawnReason.CUSTOM);
+
+            out = entity.getNearbyEntities(x, y, z);
+
+            entity.remove();
         }
 
         return out;

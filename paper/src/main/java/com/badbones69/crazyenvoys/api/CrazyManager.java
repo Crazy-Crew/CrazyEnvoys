@@ -741,14 +741,15 @@ public class CrazyManager {
                     if (!block.getChunk().isLoaded()) block.getChunk().load();
 
                     int fallingHeight = this.config.getProperty(ConfigKeys.envoy_falling_height);
-                    Material fallingBlock = Material.valueOf(this.config.getProperty(ConfigKeys.envoy_falling_block_type));
+                    Material material = Material.valueOf(this.config.getProperty(ConfigKeys.envoy_falling_block_type));
 
-                    //TODO() Test to make sure this works.
-                    FallingBlock chest = block.getWorld().spawnFallingBlock(block.getLocation().add(.5, fallingHeight, .5), fallingBlock.createBlockData());
-                    chest.setDropItem(false);
-                    chest.setHurtEntities(false);
+                    FallingBlock fallingBlock = block.getWorld().spawn(block.getLocation().add(.5, fallingHeight, .5), FallingBlock.class);
+                    fallingBlock.setBlockData(material.createBlockData());
 
-                    this.fallingBlocks.put(chest, block);
+                    fallingBlock.setDropItem(false);
+                    fallingBlock.setHurtEntities(false);
+
+                    this.fallingBlocks.put(fallingBlock, block);
                 } else {
                     Tier tier = pickRandomTier();
 
