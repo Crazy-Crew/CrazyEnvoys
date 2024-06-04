@@ -7,7 +7,7 @@ plugins {
 
 val isSnapshot = false
 
-rootProject.version = "1.9.1"
+rootProject.version = "1.9.2"
 
 val content: String = rootProject.file("CHANGELOG.md").readText(Charsets.UTF_8)
 
