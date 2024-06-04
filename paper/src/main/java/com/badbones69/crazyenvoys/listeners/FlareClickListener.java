@@ -57,6 +57,7 @@ public class FlareClickListener implements Listener {
 
                 if (this.crazyManager.isEnvoyActive()) {
                     Messages.already_started.sendMessage(player);
+
                     return;
                 }
 
@@ -65,7 +66,9 @@ public class FlareClickListener implements Listener {
                 if (this.config.getProperty(ConfigKeys.envoys_flare_minimum_players_toggle) && online < this.config.getProperty(ConfigKeys.envoys_flare_minimum_players_amount)) {
                     Map<String, String> placeholder = new HashMap<>();
                     placeholder.put("{amount}", String.valueOf(online));
+
                     Messages.not_enough_players.sendMessage(player, placeholder);
+
                     return;
                 }
 

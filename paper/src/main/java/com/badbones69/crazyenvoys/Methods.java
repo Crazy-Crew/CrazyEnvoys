@@ -4,6 +4,8 @@ import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
+import org.bukkit.entity.Marker;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.Color;
@@ -27,6 +29,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Methods {
 
@@ -142,10 +145,11 @@ public class Methods {
         return locations;
     }
 
-    public boolean isSuccessful(int min, int max) {
+    public boolean isSuccessful(final int min, final int max) {
         if (max <= min || max <= 0) return true;
 
-        int chance = 1 + new Random().nextInt(max);
+        final int chance = 1 + ThreadLocalRandom.current().nextInt(max);
+
         return chance <= min;
     }
 
