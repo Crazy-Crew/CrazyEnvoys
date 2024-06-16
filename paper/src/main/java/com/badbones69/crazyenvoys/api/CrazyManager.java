@@ -706,7 +706,7 @@ public class CrazyManager {
         Messages.started.broadcastMessage(false, placeholder);
 
         if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle)) {
-            this.countdownTimer = new CountdownTimer(this.config.getProperty(ConfigKeys.envoys_grace_period_timer));
+            this.countdownTimer = new CountdownTimer(this.plugin, this.config.getProperty(ConfigKeys.envoys_grace_period_timer));
 
             this.countdownTimer.scheduleTimer();
         }
