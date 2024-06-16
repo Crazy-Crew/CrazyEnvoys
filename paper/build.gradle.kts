@@ -1,21 +1,15 @@
 plugins {
+    alias(libs.plugins.paperweight)
     alias(libs.plugins.shadowJar)
     alias(libs.plugins.runPaper)
 
     `paper-plugin`
 }
 
-feather {
-    repository("https://repo.oraxen.com/releases")
-}
-
 dependencies {
-    implementation(libs.triumph.cmds)
+    paperweight.paperDevBundle(libs.versions.paper)
 
-    // org.yaml is already bundled with Paper
-    implementation(libs.vital.paper) {
-        exclude("org.yaml")
-    }
+    implementation(libs.triumph.cmds)
 
     implementation(libs.nbtapi)
 
@@ -23,16 +17,16 @@ dependencies {
 
     compileOnly(libs.decent.holograms)
 
-    compileOnly(libs.placeholderapi)
-
     compileOnly(libs.worldguard)
-
-    compileOnly(libs.oraxen)
 
     api(projects.crazyenvoysCore)
 }
 
 val component: SoftwareComponent = components["java"]
+
+paperweight {
+    reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.REOBF_PRODUCTION
+}
 
 tasks {
     publishing {

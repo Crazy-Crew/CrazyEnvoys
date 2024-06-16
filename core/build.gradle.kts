@@ -1,7 +1,9 @@
 plugins {
-    `java-plugin`
+    `paper-plugin`
 }
 
 dependencies {
-    compileOnly(libs.vital.core)
+    compileOnly(libs.paper)
+
+    api(libs.vital.paper)
 }

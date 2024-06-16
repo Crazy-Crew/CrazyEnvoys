@@ -9,9 +9,9 @@ plugins {
     `java-plugin`
 }
 
-val buildNumber: String = System.getenv("BUILD_NUMBER") ?: "SNAPSHOT"
+val buildNumber: String? = System.getenv("BUILD_NUMBER")
 
-rootProject.version = "1.10-$buildNumber"
+rootProject.version = if (buildNumber != null) "1.10-$buildNumber" else "1.10"
 
 val isSnapshot = false
 
@@ -41,9 +41,7 @@ modrinth {
 
     gameVersions.set(listOf(libs.versions.minecraft.get()))
 
-    loaders.add("paper")
-    loaders.add("purpur")
-    loaders.add("folia")
+    loaders.addAll(listOf("purpur", "paper", "folia"))
 
     autoAddDependsOn.set(false)
     detectLoaders.set(false)
