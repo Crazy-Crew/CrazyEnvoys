@@ -277,8 +277,8 @@ public enum FileProperty {
      * @return the finalized message to set
      */
     private String replace(final String message) {
-        return message.replaceAll("%prefix%", "")
-                .replaceAll("%Prefix%", "")
+        return message.replaceAll("%prefix%", "{prefix}")
+                .replaceAll("%Prefix%", "{prefix}")
                 .replaceAll("%time%", "{time}")
                 .replaceAll("%amount%", "{amount}")
                 .replaceAll("%tier%", "{tier}")
