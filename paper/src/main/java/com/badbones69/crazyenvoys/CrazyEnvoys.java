@@ -15,7 +15,6 @@ import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
 import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
-import com.ryderbelserion.vital.paper.VitalPaper;
 import com.ryderbelserion.vital.paper.enums.Support;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -23,8 +22,9 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
+import us.crazycrew.crazyenvoys.core.Server;
+import us.crazycrew.crazyenvoys.core.config.ConfigManager;
+import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.support.MetricsWrapper;
 
 public class CrazyEnvoys extends JavaPlugin {
@@ -36,7 +36,6 @@ public class CrazyEnvoys extends JavaPlugin {
 
     private Methods methods;
 
-    // Envoy Required Classes.
     private EditorSettings editorSettings;
     private FlareSettings flareSettings;
     private CoolDownSettings coolDownSettings;
@@ -44,16 +43,20 @@ public class CrazyEnvoys extends JavaPlugin {
 
     private CrazyManager crazyManager;
 
-    private CrazyHandler crazyHandler;
+    private FileManager fileManager;
 
     @Override
     public void onEnable() {
-        new VitalPaper(this).setLogging(false);
+        new Server(this);
+
+        this.fileManager = new FileManager();
+        this.fileManager.registerCustomFilesFolder("/tiers")
+                .registerDefaultGenerateFiles("Basic.yml", "/tiers", "/tiers")
+                .registerDefaultGenerateFiles("Lucky.yml", "/tiers", "/tiers")
+                .registerDefaultGenerateFiles("Titan.yml", "/tiers", "/tiers")
+                .setup();
 
         new MetricsWrapper(this, 4514);
-
-        this.crazyHandler = new CrazyHandler(getDataFolder());
-        this.crazyHandler.install();
 
         this.methods = new Methods();
 
@@ -63,16 +66,22 @@ public class CrazyEnvoys extends JavaPlugin {
         this.flareSettings = new FlareSettings();
 
         this.crazyManager = new CrazyManager();
-
         this.crazyManager.load();
 
-        enable();
+        getServer().getPluginManager().registerEvents(new EnvoyEditListener(), this);
+        getServer().getPluginManager().registerEvents(new EnvoyClickListener(), this);
+        getServer().getPluginManager().registerEvents(new FlareClickListener(), this);
+        getServer().getPluginManager().registerEvents(new FireworkDamageListener(), this);
+
+        if (Support.placeholder_api.isEnabled()) {
+            new PlaceholderAPISupport().register();
+        }
+
+        registerCommand(getCommand("crazyenvoys"), new EnvoyTab(), new EnvoyCommand());
     }
 
     @Override
     public void onDisable() {
-        this.crazyHandler.uninstall();
-
         for (Player player : getServer().getOnlinePlayers()) {
             if (this.editorSettings.isEditor(player)) {
                 this.editorSettings.removeEditor(player);
@@ -91,25 +100,8 @@ public class CrazyEnvoys extends JavaPlugin {
         this.crazyManager.reload(true);
     }
 
-    public @NotNull CrazyHandler getCrazyHandler() {
-        return this.crazyHandler;
-    }
-
-    public boolean isLogging() {
-        return this.crazyHandler.getConfigManager().getConfig().getProperty(ConfigKeys.verbose_logging);
-    }
-
-    private void enable() {
-        getServer().getPluginManager().registerEvents(new EnvoyEditListener(), this);
-        getServer().getPluginManager().registerEvents(new EnvoyClickListener(), this);
-        getServer().getPluginManager().registerEvents(new FlareClickListener(), this);
-        getServer().getPluginManager().registerEvents(new FireworkDamageListener(), this);
-
-        if (Support.placeholder_api.isEnabled()) {
-            new PlaceholderAPISupport().register();
-        }
-
-        registerCommand(getCommand("crazyenvoys"), new EnvoyTab(), new EnvoyCommand());
+    public final boolean isLogging() {
+        return ConfigManager.getConfig().getProperty(ConfigKeys.verbose_logging);
     }
 
     private void registerCommand(PluginCommand pluginCommand, TabCompleter tabCompleter, CommandExecutor commandExecutor) {
@@ -120,32 +112,31 @@ public class CrazyEnvoys extends JavaPlugin {
         }
     }
 
-    public FileManager getFileManager() {
-        return this.crazyHandler.getFileManager();
+    public final FileManager getFileManager() {
+        return this.fileManager;
     }
 
-    public Methods getMethods() {
+    public final Methods getMethods() {
         return this.methods;
     }
 
-    // Envoy Required Classes.
-    public EditorSettings getEditorSettings() {
+    public final EditorSettings getEditorSettings() {
         return this.editorSettings;
     }
 
-    public FlareSettings getFlareSettings() {
+    public final FlareSettings getFlareSettings() {
         return this.flareSettings;
     }
 
-    public CoolDownSettings getCoolDownSettings() {
+    public final CoolDownSettings getCoolDownSettings() {
         return this.coolDownSettings;
     }
 
-    public LocationSettings getLocationSettings() {
+    public final LocationSettings getLocationSettings() {
         return this.locationSettings;
     }
 
-    public CrazyManager getCrazyManager() {
+    public final CrazyManager getCrazyManager() {
         return this.crazyManager;
     }
 }

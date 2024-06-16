@@ -44,9 +44,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
+import us.crazycrew.crazyenvoys.core.config.ConfigManager;
+import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -62,11 +61,7 @@ public class CrazyManager {
     @NotNull
     private final CrazyEnvoys plugin = CrazyEnvoys.get();
     @NotNull
-    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    @NotNull
-    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
-    @NotNull
-    private final SettingsManager config = this.configManager.getConfig();
+    private final SettingsManager config = ConfigManager.getConfig();
 
     @NotNull
     private final FileManager fileManager = this.plugin.getFileManager();
@@ -151,7 +146,7 @@ public class CrazyManager {
             return;
         }
 
-        this.configManager.reload();
+        ConfigManager.refresh();
 
         removeAllEnvoys();
 
@@ -640,7 +635,7 @@ public class CrazyManager {
             }
         }
 
-        boolean envoyLocationsBroadcast = this.plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(ConfigKeys.envoys_locations_broadcast);
+        boolean envoyLocationsBroadcast = ConfigManager.getConfig().getProperty(ConfigKeys.envoys_locations_broadcast);
 
         if (envoyLocationsBroadcast) {
             StringBuilder locations = getStringBuilder();

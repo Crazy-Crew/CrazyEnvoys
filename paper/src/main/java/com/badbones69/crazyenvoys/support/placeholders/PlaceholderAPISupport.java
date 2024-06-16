@@ -6,10 +6,9 @@ import com.badbones69.crazyenvoys.api.CrazyManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.common.config.types.MessageKeys;
-import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
+import us.crazycrew.crazyenvoys.core.config.ConfigManager;
+import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
+import us.crazycrew.crazyenvoys.core.config.types.MessageKeys;
 
 public class PlaceholderAPISupport extends PlaceholderExpansion {
 
@@ -17,13 +16,9 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
     private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
     @NotNull
-    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
+    private final SettingsManager config = ConfigManager.getConfig();
     @NotNull
-    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
-    @NotNull
-    private final SettingsManager config = this.configManager.getConfig();
-    @NotNull
-    private final SettingsManager messages = this.configManager.getMessages();
+    private final SettingsManager messages = ConfigManager.getMessages();
 
     @NotNull
     private final CrazyManager crazyManager = this.plugin.getCrazyManager();

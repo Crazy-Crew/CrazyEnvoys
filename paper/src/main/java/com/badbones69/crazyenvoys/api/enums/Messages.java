@@ -4,15 +4,14 @@ import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.properties.Property;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import us.crazycrew.crazyenvoys.common.utils.StringUtils;
 import com.badbones69.crazyenvoys.util.MsgUtils;
+import com.ryderbelserion.vital.core.util.StringUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import us.crazycrew.crazyenvoys.common.config.types.MessageKeys;
-
+import us.crazycrew.crazyenvoys.core.config.ConfigManager;
+import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
+import us.crazycrew.crazyenvoys.core.config.types.MessageKeys;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,9 +100,7 @@ public enum Messages {
     @NotNull
     private final CrazyEnvoys plugin = CrazyEnvoys.get();
     @NotNull
-    private final ConfigManager configManager = this.plugin.getCrazyHandler().getConfigManager();
-    @NotNull
-    private final SettingsManager messages = this.configManager.getMessages();
+    private final SettingsManager messages = ConfigManager.getMessages();
     @NotNull
     private final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
@@ -141,7 +138,7 @@ public enum Messages {
         String message;
 
         if (isList()) {
-            message = StringUtils.convertList(getPropertyList(this.listProperty));
+            message = StringUtil.convertList(getPropertyList(this.listProperty));
         } else {
             message = getProperty(this.property);
         }
@@ -162,7 +159,7 @@ public enum Messages {
         String message;
 
         if (isList()) {
-            message = StringUtils.convertList(getPropertyList(this.listProperty));
+            message = StringUtil.convertList(getPropertyList(this.listProperty));
         } else {
             message = getProperty(this.property);
         }
@@ -183,7 +180,7 @@ public enum Messages {
         String message;
 
         if (isList()) {
-            message = StringUtils.convertList(getPropertyList(this.listProperty));
+            message = StringUtil.convertList(getPropertyList(this.listProperty));
         } else {
             message = getProperty(this.property);
         }
@@ -229,9 +226,9 @@ public enum Messages {
         // Send in console because we should lol.
         sendMessage(this.plugin.getServer().getConsoleSender(), placeholder);
 
-        if (this.configManager.getConfig().getProperty(ConfigKeys.envoys_world_messages)) {
+        if (ConfigManager.getConfig().getProperty(ConfigKeys.envoys_world_messages)) {
             for (Player player : this.plugin.getServer().getOnlinePlayers()) {
-                for (String world : this.configManager.getConfig().getProperty(ConfigKeys.envoys_allowed_worlds)) {
+                for (String world : ConfigManager.getConfig().getProperty(ConfigKeys.envoys_allowed_worlds)) {
                     if (player.getWorld().getName().equalsIgnoreCase(world)) {
                         if (ignore) {
                             if (!this.crazyManager.isIgnoringMessages(player.getUniqueId())) sendMessage(player, placeholder);
@@ -253,7 +250,7 @@ public enum Messages {
     }
 
     public String asString() {
-        return MsgUtils.color(this.message.replaceAll("\\{prefix}", this.configManager.getConfig().getProperty(ConfigKeys.command_prefix)));
+        return MsgUtils.color(this.message.replaceAll("\\{prefix}", ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix)));
     }
 
     public List<String> toListString() {

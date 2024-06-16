@@ -15,9 +15,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
+import us.crazycrew.crazyenvoys.core.config.ConfigManager;
+import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,11 +25,7 @@ public class FlareClickListener implements Listener {
     @NotNull
     private final CrazyEnvoys plugin = CrazyEnvoys.get();
     @NotNull
-    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    @NotNull
-    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
-    @NotNull
-    private final SettingsManager config = this.configManager.getConfig();
+    private final SettingsManager config = ConfigManager.getConfig();
 
     @NotNull
     private final CrazyManager crazyManager = this.plugin.getCrazyManager();
