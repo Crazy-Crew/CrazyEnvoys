@@ -41,21 +41,15 @@ import static java.util.regex.Matcher.quoteReplacement;
 
 public class EnvoyClickListener implements Listener {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-    @NotNull
-    private final SettingsManager config = ConfigManager.getConfig();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private @NotNull final Methods methods = this.plugin.getMethods();
 
-    @NotNull
-    private final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
-    @NotNull
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private @NotNull final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
+    private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    @NotNull
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
     
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerClick(PlayerInteractEvent event) {

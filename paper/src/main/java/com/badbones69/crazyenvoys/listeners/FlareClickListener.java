@@ -22,18 +22,13 @@ import java.util.Map;
 
 public class FlareClickListener implements Listener {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-    @NotNull
-    private final SettingsManager config = ConfigManager.getConfig();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
-    @NotNull
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private @NotNull final Methods methods = this.plugin.getMethods();
 
-    @NotNull
-    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
+    private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
 
     @EventHandler(ignoreCancelled = true)
     public void onFlareInteract(PlayerInteractEvent event) {

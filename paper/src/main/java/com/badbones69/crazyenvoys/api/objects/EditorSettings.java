@@ -11,11 +11,9 @@ import java.util.UUID;
 
 public class EditorSettings {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    @NotNull
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
     private final List<UUID> editors = new ArrayList<>();
 

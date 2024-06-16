@@ -58,28 +58,20 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class CrazyManager {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-    @NotNull
-    private final SettingsManager config = ConfigManager.getConfig();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
-    @NotNull
-    private final FileManager fileManager = this.plugin.getFileManager();
+    private @NotNull final FileManager fileManager = this.plugin.getFileManager();
 
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private @NotNull final Methods methods = this.plugin.getMethods();
 
-    @NotNull
-    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
+    private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
 
-    @NotNull
-    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
+    private @NotNull final EditorSettings editorSettings = this.plugin.getEditorSettings();
 
-    @NotNull
-    private final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
+    private @NotNull final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
 
-    @NotNull
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
     
     private CountdownTimer countdownTimer;
 

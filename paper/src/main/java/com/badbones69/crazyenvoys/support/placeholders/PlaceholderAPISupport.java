@@ -12,16 +12,12 @@ import us.crazycrew.crazyenvoys.core.config.types.MessageKeys;
 
 public class PlaceholderAPISupport extends PlaceholderExpansion {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    @NotNull
-    private final SettingsManager config = ConfigManager.getConfig();
-    @NotNull
-    private final SettingsManager messages = ConfigManager.getMessages();
+    private @NotNull final SettingsManager config = ConfigManager.getConfig();
+    private @NotNull final SettingsManager messages = ConfigManager.getMessages();
 
-    @NotNull
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String identifier) {

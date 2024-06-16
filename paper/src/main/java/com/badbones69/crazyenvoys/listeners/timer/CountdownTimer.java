@@ -12,8 +12,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CountdownTimer extends FoliaRunnable {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
     // Seconds and shiz
     private final int seconds;

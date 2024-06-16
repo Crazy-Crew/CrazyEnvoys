@@ -11,11 +11,9 @@ import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 
 public class FlareSettings {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private @NotNull final Methods methods = this.plugin.getMethods();
     
     private ItemBuilder flareItemBuilder;
     

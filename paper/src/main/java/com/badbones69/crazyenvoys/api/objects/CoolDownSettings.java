@@ -10,10 +10,8 @@ import java.util.UUID;
 
 public class CoolDownSettings {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final Methods methods = this.plugin.getMethods();
 
     private final Map<UUID, Calendar> cooldown = new HashMap<>();
 

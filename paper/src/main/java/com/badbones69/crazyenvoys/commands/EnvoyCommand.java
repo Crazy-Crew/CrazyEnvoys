@@ -27,21 +27,14 @@ import java.util.UUID;
 
 public class EnvoyCommand implements CommandExecutor {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private @NotNull final Methods methods = this.plugin.getMethods();
 
-    @NotNull
-    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
-    @NotNull
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
-    @NotNull
-    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
-    @NotNull
-
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private @NotNull final EditorSettings editorSettings = this.plugin.getEditorSettings();
+    private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
+    private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
     
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {

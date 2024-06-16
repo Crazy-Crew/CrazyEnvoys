@@ -97,12 +97,10 @@ public enum Messages {
 
         this.isList = isList;
     }
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-    @NotNull
-    private final SettingsManager messages = ConfigManager.getMessages();
-    @NotNull
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final SettingsManager messages = ConfigManager.getMessages();
+    private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
     @NotNull
     private List<String> getPropertyList(Property<List<String>> properties) {
