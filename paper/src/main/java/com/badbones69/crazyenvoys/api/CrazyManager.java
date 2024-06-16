@@ -52,9 +52,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CrazyManager {
 
@@ -583,7 +583,7 @@ public class CrazyManager {
             maxSpawns = this.config.getProperty(ConfigKeys.envoys_max_drops);
         } else if (this.config.getProperty(ConfigKeys.envoys_random_drops)) {
             // Generates a random number between the min and max settings
-            maxSpawns = new Random().nextInt(this.config.getProperty(ConfigKeys.envoys_max_drops) + 1 - this.config.getProperty(ConfigKeys.envoys_min_drops)) + this.config.getProperty(ConfigKeys.envoys_min_drops);
+            maxSpawns = ThreadLocalRandom.current().nextInt(this.config.getProperty(ConfigKeys.envoys_max_drops) + 1 - this.config.getProperty(ConfigKeys.envoys_min_drops)) + this.config.getProperty(ConfigKeys.envoys_min_drops);
         } else {
             maxSpawns = this.config.getProperty(ConfigKeys.envoys_random_locations) ? this.config.getProperty(ConfigKeys.envoys_max_drops) : this.locationSettings.getActiveLocations().size();
         }
@@ -601,7 +601,7 @@ public class CrazyManager {
             while (this.locationSettings.getDropLocations().size() < maxSpawns) {
                 int maxRadius = this.config.getProperty(ConfigKeys.envoys_max_radius);
                 Location location = this.center.clone();
-                location.add(-(maxRadius) + new Random().nextInt(maxRadius * 2), 0, -(maxRadius) + new Random().nextInt(maxRadius * 2));
+                location.add(-(maxRadius) + ThreadLocalRandom.current().nextInt(maxRadius * 2), 0, -(maxRadius) + ThreadLocalRandom.current().nextInt(maxRadius * 2));
                 location = location.getWorld().getHighestBlockAt(location).getLocation();
 
                 if (!location.getChunk().isLoaded() && !location.getChunk().load()) continue;
@@ -625,7 +625,7 @@ public class CrazyManager {
                     this.locationSettings.addAllDropLocations(this.locationSettings.getSpawnLocations());
                 } else {
                     while (this.locationSettings.getDropLocations().size() < maxSpawns) {
-                        Block block = this.locationSettings.getSpawnLocations().get(new Random().nextInt(this.locationSettings.getSpawnLocations().size()));
+                        Block block = this.locationSettings.getSpawnLocations().get(ThreadLocalRandom.current().nextInt(this.locationSettings.getSpawnLocations().size()));
 
                         this.locationSettings.addDropLocations(block);
                     }
@@ -1049,7 +1049,7 @@ public class CrazyManager {
             }
         }
 
-        return this.cachedChances.get(new Random().nextInt(this.cachedChances.size()));
+        return this.cachedChances.get(ThreadLocalRandom.current().nextInt(this.cachedChances.size()));
     }
 
     /**
