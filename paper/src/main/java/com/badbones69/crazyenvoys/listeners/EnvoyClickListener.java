@@ -28,41 +28,28 @@ import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
+import us.crazycrew.crazyenvoys.core.config.ConfigManager;
+import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-
 import static java.util.regex.Matcher.quoteReplacement;
 
 public class EnvoyClickListener implements Listener {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-    @NotNull
-    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    @NotNull
-    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
-    @NotNull
-    private final SettingsManager config = this.configManager.getConfig();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private @NotNull final Methods methods = this.plugin.getMethods();
 
-    @NotNull
-    private final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
-    @NotNull
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private @NotNull final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
+    private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    @NotNull
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
     
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerClick(PlayerInteractEvent event) {

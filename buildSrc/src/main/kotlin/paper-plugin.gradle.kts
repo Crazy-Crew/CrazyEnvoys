@@ -1,22 +1,13 @@
 import com.ryderbelserion.feather.enums.Repository
-import org.gradle.accessors.dm.LibrariesForLibs
-
-val libs = the<LibrariesForLibs>()
 
 plugins {
     id("java-plugin")
 }
 
-dependencies {
-    compileOnly(libs.paper)
-}
+repositories {
+    maven("https://repo.triumphteam.dev/snapshots")
 
-feather {
-    repository("https://repo.extendedclip.com/content/repositories/placeholderapi")
+    maven("https://maven.enginehub.org/repo")
 
-    repository("https://repo.triumphteam.dev/snapshots")
-
-    repository("https://maven.enginehub.org/repo")
-
-    repository(Repository.Paper.url)
+    maven(Repository.Paper.url)
 }

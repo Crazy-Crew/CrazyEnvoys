@@ -6,15 +6,13 @@ import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
 import org.bukkit.entity.Marker;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
+import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,22 +20,19 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
+import us.crazycrew.crazyenvoys.core.config.ConfigManager;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Methods {
 
     private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final @NotNull CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    private final @NotNull ConfigManager configManager = this.crazyHandler.getConfigManager();
-    private final @NotNull SettingsManager config = this.configManager.getConfig();
+    private final @NotNull SettingsManager config = ConfigManager.getConfig();
 
     public String getPrefix() {
         return MsgUtils.color(this.config.getProperty(ConfigKeys.command_prefix));

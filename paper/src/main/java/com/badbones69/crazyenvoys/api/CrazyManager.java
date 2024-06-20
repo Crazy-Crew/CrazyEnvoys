@@ -44,47 +44,34 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.jetbrains.annotations.NotNull;
-import us.crazycrew.crazyenvoys.common.config.ConfigManager;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
-import com.badbones69.crazyenvoys.api.plugin.CrazyHandler;
+import us.crazycrew.crazyenvoys.core.config.ConfigManager;
+import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CrazyManager {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
-    @NotNull
-    private final CrazyHandler crazyHandler = this.plugin.getCrazyHandler();
-    @NotNull
-    private final ConfigManager configManager = this.crazyHandler.getConfigManager();
-    @NotNull
-    private final SettingsManager config = this.configManager.getConfig();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
-    @NotNull
-    private final FileManager fileManager = this.plugin.getFileManager();
+    private @NotNull final FileManager fileManager = this.plugin.getFileManager();
 
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private @NotNull final Methods methods = this.plugin.getMethods();
 
-    @NotNull
-    private final FlareSettings flareSettings = this.plugin.getFlareSettings();
+    private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
 
-    @NotNull
-    private final EditorSettings editorSettings = this.plugin.getEditorSettings();
+    private @NotNull final EditorSettings editorSettings = this.plugin.getEditorSettings();
 
-    @NotNull
-    private final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
+    private @NotNull final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
 
-    @NotNull
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
     
     private CountdownTimer countdownTimer;
 
@@ -151,7 +138,7 @@ public class CrazyManager {
             return;
         }
 
-        this.configManager.reload();
+        ConfigManager.refresh();
 
         removeAllEnvoys();
 
@@ -588,7 +575,7 @@ public class CrazyManager {
             maxSpawns = this.config.getProperty(ConfigKeys.envoys_max_drops);
         } else if (this.config.getProperty(ConfigKeys.envoys_random_drops)) {
             // Generates a random number between the min and max settings
-            maxSpawns = new Random().nextInt(this.config.getProperty(ConfigKeys.envoys_max_drops) + 1 - this.config.getProperty(ConfigKeys.envoys_min_drops)) + this.config.getProperty(ConfigKeys.envoys_min_drops);
+            maxSpawns = ThreadLocalRandom.current().nextInt(this.config.getProperty(ConfigKeys.envoys_max_drops) + 1 - this.config.getProperty(ConfigKeys.envoys_min_drops)) + this.config.getProperty(ConfigKeys.envoys_min_drops);
         } else {
             maxSpawns = this.config.getProperty(ConfigKeys.envoys_random_locations) ? this.config.getProperty(ConfigKeys.envoys_max_drops) : this.locationSettings.getActiveLocations().size();
         }
@@ -606,7 +593,7 @@ public class CrazyManager {
             while (this.locationSettings.getDropLocations().size() < maxSpawns) {
                 int maxRadius = this.config.getProperty(ConfigKeys.envoys_max_radius);
                 Location location = this.center.clone();
-                location.add(-(maxRadius) + new Random().nextInt(maxRadius * 2), 0, -(maxRadius) + new Random().nextInt(maxRadius * 2));
+                location.add(-(maxRadius) + ThreadLocalRandom.current().nextInt(maxRadius * 2), 0, -(maxRadius) + ThreadLocalRandom.current().nextInt(maxRadius * 2));
                 location = location.getWorld().getHighestBlockAt(location).getLocation();
 
                 if (!location.getChunk().isLoaded() && !location.getChunk().load()) continue;
@@ -630,7 +617,7 @@ public class CrazyManager {
                     this.locationSettings.addAllDropLocations(this.locationSettings.getSpawnLocations());
                 } else {
                     while (this.locationSettings.getDropLocations().size() < maxSpawns) {
-                        Block block = this.locationSettings.getSpawnLocations().get(new Random().nextInt(this.locationSettings.getSpawnLocations().size()));
+                        Block block = this.locationSettings.getSpawnLocations().get(ThreadLocalRandom.current().nextInt(this.locationSettings.getSpawnLocations().size()));
 
                         this.locationSettings.addDropLocations(block);
                     }
@@ -640,7 +627,7 @@ public class CrazyManager {
             }
         }
 
-        boolean envoyLocationsBroadcast = this.plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(ConfigKeys.envoys_locations_broadcast);
+        boolean envoyLocationsBroadcast = ConfigManager.getConfig().getProperty(ConfigKeys.envoys_locations_broadcast);
 
         if (envoyLocationsBroadcast) {
             StringBuilder locations = getStringBuilder();
@@ -719,7 +706,7 @@ public class CrazyManager {
         Messages.started.broadcastMessage(false, placeholder);
 
         if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle)) {
-            this.countdownTimer = new CountdownTimer(this.config.getProperty(ConfigKeys.envoys_grace_period_timer));
+            this.countdownTimer = new CountdownTimer(this.plugin, this.config.getProperty(ConfigKeys.envoys_grace_period_timer));
 
             this.countdownTimer.scheduleTimer();
         }
@@ -1054,7 +1041,7 @@ public class CrazyManager {
             }
         }
 
-        return this.cachedChances.get(new Random().nextInt(this.cachedChances.size()));
+        return this.cachedChances.get(ThreadLocalRandom.current().nextInt(this.cachedChances.size()));
     }
 
     /**

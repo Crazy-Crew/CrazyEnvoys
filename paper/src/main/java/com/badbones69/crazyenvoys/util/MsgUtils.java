@@ -4,7 +4,8 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import us.crazycrew.crazyenvoys.common.config.types.ConfigKeys;
+import us.crazycrew.crazyenvoys.core.config.ConfigManager;
+import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static java.util.regex.Matcher.quoteReplacement;
@@ -40,6 +41,6 @@ public class MsgUtils {
     }
 
     public static String getPrefix() {
-        return color(plugin.getCrazyHandler().getConfigManager().getConfig().getProperty(ConfigKeys.command_prefix));
+        return color(ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix));
     }
 }

@@ -13,14 +13,11 @@ import java.util.List;
 
 public class EnvoyTab implements TabCompleter {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    @NotNull
-    private final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
-    @NotNull
-    private final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String commandLabel, String[] args) {

@@ -2,7 +2,7 @@ package com.badbones69.crazyenvoys.listeners.timer;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
-import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -12,15 +12,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CountdownTimer extends FoliaRunnable {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
     // Seconds and shiz
     private final int seconds;
     private int secondsLeft;
 
-    public CountdownTimer(int seconds) {
-        super(Bukkit.getGlobalRegionScheduler());
+    public CountdownTimer(JavaPlugin plugin, int seconds) {
+        super(plugin.getServer().getGlobalRegionScheduler());
 
         this.seconds = seconds;
         this.secondsLeft = seconds;

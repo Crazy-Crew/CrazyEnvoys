@@ -11,11 +11,9 @@ import java.util.List;
 
 public class LocationSettings {
 
-    @NotNull
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    @NotNull
-    private final Methods methods = this.plugin.getMethods();
+    private @NotNull final Methods methods = this.plugin.getMethods();
 
     private final List<Block> spawnLocations = new ArrayList<>();
 

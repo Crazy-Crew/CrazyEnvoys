@@ -1,21 +1,19 @@
 plugins {
+    alias(libs.plugins.paperweight)
     alias(libs.plugins.shadowJar)
     alias(libs.plugins.runPaper)
 
     `paper-plugin`
 }
 
-feather {
-    repository("https://repo.oraxen.com/releases")
+base {
+    archivesName.set(rootProject.name)
 }
 
 dependencies {
-    implementation(libs.triumph.cmds)
+    paperweight.paperDevBundle(libs.versions.paper)
 
-    // org.yaml is already bundled with Paper
-    implementation(libs.vital.paper) {
-        exclude("org.yaml")
-    }
+    implementation(libs.triumph.cmds)
 
     implementation(libs.nbtapi)
 
@@ -23,16 +21,16 @@ dependencies {
 
     compileOnly(libs.decent.holograms)
 
-    compileOnly(libs.placeholderapi)
-
     compileOnly(libs.worldguard)
-
-    compileOnly(libs.oraxen)
 
     api(projects.crazyenvoysCore)
 }
 
 val component: SoftwareComponent = components["java"]
+
+paperweight {
+    reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.REOBF_PRODUCTION
+}
 
 tasks {
     publishing {
@@ -63,15 +61,15 @@ tasks {
 
         defaultCharacterEncoding = Charsets.UTF_8.name()
 
-        minecraftVersion("1.20.6")
+        minecraftVersion(libs.versions.minecraft.get())
     }
 
     assemble {
-        dependsOn(shadowJar)
+        dependsOn(reobfJar)
 
         doLast {
             copy {
-                from(shadowJar.get())
+                from(reobfJar.get())
                 into(rootProject.projectDir.resolve("jars"))
             }
         }
