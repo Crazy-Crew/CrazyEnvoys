@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 public enum PersistentKeys {
 
-    no_firework_damage("firework");
+    no_firework_damage("firework"),
+    envoy_flare("envoy_flare");
 
     private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
 

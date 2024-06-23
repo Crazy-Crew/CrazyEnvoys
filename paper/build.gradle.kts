@@ -15,8 +15,6 @@ dependencies {
 
     implementation(libs.triumph.cmds)
 
-    implementation(libs.nbtapi)
-
     compileOnly(fileTree("$projectDir/libs/compile").include("*.jar"))
 
     compileOnly(libs.decent.holograms)
@@ -80,7 +78,6 @@ tasks {
         archiveClassifier.set("")
 
         listOf(
-            "de.tr7zw.changeme.nbtapi",
             "com.ryderbelserion",
             "dev.triumphteam",
             "ch.jalu"

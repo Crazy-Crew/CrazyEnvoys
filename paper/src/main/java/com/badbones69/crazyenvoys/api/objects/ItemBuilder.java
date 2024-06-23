@@ -7,7 +7,10 @@ import com.destroystokyo.paper.profile.ProfileProperty;
 import com.ryderbelserion.vital.paper.builders.PlayerBuilder;
 import com.ryderbelserion.vital.paper.enums.Support;
 import com.ryderbelserion.vital.paper.util.DyeUtil;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import io.th0rgal.oraxen.api.OraxenItems;
+import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import org.bukkit.*;
 import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
@@ -21,6 +24,7 @@ import org.bukkit.inventory.meta.*;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.profile.PlayerTextures;
@@ -34,7 +38,7 @@ import java.util.stream.Collectors;
 
 public class ItemBuilder {
 
-    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
     // Item Data
     private Material material;
@@ -49,12 +53,15 @@ public class ItemBuilder {
     // Player
 
     // Skulls
-    private boolean isHead;
+    private boolean isHead = false;
+    private boolean isCustom = false;
 
     /**
      * Holds the {@link UUID} of the skull of which this {@link ItemStack} belongs to.
      */
     private @Nullable UUID uuid = null;
+
+    private String customHead = "";
 
     /**
      * Holds the url for the skull.
@@ -179,8 +186,8 @@ public class ItemBuilder {
 
         this.enchantments = new HashMap<>(itemBuilder.enchantments);
 
-
         this.isHead = itemBuilder.isHead;
+        this.isCustom = itemBuilder.isCustom;
 
         this.unbreakable = itemBuilder.unbreakable;
         this.hideItemFlags = itemBuilder.hideItemFlags;
@@ -368,11 +375,23 @@ public class ItemBuilder {
     public ItemStack build() {
         ItemStack item = this.itemStack;
 
+        if (Support.head_database.isEnabled()) {
+            HeadDatabaseAPI api = this.plugin.getApi();
+
+            if (api != null) {
+                item = api.isHead(this.customHead) ? api.getItemHead(this.customHead) : item.withType(Material.PLAYER_HEAD);
+                this.itemMeta = item.getItemMeta();
+                this.material = Material.PLAYER_HEAD;
+                this.isCustom = true;
+            }
+        }
+
         if (Support.oraxen.isEnabled()) {
             io.th0rgal.oraxen.items.ItemBuilder oraxenItem = OraxenItems.getItemById(this.customMaterial);
 
             if (oraxenItem != null && OraxenItems.exists(this.customMaterial)) {
                 item = oraxenItem.build();
+
                 this.itemMeta = item.getItemMeta();
             }
         }
@@ -390,16 +409,18 @@ public class ItemBuilder {
         this.itemMeta.setDisplayName(getUpdatedName());
         this.itemMeta.setLore(getUpdatedLore());
 
-        if (this.isHead) {
+        if (this.isHead && !this.isCustom) {
             if (this.itemMeta instanceof final SkullMeta skull) {
                 if (this.uuid != null && !skull.hasOwner()) {
-                    skull.setOwningPlayer(Bukkit.getOfflinePlayer(this.uuid));
+                    skull.setOwningPlayer(this.plugin.getServer().getOfflinePlayer(this.uuid));
                 } else {
                     final UUID id = UUID.randomUUID();
 
-                    final PlayerProfile profile = Bukkit.getServer().createProfile(id, "");
+                    final String asString = id.toString().substring(id.toString().length() - 16);
 
-                    profile.setProperty(new ProfileProperty(id.toString(), id.toString()));
+                    final PlayerProfile profile = this.plugin.getServer().createProfile(id, asString);
+
+                    profile.setProperty(new ProfileProperty(id.toString(), asString));
 
                     PlayerTextures textures = profile.getTextures();
 
@@ -481,10 +502,6 @@ public class ItemBuilder {
         return item;
     }
 
-    /*
-      Class based extensions.
-     */
-
     /**
      * Set the type of item the builder is set to.
      *
@@ -498,6 +515,22 @@ public class ItemBuilder {
         this.itemMeta = this.itemStack.getItemMeta();
 
         this.isHead = material == Material.PLAYER_HEAD;
+
+        return this;
+    }
+
+    /**
+     * Sets a custom skull
+     *
+     * @param skull the id of the skull
+     * @param hdb the {@link HeadDatabaseAPI}
+     * @return {@link ItemBuilder}
+     */
+    public @NotNull final ItemBuilder setSkull(@NotNull final String skull, @Nullable final HeadDatabaseAPI hdb) {
+        if (skull.isEmpty() || hdb == null) return this;
+
+        this.customHead = skull;
+        this.isCustom = true;
 
         return this;
     }
@@ -1041,14 +1074,15 @@ public class ItemBuilder {
                     }
                     case "lore" -> itemBuilder.setLore(Arrays.asList(value.split(",")));
                     case "player" -> itemBuilder.setPlayerName(value);
+                    case "skull" -> itemBuilder.setSkull(value, CrazyEnvoys.get().getApi());
                     case "unbreakable-item" -> {
                         if (value.isEmpty() || value.equalsIgnoreCase("true")) itemBuilder.setUnbreakable(true);
                     }
                     case "trim-pattern" -> {
-                        if (!value.isEmpty()) itemBuilder.setTrimPattern(Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(value.toLowerCase())));
+                        if (!value.isEmpty()) itemBuilder.setTrimPattern(RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_PATTERN).get(NamespacedKey.minecraft(value.toLowerCase())));
                     }
                     case "trim-material" -> {
-                        if (!value.isEmpty()) itemBuilder.setTrimMaterial(Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(value.toLowerCase())));
+                        if (!value.isEmpty()) itemBuilder.setTrimMaterial(RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL).get(NamespacedKey.minecraft(value.toLowerCase())));
                     }
                     default -> {
                         Enchantment enchantment = getEnchantment(option);
@@ -1085,7 +1119,8 @@ public class ItemBuilder {
         } catch (Exception exception) {
             itemBuilder.setMaterial(Material.RED_TERRACOTTA).setName("&c&lERROR").setLore(Arrays.asList("&cThere is an error", "&cFor : &c" + (placeHolder != null ? placeHolder : "")));
 
-            CrazyEnvoys.get().getLogger().log(Level.WARNING, "An error has occurred with the item builder: ", exception);
+            CrazyEnvoys plugin = CrazyEnvoys.get();
+            plugin.getLogger().log(Level.WARNING, "An error has occurred with the item builder: ", exception);
         }
 
         return itemBuilder;

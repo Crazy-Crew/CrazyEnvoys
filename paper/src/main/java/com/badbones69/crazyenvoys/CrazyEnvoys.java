@@ -16,12 +16,14 @@ import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import com.ryderbelserion.vital.paper.enums.Support;
+import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import us.crazycrew.crazyenvoys.core.Server;
 import us.crazycrew.crazyenvoys.core.config.ConfigManager;
 import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
@@ -43,11 +45,17 @@ public class CrazyEnvoys extends JavaPlugin {
 
     private CrazyManager crazyManager;
 
+    private HeadDatabaseAPI api;
+
     private FileManager fileManager;
 
     @Override
     public void onEnable() {
         new Server(this);
+
+        if (Support.head_database.isEnabled()) {
+            this.api = new HeadDatabaseAPI();
+        }
 
         this.fileManager = new FileManager();
         this.fileManager.registerCustomFilesFolder("/tiers")
@@ -110,6 +118,15 @@ public class CrazyEnvoys extends JavaPlugin {
 
             if (tabCompleter != null) pluginCommand.setTabCompleter(tabCompleter);
         }
+    }
+
+    public @Nullable
+    final HeadDatabaseAPI getApi() {
+        if (this.api == null) {
+            return null;
+        }
+
+        return this.api;
     }
 
     public final FileManager getFileManager() {
