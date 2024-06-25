@@ -379,10 +379,12 @@ public class ItemBuilder {
             HeadDatabaseAPI api = this.plugin.getApi();
 
             if (api != null) {
-                item = api.isHead(this.customHead) ? api.getItemHead(this.customHead) : item.withType(Material.PLAYER_HEAD);
-                this.itemMeta = item.getItemMeta();
-                this.material = Material.PLAYER_HEAD;
-                this.isCustom = true;
+                if (!this.customHead.isEmpty()) {
+                    item = api.isHead(this.customHead) ? api.getItemHead(this.customHead) : item.withType(Material.PLAYER_HEAD);
+                    this.itemMeta = item.getItemMeta();
+                    this.material = Material.PLAYER_HEAD;
+                    this.isCustom = true;
+                }
             }
         }
 
