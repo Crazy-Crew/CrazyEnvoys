@@ -416,13 +416,9 @@ public class ItemBuilder {
                 if (this.uuid != null && !skull.hasOwner()) {
                     skull.setOwningPlayer(this.plugin.getServer().getOfflinePlayer(this.uuid));
                 } else {
-                    final UUID id = UUID.randomUUID();
+                    final PlayerProfile profile = this.plugin.getServer().createProfile(null, "");
 
-                    final String asString = id.toString().substring(id.toString().length() - 16);
-
-                    final PlayerProfile profile = this.plugin.getServer().createProfile(id, asString);
-
-                    profile.setProperty(new ProfileProperty(id.toString(), asString));
+                    profile.setProperty(new ProfileProperty("", ""));
 
                     PlayerTextures textures = profile.getTextures();
 
