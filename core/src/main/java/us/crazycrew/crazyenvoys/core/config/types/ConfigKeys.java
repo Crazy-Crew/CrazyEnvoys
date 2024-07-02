@@ -138,6 +138,9 @@ public class ConfigKeys implements SettingsHolder {
     @Comment("The material of the flare item.")
     public static final Property<String> envoys_flare_item_type = newProperty("flare.item.type", "REDSTONE_TORCH");
 
+    @Comment("If the flare will glow.")
+    public static final Property<Boolean> envoys_flare_item_glowing = newProperty("flare.item.glowing", false);
+
     @Comment("The lore of the flare item.")
     public static final Property<List<String>> envoys_flare_item_lore = newListProperty("flare.item.lore", List.of(
             "&7Right click me to",

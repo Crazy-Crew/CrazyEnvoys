@@ -24,6 +24,7 @@ public class FlareSettings {
 
         this.flareItemBuilder = new ItemBuilder()
                 .setMaterial(config.getProperty(ConfigKeys.envoys_flare_item_type))
+                .setGlow(config.getProperty(ConfigKeys.envoys_flare_item_glowing))
                 .setName(config.getProperty(ConfigKeys.envoys_flare_item_name))
                 .setLore(config.getProperty(ConfigKeys.envoys_flare_item_lore));
     }

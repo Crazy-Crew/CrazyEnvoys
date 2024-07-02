@@ -65,7 +65,7 @@ public class FlareClickListener implements Listener {
                 boolean toggle = false;
 
                 if (Support.worldedit.isEnabled() && Support.worldguard.isEnabled()) {
-                    if (this.config.getProperty(ConfigKeys.envoys_world_messages)) {
+                    if (this.config.getProperty(ConfigKeys.envoys_flare_world_guard_toggle)) {
                         for (String region : this.config.getProperty(ConfigKeys.envoys_flare_world_guard_regions)) {
                             if (this.crazyManager.getWorldGuardPluginSupport().inRegion(region, player.getLocation())) toggle = true;
                         }
