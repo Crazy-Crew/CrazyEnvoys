@@ -6,6 +6,7 @@ import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
 import org.bukkit.entity.Marker;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.inventory.Inventory;
 import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.Color;
@@ -26,27 +27,35 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Methods {
 
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
+    private static final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final @NotNull SettingsManager config = ConfigManager.getConfig();
+    private static final @NotNull SettingsManager config = ConfigManager.getConfig();
 
-    public String getPrefix() {
-        return MsgUtils.color(this.config.getProperty(ConfigKeys.command_prefix));
+    public static String getPrefix() {
+        return MsgUtils.color(config.getProperty(ConfigKeys.command_prefix));
     }
 
-    public String getPrefix(String message) {
-        return MsgUtils.color(this.config.getProperty(ConfigKeys.command_prefix) + message);
+    public static void addItem(final Player player, final ItemStack... items) {
+        final Inventory inventory = player.getInventory();
+
+        inventory.setMaxStackSize(64);
+        inventory.addItem(items);
     }
 
-    public ItemStack getItemInHand(Player player) {
+    public static String getPrefix(String message) {
+        return MsgUtils.color(config.getProperty(ConfigKeys.command_prefix) + message);
+    }
+
+    public static ItemStack getItemInHand(Player player) {
         return player.getInventory().getItemInMainHand();
     }
 
-    public Calendar getTimeFromString(String time) {
+    public static Calendar getTimeFromString(String time) {
         Calendar cal = Calendar.getInstance();
 
         for (String i : time.split(" ")) {
@@ -62,7 +71,7 @@ public class Methods {
         return cal;
     }
 
-    public boolean isInt(String s) {
+    public static boolean isInt(String s) {
         try {
             Integer.parseInt(s);
         } catch (NumberFormatException nfe) {
@@ -72,8 +81,8 @@ public class Methods {
         return true;
     }
 
-    public boolean isOnline(String name) {
-        for (Player player : this.plugin.getServer().getOnlinePlayers()) {
+    public static boolean isOnline(String name) {
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
             if (player.getName().equalsIgnoreCase(name)) {
                 return true;
             }
@@ -82,15 +91,15 @@ public class Methods {
         return false;
     }
 
-    public Player getPlayer(String name) {
-        return this.plugin.getServer().getPlayer(name);
+    public static Player getPlayer(String name) {
+        return plugin.getServer().getPlayer(name);
     }
 
-    public boolean isInvFull(Player player) {
+    public static boolean isInvFull(Player player) {
         return player.getInventory().firstEmpty() == -1;
     }
 
-    public void firework(Location loc, List<Color> colors) {
+    public static void firework(Location loc, List<Color> colors) {
         Firework firework = loc.getWorld().spawn(loc, Firework.class);
         FireworkMeta fireworkMeta = firework.getFireworkMeta();
         fireworkMeta.addEffects(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(colors).trail(false).flicker(false).build());
@@ -104,16 +113,16 @@ public class Methods {
         detonate(firework);
     }
 
-    private void detonate(Firework firework) {
-        new FoliaRunnable(this.plugin.getServer().getRegionScheduler(), firework.getLocation()) {
+    private static void detonate(Firework firework) {
+        new FoliaRunnable(plugin.getServer().getRegionScheduler(), firework.getLocation()) {
             @Override
             public void run() {
                 firework.detonate();
             }
-        }.runDelayed(this.plugin, 2);
+        }.runDelayed(plugin, 2);
     }
 
-    public List<String> getPage(List<String> list, Integer page) {
+    public static List<String> getPage(List<String> list, Integer page) {
         List<String> locations = new ArrayList<>();
 
         if (page <= 0) page = 1;
@@ -140,7 +149,7 @@ public class Methods {
         return locations;
     }
 
-    public boolean isSuccessful(final int min, final int max) {
+    public static boolean isSuccessful(final int min, final int max) {
         if (max <= min || max <= 0) return true;
 
         final int chance = 1 + ThreadLocalRandom.current().nextInt(max);
@@ -148,7 +157,7 @@ public class Methods {
         return chance <= min;
     }
 
-    public List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
+    public static List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
         List<Entity> out = new ArrayList<>();
 
         if (loc.getWorld() != null) {
@@ -162,7 +171,7 @@ public class Methods {
         return out;
     }
 
-    public String convertTimeToString(Calendar timeTill) {
+    public static String convertTimeToString(Calendar timeTill) {
         Calendar rightNow = Calendar.getInstance();
         int total = ((int) (timeTill.getTimeInMillis() / 1000) - (int) (rightNow.getTimeInMillis() / 1000));
         int day = 0;
@@ -177,13 +186,13 @@ public class Methods {
         second += total;
         String message = "";
 
-        if (day > 0) message += day + Messages.day.getStringMessage() + ", ";
-        if (day > 0 || hour > 0) message += hour + Messages.hour.getStringMessage() + ", ";
-        if (day > 0 || hour > 0 || minute > 0) message += minute + Messages.minute.getStringMessage() + ", ";
-        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + Messages.second.getStringMessage() + ", ";
+        if (day > 0) message += day + Messages.day.getMessage() + ", ";
+        if (day > 0 || hour > 0) message += hour + Messages.hour.getMessage() + ", ";
+        if (day > 0 || hour > 0 || minute > 0) message += minute + Messages.minute.getMessage() + ", ";
+        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + Messages.second.getMessage() + ", ";
 
         if (message.length() < 2) {
-            message = "0" + Messages.second.getStringMessage();
+            message = "0" + Messages.second.getMessage();
         } else {
             message = message.substring(0, message.length() - 2);
         }
@@ -191,19 +200,19 @@ public class Methods {
         return message;
     }
 
-    public String getUnBuiltLocation(Location location) {
+    public static String getUnBuiltLocation(Location location) {
         return "World:" + location.getWorld().getName() + ", X:" + location.getBlockX() + ", Y:" + location.getBlockY() + ", Z:" + location.getBlockZ();
     }
 
-    public Location getBuiltLocation(String locationString) {
-        World w = this.plugin.getServer().getWorlds().getFirst();
+    public static Location getBuiltLocation(String locationString) {
+        World w = plugin.getServer().getWorlds().getFirst();
         int x = 0;
         int y = 0;
         int z = 0;
 
         for (String i : locationString.toLowerCase().split(", ")) {
             if (i.startsWith("world:")) {
-                w = this.plugin.getServer().getWorld(i.replace("world:", ""));
+                w = plugin.getServer().getWorld(i.replace("world:", ""));
             } else if (i.startsWith("x:")) {
                 x = Integer.parseInt(i.replace("x:", ""));
             } else if (i.startsWith("y:")) {
@@ -216,7 +225,7 @@ public class Methods {
         return new Location(w, x, y, z);
     }
 
-    public List<String> getPlaceholders(List<String> message, HashMap<String, String> lorePlaceholders) {
+    public static List<String> getPlaceholders(List<String> message, Map<String, String> lorePlaceholders) {
         List<String> lore = new ArrayList<>();
 
         for (String msg : message) {
