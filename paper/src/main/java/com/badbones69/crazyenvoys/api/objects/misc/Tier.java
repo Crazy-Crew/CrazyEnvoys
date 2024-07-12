@@ -2,9 +2,9 @@ package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
-import com.badbones69.crazyenvoys.api.FileManager;
-import com.badbones69.crazyenvoys.api.FileManager.CustomFile;
 import com.badbones69.crazyenvoys.util.MsgUtils;
+import com.ryderbelserion.vital.paper.files.config.CustomFile;
+import com.ryderbelserion.vital.paper.files.config.FileManager;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
@@ -50,13 +50,11 @@ public class Tier {
     /**
      * Create a new tier.
      *
-     * @param name The name of the tier.
+     * @param file the custom file object.
      */
-    public Tier(String name) {
-        this.name = name;
-
-        FileManager fileManager = this.plugin.getFileManager();
-        this.file = fileManager.getFile(name);
+    public Tier(final CustomFile file) {
+        this.name = file.getStrippedName();
+        this.file = file;
 
         this.claimPermission = "";
         this.claimPermissionToggle = false;

@@ -2,7 +2,6 @@ package com.badbones69.crazyenvoys;
 
 import com.badbones69.crazyenvoys.commands.EnvoyCommand;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.api.FileManager;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
@@ -16,6 +15,7 @@ import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import com.ryderbelserion.vital.paper.enums.Support;
+import com.ryderbelserion.vital.paper.files.config.FileManager;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -58,11 +58,7 @@ public class CrazyEnvoys extends JavaPlugin {
         }
 
         this.fileManager = new FileManager();
-        this.fileManager.registerCustomFilesFolder("/tiers")
-                .registerDefaultGenerateFiles("Basic.yml", "/tiers", "/tiers")
-                .registerDefaultGenerateFiles("Lucky.yml", "/tiers", "/tiers")
-                .registerDefaultGenerateFiles("Titan.yml", "/tiers", "/tiers")
-                .setup();
+        this.fileManager.addFile("users.yml").addFolder("tiers").init();
 
         new MetricsWrapper(this, 4514);
 
@@ -120,8 +116,7 @@ public class CrazyEnvoys extends JavaPlugin {
         }
     }
 
-    public @Nullable
-    final HeadDatabaseAPI getApi() {
+    public @Nullable final HeadDatabaseAPI getApi() {
         if (this.api == null) {
             return null;
         }
