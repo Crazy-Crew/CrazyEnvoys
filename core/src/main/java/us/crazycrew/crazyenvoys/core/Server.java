@@ -1,21 +1,21 @@
 package us.crazycrew.crazyenvoys.core;
 
 import com.ryderbelserion.vital.core.Vital;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.core.config.ConfigManager;
 import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 import java.io.File;
-import java.util.logging.Logger;
 
 public class Server extends Vital {
 
     private final File dataFolder;
-    private final Logger logger;
+    private final ComponentLogger logger;
 
     public Server(final JavaPlugin plugin) {
         this.dataFolder = plugin.getDataFolder();
-        this.logger = plugin.getLogger();
+        this.logger = plugin.getComponentLogger();
 
         ConfigManager.load(this.dataFolder, this.logger);
     }
@@ -26,7 +26,7 @@ public class Server extends Vital {
     }
 
     @Override
-    public @NotNull Logger getLogger() {
+    public @NotNull ComponentLogger getLogger() {
         return this.logger;
     }
 

@@ -4,6 +4,7 @@ import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;
 import ch.jalu.configme.configurationdata.ConfigurationDataBuilder;
 import ch.jalu.configme.resource.YamlFileResourceOptions;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.configuration.file.YamlConfiguration;
 import us.crazycrew.crazyenvoys.core.config.migrate.ConfigMigration;
 import us.crazycrew.crazyenvoys.core.config.migrate.LocaleMigration;
@@ -11,14 +12,13 @@ import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 import us.crazycrew.crazyenvoys.core.config.types.MessageKeys;
 import java.io.File;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
 
 public class ConfigManager {
 
     private static SettingsManager messages;
     private static SettingsManager config;
 
-    public static void load(final File dataFolder, final Logger logger) {
+    public static void load(final File dataFolder, final ComponentLogger logger) {
         YamlFileResourceOptions builder = YamlFileResourceOptions.builder().indentationSize(2).build();
 
         File configFile = new File(dataFolder, "config.yml");
@@ -66,7 +66,7 @@ public class ConfigManager {
         return messages;
     }
 
-    private static void copyPluginConfig(final File dataFolder, final Logger logger, final SettingsManager config) {
+    private static void copyPluginConfig(final File dataFolder, final ComponentLogger logger, final SettingsManager config) {
         File input = new File(dataFolder, "plugin-config.yml");
 
         if (!input.exists()) return;
@@ -89,6 +89,6 @@ public class ConfigManager {
         config.save();
 
         // Delete old file.
-        if (input.delete()) logger.warning("Successfully migrated " + input.getName() + ".yml");
+        if (input.delete()) logger.warn("Successfully migrated {}.yml", input.getName());
     }
 }
