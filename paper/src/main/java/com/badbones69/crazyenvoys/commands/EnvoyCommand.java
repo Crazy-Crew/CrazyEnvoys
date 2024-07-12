@@ -29,8 +29,6 @@ public class EnvoyCommand implements CommandExecutor {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private @NotNull final Methods methods = this.plugin.getMethods();
-
     private @NotNull final EditorSettings editorSettings = this.plugin.getEditorSettings();
     private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
     private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
@@ -131,7 +129,7 @@ public class EnvoyCommand implements CommandExecutor {
                     Player player;
 
                     if (args.length >= 2) {
-                        if (this.methods.isInt(args[1])) {
+                        if (Methods.isInt(args[1])) {
                             amount = Integer.parseInt(args[1]);
                         } else {
                             Messages.not_a_number.sendMessage(sender);
@@ -140,8 +138,8 @@ public class EnvoyCommand implements CommandExecutor {
                     }
 
                     if (args.length >= 3) {
-                        if (this.methods.isOnline(args[2])) {
-                            player = this.methods.getPlayer(args[2]);
+                        if (Methods.isOnline(args[2])) {
+                            player = Methods.getPlayer(args[2]);
                         } else {
                             Messages.not_online.sendMessage(sender);
                             return true;
@@ -180,7 +178,7 @@ public class EnvoyCommand implements CommandExecutor {
                     int page = 1;
 
                     if (args.length >= 2) {
-                        if (this.methods.isInt(args[1])) {
+                        if (Methods.isInt(args[1])) {
                             page = Integer.parseInt(args[1]);
                         } else {
                             Messages.not_a_number.sendMessage(sender);
@@ -197,7 +195,7 @@ public class EnvoyCommand implements CommandExecutor {
                         placeholders.put("{x}", String.valueOf(block.getX()));
                         placeholders.put("{y}", String.valueOf(block.getY()));
                         placeholders.put("{z}", String.valueOf(block.getZ()));
-                        locs.add(Messages.drops_format.getStringMessage(placeholders));
+                        locs.add(Messages.drops_format.getMessage(sender, placeholders));
                         amount++;
                         placeholders.clear();
                     }
@@ -208,7 +206,7 @@ public class EnvoyCommand implements CommandExecutor {
                         Messages.drops_possibilities.sendMessage(sender);
                     }
 
-                    for (String dropLocation : this.methods.getPage(locs, page)) {
+                    for (String dropLocation : Methods.getPage(locs, page)) {
                         sender.sendMessage(MsgUtils.color(dropLocation));
                     }
 

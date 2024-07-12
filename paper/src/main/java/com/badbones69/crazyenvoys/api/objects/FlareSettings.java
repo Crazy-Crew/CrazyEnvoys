@@ -1,21 +1,15 @@
 package com.badbones69.crazyenvoys.api.objects;
 
 import ch.jalu.configme.SettingsManager;
-import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import us.crazycrew.crazyenvoys.core.config.ConfigManager;
 import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 
 public class FlareSettings {
-
-    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
-
-    private @NotNull final Methods methods = this.plugin.getMethods();
     
     private ItemBuilder flareItemBuilder;
     
@@ -52,10 +46,10 @@ public class FlareSettings {
     }
     
     public void giveFlare(Player player, int amount) {
-        if (this.methods.isInvFull(player)) {
+        if (Methods.isInvFull(player)) {
             player.getWorld().dropItem(player.getLocation(), getFlare(amount));
         } else {
-            player.getInventory().addItem(getFlare(amount));
+            Methods.addItem(player, getFlare(amount));
         }
     }
     

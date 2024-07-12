@@ -64,8 +64,6 @@ public class CrazyManager {
 
     private @NotNull final FileManager fileManager = this.plugin.getFileManager();
 
-    private @NotNull final Methods methods = this.plugin.getMethods();
-
     private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
 
     private @NotNull final EditorSettings editorSettings = this.plugin.getEditorSettings();
@@ -476,7 +474,7 @@ public class CrazyManager {
      * @return The time till the next envoy.
      */
     public String getNextEnvoyTime() {
-        String message = this.methods.convertTimeToString(getNextEnvoy());
+        String message = Methods.convertTimeToString(getNextEnvoy());
 
         if (message.equals("0" + Messages.second.getString())) message = Messages.on_going.getString();
 
@@ -546,7 +544,7 @@ public class CrazyManager {
      * @return The time left in the current envoy event.
      */
     public String getEnvoyRunTimeLeft() {
-        String message = this.methods.convertTimeToString(this.envoyTimeLeft);
+        String message = Methods.convertTimeToString(this.envoyTimeLeft);
 
         if (message.equals("0" + Messages.second.getString())) message = Messages.not_running.getString();
 
@@ -635,7 +633,7 @@ public class CrazyManager {
         if (envoyLocationsBroadcast) {
             StringBuilder locations = getStringBuilder();
 
-            this.plugin.getServer().broadcast(Messages.envoy_locations.getMessage("{locations}", locations.toString().translateEscapes()).asString().translateEscapes(), "envoy.locations");
+            this.plugin.getServer().broadcast(Messages.envoy_locations.getMessage("{locations}", locations.toString().translateEscapes()).translateEscapes(), "envoy.locations");
         }
 
         return this.locationSettings.getDropLocations();
@@ -654,7 +652,7 @@ public class CrazyManager {
             placeholders.put("{y}", String.valueOf(block.getY()));
             placeholders.put("{z}", String.valueOf(block.getZ()));
 
-            locations.append(Messages.location_format.getMessage(placeholders).asString().translateEscapes());
+            locations.append(Messages.location_format.getMessage(placeholders).translateEscapes());
             x += 1;
         }
 
@@ -671,7 +669,7 @@ public class CrazyManager {
         // crates to spawn in the ground when not using falling blocks.
 
         if (this.tiers.isEmpty()) {
-            this.plugin.getServer().broadcastMessage(this.methods.getPrefix() + MsgUtils.color("&cNo tiers were found. Please delete the Tiers folder to allow it to remake the default tier files."));
+            this.plugin.getServer().broadcastMessage(Methods.getPrefix() + MsgUtils.color("&cNo tiers were found. Please delete the Tiers folder to allow it to remake the default tier files."));
             return false;
         }
 
@@ -719,7 +717,7 @@ public class CrazyManager {
                 boolean spawnFallingBlock = false;
 
                 if (this.config.getProperty(ConfigKeys.envoy_falling_block_toggle)) {
-                    for (Entity entity : this.methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
+                    for (Entity entity : Methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
                         if (entity instanceof Player) {
                             spawnFallingBlock = true;
                             break;
@@ -851,7 +849,7 @@ public class CrazyManager {
      */
     public void setCenter(Location loc) {
         this.center = loc;
-        this.centerString = this.methods.getUnBuiltLocation(this.center);
+        this.centerString = Methods.getUnBuiltLocation(this.center);
 
         Files.users.getConfiguration().set("Center", this.centerString);
         Files.users.save();
@@ -941,9 +939,9 @@ public class CrazyManager {
 
         if (users.contains("Center")) {
             this.centerString = users.getString("Center");
-            if (this.centerString != null) this.center = this.methods.getBuiltLocation(centerString);
+            if (this.centerString != null) this.center = Methods.getBuiltLocation(centerString);
         } else {
-            this.center = this.plugin.getServer().getWorlds().get(0).getSpawnLocation();
+            this.center = this.plugin.getServer().getWorlds().getFirst().getSpawnLocation();
         }
 
         if (this.center.getWorld() == null) {
@@ -965,7 +963,7 @@ public class CrazyManager {
         if (this.config.getProperty(ConfigKeys.envoys_countdown)) {
             String time = this.config.getProperty(ConfigKeys.envoys_cooldown);
 
-            cal = this.methods.getTimeFromString(time);
+            cal = Methods.getTimeFromString(time);
         } else {
             getEnvoyTime(cal);
         }
@@ -976,7 +974,7 @@ public class CrazyManager {
     private Calendar getEnvoyRunTimeCalendar() {
         String time = this.config.getProperty(ConfigKeys.envoys_run_time).toLowerCase();
 
-        return this.methods.getTimeFromString(time);
+        return Methods.getTimeFromString(time);
     }
 
     private void firework(Location loc, Tier tier) {
@@ -1067,7 +1065,7 @@ public class CrazyManager {
         List<String> strings = new ArrayList<>();
 
         for (Block block : stringList) {
-            strings.add(this.methods.getUnBuiltLocation(block.getLocation()));
+            strings.add(Methods.getUnBuiltLocation(block.getLocation()));
         }
 
         return strings;
@@ -1077,7 +1075,7 @@ public class CrazyManager {
         List<Block> locations = new ArrayList<>();
 
         for (String location : locationsList) {
-            locations.add(this.methods.getBuiltLocation(location).getBlock());
+            locations.add(Methods.getBuiltLocation(location).getBlock());
         }
 
         return locations;

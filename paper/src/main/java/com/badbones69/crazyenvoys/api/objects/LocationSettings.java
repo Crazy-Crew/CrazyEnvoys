@@ -13,8 +13,6 @@ public class LocationSettings {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private @NotNull final Methods methods = this.plugin.getMethods();
-
     private final List<Block> spawnLocations = new ArrayList<>();
 
     /**
@@ -158,7 +156,7 @@ public class LocationSettings {
 
         for (String location : users.getStringList("Locations.Spawns")) {
             try {
-                getSpawnLocations().add(this.methods.getBuiltLocation(location).getBlock());
+                getSpawnLocations().add(Methods.getBuiltLocation(location).getBlock());
             } catch (Exception ignore) {
                 addFailedLocations(location);
             }
@@ -174,7 +172,7 @@ public class LocationSettings {
 
             for (String location : getFailedLocations()) {
                 try {
-                    getSpawnLocations().add(this.methods.getBuiltLocation(location).getBlock());
+                    getSpawnLocations().add(Methods.getBuiltLocation(location).getBlock());
                     fixed++;
                 } catch (Exception ignore) {
                     failed++;
@@ -192,7 +190,7 @@ public class LocationSettings {
 
         for (Block block : this.spawnLocations) {
             try {
-                locations.add(this.methods.getUnBuiltLocation(block.getLocation()));
+                locations.add(Methods.getUnBuiltLocation(block.getLocation()));
             } catch (Exception ignored) {}
         }
 

@@ -1,17 +1,15 @@
 package com.badbones69.crazyenvoys.api.objects.misc;
 
-import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.vital.paper.files.config.CustomFile;
-import com.ryderbelserion.vital.paper.files.config.FileManager;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Tier {
 
@@ -41,11 +39,7 @@ public class Tier {
     private List<String> prizeMessage;
 
     // Placeholders,
-    private final HashMap<String, String> lorePlaceholders;
-
-    private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
-
-    private final @NotNull Methods methods = this.plugin.getMethods();
+    private final Map<String, String> lorePlaceholders;
     
     /**
      * Create a new tier.
@@ -348,7 +342,7 @@ public class Tier {
     /**
      * @return All lore placeholders.
      */
-    public HashMap<String, String> getLorePlaceholders() {
+    public Map<String, String> getLorePlaceholders() {
         return this.lorePlaceholders;
     }
 
@@ -358,7 +352,7 @@ public class Tier {
      * @return The hologram with all placeholders in it.
      */
     public List<String> getHoloMessage() {
-        return this.methods.getPlaceholders(this.holoMessage, this.lorePlaceholders);
+        return Methods.getPlaceholders(this.holoMessage, this.lorePlaceholders);
     }
 
     /**

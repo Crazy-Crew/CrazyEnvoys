@@ -6,9 +6,13 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.vital.core.util.StringUtil;
+import com.ryderbelserion.vital.paper.enums.Support;
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import us.crazycrew.crazyenvoys.core.config.ConfigManager;
 import us.crazycrew.crazyenvoys.core.config.types.ConfigKeys;
 import us.crazycrew.crazyenvoys.core.config.types.MessageKeys;
@@ -75,8 +79,6 @@ public enum Messages {
 
     private boolean isList = false;
 
-    private String message;
-
     /**
      * Used for strings
      *
@@ -102,43 +104,73 @@ public enum Messages {
     private @NotNull final SettingsManager messages = ConfigManager.getMessages();
     private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
-    @NotNull
-    private List<String> getPropertyList(Property<List<String>> properties) {
-        return this.messages.getProperty(properties);
+    public String getString() {
+        return this.messages.getProperty(this.property);
     }
 
-    @NotNull
-    private String getProperty(Property<String> property) {
-        return this.messages.getProperty(property);
+    public List<String> getList() {
+        return this.messages.getProperty(this.listProperty);
     }
 
     private boolean isList() {
         return this.isList;
     }
 
-    public String getString() {
-        return getMessage().toString();
+    public String getMessage() {
+        return getMessage(null, new HashMap<>());
     }
 
-    public Messages getMessage() {
-        return getMessage(new HashMap<>());
+    public String getMessage(final String placeholder, final String replacement) {
+        return getMessage(null, placeholder, replacement);
     }
 
-    public Messages getMessage(String placeholder, String replacement) {
-        Map<String, String> placeholders = new HashMap<>();
-        placeholders.put(placeholder, replacement);
-
-        return getMessage(placeholders);
+    public String getMessage(final Map<String, String> placeholders) {
+        return getMessage(null, placeholders);
     }
 
-    public Messages getMessage(Map<String, String> placeholders) {
-        // Get the string first.
+    public String getMessage(@Nullable final CommandSender sender) {
+        return getMessage(sender, new HashMap<>());
+    }
+
+    public String getMessage(@Nullable final CommandSender sender, @NotNull final String placeholder, @NotNull final String replacement) {
+        Map<String, String> placeholders = new HashMap<>() {{
+            put(placeholder, replacement);
+        }};
+
+        return getMessage(sender, placeholders);
+    }
+
+    public String getMessage(@Nullable final CommandSender sender, @NotNull final Map<String, String> placeholders) {
+        return parse(sender, placeholders).replaceAll("\\{prefix}", MsgUtils.getPrefix());
+    }
+
+    public void sendMessage(final CommandSender sender, final String placeholder, final String replacement) {
+        sender.sendMessage(getMessage(sender, placeholder, replacement));
+    }
+
+    public void sendMessage(final CommandSender sender, final Map<String, String> placeholders) {
+        sender.sendMessage(getMessage(sender, placeholders));
+    }
+
+    public void sendMessage(final CommandSender sender) {
+        sender.sendMessage(getMessage(sender));
+    }
+
+    private @NotNull String parse(@Nullable final CommandSender sender, @NotNull final Map<String, String> placeholders) {
         String message;
 
         if (isList()) {
-            message = StringUtil.convertList(getPropertyList(this.listProperty));
+            message = StringUtils.chomp(StringUtil.convertList(getList()));
         } else {
-            message = getProperty(this.property);
+            message = getString();
+        }
+
+        if (sender != null) {
+            if (sender instanceof Player player) {
+                if (Support.placeholder_api.isEnabled()) {
+                    message = PlaceholderAPI.setPlaceholders(player, message);
+                }
+            }
         }
 
         if (!placeholders.isEmpty()) {
@@ -147,73 +179,7 @@ public enum Messages {
             }
         }
 
-        this.message = message;
-
-        return this;
-    }
-
-    public String getStringMessage(Map<String, String> placeholders) {
-        // Get the string first.
-        String message;
-
-        if (isList()) {
-            message = StringUtil.convertList(getPropertyList(this.listProperty));
-        } else {
-            message = getProperty(this.property);
-        }
-
-        if (!placeholders.isEmpty()) {
-            for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
-                message = message.replace(placeholder.getKey(), placeholder.getValue()).replace(placeholder.getKey().toLowerCase(), placeholder.getValue());
-            }
-        }
-
-        this.message = message;
-
-        return this.message;
-    }
-
-    public String getStringMessage() {
-        // Get the string first.
-        String message;
-
-        if (isList()) {
-            message = StringUtil.convertList(getPropertyList(this.listProperty));
-        } else {
-            message = getProperty(this.property);
-        }
-
-        this.message = message;
-
-        return this.message;
-    }
-
-    public void sendMessage(Player player) {
-        sendMessage(player, new HashMap<>());
-    }
-
-    public void sendMessage(Player player, Map<String, String> placeholder) {
-        String message = getMessage(placeholder).asString();
-
-        if (message.isEmpty() || message.isBlank()) {
-            return;
-        }
-
-        player.sendMessage(message);
-    }
-
-    public void sendMessage(CommandSender sender) {
-        sendMessage(sender, new HashMap<>());
-    }
-
-    public void sendMessage(CommandSender sender, Map<String, String> placeholder) {
-        String message = getMessage(placeholder).asString();
-
-        if (message.isEmpty() || message.isBlank()) {
-            return;
-        }
-
-        sender.sendMessage(message);
+        return MsgUtils.color(message);
     }
 
     public void broadcastMessage(boolean ignore) {
@@ -245,17 +211,5 @@ public enum Messages {
                 }
             }
         }
-    }
-
-    public String asString() {
-        return MsgUtils.color(this.message.replaceAll("\\{prefix}", ConfigManager.getConfig().getProperty(ConfigKeys.command_prefix)));
-    }
-
-    public List<String> toListString() {
-        ArrayList<String> components = new ArrayList<>();
-
-        getPropertyList(this.listProperty).forEach(line -> components.add(MsgUtils.color(line)));
-
-        return components;
     }
 }

@@ -7,7 +7,6 @@ import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
-import com.ryderbelserion.vital.paper.enums.Support;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,7 +25,6 @@ public class FlareClickListener implements Listener {
     private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
     private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
-    private @NotNull final Methods methods = this.plugin.getMethods();
 
     private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
 
@@ -35,9 +33,9 @@ public class FlareClickListener implements Listener {
         Player player = event.getPlayer();
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            ItemStack flare = this.methods.getItemInHand(player);
+            ItemStack flare = Methods.getItemInHand(player);
 
-            if (flare != null && this.flareSettings.isFlare(flare)) {
+            if (this.flareSettings.isFlare(flare)) {
                 event.setCancelled(true);
 
                 if (!player.hasPermission("envoy.flare.use")) {
@@ -64,7 +62,7 @@ public class FlareClickListener implements Listener {
 
                 boolean toggle = false;
 
-                if (Support.worldedit.isEnabled() && Support.worldguard.isEnabled()) {
+                if (this.plugin.getServer().getPluginManager().isPluginEnabled("WorldEdit") && this.plugin.getServer().getPluginManager().isPluginEnabled("WorldGuard")) {
                     if (this.config.getProperty(ConfigKeys.envoys_flare_world_guard_toggle)) {
                         for (String region : this.config.getProperty(ConfigKeys.envoys_flare_world_guard_regions)) {
                             if (this.crazyManager.getWorldGuardPluginSupport().inRegion(region, player.getLocation())) toggle = true;
@@ -78,6 +76,7 @@ public class FlareClickListener implements Listener {
 
                 if (!toggle) {
                     Messages.not_in_world_guard_region.sendMessage(player);
+
                     return;
                 }
 

@@ -20,8 +20,6 @@ public class EnvoyEditListener implements Listener {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private @NotNull final Methods methods = this.plugin.getMethods();
-
     private @NotNull final EditorSettings editorSettings = this.plugin.getEditorSettings();
 
     private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
@@ -37,7 +35,7 @@ public class EnvoyEditListener implements Listener {
 
         event.setCancelled(true);
 
-        if (this.methods.getItemInHand(player).getType() != Material.BEDROCK) return;
+        if (Methods.getItemInHand(player).getType() != Material.BEDROCK) return;
 
         this.locationSettings.addSpawnLocation(block);
 

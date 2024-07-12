@@ -36,8 +36,6 @@ public class CrazyEnvoys extends JavaPlugin {
         return JavaPlugin.getPlugin(CrazyEnvoys.class);
     }
 
-    private Methods methods;
-
     private EditorSettings editorSettings;
     private FlareSettings flareSettings;
     private CoolDownSettings coolDownSettings;
@@ -61,8 +59,6 @@ public class CrazyEnvoys extends JavaPlugin {
         this.fileManager.addFile("users.yml").addFolder("tiers").init();
 
         new MetricsWrapper(this, 4514);
-
-        this.methods = new Methods();
 
         this.locationSettings = new LocationSettings();
         this.editorSettings = new EditorSettings();
@@ -126,10 +122,6 @@ public class CrazyEnvoys extends JavaPlugin {
 
     public final FileManager getFileManager() {
         return this.fileManager;
-    }
-
-    public final Methods getMethods() {
-        return this.methods;
     }
 
     public final EditorSettings getEditorSettings() {

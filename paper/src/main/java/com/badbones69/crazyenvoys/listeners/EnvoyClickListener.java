@@ -44,8 +44,6 @@ public class EnvoyClickListener implements Listener {
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
     private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
-    private @NotNull final Methods methods = this.plugin.getMethods();
-
     private @NotNull final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
     private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
@@ -89,7 +87,7 @@ public class EnvoyClickListener implements Listener {
 
                 if (this.coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(this.coolDownSettings.getCooldown().get(uuid))) {
                     Map<String, String> placeholder = new HashMap<>();
-                    placeholder.put("{time}", this.methods.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
+                    placeholder.put("{time}", Methods.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
 
                     Messages.cooldown_left.sendMessage(player, placeholder);
                     return;
@@ -106,7 +104,7 @@ public class EnvoyClickListener implements Listener {
 
         if (envoyOpenEvent.isCancelled()) return;
 
-        if (tier.getFireworkToggle()) this.methods.firework(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
+        if (tier.getFireworkToggle()) Methods.firework(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
 
         event.getClickedBlock().setType(Material.AIR);
 
@@ -121,7 +119,7 @@ public class EnvoyClickListener implements Listener {
         this.crazyManager.removeActiveEnvoy(block);
 
         if (tier.getPrizes().isEmpty()) {
-            this.plugin.getServer().broadcastMessage(this.methods.getPrefix() + MsgUtils.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+            this.plugin.getServer().broadcastMessage(Methods.getPrefix() + MsgUtils.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
 
             return;
         }
@@ -155,10 +153,10 @@ public class EnvoyClickListener implements Listener {
                 if (prize.getDropItems()) {
                     event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                 } else {
-                    if (this.methods.isInvFull(player)) {
+                    if (Methods.isInvFull(player)) {
                         event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                     } else {
-                        player.getInventory().addItem(item);
+                        Methods.addItem(player, item);
                     }
                 }
             }
@@ -247,7 +245,7 @@ public class EnvoyClickListener implements Listener {
 
         for (int i = 0; prizes.size() < maxBulk && i < 500; i++) {
             for (Prize prize : tier.getPrizes()) {
-                if (!prizes.contains(prize) && this.methods.isSuccessful(prize.getChance(), 100)) prizes.add(prize);
+                if (!prizes.contains(prize) && Methods.isSuccessful(prize.getChance(), 100)) prizes.add(prize);
 
                 if (prizes.size() == maxBulk) break;
             }
@@ -263,7 +261,7 @@ public class EnvoyClickListener implements Listener {
 
         while (tiers.isEmpty()) {
             for (Tier tier : this.crazyManager.getTiers()) {
-                if (this.methods.isSuccessful(tier.getSpawnChance(), 100)) tiers.add(tier);
+                if (Methods.isSuccessful(tier.getSpawnChance(), 100)) tiers.add(tier);
             }
         }
 
