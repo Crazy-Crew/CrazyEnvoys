@@ -10,28 +10,35 @@ import java.io.File;
 
 public class Server extends Vital {
 
+    private final JavaPlugin plugin;
     private final File dataFolder;
     private final ComponentLogger logger;
 
     public Server(final JavaPlugin plugin) {
         this.dataFolder = plugin.getDataFolder();
         this.logger = plugin.getComponentLogger();
+        this.plugin = plugin;
 
         ConfigManager.load(this.dataFolder, this.logger);
     }
 
     @Override
-    public @NotNull File getDirectory() {
+    public @NotNull final File getDirectory() {
         return this.dataFolder;
     }
 
     @Override
-    public @NotNull ComponentLogger getLogger() {
+    public @NotNull final ComponentLogger getLogger() {
         return this.logger;
     }
 
     @Override
-    public boolean isLogging() {
+    public void saveResource(String resourceName, boolean replaceExisting) {
+        this.plugin.saveResource(resourceName, replaceExisting);
+    }
+
+    @Override
+    public final boolean isLogging() {
         return ConfigManager.getConfig().getProperty(ConfigKeys.verbose_logging);
     }
 }

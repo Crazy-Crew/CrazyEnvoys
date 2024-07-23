@@ -10,7 +10,7 @@ plugins {
 
 val buildNumber: String? = System.getenv("BUILD_NUMBER")
 
-rootProject.version = if (buildNumber != null) "${libs.versions.minecraft.get()}-$buildNumber" else "1.12.1"
+rootProject.version = if (buildNumber != null) "${libs.versions.minecraft.get()}-$buildNumber" else "1.12.2"
 
 val isSnapshot = true
 
@@ -27,7 +27,13 @@ dependencies {
 
     compileOnly(libs.decent.holograms)
 
+    compileOnly(libs.headdatabaseapi)
+
+    compileOnly(libs.placeholderapi)
+
     compileOnly(libs.worldguard)
+
+    compileOnly(libs.oraxen)
 }
 
 val component: SoftwareComponent = components["java"]

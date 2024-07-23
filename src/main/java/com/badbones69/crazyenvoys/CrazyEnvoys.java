@@ -29,11 +29,19 @@ import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.support.MetricsWrapper;
 
+import java.util.Locale;
+
 public class CrazyEnvoys extends JavaPlugin {
 
     @NotNull
     public static CrazyEnvoys get() {
         return JavaPlugin.getPlugin(CrazyEnvoys.class);
+    }
+
+    private final long startTime;
+
+    public CrazyEnvoys() {
+        this.startTime = System.nanoTime();
     }
 
     private EditorSettings editorSettings;
@@ -78,6 +86,10 @@ public class CrazyEnvoys extends JavaPlugin {
         }
 
         registerCommand(getCommand("crazyenvoys"), new EnvoyTab(), new EnvoyCommand());
+
+        if (isLogging()) {
+            getComponentLogger().info("Done ({})!", String.format(Locale.ROOT, "%.3fs", (double) (System.nanoTime() - this.startTime) / 1.0E9D));
+        }
     }
 
     @Override
