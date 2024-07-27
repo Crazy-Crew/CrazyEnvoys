@@ -4,6 +4,7 @@ import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.CrazyManager;
+import com.badbones69.crazyenvoys.api.builders.types.PrizeGui;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyOpenEvent;
@@ -12,12 +13,14 @@ import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
+import com.badbones69.crazyenvoys.config.beans.GuiProperty;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.vital.paper.enums.Support;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import com.badbones69.crazyenvoys.config.ConfigManager;
@@ -149,19 +153,27 @@ public class EnvoyClickListener implements Listener {
                 this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), cmd.replace("{player}", player.getName()).replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
             }
 
-            for (ItemStack item : prize.getItems()) {
-                if (prize.getDropItems()) {
-                    event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
-                } else {
-                    if (Methods.isInvFull(player)) {
+            if (!this.config.getProperty(ConfigKeys.envoy_menu_open)) {
+                for (ItemStack item : prize.getItems()) {
+                    if (prize.getDropItems()) {
                         event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
                     } else {
-                        Methods.addItem(player, item);
+                        if (Methods.isInvFull(player)) {
+                            event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
+                        } else {
+                            Methods.addItem(player, item);
+                        }
                     }
                 }
-            }
 
-            player.updateInventory();
+                player.updateInventory();
+            } else {
+                if (!prize.getItems().isEmpty()) {
+                    GuiProperty property = this.config.getProperty(ConfigKeys.envoy_menu);
+
+                    player.openInventory(new PrizeGui(player, property.getTitle(), property.getSize(), tier, prize).build().getInventory());
+                }
+            }
         }
 
         if (!this.crazyManager.getActiveEnvoys().isEmpty()) {

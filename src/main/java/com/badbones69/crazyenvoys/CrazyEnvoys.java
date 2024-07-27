@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoys;
 
+import com.badbones69.crazyenvoys.api.builders.types.PrizeGui;
 import com.badbones69.crazyenvoys.commands.EnvoyCommand;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
@@ -80,6 +81,8 @@ public class CrazyEnvoys extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EnvoyClickListener(), this);
         getServer().getPluginManager().registerEvents(new FlareClickListener(), this);
         getServer().getPluginManager().registerEvents(new FireworkDamageListener(), this);
+
+        getServer().getPluginManager().registerEvents(new PrizeGui(), this);
 
         if (Support.placeholder_api.isEnabled()) {
             new PlaceholderAPISupport().register();
