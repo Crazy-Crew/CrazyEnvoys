@@ -56,6 +56,9 @@ public class ConfigKeys implements SettingsHolder {
     @Comment("The console prefix you want shown when the logging messages show up!")
     public static final Property<String> console_prefix = PropertyInitializer.newProperty("root.console_prefix" ,"&8[&cCrazyEnvoys&8] ");
 
+    @Comment("Envoys will act as chests with items inside instead of adding to inventory.")
+    public static final Property<Boolean> envoy_open_chest = PropertyInitializer.newProperty("envoys.open-chest", false);
+
     @Comment("Whether or not a block should fall when an envoy spawns.")
     public static final Property<Boolean> envoy_falling_block_toggle = newProperty("envoys.falling-blocks.toggle", true);
 

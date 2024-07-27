@@ -135,7 +135,7 @@ public class Prize {
      * @return The items that are won in the prize.
      */
     public List<ItemStack> getItems() {
-        return this.items;
+        return new ArrayList<>(this.items);
     }
     
     /**
