@@ -13,6 +13,7 @@ import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
+import com.badbones69.crazyenvoys.config.beans.GuiProperty;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.vital.paper.enums.Support;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -152,7 +153,7 @@ public class EnvoyClickListener implements Listener {
                 this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), cmd.replace("{player}", player.getName()).replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
             }
 
-            if (!this.config.getProperty(ConfigKeys.envoy_open_chest)) {
+            if (!this.config.getProperty(ConfigKeys.envoy_menu_open)) {
                 for (ItemStack item : prize.getItems()) {
                     if (prize.getDropItems()) {
                         event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
@@ -168,7 +169,9 @@ public class EnvoyClickListener implements Listener {
                 player.updateInventory();
             } else {
                 if (!prize.getItems().isEmpty()) {
-                    player.openInventory(new PrizeGui(player, tier, prize).build().getInventory());
+                    GuiProperty property = this.config.getProperty(ConfigKeys.envoy_menu);
+
+                    player.openInventory(new PrizeGui(player, property.getTitle(), property.getSize(), tier, prize).build().getInventory());
                 }
             }
         }

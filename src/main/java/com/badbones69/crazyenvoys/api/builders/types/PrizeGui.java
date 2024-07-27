@@ -6,8 +6,11 @@ import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -16,8 +19,8 @@ public class PrizeGui extends InventoryBuilder {
 
     private Prize prize;
 
-    public PrizeGui(final Player player, final Tier tier, Prize prize) {
-        super(player, "<red>Prizes", 27, tier);
+    public PrizeGui(final Player player, final String title, final int size, final Tier tier, final Prize prize) {
+        super(player, title, size, tier);
 
         this.prize = prize;
     }
@@ -43,6 +46,8 @@ public class PrizeGui extends InventoryBuilder {
 
         if (!(inventory.getHolder(false) instanceof PrizeGui holder)) return;
 
+        event.setCancelled(true);
+
         final Player player = holder.getPlayer();
 
         if (event.getCurrentItem() == null) return;
@@ -57,12 +62,27 @@ public class PrizeGui extends InventoryBuilder {
 
         if (!pdc.has(PersistentKeys.prize_item.getNamespacedKey())) return;
 
-        final Inventory playerInventory = player.getInventory();
+        final PlayerInventory playerInventory = player.getInventory();
 
         playerInventory.setMaxStackSize(64);
+
+        itemStack.editMeta(meta -> meta.getPersistentDataContainer().remove(PersistentKeys.prize_item.getNamespacedKey()));
 
         playerInventory.addItem(itemStack);
 
         event.setCurrentItem(null);
+
+        if (inventory.isEmpty()) {
+            inventory.close();
+        }
+    }
+
+    @Override
+    public void run(InventoryDragEvent event) {
+        final Inventory inventory = event.getView().getTopInventory();
+
+        if (!(inventory.getHolder(false) instanceof PrizeGui)) return;
+
+        event.setCancelled(true);
     }
 }

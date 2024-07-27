@@ -5,9 +5,12 @@ import ch.jalu.configme.SettingsHolder;
 import ch.jalu.configme.configurationdata.CommentsConfiguration;
 import ch.jalu.configme.properties.Property;
 import ch.jalu.configme.properties.PropertyInitializer;
+import com.badbones69.crazyenvoys.config.beans.GuiProperty;
+
 import java.util.List;
-import static ch.jalu.configme.properties.PropertyInitializer.newListProperty;
-import static ch.jalu.configme.properties.PropertyInitializer.newProperty;
+
+import static ch.jalu.configme.properties.PropertyInitializer.*;
+import static ch.jalu.configme.properties.PropertyInitializer.newBeanProperty;
 
 public class ConfigKeys implements SettingsHolder {
     
@@ -57,9 +60,12 @@ public class ConfigKeys implements SettingsHolder {
     public static final Property<String> console_prefix = PropertyInitializer.newProperty("root.console_prefix" ,"&8[&cCrazyEnvoys&8] ");
 
     @Comment("Envoys will act as chests with items inside instead of adding to inventory.")
-    public static final Property<Boolean> envoy_open_chest = PropertyInitializer.newProperty("envoys.open-chest", false);
+    public static final Property<Boolean> envoy_menu_open = PropertyInitializer.newProperty("envoys.open-chest.toggle", false);
 
-    @Comment("Whether or not a block should fall when an envoy spawns.")
+    @Comment("Settings related to the menu opened when right clicking an envoy. Requires the option above to be true!")
+    public static final Property<GuiProperty> envoy_menu = newBeanProperty(GuiProperty.class, "envoys.open-chest.menu", new GuiProperty("&cEnvoy Drops", 27));
+
+    @Comment("Whether a block should fall when an envoy spawns.")
     public static final Property<Boolean> envoy_falling_block_toggle = newProperty("envoys.falling-blocks.toggle", true);
 
     @Comment("The block type falling when an envoy spawns.")
