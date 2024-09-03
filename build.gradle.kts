@@ -19,8 +19,6 @@ val content: String = rootProject.file("CHANGELOG.md").readText(Charsets.UTF_8)
 dependencies {
     paperweight.paperDevBundle(libs.versions.paper)
 
-    implementation(libs.triumph.cmds)
-
     implementation(libs.vital.paper)
 
     compileOnly(fileTree("$projectDir/libs/compile").include("*.jar"))
@@ -90,8 +88,7 @@ tasks {
         archiveClassifier.set("")
 
         listOf(
-            "com.ryderbelserion",
-            "dev.triumphteam"
+            "com.ryderbelserion.vital"
         ).forEach {
             relocate(it, "libs.$it")
         }
