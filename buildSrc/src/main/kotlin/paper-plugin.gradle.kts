@@ -5,9 +5,7 @@ plugins {
 }
 
 repositories {
-    maven("https://repo.triumphteam.dev/snapshots")
+    maven("https://repo.papermc.io/repository/maven-public")
 
     maven("https://maven.enginehub.org/repo")
-
-    maven(Repository.Paper.url)
 }
