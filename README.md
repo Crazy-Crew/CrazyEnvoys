@@ -1,91 +1,69 @@
-<br />
+<center><div align="center">
 
-<div align="center">
-
-[![CrazyEnvoys](https://raw.githubusercontent.com/RyderBelserion/Assets/main/crazycrew/webp/CrazyEnvoysBanner.webp)](https://modrinth.com/plugin/crazyenvoys)
+![CrazyEnvoys](https://raw.githubusercontent.com/Crazy-Crew/Branding/main/crazyenvoys/banner/webp/banner.webp)
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![GPU License][license-shield]][license-url]
-[![Contact][discord-shield]][discord-url]
-![CodeFactor][codefactor-shield]
+[![MIT License][license-shield]][license-url]
+[![CodeFactor](https://www.codefactor.io/repository/github/crazy-crew/crazyenvoys/badge)](https://www.codefactor.io/repository/github/crazy-crew/crazyenvoys)
 
-![Paper](https://cdn.jsdelivr.net/gh/intergrav/devins-badges/assets/compact/supported/paper_vector.svg)
-![Purpur](https://cdn.jsdelivr.net/gh/intergrav/devins-badges/assets/compact/supported/purpur_vector.svg)
+<big>**Drop custom crates with any prize you want all over spawn for players to fight over.**</big>
 
-  <p align="center">
-    Drop custom crates with any prize you want all over spawn for players to fight over.
-    <br />
-    <a href="https://docs.crazycrew.us/docs/category/crazyenvoys"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/Crazy-Crew/CrazyEnvoys/issues/new?assignees=ryderbelserion&labels=bug&projects=&template=bugs.yml&title=%5BBug+Report%5D%3A+">Report Bug</a>
-    ·
-    <a href="https://github.com/Crazy-Crew/CrazyEnvoys/discussions/new?category=features">Request Feature</a>
-    ·
-    <a href="https://discord.gg/badbones-s-live-chat-182615261403283459">Get Support</a>
-  </p>
-</div>
+<big> **Quick Links**</big><br>
+[Request Features](https://github.com/Crazy-Crew/CrazyEnvoys/issues)<br>
+[Documentation](https://docs.crazycrew.us/docs/category/crazyenvoys)<br>
+[Developer API](https://docs.crazycrew.us/docs/plugins/crazyenvoys/guides/api/intro)<br>
+[Report Bugs](https://github.com/Crazy-Crew/CrazyEnvoys/issues)<br>
+[Trello Board](https://trello.com/b/BGDNUdaj/crazyenvoys)
 
-<!-- TABLE OF CONTENTS -->
+<big> **Supported Platforms**</big><br>
+[![paper software](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact-minimal/supported/paper_vector.svg)](https://papermc.io/)
+[![purpur software](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact-minimal/supported/purpur_vector.svg)](https://purpurmc.org/)
+
+<big> **Initial Plugin Setup**</big><br>
+CrazyEnvoys as first install will come with a set of default files such as `config.yml`, `messages.yml`, and files in the `tiers` folder.
+You can simply edit these files, and configure the looks and settings then do `/crazyenvoys reload`<br>
+
+[![Partnered with ApexHosting](https://raw.githubusercontent.com/Crazy-Crew/Branding/main/apex-banner-transparent.webp)](https://billing.apexminecrafthosting.com/aff.php?aff=5511)
+
+![Features Banner](https://raw.githubusercontent.com/Crazy-Crew/Branding/main/crazyenvoys/banner/webp/features.webp)
+
+**In-game location editing with multi user support.**<br>
+**Unlimited locations & prizes.**<br>
+**Configurable warning times.**<br>
+**Configure the falling block & crate block.**<br>
+**Ability to configure the firework colors.**<br>
+**Customize almost every message.**<br>
+**Signal Flares, Flares, Multiple tiers.**<br>
+**Ability to have envoy claim cooldowns.**<br>
+**Ability to have a grace period for envoys to prevent people rushing it.**<br>
+**and so much more!**
+
+![Support Banner](https://raw.githubusercontent.com/Crazy-Crew/Branding/main/crazyenvoys/banner/webp/support.webp)
+
+Are you confused about something? Hop by the Discord and you might just get an answer!<br>
+Please head to [crazy-envoys](https://discord.com/channels/182615261403283459/255937811428016130) with your question and do not cross post.<br>
+
 <details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
+<summary>Support Checklist</summary>
+
+Please check to make sure that your question wasn't asked before, You can use `Ctrl+F` on Discord to look for past conversations.<br>
+Describe your issue in detail, Don't just make it a bread crumb trail that has to be questioned out of you.<br>
+Plugin Version i.e. `CrazyEnvoys 3.3` **LATEST DOES NOT COUNT**<br>
+Server Version & Server Type i.e. `Paper 1.21.1` or `Purpur 1.21.1` **LATEST DOES NOT COUNT**<br>
+Send any console errors or files you have through https://mclo.gs/ - (We don't own the website, You have to copy the link and send it.)<br>
+
 </details>
 
-### Resource Page
-[![Hangar](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/compact/available/hangar_46h.png)](https://hangar.papermc.io/CrazyCrew/CrazyEnvoys)
-[![Modrinth](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/compact/available/modrinth_46h.png)](https://modrinth.com/plugin/crazyenvoys)
+<!--[![Discord](https://discord.com/api/guilds/182615261403283459/widget.png?style=banner2)](https://discord.gg/badbones-s-live-chat-182615261403283459)<br>-->
+[![Discord Invite Button](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-plural_vector.svg)](https://discord.gg/badbones-s-live-chat-182615261403283459)
+</div>
 
-## Getting Started
-How to get started with contributing / maintaining your own version of CrazyEnvoys!
+![CrazyEnvoys Statistics](https://bstats.org/signatures/bukkit/CrazyEnvoy.svg)
+</center>
 
-### Prerequisites
-A list of things necessary to make sure you can build CrazyEnvoys properly.
-* Intellij IDEA
-    * > https://www.jetbrains.com/idea/download/
-* Gradle
-
-### Installation
-1. Clone the repo
-   ```sh
-   git clone https://github.com/Crazy-Crew/CrazyEnvoys.git
-   ```
-2. Open the repository using Intellij IDEA & wait until it finishes downloading/indexing.
-3. Run the build task.
-   ```gradle
-   ./gradlew assemble
-   ```
-
-## Roadmap
-Check our public [trello board](https://trello.com/b/BGDNUdaj) for our current plans, any bugs and general tracking of the project progress.
-
-## Contributing
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/yourfeature`)
-3. Commit your Changes (`git commit -m 'your amazing feature.'`)
-4. Push to the Branch (`git push`)
-5. Open a Pull Request to the `main` branch to add your feature/fix.
-
-## License
-Distributed under the MIT License. See [`LICENSE`](/LICENSE) for more information.
-
-[discord-shield]: https://img.shields.io/discord/182615261403283459.svg?style=flat&logo=appveyor
-[discord-url]: https://discord.gg/badbones-s-live-chat-182615261403283459
 
 [contributors-shield]: https://img.shields.io/github/contributors/Crazy-Crew/CrazyEnvoys.svg?style=flat&logo=appveyor
 [contributors-url]: https://github.com/Crazy-Crew/CrazyEnvoys/graphs/contributors
@@ -96,6 +74,4 @@ Distributed under the MIT License. See [`LICENSE`](/LICENSE) for more informatio
 [issues-shield]: https://img.shields.io/github/issues/Crazy-Crew/CrazyEnvoys.svg?style=flat&logo=appveyor
 [issues-url]: https://github.com/Crazy-Crew/CrazyEnvoys/issues
 [license-shield]: https://img.shields.io/github/license/Crazy-Crew/CrazyEnvoys.svg?style=flat&logo=appveyor
-[license-url]: https://github.com/Crazy-Crew/CrazyEnvoys/blob/master/LICENSE
-
-[codefactor-shield]: https://img.shields.io/codefactor/grade/github/crazy-crew/CrazyEnvoys/main?style=flat&logo=appveyor
+[license-url]: https://github.com/Crazy-Crew/CrazyEnvoys/blob/main/LICENSE
