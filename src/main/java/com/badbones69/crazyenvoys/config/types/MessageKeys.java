@@ -82,7 +82,9 @@ public class MessageKeys implements SettingsHolder {
 
     public static final Property<String> envoy_time_left = newProperty("envoys.time-left", "{prefix}&7The current envoy has &6{time}&7 left.");
 
-    public static final Property<String> envoy_time_till_event = newProperty("envoys.time-till-event", "{prefix}&7The next envoy will start in &6{time}&7.");
+    public static final Property<List<String>> envoy_time_till_event = newListProperty("envoys.time-till-event", List.of(
+            "{prefix}&7The next envoy will start in &6{time}&7."
+    ));
 
     public static final Property<String> envoy_used_flare = newProperty("envoys.flare.used-flare", "{prefix}&7You have just started an envoy event with a flare.");
 

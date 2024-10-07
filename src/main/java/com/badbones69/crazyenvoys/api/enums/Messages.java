@@ -8,7 +8,7 @@ import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.vital.core.util.StringUtil;
 import com.ryderbelserion.vital.paper.enums.Support;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.config.types.MessageKeys;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +50,7 @@ public enum Messages {
     countdown_in_progress(MessageKeys.countdown_in_progress),
     no_permission(MessageKeys.no_permission),
     no_claim_permission(MessageKeys.no_claim_permission),
-    time_till_event(MessageKeys.envoy_time_till_event),
+    time_till_event(MessageKeys.envoy_time_till_event, true),
     cant_use_flares(MessageKeys.envoy_cant_use_flare),
     already_started(MessageKeys.envoy_already_started),
     enter_editor_mode(MessageKeys.enter_editor_mode),
