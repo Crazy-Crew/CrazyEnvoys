@@ -1,5 +1,4 @@
 [plugins]
-paperweight = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight" }
 hangar = { id = "io.papermc.hangar-publish-plugin", version.ref = "hangar" }
 runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
@@ -10,13 +9,13 @@ shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 paper = "1.21.1-R0.1-SNAPSHOT"
 velocity = "3.3.0-SNAPSHOT"
 minecraft = "1.21.1"
+brigadier = "1.3.10"
 
 # Gradle Plugins
-paperweight = "1.7.2"
 runPaper = "2.3.0"
-minotaur = "2.+"
-shadow = "8.3.0"
+minotaur = "2.8.7"
 hangar = "0.1.2"
+shadow = "8.3.0"
 
 # Bukkit Plugins
 itemsadder = "3.6.3-beta-14"
@@ -26,11 +25,9 @@ decentholograms = "2.8.8"
 fancyholograms = "2.2.0"
 worldguard = "7.0.10"
 oraxen = "1.171.0"
-nbtapi = "2.13.0"
 vault = "1.7.1"
 
 # Libraries
-configurate = "4.2.0-SNAPSHOT"
 jetbrains = "24.1.0"
 adventure = "4.17.0"
 vital = "2.0.1"
@@ -53,7 +50,8 @@ vault = { module = "com.github.MilkBowl:VaultAPI", version.ref = "vault" }
 itemsadder = { module = "com.github.LoneDev6:api-itemsadder", version.ref = "itemsadder" }
 oraxen = { module = "io.th0rgal:oraxen", version.ref = "oraxen" }
 worldguard = { module = "com.sk89q.worldguard:worldguard-bukkit", version.ref = "worldguard" }
-nbtapi = { module = "de.tr7zw:item-nbt-api", version.ref = "nbtapi" }
+cmi-api = { module = "CMI-API:CMI-API", version = "9.7.4.1" }
+cmi-lib = { module = "CMILib:CMILib", version = "1.5.1.4" }
 
 # Libraries
 jetbrains = { module = "org.jetbrains:annotations", version.ref = "jetbrains" }
@@ -62,5 +60,11 @@ vital-paper = { module = "com.ryderbelserion.vital:paper", version.ref = "vital"
 vital-core = { module = "com.ryderbelserion.vital:core", version.ref = "vital" }
 
 [bundles]
-holograms = ["decent-holograms", "fancy-holograms"]
-items = ["itemsadder", "oraxen"]
+# Soft Depends
+dependencies = ["decent-holograms", "cmi-lib", "cmi-api", "worldguard"]
+
+# Shared with the git submodules
+shared = ["headdatabaseapi", "placeholderapi", "oraxen"]
+
+# Adventure API
+adventure = ["kyori-api", "kyori-text", "kyori-logger"]

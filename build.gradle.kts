@@ -1,43 +1,56 @@
 plugins {
-    alias(libs.plugins.paperweight)
     alias(libs.plugins.runPaper)
     alias(libs.plugins.minotaur)
+
     alias(libs.plugins.hangar)
     alias(libs.plugins.shadow)
 
-    `paper-plugin`
+    `maven-publish`
+    `java-library`
 }
 
 val buildNumber: String? = System.getenv("BUILD_NUMBER")
 
 rootProject.version = if (buildNumber != null) "${libs.versions.minecraft.get()}-$buildNumber" else "1.12.2"
 
-val isSnapshot = false
+val isBeta = false
 
 val content: String = rootProject.file("CHANGELOG.md").readText(Charsets.UTF_8)
 
-dependencies {
-    paperweight.paperDevBundle(libs.versions.paper)
+repositories {
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi")
 
+    maven("https://repo.papermc.io/repository/maven-public")
+
+    maven("https://repo.codemc.io/repository/maven-public")
+
+    maven("https://repo.crazycrew.us/libraries")
+    maven("https://repo.crazycrew.us/releases")
+
+    maven("https://repo.oraxen.com/releases")
+
+    maven("https://maven.enginehub.org/repo")
+
+    maven("https://jitpack.io")
+
+    mavenCentral()
+}
+
+dependencies {
     implementation(libs.vital.paper)
 
-    compileOnly(fileTree("$projectDir/libs/compile").include("*.jar"))
+    compileOnly(libs.bundles.dependencies)
+    compileOnly(libs.bundles.shared)
 
-    compileOnly(libs.decent.holograms)
-
-    compileOnly(libs.headdatabaseapi)
-
-    compileOnly(libs.placeholderapi)
-
-    compileOnly(libs.worldguard)
-
-    compileOnly(libs.oraxen)
+    compileOnly(libs.paper)
 }
 
 val component: SoftwareComponent = components["java"]
 
-paperweight {
-    reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.REOBF_PRODUCTION
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
 }
 
 tasks {
@@ -73,11 +86,11 @@ tasks {
     }
 
     assemble {
-        dependsOn(reobfJar)
+        dependsOn(shadowJar)
 
         doLast {
             copy {
-                from(reobfJar.get())
+                from(shadowJar.get())
                 into(rootProject.projectDir.resolve("jars"))
             }
         }
@@ -92,6 +105,19 @@ tasks {
         ).forEach {
             relocate(it, "libs.$it")
         }
+    }
+
+    compileJava {
+        options.encoding = Charsets.UTF_8.name()
+        options.release.set(21)
+    }
+
+    javadoc {
+        options.encoding = Charsets.UTF_8.name()
+    }
+
+    processResources {
+        filteringCharset = Charsets.UTF_8.name()
     }
 
     processResources {
@@ -113,7 +139,7 @@ tasks {
 
         projectId.set(rootProject.name.lowercase())
 
-        versionType.set(if (isSnapshot) "beta" else "release")
+        versionType.set(if (isBeta) "beta" else "release")
 
         versionName.set("${rootProject.name} ${rootProject.version}")
         versionNumber.set(rootProject.version as String)
@@ -142,7 +168,7 @@ tasks {
 
             version.set(rootProject.version as String)
 
-            channel.set(if (isSnapshot) "Beta" else "Release")
+            channel.set(if (isBeta) "Beta" else "Release")
 
             changelog.set(content)
 
