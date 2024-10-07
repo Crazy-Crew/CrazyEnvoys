@@ -5,9 +5,13 @@ import ch.jalu.configme.properties.Property;
 import ch.jalu.configme.resource.PropertyReader;
 import com.badbones69.crazyenvoys.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.config.types.MessageKeys;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import static ch.jalu.configme.properties.PropertyInitializer.newListProperty;
 import static ch.jalu.configme.properties.PropertyInitializer.newProperty;
 
@@ -46,7 +50,9 @@ public enum Properties {
     remove_location(MessageKeys.envoy_remove_location, newProperty("Messages.Remove-Location", MessageKeys.envoy_remove_location.getDefaultValue())),
 
     time_left(MessageKeys.envoy_time_left, newProperty("Messages.Time-Left", MessageKeys.envoy_time_left.getDefaultValue())),
-    time_till_event(MessageKeys.envoy_time_till_event, newProperty("Messages.Time-Till-Event", MessageKeys.envoy_time_till_event.getDefaultValue())),
+    time_till_event(MessageKeys.envoy_time_till_event, newListProperty("Messages.Time-Till-Event", MessageKeys.envoy_time_till_event.getDefaultValue()), Collections.emptyList()),
+
+    time_till_event_list(false, MessageKeys.envoy_time_till_event, newProperty("envoys.time-till-event", MessageKeys.envoy_time_till_event.getDefaultValue().toString())),
 
     envoy_used_flare(MessageKeys.envoy_used_flare, newProperty("Messages.Used-Flare", MessageKeys.envoy_used_flare.getDefaultValue())),
     envoy_cant_use_flare(MessageKeys.envoy_cant_use_flare, newProperty("Messages.Cant-Use-Flares", MessageKeys.envoy_cant_use_flare.getDefaultValue())),
@@ -166,6 +172,34 @@ public enum Properties {
         if (key == null) return false;
 
         configuration.setValue(this.newString, replace(this.oldString.determineValue(reader).getValue()));
+
+        return true;
+    }
+
+    /**
+     * A constructor moving the old string property to a list property
+     *
+     * @param newList the new property
+     * @param oldString the old property
+     */
+    Properties(boolean bean, Property<List<String>> newList, Property<String> oldString) {
+        this.newList = newList;
+        this.oldString = oldString;
+    }
+
+    /**
+     * Migrates a string to a string list
+     *
+     * @param reader the config reader
+     * @param configuration the configuration data
+     * @return true or false
+     */
+    public boolean moveStringToList(PropertyReader reader, ConfigurationData configuration) {
+        String key = reader.getString(this.oldString.getPath());
+
+        if (key == null) return false;
+
+        configuration.setValue(this.newList, List.of(replace(this.oldString.determineValue(reader).getValue())));
 
         return true;
     }
