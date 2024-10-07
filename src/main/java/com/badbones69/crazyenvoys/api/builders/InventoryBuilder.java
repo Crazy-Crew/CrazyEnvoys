@@ -4,22 +4,13 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.vital.paper.enums.Support;
-import com.ryderbelserion.vital.paper.util.AdvUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
-import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.MenuType;
 import org.bukkit.Server;
-import org.bukkit.craftbukkit.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.inventory.CraftContainer;
-import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
@@ -107,14 +98,6 @@ public abstract class InventoryBuilder implements InventoryHolder, Listener {
 
     public @NotNull final InventoryView getView() {
         return getPlayer().getOpenInventory();
-    }
-
-    public void sendTitleChange() {
-        ServerPlayer entityPlayer = (ServerPlayer) ((CraftHumanEntity) getView().getPlayer()).getHandle();
-        int containerId = entityPlayer.containerMenu.containerId;
-        MenuType<?> windowType = CraftContainer.getNotchInventoryType(getView().getTopInventory());
-        entityPlayer.connection.send(new ClientboundOpenScreenPacket(containerId, windowType, CraftChatMessage.fromJSON(JSONComponentSerializer.json().serialize(AdvUtil.parse(this.title)))));
-        getPlayer().updateInventory();
     }
 
     @Override
