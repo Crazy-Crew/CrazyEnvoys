@@ -22,7 +22,7 @@ import java.util.Map;
 
 public enum Messages {
 
-    ended(MessageKeys.envoy_ended),
+    ended(MessageKeys.envoy_ended, true),
     warning(MessageKeys.envoy_warning),
     started(MessageKeys.envoy_started, true),
     on_going(MessageKeys.hologram_on_going),
@@ -36,7 +36,7 @@ public enum Messages {
     given_flare(MessageKeys.envoy_received_flare),
     force_start(MessageKeys.envoy_force_start),
     not_started(MessageKeys.envoy_not_started),
-    envoys_remaining(MessageKeys.envoys_remaining),
+    envoys_remaining(MessageKeys.envoys_remaining, true),
     force_end(MessageKeys.envoy_force_ended),
     drops_page(MessageKeys.drops_page),
     drops_format(MessageKeys.drops_format),

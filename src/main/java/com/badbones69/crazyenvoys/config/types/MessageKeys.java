@@ -60,9 +60,13 @@ public class MessageKeys implements SettingsHolder {
             "{prefix}&7An envoy event has just started. &6{amount} &7crates have spawned around spawn for 5m."
     ));
 
-    public static final Property<String> envoys_remaining = newProperty("envoys.left", "{prefix}&6{player} &7has just found a tier envoy. There are now &6{amount} &7left to find.");
+    public static final Property<List<String>> envoys_remaining = newListProperty("envoys.left", List.of(
+            "{prefix}&6{player} &7has just found a tier envoy. There are now &6{amount} &7left to find."
+    ));
 
-    public static final Property<String> envoy_ended = newProperty("envoys.ended", "{prefix}&cThe envoy event has ended. Thanks for playing and please come back for the next one.");
+    public static final Property<List<String>> envoy_ended = newListProperty("envoys.ended", List.of(
+            "{prefix}&cThe envoy event has ended. Thanks for playing and please come back for the next one."
+    ));
 
     public static final Property<String> not_enough_players = newProperty("envoys.not-enough-players", "{prefix}&7Not enough players are online to start the envoy event. Only &6{amount} &7players are online.");
 

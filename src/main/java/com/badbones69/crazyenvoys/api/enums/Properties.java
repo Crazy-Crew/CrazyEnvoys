@@ -35,8 +35,12 @@ public enum Properties {
     warning(MessageKeys.envoy_warning, newProperty("Messages.Warning", MessageKeys.envoy_warning.getDefaultValue())),
     other_started(MessageKeys.envoy_started, newListProperty("Envoys.Started", MessageKeys.envoy_started.getDefaultValue()), Collections.emptyList()),
     started(MessageKeys.envoy_started, newListProperty("Messages.Started", MessageKeys.envoy_started.getDefaultValue()), Collections.emptyList()),
-    left(MessageKeys.envoys_remaining, newProperty("Messages.Left", MessageKeys.envoys_remaining.getDefaultValue())),
-    ended(MessageKeys.envoy_ended, newProperty("Messages.Ended", MessageKeys.envoy_ended.getDefaultValue())),
+
+    left(MessageKeys.envoys_remaining, newListProperty("Messages.Left", MessageKeys.envoys_remaining.getDefaultValue()), Collections.emptyList()),
+    ended(MessageKeys.envoy_ended, newListProperty("Messages.Ended", MessageKeys.envoy_ended.getDefaultValue()), Collections.emptyList()),
+
+    ended_list(false, MessageKeys.envoy_ended, newProperty("envoys.ended", MessageKeys.envoy_ended.getDefaultValue().toString())),
+    left_list(false, MessageKeys.envoys_remaining, newProperty("envoys.left", MessageKeys.envoys_remaining.getDefaultValue().toString())),
 
     not_enough_players(MessageKeys.not_enough_players, newProperty("Messages.Not-Enough-Players", MessageKeys.not_enough_players.getDefaultValue())),
 
