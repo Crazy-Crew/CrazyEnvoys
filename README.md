@@ -26,8 +26,6 @@
 CrazyEnvoys as first install will come with a set of default files such as `config.yml`, `messages.yml`, and files in the `tiers` folder.
 You can simply edit these files, and configure the looks and settings then do `/crazyenvoys reload`<br>
 
-[![Partnered with ApexHosting](https://raw.githubusercontent.com/Crazy-Crew/Branding/main/apex-banner-transparent.webp)](https://billing.apexminecrafthosting.com/aff.php?aff=5511)
-
 ![Features Banner](https://raw.githubusercontent.com/Crazy-Crew/Branding/main/crazyenvoys/banner/webp/features.webp)<br>
 **In-game location editing with multi user support.**<br>
 **Unlimited locations & prizes.**<br>
