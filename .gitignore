@@ -1,0 +1,14 @@
+.gradle
+.idea
+build
+
+buildSrc/.gradle
+buildSrc/build
+
+api/.gradle
+api/build
+
+!run/eula.txt
+run
+
+jars
