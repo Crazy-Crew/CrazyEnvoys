@@ -15,7 +15,7 @@ import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.config.beans.GuiProperty;
 import com.badbones69.crazyenvoys.util.MsgUtils;
-import com.ryderbelserion.vital.paper.enums.Support;
+import com.ryderbelserion.vital.paper.api.enums.Support;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Material;

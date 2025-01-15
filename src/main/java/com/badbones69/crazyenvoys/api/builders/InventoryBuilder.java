@@ -3,7 +3,7 @@ package com.badbones69.crazyenvoys.api.builders;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.util.MsgUtils;
-import com.ryderbelserion.vital.paper.enums.Support;
+import com.ryderbelserion.vital.paper.api.enums.Support;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;

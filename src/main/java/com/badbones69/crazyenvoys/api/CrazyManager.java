@@ -23,10 +23,10 @@ import com.badbones69.crazyenvoys.listeners.timer.CountdownTimer;
 import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
-import com.ryderbelserion.vital.paper.enums.Support;
-import com.ryderbelserion.vital.paper.files.config.CustomFile;
-import com.ryderbelserion.vital.paper.files.config.FileManager;
-import com.ryderbelserion.vital.paper.util.DyeUtil;
+import com.ryderbelserion.vital.paper.api.enums.Support;
+import com.ryderbelserion.vital.paper.api.files.CustomFile;
+import com.ryderbelserion.vital.paper.api.files.FileManager;
+import com.ryderbelserion.vital.paper.util.PaperMethods;
 import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -192,7 +192,7 @@ public class CrazyManager {
         //================================== Tiers Load ==================================//
         this.tiers.clear();
 
-        for (CustomFile tierFile : this.fileManager.getCustomFiles()) {
+        for (CustomFile tierFile : this.fileManager.getCustomFiles().values()) {
             FileConfiguration file = tierFile.getConfiguration();
 
             Tier tier = new Tier(tierFile);
@@ -217,7 +217,7 @@ public class CrazyManager {
             if (file.getStringList("Settings.Firework-Colors").isEmpty()) {
                 tier.setFireworkColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
             } else {
-                file.getStringList("Settings.Firework-Colors").forEach(color -> tier.addFireworkColor(DyeUtil.getDefaultColor(color)));
+                file.getStringList("Settings.Firework-Colors").forEach(color -> tier.addFireworkColor(PaperMethods.getDefaultColor(color)));
             }
 
             if (file.contains("Settings.Prize-Message") && !file.getStringList("Settings.Prize-Message").isEmpty()) {
@@ -234,7 +234,7 @@ public class CrazyManager {
             if (file.getStringList("Settings.Signal-Flare.Colors").isEmpty()) {
                 tier.setSignalFlareColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
             } else {
-                file.getStringList("Settings.Signal-Flare.Colors").forEach(color -> tier.addSignalFlareColor(DyeUtil.getDefaultColor(color)));
+                file.getStringList("Settings.Signal-Flare.Colors").forEach(color -> tier.addSignalFlareColor(PaperMethods.getDefaultColor(color)));
             }
 
             for (String prizeID : file.getConfigurationSection("Prizes").getKeys(false)) {

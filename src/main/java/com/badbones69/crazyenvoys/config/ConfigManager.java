@@ -75,13 +75,10 @@ public class ConfigManager {
 
         String language = configuration.getString("language", "en-US");
 
-        boolean verbose = configuration.getBoolean("verbose_logging", false);
-
         String prefix = configuration.getString("command_prefix", "&8[&dCrazyEnvoys&8]: ");
         String consolePrefix = configuration.getString("console_prefix", "&8[&cCrazyEnvoys&8] ");
 
         config.setProperty(ConfigKeys.locale_file, language);
-        config.setProperty(ConfigKeys.verbose_logging, verbose);
         config.setProperty(ConfigKeys.command_prefix, prefix);
         config.setProperty(ConfigKeys.console_prefix, consolePrefix);
 

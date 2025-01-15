@@ -68,6 +68,8 @@ public class EnvoyCommand implements CommandExecutor {
                         this.crazyManager.endEnvoyEvent();
                     }
 
+                    this.plugin.getPaper().reload();
+
                     this.plugin.getFileManager().reloadFiles().init();
 
                     this.crazyManager.reload(false);

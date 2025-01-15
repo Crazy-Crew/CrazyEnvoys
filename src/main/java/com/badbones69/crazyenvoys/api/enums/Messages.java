@@ -5,8 +5,8 @@ import ch.jalu.configme.properties.Property;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.util.MsgUtils;
-import com.ryderbelserion.vital.core.util.StringUtil;
-import com.ryderbelserion.vital.paper.enums.Support;
+import com.ryderbelserion.vital.paper.api.enums.Support;
+import com.ryderbelserion.vital.utils.Methods;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.CommandSender;
@@ -159,7 +159,7 @@ public enum Messages {
         String message;
 
         if (isList()) {
-            message = StringUtils.chomp(StringUtil.convertList(getList()));
+            message = StringUtils.chomp(Methods.toString(getList()));
         } else {
             message = getString();
         }

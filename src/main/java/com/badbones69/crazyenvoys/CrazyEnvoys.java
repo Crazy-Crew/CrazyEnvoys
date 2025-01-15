@@ -15,8 +15,9 @@ import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
 import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
-import com.ryderbelserion.vital.paper.enums.Support;
-import com.ryderbelserion.vital.paper.files.config.FileManager;
+import com.ryderbelserion.vital.paper.VitalPaper;
+import com.ryderbelserion.vital.paper.api.enums.Support;
+import com.ryderbelserion.vital.paper.api.files.FileManager;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -25,11 +26,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.badbones69.crazyenvoys.api.Server;
 import com.badbones69.crazyenvoys.config.ConfigManager;
-import com.badbones69.crazyenvoys.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.support.MetricsWrapper;
-
 import java.util.Locale;
 
 public class CrazyEnvoys extends JavaPlugin {
@@ -56,9 +54,13 @@ public class CrazyEnvoys extends JavaPlugin {
 
     private FileManager fileManager;
 
+    private VitalPaper paper;
+
     @Override
     public void onEnable() {
-        new Server(this);
+        this.paper = new VitalPaper(this);
+
+        ConfigManager.load(getDataFolder(), getComponentLogger());
 
         if (Support.head_database.isEnabled()) {
             this.api = new HeadDatabaseAPI();
@@ -116,7 +118,11 @@ public class CrazyEnvoys extends JavaPlugin {
     }
 
     public final boolean isLogging() {
-        return ConfigManager.getConfig().getProperty(ConfigKeys.verbose_logging);
+        return this.paper.isVerbose();
+    }
+
+    public final VitalPaper getPaper() {
+        return this.paper;
     }
 
     private void registerCommand(PluginCommand pluginCommand, TabCompleter tabCompleter, CommandExecutor commandExecutor) {

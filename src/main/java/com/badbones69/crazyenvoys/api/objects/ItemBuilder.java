@@ -4,9 +4,9 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
-import com.ryderbelserion.vital.paper.builders.PlayerBuilder;
-import com.ryderbelserion.vital.paper.enums.Support;
-import com.ryderbelserion.vital.paper.util.DyeUtil;
+import com.ryderbelserion.vital.paper.api.builders.PlayerBuilder;
+import com.ryderbelserion.vital.paper.api.enums.Support;
+import com.ryderbelserion.vital.paper.util.PaperMethods;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import io.th0rgal.oraxen.api.OraxenItems;
@@ -590,9 +590,9 @@ public class ItemBuilder {
                     this.potionType = getPotionType(PotionEffectType.getByName(metaData));
                 } catch (Exception ignored) {}
 
-                this.potionColor = DyeUtil.getColor(metaData);
-                this.armorColor = DyeUtil.getColor(metaData);
-                this.mapColor = DyeUtil.getColor(metaData);
+                this.potionColor = PaperMethods.getColor(metaData);
+                this.armorColor = PaperMethods.getColor(metaData);
+                this.mapColor = PaperMethods.getColor(metaData);
             }
         } else if (material.contains("#")) {
             String[] b = material.split("#");
@@ -792,7 +792,7 @@ public class ItemBuilder {
             for (PatternType pattern : PatternType.values()) {
 
                 if (split[0].equalsIgnoreCase(pattern.name()) || split[0].equalsIgnoreCase(pattern.getIdentifier())) {
-                    DyeColor color = DyeUtil.getDyeColor(split[1]);
+                    DyeColor color = PaperMethods.getDyeColor(split[1]);
 
                     if (color != null) addPattern(new Pattern(color, pattern));
 
@@ -1105,7 +1105,7 @@ public class ItemBuilder {
                         try {
                             for (PatternType pattern : PatternType.values()) {
                                 if (option.equalsIgnoreCase(pattern.name()) || value.equalsIgnoreCase(pattern.getIdentifier())) {
-                                    DyeColor color = DyeUtil.getDyeColor(value);
+                                    DyeColor color = PaperMethods.getDyeColor(value);
                                     if (color != null) itemBuilder.addPattern(new Pattern(color, pattern));
                                     break;
                                 }

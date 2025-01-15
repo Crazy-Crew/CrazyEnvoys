@@ -2,7 +2,7 @@ package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.util.MsgUtils;
-import com.ryderbelserion.vital.paper.files.config.CustomFile;
+import com.ryderbelserion.vital.paper.api.files.CustomFile;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class Tier {
      * @param file the custom file object.
      */
     public Tier(final CustomFile file) {
-        this.name = file.getStrippedName();
+        this.name = file.getCleanName();
         this.file = file;
 
         this.claimPermission = "";
