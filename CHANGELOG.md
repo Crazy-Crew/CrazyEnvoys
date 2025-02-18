@@ -1,6 +1,7 @@
-### Changes:
-- Bumped to 1.21.1
-- Bumped CMI API
-
-### Added:
-- A new config option to open a menu with items in it, instead of adding it to the inventory.
+- Add support for lists with left/ended in messages.yml. (it should automatically migrate)
+```yml
+ended:
+  - 'line 1'
+  - 'line 2'
+```
+- Converted `time-till-event` into a list in messages.yml. (it should automatically migrate)
