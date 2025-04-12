@@ -23,9 +23,8 @@ envoys:
   not-started: "{prefix}&cW tym momencie żadne wydarzenie zrzutów nie jest aktywne."
   force-ended: "{prefix}&cZakończyłeś zrzuty."
   warning: "{prefix}&c[&4UWAGA&c] &7Wydarzenie zrzutów zacznie się za &6{time}."
-  started: "{prefix}&7Zrzuty właśnie zaczęły spadać. &6{amount} &7skrzyń spadło i będzie tam leżało przez 5m."
-  left: "{prefix}&6{player} &7znalazł zrzut. &6{amount}
-    &7wciąż leżą i czekają."
+  started: "{prefix}&7Zrzuty właśnie zaczęły spadać. &6{amount} &7zrzutów spadło i będzie tam leżało przez 5m."
+  left: "{prefix}&6{player} &7znalazł zrzut. Pozostało &6{amount} zrzutów"
   ended: "{prefix}&cWydarzenie zrzutów właśnie się zakończyło, oczekujcie nowego."
   not-enough-players: "{prefix}&7Nie wystarczająco graczy, aby zacząć wydarzenie zrzutów. Tylko &6{amount} &7jest teraz aktywnych."
   enter-editor-mode: "{prefix}&7Wszedłeś w tryb edycji."
@@ -43,7 +42,7 @@ envoys:
     sent-flare: "{prefix}&7Flary przekazane graczowi &6{player} &7w ilości {amount}."
     received-flare: "{prefix}&7Dostałeś flary w ilości &6{amount}&7."
   new-center: "{prefix}&7Ustawiłeś nowe centrum zrzutów."
-  not-in-world-guard-region: "{prefix}&cMusisz być w strefie wojny aby używać falr."
+  not-in-world-guard-region: "{prefix}&cMusisz być w strefie wojny aby używać flar."
   start-ignoring-messages: "{prefix}&7Od teraz wiadomośći zbiorowe nie będą ci wyświetlane."
   stop-ignoring-messages: "{prefix}&7Od teraz będziesz widział wiadomości zbiorowe."
   cooldown-left: "{prefix}&7Musisz odczekać jeszcze &6{time} &7zanim otworzysz kolejne zrzuty."
@@ -52,7 +51,7 @@ envoys:
   drops-possibilities: "{prefix}&7Lista lokacji na które mogą spadać zrzuty."
   drops-page: "{prefix}&7Użyj /crazyenvoys drop [strona], aby zobaczyć więcej."
   drops-format: "&7[&6{id}&7]: {world}, {x}, {y}, {z}"
-  no-spawn-locations-found: "{prefix}&cŻande pozycje zrzutów nie zostały znalezione, więc wydarzenie zostało zakończone, a opóźnienie zresetowane."
+  no-spawn-locations-found: "{prefix}&cŻadne pozycje zrzutów nie zostały znalezione, więc wydarzenie zostało zakończone, a opóźnienie zresetowane."
   hologram-placeholders:
     on-going: W trakcie
     not-running: Brak akcji
@@ -64,11 +63,11 @@ envoys:
   envoy-locations: '&e&lPozycje zrzutów: \n&c[ID], [Świat]: [X], [Y], [Z] &r{locations}'
   location-format: '\n&8[&3{id}&8] &c{world}: {x}, {y}, {z}'
 misc:
-  command-not-found: "{prefix}&cNieznaleźiono komendy. Użyj /crazyenvoys help, aby zobaczyć listę komend."
+  command-not-found: "{prefix}&cNieznaleziono komendy. Użyj /crazyenvoys help, aby zobaczyć listę komend."
   player-only: "{prefix}&cTylko gracze mogą używać tej komendy."
   not-online: "{prefix}&cTen gracz nie jest aktywny w tym momencie."
   not-a-number: "{prefix}&cTo nie jest liczba."
-  config-reload: "{prefix}&7Przładowałeś wszystkie pliki."
+  config-reload: "{prefix}&7Przeładowałeś wszystkie pliki."
   help:
     - "&6/crazyenvoys help &7- Pokazuje te informacje."
     - "&6/crazyenvoys reload &7- Przeładowuje wszystkie pliki związane z ustawieniami pluginu."
