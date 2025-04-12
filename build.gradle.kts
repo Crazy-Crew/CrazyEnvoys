@@ -24,6 +24,8 @@ repositories {
 
     maven("https://repo.codemc.io/repository/maven-public")
 
+    maven("https://repo.fancyplugins.de/releases/")
+
     maven("https://repo.crazycrew.us/libraries")
     maven("https://repo.crazycrew.us/releases")
 
