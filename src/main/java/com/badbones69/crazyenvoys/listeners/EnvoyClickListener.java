@@ -14,10 +14,13 @@ import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.config.beans.GuiProperty;
+import com.badbones69.crazyenvoys.support.holograms.HologramManager;
+import com.badbones69.crazyenvoys.util.MiscUtils;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.vital.paper.api.enums.Support;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -110,11 +113,11 @@ public class EnvoyClickListener implements Listener {
 
         if (tier.getFireworkToggle()) Methods.firework(block.getLocation().add(.5, 0, .5), tier.getFireworkColors());
 
-        event.getClickedBlock().setType(Material.AIR);
+        block.setType(Material.AIR);
 
-        if (this.crazyManager.hasHologramPlugin()) this.crazyManager.getHologramController().removeHologram(event.getClickedBlock());
+        if (this.holograms != null) this.holograms.removeHologram(MiscUtils.toString(block.getLocation()));
 
-        this.crazyManager.stopSignalFlare(event.getClickedBlock().getLocation());
+        this.crazyManager.stopSignalFlare(block.getLocation());
 
         Map<String, String> placeholder = new HashMap<>();
 
@@ -203,6 +206,8 @@ public class EnvoyClickListener implements Listener {
         checkEntity(entity);
     }
 
+    private final HologramManager holograms = this.crazyManager.getHolograms();
+
     private void checkEntity(Entity entity) {
         Block block = this.crazyManager.getFallingBlocks().get(entity);
         Tier tier = pickRandomTier();
@@ -211,13 +216,15 @@ public class EnvoyClickListener implements Listener {
 
         block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
 
-        if (this.crazyManager.hasHologramPlugin()) this.crazyManager.getHologramController().createHologram(block, tier);
+        final Location location = block.getLocation();
+
+        if (this.holograms != null) this.holograms.createHologram(location, tier, MiscUtils.toString(location));
 
         this.crazyManager.removeFallingBlock(entity);
         this.crazyManager.addActiveEnvoy(block, tier);
         this.locationSettings.addActiveLocation(block);
 
-        if (tier.getSignalFlareToggle() && block.getChunk().isLoaded()) this.crazyManager.startSignalFlare(block.getLocation(), tier);
+        if (tier.getSignalFlareToggle() && block.getChunk().isLoaded()) this.crazyManager.startSignalFlare(location, tier);
     }
 
     @EventHandler(ignoreCancelled = true)

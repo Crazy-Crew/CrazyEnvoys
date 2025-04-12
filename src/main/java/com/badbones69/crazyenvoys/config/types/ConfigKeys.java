@@ -53,6 +53,18 @@ public class ConfigKeys implements SettingsHolder {
     @Comment("Whether you want CrazyEnvoys to shut up or not, This option is ignored by errors.")
     public static final Property<Boolean> verbose_logging = PropertyInitializer.newProperty("root.verbose_logging", true);
 
+    @Comment({
+            "A list of available hologram plugins:",
+            " -> DecentHolograms",
+            " -> FancyHolograms",
+            " -> CMI",
+            " -> None",
+            "",
+            "If the option is set to blank, it'll pick whatever plugin it feels like picking.",
+            "Set the value to None if you do not want any."
+    })
+    public static final Property<String> hologram_plugin = newProperty("root.hologram-plugin", "");
+
     @Comment("The command prefix you want shown in front of commands!")
     public static final Property<String> command_prefix = PropertyInitializer.newProperty("root.command_prefix", "&8[&dCrazyEnvoys&8]: ");
 

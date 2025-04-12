@@ -11,7 +11,6 @@ import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent.EnvoyStartReason;
-import com.badbones69.crazyenvoys.api.interfaces.HologramController;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
@@ -20,15 +19,19 @@ import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.listeners.timer.CountdownTimer;
-import com.badbones69.crazyenvoys.support.holograms.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
-import com.badbones69.crazyenvoys.support.holograms.DecentHologramsSupport;
+import com.badbones69.crazyenvoys.support.holograms.HologramManager;
+import com.badbones69.crazyenvoys.support.holograms.types.CMIHologramsSupport;
+import com.badbones69.crazyenvoys.support.holograms.types.DecentHologramsSupport;
+import com.badbones69.crazyenvoys.support.holograms.types.FancyHologramsSupport;
+import com.badbones69.crazyenvoys.util.MiscUtils;
 import com.ryderbelserion.vital.paper.api.enums.Support;
 import com.ryderbelserion.vital.paper.api.files.CustomFile;
 import com.ryderbelserion.vital.paper.api.files.FileManager;
 import com.ryderbelserion.vital.paper.util.PaperMethods;
 import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import com.badbones69.crazyenvoys.util.MsgUtils;
@@ -60,6 +63,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class CrazyManager {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private @NotNull final ComponentLogger logger = this.plugin.getComponentLogger();
     private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
     private @NotNull final FileManager fileManager = this.plugin.getFileManager();
@@ -81,7 +85,7 @@ public class CrazyManager {
     private boolean envoyActive = false;
     private boolean autoTimer = true;
     private WorldGuardSupport worldGuardSupportVersion;
-    private HologramController hologramController;
+    private HologramManager holograms;
     private Location center;
     private String centerString;
 
@@ -125,7 +129,7 @@ public class CrazyManager {
      */
     public void reload(boolean serverStop) {
         if (serverStop) {
-            removeAllEnvoys();
+            removeAllEnvoys(true);
 
             Files.users.getConfiguration().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
             Files.users.save();
@@ -139,7 +143,7 @@ public class CrazyManager {
 
         ConfigManager.refresh();
 
-        removeAllEnvoys();
+        removeAllEnvoys(false);
 
         Files.users.getConfiguration().set("Next-Envoy", getNextEnvoy().getTimeInMillis());
         Files.users.save();
@@ -163,7 +167,7 @@ public class CrazyManager {
         // Populate the array list.
         this.locationSettings.populateMap();
 
-        if (this.plugin.isLogging() && !this.locationSettings.getFailedLocations().isEmpty()) this.plugin.getLogger().severe("Failed to load " + this.locationSettings.getFailedLocations().size() + " locations and will reattempt in 10s.");
+        if (MiscUtils.isLogging() && !this.locationSettings.getFailedLocations().isEmpty()) this.logger.error("Failed to load " + this.locationSettings.getFailedLocations().size() + " locations and will reattempt in 10s.");
 
         if (Calendar.getInstance().after(getNextEnvoy())) setEnvoyActive(false);
 
@@ -296,17 +300,79 @@ public class CrazyManager {
 
         if (this.plugin.getServer().getPluginManager().isPluginEnabled("WorldEdit") && this.plugin.getServer().getPluginManager().isPluginEnabled("WorldGuard")) this.worldGuardSupportVersion = new WorldGuardSupport();
 
-        if (Support.decent_holograms.isEnabled()) {
-            this.hologramController = new DecentHologramsSupport();
-            this.plugin.getLogger().info("DecentHolograms support has been enabled.");
-        } else if (Support.cmi.isEnabled() && CMIModule.holograms.isEnabled()) {
-            this.hologramController = new CMIHologramsSupport();
-            this.plugin.getLogger().info("CMI Hologram support has been enabled.");
-        } else this.plugin.getLogger().warning("No holograms plugin were found. If using CMI, make sure holograms module is enabled.");
+        loadHolograms();
 
         this.locationSettings.fixLocations();
 
         this.flareSettings.load();
+    }
+
+
+    /**
+     * Load the holograms.
+     */
+    public void loadHolograms() {
+        final String pluginName = this.config.getProperty(ConfigKeys.hologram_plugin).toLowerCase();
+
+        switch (pluginName) {
+            case "decentholograms" -> {
+                if (!Support.decent_holograms.isEnabled()) return;
+
+                if (this.holograms != null && this.holograms.getName().equalsIgnoreCase("DecentHolograms")) { // we don't need to do anything.
+                    return;
+                }
+
+                this.holograms = new DecentHologramsSupport();
+            }
+
+            case "fancyholograms" -> {
+                if (!Support.fancy_holograms.isEnabled()) return;
+
+                this.holograms = new FancyHologramsSupport();
+            }
+
+            case "cmi" -> {
+                if (!Support.cmi.isEnabled() && !CMIModule.holograms.isEnabled()) return;
+
+                this.holograms = new CMIHologramsSupport();
+            }
+
+            case "none" -> {}
+
+            default -> {
+                if (Support.decent_holograms.isEnabled()) {
+                    if (this.holograms == null) {
+                        this.holograms = new DecentHologramsSupport();
+                    }
+
+                    break;
+                }
+
+                if (Support.fancy_holograms.isEnabled()) {
+                    this.holograms = new FancyHologramsSupport();
+
+                    break;
+                }
+
+                if (Support.cmi.isEnabled() && CMIModule.holograms.isEnabled()) {
+                    this.holograms = new CMIHologramsSupport();
+                }
+            }
+        }
+
+        if (this.holograms == null) {
+            if (MiscUtils.isLogging()) {
+                List.of(
+                        "There was no hologram plugin found on the server. If you are using CMI",
+                        "Please make sure you enabled the hologram module in modules.yml",
+                        "You can run /crazycrates reload if using CMI otherwise restart your server."
+                ).forEach(this.logger::warn);
+            }
+
+            return;
+        }
+
+        if (MiscUtils.isLogging()) this.logger.info("{} support has been enabled.", this.holograms.getName());
     }
 
     /**
@@ -396,7 +462,7 @@ public class CrazyManager {
     /**
      * Despawns all the active crates.
      */
-    public void removeAllEnvoys() {
+    public void removeAllEnvoys(final boolean serverStop) {
         this.envoyActive = false;
         cleanLocations();
 
@@ -409,7 +475,7 @@ public class CrazyManager {
 
         this.fallingBlocks.keySet().forEach(Entity :: remove);
 
-        if (hasHologramPlugin()) this.hologramController.removeAllHolograms();
+        if (this.holograms != null) this.holograms.purge(serverStop);
 
         this.fallingBlocks.clear();
         this.activeEnvoys.clear();
@@ -419,12 +485,8 @@ public class CrazyManager {
         return this.worldGuardSupportVersion;
     }
 
-    public HologramController getHologramController() {
-        return this.hologramController;
-    }
-
-    public boolean hasHologramPlugin() {
-        return this.hologramController != null;
+    public final HologramManager getHolograms() {
+        return this.holograms;
     }
 
     /**
@@ -583,7 +645,7 @@ public class CrazyManager {
 
         if (maxSpawns > (Math.pow(this.config.getProperty(ConfigKeys.envoys_max_radius) * 2, 2) - Math.pow((this.config.getProperty(ConfigKeys.envoys_min_radius) * 2 + 1), 2))) {
             maxSpawns = (int) (Math.pow(this.config.getProperty(ConfigKeys.envoys_max_radius) * 2, 2) - Math.pow((this.config.getProperty(ConfigKeys.envoys_min_radius) * 2 + 1), 2));
-            this.plugin.getLogger().warning("Crate spawn amount is larger than the area that was provided. Spawning " + maxSpawns + " crates instead.");
+            this.logger.warn("Crate spawn amount is larger than the area that was provided. Spawning " + maxSpawns + " crates instead.");
         }
 
         if (this.config.getProperty(ConfigKeys.envoys_random_locations)) {
@@ -673,7 +735,7 @@ public class CrazyManager {
             return false;
         }
 
-        removeAllEnvoys();
+        removeAllEnvoys(false);
 
         List<Block> dropLocations = generateSpawnLocations();
 
@@ -745,7 +807,7 @@ public class CrazyManager {
 
                     block.setType(tier.getPlacedBlockMaterial());
 
-                    if (tier.isHoloEnabled() && hasHologramPlugin()) this.hologramController.createHologram(block, tier);
+                    if (tier.isHoloEnabled() && this.holograms != null) this.holograms.createHologram(block.getLocation(), tier, MiscUtils.toString(block.getLocation()));
 
                     addActiveEnvoy(block, tier);
                     this.locationSettings.addActiveLocation(block);
@@ -774,7 +836,7 @@ public class CrazyManager {
      * Ends the envoy event.
      */
     public void endEnvoyEvent() {
-        removeAllEnvoys();
+        removeAllEnvoys(false);
         setEnvoyActive(false);
         cancelEnvoyRunTime();
 
@@ -895,14 +957,14 @@ public class CrazyManager {
             locations.addAll(this.locationSettings.getSpawnLocations());
         }
 
-        for (Block spawnedLocation : locations) {
+        for (final Block spawnedLocation : locations) {
             if (spawnedLocation != null) {
                 if (!spawnedLocation.getChunk().isLoaded()) spawnedLocation.getChunk().load();
 
                 spawnedLocation.setType(Material.AIR);
                 stopSignalFlare(spawnedLocation.getLocation());
 
-                if (hasHologramPlugin()) this.hologramController.removeAllHolograms();
+                if (this.holograms != null) this.holograms.purge(false);
             }
         }
 
@@ -915,19 +977,23 @@ public class CrazyManager {
 
     private boolean testCenter() {
         if (isCenterLoaded()) { // Check to make sure the center exist and if not try to load it again.
-            this.plugin.getLogger().warning("Attempting to fix Center location that failed.");
+            if (MiscUtils.isLogging()) this.logger.warn("Attempting to fix Center location that failed.");
+            
             loadCenter();
 
             if (isCenterLoaded()) { // If center still doesn't exist then it cancels the event.
-                this.plugin.getLogger().warning("Debug Start");
-                this.plugin.getLogger().warning("Center String: \"" + centerString + "'");
-                this.plugin.getLogger().warning("Location Object: \"" + center.toString() + "'");
-                this.plugin.getLogger().warning("World Exist: \"" + (center.getWorld() != null) + "'");
-                this.plugin.getLogger().warning("Debug End");
-                this.plugin.getLogger().severe("Failed to fix Center. Will try again next event.");
+                if (MiscUtils.isLogging()) {
+                    this.logger.warn("Debug Start");
+                    this.logger.warn("Center String: \"{}'", centerString);
+                    this.logger.warn("Location Object: \"{}'", center.toString());
+                    this.logger.warn("World Exist: \"{}'", center.getWorld() != null);
+                    this.logger.warn("Debug End");
+                    this.logger.error("Failed to fix Center. Will try again next event.");
+                }
+
                 return false;
             } else {
-                this.plugin.getLogger().info("Center has been fixed and will continue event.");
+                if (MiscUtils.isLogging()) this.logger.info("Center has been fixed and will continue event.");
             }
         }
 
@@ -939,13 +1005,14 @@ public class CrazyManager {
 
         if (users.contains("Center")) {
             this.centerString = users.getString("Center");
+
             if (this.centerString != null) this.center = Methods.getBuiltLocation(centerString);
         } else {
             this.center = this.plugin.getServer().getWorlds().getFirst().getSpawnLocation();
         }
 
         if (this.center.getWorld() == null) {
-            if (this.plugin.isLogging()) this.plugin.getLogger().severe("Failed to fix Center. Will try again next event.");
+            if (MiscUtils.isLogging()) this.logger.error("Failed to fix Center. Will try again next event.");
         }
     }
 
