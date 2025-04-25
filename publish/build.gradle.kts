@@ -36,7 +36,7 @@ tasks {
         detectLoaders.set(false)
 
         dependencies {
-            //optional.project("fancyholograms")
+            optional.project("fancyholograms")
             optional.project("DecentHolograms")
         }
     }
@@ -64,9 +64,9 @@ tasks {
                             required = false
                         }
 
-                        //url("FancyHolograms", "https://modrinth.com/plugin/fancyholograms") {
-                        //    required = false
-                        //}
+                        url("FancyHolograms", "https://modrinth.com/plugin/fancyholograms") {
+                            required = false
+                        }
 
                         url("Oraxen", "https://polymart.org/product/629/oraxen") {
                             required = false
