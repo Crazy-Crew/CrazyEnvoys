@@ -39,6 +39,12 @@ public class EditorSettings {
         }
     }
 
+    public void removeFakeBlocks(Player player) {
+        for (Block block : this.locationSettings.getSpawnLocations()) {
+            player.sendBlockChange(block.getLocation(), Material.AIR.createBlockData());
+        }
+    }
+
     public void removeFakeBlocks() {
         for (Block block : this.locationSettings.getSpawnLocations()) {
             block.getState().update();

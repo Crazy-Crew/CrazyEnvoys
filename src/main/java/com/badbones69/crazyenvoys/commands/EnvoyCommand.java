@@ -306,7 +306,7 @@ public class EnvoyCommand implements CommandExecutor {
 
                     if (this.editorSettings.isEditor(player)) {
                         this.editorSettings.removeEditor(player);
-                        this.editorSettings.removeFakeBlocks();
+                        this.editorSettings.removeFakeBlocks(player);
                         player.getInventory().remove(Material.BEDROCK);
                         Messages.leave_editor_mode.sendMessage(player);
                     } else {
