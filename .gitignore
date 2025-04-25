@@ -8,6 +8,7 @@
 build/
 
 ### Servers
+run/
 !paper/run/config
 !paper/run/bukkit.yml
 !paper/run/eula.txt
