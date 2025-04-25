@@ -1,14 +1,18 @@
+### Intellij
+.kotlin/
+.idea/
+!.idea/icon.png
+
+### Gradle
 .gradle
-.idea
-build
+build/
 
-buildSrc/.gradle
-buildSrc/build
+### Servers
+!paper/run/config
+!paper/run/bukkit.yml
+!paper/run/eula.txt
+!paper/run/server.properties
+!paper/run/spigot.yml
 
-api/.gradle
-api/build
-
-!run/eula.txt
-run
-
-jars
+### Output
+jars/

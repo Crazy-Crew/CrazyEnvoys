@@ -69,7 +69,7 @@ public class CrazyEnvoys extends JavaPlugin {
         this.fileManager = new FileManager();
         this.fileManager.addFile("users.yml").addFolder("tiers").init();
 
-        new MetricsWrapper(this, 4514);
+        new MetricsWrapper(4514);
 
         this.locationSettings = new LocationSettings();
         this.editorSettings = new EditorSettings();

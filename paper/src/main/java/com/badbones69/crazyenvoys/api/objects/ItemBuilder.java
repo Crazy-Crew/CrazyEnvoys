@@ -690,7 +690,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Set the lore of the item in the builder. This will auto force color in all the lores that contains color code. (&a, &c, &7, etc...)
+     * Set the lore of the item in the builder. This will auto force color in all the lores that contains color code.
      *
      * @param lore the lore of the item in the builder.
      * @return the ItemBuilder with updated info.
@@ -708,7 +708,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Add a line to the current lore of the item. This will auto force color in the lore that contains color code. (&a, &c, &7, etc...)
+     * Add a line to the current lore of the item. This will auto force color in the lore that contains color code.
      *
      * @param lore the new line you wish to add.
      * @return the ItemBuilder with updated info.

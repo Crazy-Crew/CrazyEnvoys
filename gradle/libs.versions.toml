@@ -9,13 +9,12 @@ shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 paper = "1.21.4-R0.1-SNAPSHOT"
 velocity = "3.3.0-SNAPSHOT"
 minecraft = "1.21.4"
-brigadier = "1.3.10"
 
 # Gradle Plugins
-runPaper = "2.3.0"
+shadow = "9.0.0-beta12"
+runPaper = "2.3.1"
 minotaur = "2.8.7"
 hangar = "0.1.2"
-shadow = "8.3.0"
 
 # Bukkit Plugins
 itemsadder = "3.6.3-beta-14"
@@ -30,6 +29,7 @@ vault = "1.7.1"
 # Libraries
 jetbrains = "24.1.0"
 adventure = "4.17.0"
+bStats = "3.1.0"
 vital = "2.0.1"
 
 [libraries]
@@ -55,6 +55,7 @@ cmi-lib = { module = "CMILib:CMILib", version = "1.5.1.4" }
 
 # Libraries
 jetbrains = { module = "org.jetbrains:annotations", version.ref = "jetbrains" }
+metrics = { module = "org.bstats:bstats-bukkit", version.ref = "bStats" }
 
 vital-paper = { module = "com.ryderbelserion.vital:paper", version.ref = "vital" }
 vital-core = { module = "com.ryderbelserion.vital:core", version.ref = "vital" }
