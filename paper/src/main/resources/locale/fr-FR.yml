@@ -1,0 +1,85 @@
+# Support: https://discord.gg/badbones-s-live-chat-182615261403283459
+# Github: https://github.com/Crazy-Crew
+#
+# Issues: https://github.com/Crazy-Crew/CrazyEnvoys/issues
+# Features: https://github.com/Crazy-Crew/CrazyEnvoys/issues
+#
+# Conseils:
+#  1. Assure-toi d'utiliser le {prefix} pour ajouter le préfixe devant les messages.
+#  2. Si tu souhaites utiliser plus d'une ligne pour un message, passe d'une ligne à une liste.
+# Exemples:
+#   Ligne:
+#     No-Permission: '{prefix}&cTu n'as pas la permission d'utiliser cette commande.'
+#   Liste:
+#     No-Permission:
+#       - '{prefix}&cTu n'as pas la permission'
+#       - '&cd'utiliser cette commande. Essaie une autre.'
+player:
+  no-permission: "{prefix}&7Tu n'as pas la permission d'utiliser cette commande."
+  no-permission-to-claim: "{prefix}&7Tu n'as pas la permission de récupérer ce largage."
+envoys:
+  already-started: "{prefix}&7Un événement de largage est déjà en cours. Arrête-le pour en démarrer un nouveau."
+  force-start: "{prefix}&7Tu viens de démarrer un largage."
+  not-started: "{prefix}&7Il n'y a pas d'événement de largage en cours pour le moment."
+  force-ended: "{prefix}&7Tu viens de mettre fin au largage."
+  warning: "{prefix}&7Un événement de largage aura lieu dans &f{time}&7."
+  started:
+    list:
+      - "{prefix}&7Un événement de largage vient de commencer. &6{amount} &7caisses sont apparu autour du spawn pendant 5m."
+  left: "{prefix}&f{player} &7vient de trouver un largage. Il en reste maintenant &f{amount} &7à trouver."
+  ended: "{prefix}&7L'événement de largage est terminé. Merci d'avoir participé et reviens pour le prochain."
+  not-enough-players: "{prefix}&7Il n'y a pas assez de joueurs en ligne pour démarrer l'événement de largage. Seulement &f{amount} &7joueurs sont en ligne."
+  enter-editor-mode: "{prefix}&7Tu es maintenant en mode éditeur."
+  leave-editor-mode: "{prefix}&7Tu as quitté le mode éditeur."
+  editor-clear-locations: "{prefix}&7Tu as effacé tous les emplacements d'apparition de l'éditeur."
+  editor-clear-failure: "{prefix}&7Tu dois être en mode Éditeur pour effacer les emplacements d'apparition."
+  kicked-from-editor-mode: "{prefix}&7Désolé mais un largage est actif. Arrête-le ou attends qu'il se termine."
+  add-location: "{prefix}&7Tu viens d'ajouter un emplacement d'apparition."
+  remove-location: "{prefix}&7Tu viens de supprimer un emplacement d'apparition."
+  time-left: "{prefix}&7Le largage actuel se termine dans &f{time}&7."
+  time-till-event: "{prefix}&7Le prochain largage commencera dans &f{time}&7."
+  flare:
+    used-flare: "{prefix}&7Tu viens de démarrer un événement de largage avec une fusée éclairante."
+    cant-use-flares: "{prefix}&7Tu n'as pas la permission d'utiliser des fusées éclairantes."
+    sent-flare: "{prefix}&7Tu viens de donner &f{amount} &7fusées éclairantes à &f{player}."
+    received-flare: "{prefix}&7Tu as reçu &f{amount} &7fusées éclairantes."
+  new-center: "{prefix}&7Tu viens de définir un nouveau centre pour les caisses de largage aléatoires."
+  not-in-world-guard-region: "{prefix}&7Tu dois être dans la Zone de Guerre pour utiliser une fusée éclairante."
+  start-ignoring-messages: "{prefix}&7Tu ignores maintenant les messages de collecte."
+  stop-ignoring-messages: "{prefix}&7Tu vois maintenant tous les messages de collecte."
+  cooldown-left: "{prefix}&7Tu dois encore attendre &f{time} &7avant de pouvoir collecter une autre caisse."
+  countdown-in-progress: "{prefix}&7Tu ne peux pas récupérer de largages pendant encore &6{time} secondes."
+  drops-available: "{prefix}&7Liste de tous les largages disponibles."
+  drops-possibilities: "{prefix}&7Liste des emplacements où les largages peuvent apparaître."
+  drops-page: "{prefix}&7Utilise /envoy drops [page] pour en voir plus."
+  drops-format: "&7[&6{id}&7]: {world}, {x}, {y}, {z}"
+  no-spawn-locations-found: "{prefix}&7Aucun emplacement d'apparition n'a été trouvé, l'événement a donc été annulé et le temps de recharge a été réinitialisé."
+  hologram-placeholders:
+    on-going: En cours
+    not-running: En préparation
+  time-placeholders:
+    day: j
+    hour: h
+    minute: m
+    second: s
+  envoy-locations: "&e&lTous les emplacements de largage : \n&c[ID], [Monde]: [X], [Y], [Z] &r{locations}"
+  location-format: "
+
+    &8[&3{id}&8] &c{world}: {x}, {y}, {z}"
+misc:
+  command-not-found: "{prefix}&7Utilise /envoy help pour plus d'informations."
+  player-only: "{prefix}&7Seuls les joueurs peuvent utiliser cette commande."
+  not-online: "{prefix}&7Ce joueur n'est pas en ligne pour le moment."
+  not-a-number: "{prefix}&7Ce n'est pas un nombre."
+  config-reload: "{prefix}&7Tu viens de recharger tous les fichiers."
+  help:
+    - "&f/envoy help &7- Affiche le menu d'aide des largages."
+    - "&f/envoy reload &7- Recharge tous les fichiers de configuration."
+    - "&f/envoy time &7- Affiche le temps avant le début ou la fin du largage."
+    - "&f/envoy drops [page] &7- Affiche tous les emplacements actuels des caisses."
+    - "&f/envoy ignore &7- Désactive le message de collecte de largage."
+    - "&f/envoy flare [quantité] [joueur] &7- Donne à un joueur une fusée éclairante pour appeler un événement de largage."
+    - "&f/envoy edit &7- Modifie les emplacements des caisses avec de la bedrock."
+    - "&f/envoy start &7- Force le démarrage du largage."
+    - "&f/envoy stop &7- Force l'arrêt du largage."
+    - "&f/envoy center &7- Définit le centre des largages de caisses aléatoires."
