@@ -1,9 +1,7 @@
 rootProject.name = "CrazyEnvoys"
 
 listOf(
-    "publish" to "publish",
-
-    "paper" to "paper",
+    "paper" to "paper"
 ).forEach(::includeProject)
 
 fun includeProject(pair: Pair<String, String>): Unit = includeProject(pair.first, pair.second)

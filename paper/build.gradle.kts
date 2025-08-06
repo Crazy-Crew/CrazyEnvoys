@@ -1,70 +1,42 @@
 plugins {
-    id("paper-plugin")
+    alias(libs.plugins.fix.javadoc)
 
-    alias(libs.plugins.runPaper)
-    alias(libs.plugins.shadow)
+    `maven-publish`
+    `config-paper`
 }
-
-project.group = "${rootProject.group}"
-project.version = rootProject.version
-project.description = "Drop custom envoys with any prize you want all over spawn for players to fight over."
 
 repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 
-    maven("https://repo.fancyinnovations.com/releases/")
+    maven("https://repo.nexomc.com/releases/")
 
     maven("https://repo.oraxen.com/releases/")
 
-    maven("https://maven.enginehub.org/repo/")
+    maven("https://maven.devs.beer/")
 }
 
 dependencies {
-    implementation(libs.vital.paper)
+    implementation(libs.fusion.paper)
+
+    implementation(libs.triumph.cmds)
+
+    implementation(libs.nbt.api)
 
     implementation(libs.metrics)
 
-    compileOnly(libs.bundles.dependencies)
     compileOnly(libs.bundles.shared)
-
-    compileOnly(libs.paper)
 }
 
 tasks {
-    shadowJar {
-        archiveBaseName.set(rootProject.name)
-        archiveClassifier.set("")
+    build {
+        dependsOn(shadowJar)
+    }
 
+    shadowJar {
         listOf(
-            "com.ryderbelserion.vital",
             "org.bstats"
         ).forEach {
             relocate(it, "libs.$it")
-        }
-    }
-
-    assemble {
-        dependsOn(shadowJar)
-
-        doLast {
-            copy {
-                from(shadowJar.get())
-                into(rootProject.projectDir.resolve("jars"))
-            }
-        }
-    }
-
-    processResources {
-        inputs.properties("name" to rootProject.name)
-        inputs.properties("version" to project.version)
-        inputs.properties("group" to project.group)
-        inputs.properties("apiVersion" to libs.versions.minecraft.get())
-        inputs.properties("description" to project.description)
-        inputs.properties("authors" to rootProject.properties["authors"].toString())
-        inputs.properties("website" to rootProject.properties["website"].toString())
-
-        filesMatching("plugin.yml") {
-            expand(inputs.properties)
         }
     }
 
@@ -72,9 +44,53 @@ tasks {
 
     runServer {
         jvmArgs("-Dnet.kyori.ansi.colorLevel=truecolor")
+        jvmArgs("-Dcom.mojang.eula.agree=true")
 
         defaultCharacterEncoding = Charsets.UTF_8.name()
 
         minecraftVersion(libs.versions.minecraft.get())
+    }
+
+    javadoc {
+        val name = rootProject.name.replaceFirstChar { it.uppercase() }
+        val options = options as StandardJavadocDocletOptions
+
+        options.encoding = Charsets.UTF_8.name()
+        options.overview("src/main/javadoc/overview.html")
+        options.use()
+        options.isDocFilesSubDirs = true
+        options.windowTitle("$name ${rootProject.version} API Documentation")
+        options.docTitle("<h1>$name ${rootProject.version} API</h1>")
+        options.header = """<img src="https://raw.githubusercontent.com/Crazy-Crew/Branding/refs/heads/main/crazyvouchers/png/64x64.png" style="height:100%">"""
+        options.bottom("Copyright © 2025 CrazyCrew")
+        options.linkSource(true)
+        options.addBooleanOption("html5", true)
+    }
+
+    withType<com.jeff_media.fixjavadoc.FixJavadoc> {
+        configureEach {
+            newLineOnMethodParameters.set(false)
+            keepOriginal.set(false)
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            url = uri("https://repo.crazycrew.us/releases/")
+
+            credentials(PasswordCredentials::class)
+            authentication.create<BasicAuthentication>("basic")
+        }
+    }
+
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = "${rootProject.group}"
+            artifactId = "${project.name}-api"
+            version = rootProject.version.toString()
+            from(components["java"])
+        }
     }
 }
