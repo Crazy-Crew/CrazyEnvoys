@@ -20,8 +20,6 @@ dependencies {
 
     implementation(libs.triumph.cmds)
 
-    implementation(libs.nbt.api)
-
     implementation(libs.metrics)
 
     compileOnly(libs.bundles.shared)

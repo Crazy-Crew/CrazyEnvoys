@@ -13,9 +13,6 @@ adventure = "4.22.0" # https://github.com/KyoriPowered/adventure
 ## Minecraft
 minecraft = "1.21.8" # https://minecraft.net
 
-## Deprecated API
-nbtapi = "2.15.1"
-
 ## Plugin Version
 crazyenvoys = "1.14.0"
 
@@ -87,9 +84,6 @@ kyori-api = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 
 # https://github.com/TriumphTeam/triumph-cmds
 triumph-cmds = { module = "dev.triumphteam:triumph-cmd-bukkit", version.ref = "triumph-cmds" }
-
-# Deprecated API
-nbt-api = { module = "de.tr7zw:item-nbt-api", version.ref = "nbtapi" }
 
 # https://github.com/ryderbelserion/Fusion
 fusion-paper = { module = "com.ryderbelserion.fusion:fusion-paper", version.ref = "fusion" }
