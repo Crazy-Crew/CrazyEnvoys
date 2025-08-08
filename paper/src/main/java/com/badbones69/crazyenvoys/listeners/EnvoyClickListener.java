@@ -19,10 +19,13 @@ import com.badbones69.crazyenvoys.util.MiscUtils;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.fusion.core.api.support.ModSupport;
 import com.ryderbelserion.fusion.paper.FusionPaper;
+import com.ryderbelserion.fusion.paper.scheduler.FoliaScheduler;
+import com.ryderbelserion.fusion.paper.scheduler.Scheduler;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -51,6 +54,8 @@ public class EnvoyClickListener implements Listener {
     private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
     private final FusionPaper fusion = this.plugin.getFusion();
+
+    private final Server server = this.plugin.getServer();
 
     private @NotNull final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
     private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
@@ -153,13 +158,17 @@ public class EnvoyClickListener implements Listener {
                 }
             }
 
-            for (String cmd : prize.getCommands()) {
-                if (isPapiReady) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
+            new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
+                @Override
+                public void run() {
+                    for (String cmd : prize.getCommands()) {
+                        if (isPapiReady) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
 
-                //todo() folia support
-                this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), cmd.replace("{player}", player.getName())
-                        .replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
-            }
+                        server.dispatchCommand(server.getConsoleSender(), cmd.replace("{player}", player.getName())
+                                .replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
+                    }
+                }
+            }.runNow();
 
             if (!this.config.getProperty(ConfigKeys.envoy_menu_open)) {
                 for (ItemStack item : prize.getItems()) {
