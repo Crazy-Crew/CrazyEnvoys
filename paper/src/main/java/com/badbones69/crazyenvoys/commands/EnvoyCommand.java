@@ -54,7 +54,15 @@ public class EnvoyCommand implements CommandExecutor {
                 return true;
             }
 
-            this.server.dispatchCommand(sender, "envoy time"); //todo() wtf?
+            Map<String, String> placeholder = new HashMap<>();
+
+            if (this.crazyManager.isEnvoyActive()) {
+                placeholder.put("{time}", this.crazyManager.getEnvoyRunTimeLeft());
+                Messages.time_left.sendMessage(sender, placeholder);
+            } else {
+                placeholder.put("{time}", this.crazyManager.getNextEnvoyTime());
+                Messages.time_till_event.sendMessage(sender, placeholder);
+            }
         } else {
             switch (args[0].toLowerCase()) {
                 case "help" -> {
