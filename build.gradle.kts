@@ -80,7 +80,7 @@ feather {
 
             avatar(user.avatar)
 
-            content("<@&1029922295210311681>")
+            content("<@&929463450214735912>")
 
             embeds {
                 embed {
