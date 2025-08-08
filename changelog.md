@@ -1,7 +1,7 @@
-- Add support for lists with left/ended in messages.yml. (it should automatically migrate)
-```yml
-ended:
-  - 'line 1'
-  - 'line 2'
-```
-- Converted `time-till-event` into a list in messages.yml. (it should automatically migrate)
+- Updated to 1.21.8.
+- Fixed multiple issues on Folia.
+- Updated FileManager usage.
+- Added `FanccyHolograms` as soft depend.
+- Improved performance interacting/creating flares by not using ItemMeta.
+- Fixed typos in pl-PL.yml [#150](https://github.com/Crazy-Crew/CrazyEnvoys/pull/150)
+- Added the french translation [#153](https://github.com/Crazy-Crew/CrazyEnvoys/pull/153)
