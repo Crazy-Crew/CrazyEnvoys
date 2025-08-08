@@ -16,7 +16,7 @@ import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import com.ryderbelserion.fusion.core.api.support.ModSupport;
-import com.ryderbelserion.fusion.core.files.FileManager;
+import com.ryderbelserion.fusion.core.files.enums.FileAction;
 import com.ryderbelserion.fusion.core.files.enums.FileType;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
@@ -30,7 +30,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.support.MetricsWrapper;
-
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Optional;
@@ -67,7 +66,7 @@ public class CrazyEnvoys extends JavaPlugin {
         ConfigManager.load(getDataFolder(), getComponentLogger());
 
         this.fileManager = this.fusion.getFileManager();
-        this.fileManager.addPaperFile(path.resolve("users.yml"), consumer -> {})
+        this.fileManager.addPaperFile(path.resolve("users.yml"), consumer -> consumer.addAction(FileAction.EXTRACT_FILE))
             .addFolder(path.resolve("tiers"), FileType.PAPER);
 
         new MetricsWrapper(4514);
