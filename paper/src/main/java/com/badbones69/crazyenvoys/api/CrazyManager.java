@@ -1,7 +1,6 @@
 package com.badbones69.crazyenvoys.api;
 
 import ch.jalu.configme.SettingsManager;
-import com.Zrips.CMI.Modules.ModuleHandling.CMIModule;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.enums.Files;
@@ -31,14 +30,10 @@ import com.ryderbelserion.fusion.paper.scheduler.FoliaScheduler;
 import com.ryderbelserion.fusion.paper.scheduler.Scheduler;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
+import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import com.badbones69.crazyenvoys.util.MsgUtils;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -47,10 +42,10 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.types.ConfigKeys;
-
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -58,6 +53,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public class CrazyManager {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+
+    private final Server server = this.plugin.getServer();
+
+    private final PluginManager pluginManager = this.server.getPluginManager();
 
     private final FusionPaper fusion = this.plugin.getFusion();
 
@@ -654,7 +653,7 @@ public class CrazyManager {
         if (envoyLocationsBroadcast) {
             StringBuilder locations = getStringBuilder();
 
-            this.plugin.getServer().broadcast(Messages.envoy_locations.getMessage("{locations}", locations.toString().translateEscapes()).translateEscapes(), "envoy.locations");
+            this.server.broadcast(Messages.envoy_locations.getMessage("{locations}", locations.toString().translateEscapes()).translateEscapes(), "envoy.locations");
         }
 
         return this.locationSettings.getDropLocations();
@@ -690,7 +689,8 @@ public class CrazyManager {
         // crates to spawn in the ground when not using falling blocks.
 
         if (this.tiers.isEmpty()) {
-            this.plugin.getServer().broadcastMessage(Methods.getPrefix() + MsgUtils.color("&cNo tiers were found. Please delete the Tiers folder to allow it to remake the default tier files."));
+            this.fusion.log("error", "<red>No tiers were found in the <yellow>tiers</yellow> folder, Please delete the folder to allow re-generating the examples.");
+
             return false;
         }
 
@@ -704,13 +704,13 @@ public class CrazyManager {
             setNextEnvoy(getEnvoyCooldown());
             resetWarnings();
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.NO_LOCATIONS_FOUND);
-            this.plugin.getServer().getPluginManager().callEvent(event);
+            this.pluginManager.callEvent(event);
             Messages.no_spawn_locations_found.broadcastMessage(false);
             return false;
         }
 
         for (UUID uuid : this.editorSettings.getEditors()) {
-            Player player = this.plugin.getServer().getPlayer(uuid);
+            Player player = this.server.getPlayer(uuid);
 
             this.editorSettings.removeFakeBlocks();
             if (player != null) {
@@ -965,7 +965,7 @@ public class CrazyManager {
 
             if (this.centerString != null) this.center = Methods.getBuiltLocation(centerString);
         } else {
-            this.center = this.plugin.getServer().getWorlds().getFirst().getSpawnLocation();
+            this.center = this.server.getWorlds().getFirst().getSpawnLocation();
         }
 
         if (this.center.getWorld() == null) {

@@ -30,12 +30,12 @@ public class Tier {
     private double holoHeight;
     private final List<String> holoMessage;
     private boolean fireworkToggle;
-    private List<Color> fireworkColors;
+    private List<Color> fireworkColors = new ArrayList<>();
     private boolean signalFlareToggle;
     private String signalFlareTimer;
-    private List<Color> signalFlareColors;
-    private List<Prize> prizes;
-    private List<String> prizeMessage;
+    private List<Color> signalFlareColors = new ArrayList<>();
+    private List<Prize> prizes = new ArrayList<>();
+    private List<String> prizeMessage = new ArrayList<>();
 
     public Tier(
             final boolean claimPermissionToggle,

@@ -17,7 +17,6 @@ import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
 import com.ryderbelserion.fusion.core.api.support.ModSupport;
 import com.ryderbelserion.fusion.core.files.enums.FileAction;
-import com.ryderbelserion.fusion.core.files.enums.FileType;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
@@ -67,7 +66,7 @@ public class CrazyEnvoys extends JavaPlugin {
 
         this.fileManager = this.fusion.getFileManager();
         this.fileManager.addPaperFile(path.resolve("users.yml"), consumer -> consumer.addAction(FileAction.EXTRACT_FILE))
-            .addFolder(path.resolve("tiers"), FileType.PAPER);
+            .addPaperFolder(path.resolve("tiers"));
 
         new MetricsWrapper(4514);
 
