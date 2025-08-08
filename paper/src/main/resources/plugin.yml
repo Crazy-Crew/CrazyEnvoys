@@ -13,6 +13,7 @@ folia-supported: true
 softdepend:
   - CMI
   - DecentHolograms
+  - FancyHolograms
   - PlaceholderAPI
   - MVdWPlaceholderAPI
   - Multiverse-Core
