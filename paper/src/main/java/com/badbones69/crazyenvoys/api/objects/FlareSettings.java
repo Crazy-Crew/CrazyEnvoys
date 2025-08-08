@@ -30,15 +30,13 @@ public class FlareSettings {
     public ItemStack getFlare(int amount) {
         ItemStack itemStack = this.flareItemBuilder.setAmount(amount).build();
 
-        itemStack.editMeta(itemMeta -> itemMeta.getPersistentDataContainer().set(PersistentKeys.envoy_flare.getNamespacedKey(), PersistentDataType.BOOLEAN, true));
+        itemStack.editPersistentDataContainer(container -> container.set(PersistentKeys.envoy_flare.getNamespacedKey(), PersistentDataType.BOOLEAN, true));
 
         return itemStack;
     }
     
     public boolean isFlare(ItemStack item) {
-        if (!item.hasItemMeta()) return false;
-
-        return item.getItemMeta().getPersistentDataContainer().has(PersistentKeys.envoy_flare.getNamespacedKey());
+        return item.getPersistentDataContainer().has(PersistentKeys.envoy_flare.getNamespacedKey());
     }
     
     public void giveFlare(Player player) {
