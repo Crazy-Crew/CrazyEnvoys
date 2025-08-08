@@ -14,9 +14,7 @@ import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent.EnvoyStartReason;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
-import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
-import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.listeners.timer.CountdownTimer;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
@@ -25,13 +23,15 @@ import com.badbones69.crazyenvoys.support.holograms.types.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.types.DecentHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.types.FancyHologramsSupport;
 import com.badbones69.crazyenvoys.util.MiscUtils;
-import com.ryderbelserion.vital.paper.api.enums.Support;
-import com.ryderbelserion.vital.paper.api.files.CustomFile;
-import com.ryderbelserion.vital.paper.api.files.FileManager;
-import com.ryderbelserion.vital.paper.util.PaperMethods;
-import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
+import com.ryderbelserion.fusion.core.FusionKey;
+import com.ryderbelserion.fusion.paper.FusionPaper;
+import com.ryderbelserion.fusion.paper.files.PaperFileManager;
+import com.ryderbelserion.fusion.paper.files.types.PaperCustomFile;
+import com.ryderbelserion.fusion.paper.scheduler.FoliaScheduler;
+import com.ryderbelserion.fusion.paper.scheduler.Scheduler;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import com.badbones69.crazyenvoys.util.MsgUtils;
@@ -50,23 +50,21 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.jetbrains.annotations.NotNull;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.types.ConfigKeys;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+
+import java.nio.file.Path;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CrazyManager {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+
+    private final FusionPaper fusion = this.plugin.getFusion();
+
     private @NotNull final ComponentLogger logger = this.plugin.getComponentLogger();
     private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
-    private @NotNull final FileManager fileManager = this.plugin.getFileManager();
+    private @NotNull final PaperFileManager fileManager = this.plugin.getFileManager();
 
     private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
 
@@ -167,7 +165,9 @@ public class CrazyManager {
         // Populate the array list.
         this.locationSettings.populateMap();
 
-        if (MiscUtils.isLogging() && !this.locationSettings.getFailedLocations().isEmpty()) this.logger.error("Failed to load " + this.locationSettings.getFailedLocations().size() + " locations and will reattempt in 10s.");
+        if (!this.locationSettings.getFailedLocations().isEmpty()) {
+            this.fusion.log("warn", "Failed to load {} locations and will reattempt in 10s.", this.locationSettings.getFailedLocations().size());
+        }
 
         if (Calendar.getInstance().after(getNextEnvoy())) setEnvoyActive(false);
 
@@ -196,109 +196,70 @@ public class CrazyManager {
         //================================== Tiers Load ==================================//
         this.tiers.clear();
 
-        for (CustomFile tierFile : this.fileManager.getCustomFiles().values()) {
-            FileConfiguration file = tierFile.getConfiguration();
+        final Path dataPath = this.plugin.getDataPath();
 
-            Tier tier = new Tier(tierFile);
+        for (final Path path : this.fusion.getFiles(dataPath, "yml")) {
+            final Optional<PaperCustomFile> file = this.fileManager.getPaperFile(path);
 
-            tier.setClaimPermissionToggle(file.getBoolean("Settings.Claim-Permission"));
-            tier.setClaimPermission(file.getString("Settings.Claim-Permission-Name"));
-            tier.setUseChance(file.getBoolean("Settings.Use-Chance"));
-            tier.setSpawnChance(file.getInt("Settings.Spawn-Chance"));
-            tier.setBulkToggle(file.getBoolean("Settings.Bulk-Prizes.Toggle"));
-            tier.setBulkRandom(file.getBoolean("Settings.Bulk-Prizes.Random"));
-            tier.setBulkMax(file.getInt("Settings.Bulk-Prizes.Max-Bulk"));
-            tier.setHoloToggle(file.getBoolean("Settings.Hologram-Toggle"));
-            tier.setHoloRange(file.getInt("Settings.Hologram-Range", 8));
-            tier.setHoloHeight(file.getDouble("Settings.Hologram-Height", 1.5));
-            tier.setHoloMessage(file.getStringList("Settings.Hologram"));
-            ItemBuilder placedBlock = new ItemBuilder().setMaterial(file.getString("Settings.Placed-Block", "CHEST"));
-            tier.setPlacedBlockMaterial(placedBlock.getMaterial());
-            tier.setPlacedBlockMetaData(placedBlock.getDamage());
+            if (file.isEmpty()) continue;
 
-            tier.setFireworkToggle(file.getBoolean("Settings.Firework-Toggle"));
+            final PaperCustomFile customFile = file.get();
 
-            if (file.getStringList("Settings.Firework-Colors").isEmpty()) {
-                tier.setFireworkColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
-            } else {
-                file.getStringList("Settings.Firework-Colors").forEach(color -> tier.addFireworkColor(PaperMethods.getDefaultColor(color)));
-            }
+            final YamlConfiguration configuration = customFile.getConfiguration();
 
-            if (file.contains("Settings.Prize-Message") && !file.getStringList("Settings.Prize-Message").isEmpty()) {
-                List<String> array = new ArrayList<>();
-
-                file.getStringList("Settings.Prize-Message").forEach(line -> array.add(line.replaceAll("%reward%", "{reward}").replaceAll("%tier%", "{tier}")));
-
-                tier.setPrizeMessage(array);
-            }
-
-            tier.setSignalFlareToggle(file.getBoolean("Settings.Signal-Flare.Toggle"));
-            tier.setSignalFlareTimer(file.getString("Settings.Signal-Flare.Time"));
-
-            if (file.getStringList("Settings.Signal-Flare.Colors").isEmpty()) {
-                tier.setSignalFlareColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
-            } else {
-                file.getStringList("Settings.Signal-Flare.Colors").forEach(color -> tier.addSignalFlareColor(PaperMethods.getDefaultColor(color)));
-            }
-
-            for (String prizeID : file.getConfigurationSection("Prizes").getKeys(false)) {
-                String path = "Prizes." + prizeID + ".";
-                int chance = file.getInt(path + "Chance");
-                String displayName = file.contains(path + "DisplayName") ? file.getString(path + "DisplayName") : "";
-
-                List<String> commands = new ArrayList<>();
-
-                file.getStringList(path + "Commands").forEach(line -> commands.add(line.replaceAll("%reward%", "{reward}")
-                        .replaceAll("%player%", "{player}")
-                        .replaceAll("%Player%", "{player}")
-                        .replaceAll("%tier%", "{tier}")));
-
-                List<String> messages = new ArrayList<>();
-
-                file.getStringList(path + "Messages").forEach(line -> messages.add(line.replaceAll("%reward%", "{reward}")
-                        .replaceAll("%player%", "{player}")
-                        .replaceAll("%Player%", "{player}")
-                        .replaceAll("%tier%", "{tier}")));
-
-                boolean dropItems = file.getBoolean(path + "Drop-Items");
-                List<ItemBuilder> items = ItemBuilder.convertStringList(file.getStringList(path + "Items"));
-                tier.addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
-            }
+            final Tier tier = new Tier(
+                    configuration.getBoolean("Settings.Claim-Permission", false),
+                    configuration.getString("Settings.Claim-Permission-Name", ""),
+                    configuration.getBoolean("Settings.Use-Chance", false),
+                    configuration.getInt("Settings.Spawn-Chance", 30),
+                    configuration.getBoolean("Settings.Bulk-Prizes.Toggle", false),
+                    configuration.getBoolean("Settings.Bulk-Prizes.Random", false),
+                    configuration.getInt("Settings.Bulk-Prizes.Max-Bulk", 1),
+                    configuration.getBoolean("Settings.Hologram-Toggle", false),
+                    configuration.getInt("Settings.Hologram-Range", 8),
+                    configuration.getDouble("Settings.Hologram-Height", 1.5),
+                    configuration.getStringList("Settings.Hologram"),
+                    configuration,
+                    path
+                    );
 
             this.tiers.add(tier);
-            cleanLocations();
 
-            // Loading the blacklisted blocks.
-            this.blacklistedBlocks.add(Material.WATER);
-            this.blacklistedBlocks.add(Material.LILY_PAD);
-            this.blacklistedBlocks.add(Material.LAVA);
-            this.blacklistedBlocks.add(Material.CHORUS_PLANT);
-            this.blacklistedBlocks.add(Material.KELP_PLANT);
-            this.blacklistedBlocks.add(Material.TALL_GRASS);
-            this.blacklistedBlocks.add(Material.CHORUS_FLOWER);
-            this.blacklistedBlocks.add(Material.SUNFLOWER);
-            this.blacklistedBlocks.add(Material.IRON_BARS);
-            this.blacklistedBlocks.add(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
-            this.blacklistedBlocks.add(Material.IRON_TRAPDOOR);
-            this.blacklistedBlocks.add(Material.OAK_TRAPDOOR);
-            this.blacklistedBlocks.add(Material.OAK_FENCE);
-            this.blacklistedBlocks.add(Material.OAK_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.ACACIA_FENCE);
-            this.blacklistedBlocks.add(Material.BIRCH_FENCE);
-            this.blacklistedBlocks.add(Material.DARK_OAK_FENCE);
-            this.blacklistedBlocks.add(Material.JUNGLE_FENCE);
-            this.blacklistedBlocks.add(Material.NETHER_BRICK_FENCE);
-            this.blacklistedBlocks.add(Material.SPRUCE_FENCE);
-            this.blacklistedBlocks.add(Material.ACACIA_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.BIRCH_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.DARK_OAK_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.JUNGLE_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.SPRUCE_FENCE_GATE);
-            this.blacklistedBlocks.add(Material.GLASS_PANE);
-            this.blacklistedBlocks.add(Material.STONE_SLAB);
+            cleanLocations();
         }
 
-        if (this.plugin.getServer().getPluginManager().isPluginEnabled("WorldEdit") && this.plugin.getServer().getPluginManager().isPluginEnabled("WorldGuard")) this.worldGuardSupportVersion = new WorldGuardSupport();
+        // Loading the blacklisted blocks.
+        this.blacklistedBlocks.add(Material.WATER);
+        this.blacklistedBlocks.add(Material.LILY_PAD);
+        this.blacklistedBlocks.add(Material.LAVA);
+        this.blacklistedBlocks.add(Material.CHORUS_PLANT);
+        this.blacklistedBlocks.add(Material.KELP_PLANT);
+        this.blacklistedBlocks.add(Material.TALL_GRASS);
+        this.blacklistedBlocks.add(Material.CHORUS_FLOWER);
+        this.blacklistedBlocks.add(Material.SUNFLOWER);
+        this.blacklistedBlocks.add(Material.IRON_BARS);
+        this.blacklistedBlocks.add(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
+        this.blacklistedBlocks.add(Material.IRON_TRAPDOOR);
+        this.blacklistedBlocks.add(Material.OAK_TRAPDOOR);
+        this.blacklistedBlocks.add(Material.OAK_FENCE);
+        this.blacklistedBlocks.add(Material.OAK_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.ACACIA_FENCE);
+        this.blacklistedBlocks.add(Material.BIRCH_FENCE);
+        this.blacklistedBlocks.add(Material.DARK_OAK_FENCE);
+        this.blacklistedBlocks.add(Material.JUNGLE_FENCE);
+        this.blacklistedBlocks.add(Material.NETHER_BRICK_FENCE);
+        this.blacklistedBlocks.add(Material.SPRUCE_FENCE);
+        this.blacklistedBlocks.add(Material.ACACIA_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.BIRCH_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.DARK_OAK_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.JUNGLE_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.SPRUCE_FENCE_GATE);
+        this.blacklistedBlocks.add(Material.GLASS_PANE);
+        this.blacklistedBlocks.add(Material.STONE_SLAB);
+
+        if (this.fusion.isModReady(new FusionKey("crazyenvoys", "WorldEdit")) && this.fusion.isModReady(new FusionKey("crazyenvoys", "WorldGuard"))) {
+            this.worldGuardSupportVersion = new WorldGuardSupport();
+        }
 
         loadHolograms();
 
@@ -316,7 +277,7 @@ public class CrazyManager {
 
         switch (pluginName) {
             case "decentholograms" -> {
-                if (!Support.decent_holograms.isEnabled()) return;
+                //if (!Support.decent_holograms.isEnabled()) return;
 
                 if (this.holograms != null && this.holograms.getName().equalsIgnoreCase("DecentHolograms")) { // we don't need to do anything.
                     return;
@@ -326,13 +287,13 @@ public class CrazyManager {
             }
 
             case "fancyholograms" -> {
-                if (!Support.fancy_holograms.isEnabled()) return;
+                //if (!Support.fancy_holograms.isEnabled()) return;
 
                 this.holograms = new FancyHologramsSupport();
             }
 
             case "cmi" -> {
-                if (!Support.cmi.isEnabled() && !CMIModule.holograms.isEnabled()) return;
+                //if (!Support.cmi.isEnabled() && !CMIModule.holograms.isEnabled()) return;
 
                 this.holograms = new CMIHologramsSupport();
             }
@@ -340,39 +301,37 @@ public class CrazyManager {
             case "none" -> {}
 
             default -> {
-                if (Support.decent_holograms.isEnabled()) {
-                    if (this.holograms == null) {
-                        this.holograms = new DecentHologramsSupport();
-                    }
+                //if (Support.decent_holograms.isEnabled()) {
+                //    if (this.holograms == null) {
+                //        this.holograms = new DecentHologramsSupport();
+                //    }
 
-                    break;
-                }
+                //    break;
+                //}
 
-                if (Support.fancy_holograms.isEnabled()) {
-                    this.holograms = new FancyHologramsSupport();
+                //if (Support.fancy_holograms.isEnabled()) {
+                //    this.holograms = new FancyHologramsSupport();
 
-                    break;
-                }
+                //    break;
+                //}
 
-                if (Support.cmi.isEnabled() && CMIModule.holograms.isEnabled()) {
-                    this.holograms = new CMIHologramsSupport();
-                }
+                //if (Support.cmi.isEnabled() && CMIModule.holograms.isEnabled()) {
+                //    this.holograms = new CMIHologramsSupport();
+                //}
             }
         }
 
         if (this.holograms == null) {
-            if (MiscUtils.isLogging()) {
-                List.of(
-                        "There was no hologram plugin found on the server. If you are using CMI",
-                        "Please make sure you enabled the hologram module in modules.yml",
-                        "You can run /crazycrates reload if using CMI otherwise restart your server."
-                ).forEach(this.logger::warn);
-            }
+            List.of(
+                    "There was no hologram plugin found on the server. If you are using CMI",
+                    "Please make sure you enabled the hologram module in modules.yml",
+                    "You can run /crazycrates reload if using CMI otherwise restart your server."
+            ).forEach(line -> this.fusion.log("warn", line));
 
             return;
         }
 
-        if (MiscUtils.isLogging()) this.logger.info("{} support has been enabled.", this.holograms.getName());
+        this.fusion.log("warn", "{} support has been enabled.", this.holograms.getName());
     }
 
     /**
@@ -381,7 +340,7 @@ public class CrazyManager {
     public void startEnvoyCountDown() {
         cancelEnvoyCooldownTime();
 
-        this.coolDownTask = new FoliaRunnable(this.plugin.getServer().getGlobalRegionScheduler()) {
+        this.coolDownTask = new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
             @Override
             public void run() {
                 if (!isEnvoyActive()) {
@@ -441,7 +400,7 @@ public class CrazyManager {
                     }
                 }
             }
-        }.runAtFixedRate(this.plugin, 20, 20);
+        }.runAtFixedRate( 20, 20);
     }
 
     /**
@@ -817,7 +776,7 @@ public class CrazyManager {
             }
         }
 
-        this.runTimeTask = new FoliaRunnable(this.plugin.getServer().getGlobalRegionScheduler()) {
+        this.runTimeTask = new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
             @Override
             public void run() {
                 EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.OUT_OF_TIME);
@@ -825,7 +784,7 @@ public class CrazyManager {
                 Messages.ended.broadcastMessage(false);
                 endEnvoyEvent();
             }
-        }.runDelayed(this.plugin, getTimeSeconds(this.config.getProperty(ConfigKeys.envoys_run_time)) * 20L);
+        }.runDelayed(getTimeSeconds(this.config.getProperty(ConfigKeys.envoys_run_time)) * 20L);
 
         this.envoyTimeLeft = getEnvoyRunTimeCalendar();
 
@@ -876,12 +835,12 @@ public class CrazyManager {
      * @param tier The tier the signal is.
      */
     public void startSignalFlare(final Location loc, final Tier tier) {
-        ScheduledTask task = new FoliaRunnable(this.plugin.getServer().getRegionScheduler(), loc) {
+        ScheduledTask task = new FoliaScheduler(this.plugin, loc) {
             @Override
             public void run() {
                 firework(loc.clone().add(.5, 0, .5), tier);
             }
-        }.runAtFixedRate(this.plugin, getTimeSeconds(tier.getSignalFlareTimer()) * 20L, getTimeSeconds(tier.getSignalFlareTimer()) * 20L);
+        }.runAtFixedRate(getTimeSeconds(tier.getSignalFlareTimer()) * 20L, getTimeSeconds(tier.getSignalFlareTimer()) * 20L);
 
         this.activeSignals.put(loc, task);
     }
@@ -977,23 +936,21 @@ public class CrazyManager {
 
     private boolean testCenter() {
         if (isCenterLoaded()) { // Check to make sure the center exist and if not try to load it again.
-            if (MiscUtils.isLogging()) this.logger.warn("Attempting to fix Center location that failed.");
+            this.fusion.log("warn", "Attempting to fix Center location that failed.");
             
             loadCenter();
 
             if (isCenterLoaded()) { // If center still doesn't exist then it cancels the event.
-                if (MiscUtils.isLogging()) {
-                    this.logger.warn("Debug Start");
-                    this.logger.warn("Center String: \"{}'", centerString);
-                    this.logger.warn("Location Object: \"{}'", center.toString());
-                    this.logger.warn("World Exist: \"{}'", center.getWorld() != null);
-                    this.logger.warn("Debug End");
-                    this.logger.error("Failed to fix Center. Will try again next event.");
-                }
+                this.fusion.log("warn", "Debug Start");
+                this.fusion.log("warn", "Center String: \"{}'", centerString);
+                this.fusion.log("warn", "Location Object: \"{}'", center.toString());
+                this.fusion.log("warn", "World Exist: \"{}'", center.getWorld() != null);
+                this.fusion.log("warn", "Debug End");
+                this.fusion.log("warn", "Failed to fix Center. Will try again next event.");
 
                 return false;
             } else {
-                if (MiscUtils.isLogging()) this.logger.info("Center has been fixed and will continue event.");
+                this.fusion.log("warn", "Center has been fixed and will continue event.");
             }
         }
 
@@ -1012,7 +969,7 @@ public class CrazyManager {
         }
 
         if (this.center.getWorld() == null) {
-            if (MiscUtils.isLogging()) this.logger.error("Failed to fix Center. Will try again next event.");
+            this.fusion.log("warn", "Failed to fix Center. Will try again next event.");
         }
     }
 

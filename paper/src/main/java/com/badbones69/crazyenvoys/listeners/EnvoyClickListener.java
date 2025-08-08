@@ -17,13 +17,13 @@ import com.badbones69.crazyenvoys.config.beans.GuiProperty;
 import com.badbones69.crazyenvoys.support.holograms.HologramManager;
 import com.badbones69.crazyenvoys.util.MiscUtils;
 import com.badbones69.crazyenvoys.util.MsgUtils;
-import com.ryderbelserion.vital.paper.api.enums.Support;
+import com.ryderbelserion.fusion.core.api.support.ModSupport;
+import com.ryderbelserion.fusion.paper.FusionPaper;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,7 +32,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import com.badbones69.crazyenvoys.config.ConfigManager;
@@ -50,6 +49,8 @@ public class EnvoyClickListener implements Listener {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
     private @NotNull final SettingsManager config = ConfigManager.getConfig();
+
+    private final FusionPaper fusion = this.plugin.getFusion();
 
     private @NotNull final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
     private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
@@ -131,10 +132,12 @@ public class EnvoyClickListener implements Listener {
             return;
         }
 
+        final boolean isPapiReady = this.fusion.isModReady(ModSupport.placeholder_api);
+
         for (Prize prize : envoyOpenEvent.getPrizes()) {
             if (!tier.getPrizeMessage().isEmpty() && prize.getMessages().isEmpty()) {
                 for (String message : tier.getPrizeMessage()) {
-                    if (Support.placeholder_api.isEnabled()) {
+                    if (isPapiReady) {
                         message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
@@ -142,7 +145,7 @@ public class EnvoyClickListener implements Listener {
                 }
             } else {
                 for (String message : prize.getMessages()) {
-                    if (Support.placeholder_api.isEnabled()) {
+                    if (isPapiReady) {
                         message = PlaceholderAPI.setPlaceholders(player, message);
                     }
 
@@ -151,9 +154,11 @@ public class EnvoyClickListener implements Listener {
             }
 
             for (String cmd : prize.getCommands()) {
-                if (Support.placeholder_api.isEnabled()) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
+                if (isPapiReady) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
 
-                this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), cmd.replace("{player}", player.getName()).replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
+                //todo() folia support
+                this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), cmd.replace("{player}", player.getName())
+                        .replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
             }
 
             if (!this.config.getProperty(ConfigKeys.envoy_menu_open)) {

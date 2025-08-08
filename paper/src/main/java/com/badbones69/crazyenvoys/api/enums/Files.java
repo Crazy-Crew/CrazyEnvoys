@@ -1,21 +1,23 @@
 package com.badbones69.crazyenvoys.api.enums;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.ryderbelserion.vital.paper.api.files.FileManager;
+import com.ryderbelserion.fusion.core.api.exceptions.FusionException;
+import com.ryderbelserion.fusion.paper.files.PaperFileManager;
+import com.ryderbelserion.fusion.paper.files.types.PaperCustomFile;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import java.nio.file.Path;
+import java.util.Optional;
 
 public enum Files {
 
     users("users.yml");
 
-    private final String fileName;
-    private final String strippedName;
+    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    private @NotNull final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final PaperFileManager fileManager = this.plugin.getFileManager();
 
-    private @NotNull final FileManager fileManager = this.plugin.getFileManager();
+    private final Path path;
 
     /**
      * A constructor to build a file
@@ -23,27 +25,28 @@ public enum Files {
      * @param fileName the name of the file
      */
     Files(final String fileName) {
-        this.fileName = fileName;
-        this.strippedName = this.fileName.replace(".yml", "");
+        this.path = this.plugin.getDataPath().resolve(fileName);
     }
 
     public final YamlConfiguration getConfiguration() {
-        return this.fileManager.getFile(this.fileName).getConfiguration();
-    }
+        final Optional<PaperCustomFile> key = this.fileManager.getPaperFile(this.path);
 
-    public final String getStrippedName() {
-        return this.strippedName;
-    }
+        if (key.isEmpty()) {
+            throw new FusionException("Cannot find the value in the cache: %s".formatted(this.path));
+        }
 
-    public final String getFileName() {
-        return this.fileName;
+        return key.get().getConfiguration();
     }
 
     public void save() {
-        this.fileManager.saveFile(this.fileName);
+        final Optional<PaperCustomFile> customFile = this.fileManager.getPaperFile(this.path);
+
+        if (customFile.isEmpty()) return;
+
+        customFile.get().save();
     }
 
     public void reload() {
-        this.fileManager.addFile(this.fileName);
+        this.fileManager.addPaperFile(this.path, consumer -> {});
     }
 }

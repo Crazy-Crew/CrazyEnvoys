@@ -5,8 +5,8 @@ import ch.jalu.configme.properties.Property;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.util.MsgUtils;
-import com.ryderbelserion.vital.paper.api.enums.Support;
-import com.ryderbelserion.vital.utils.Methods;
+import com.ryderbelserion.fusion.core.api.support.ModSupport;
+import com.ryderbelserion.fusion.paper.FusionPaper;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.CommandSender;
@@ -103,6 +103,8 @@ public enum Messages {
     private @NotNull final SettingsManager messages = ConfigManager.getMessages();
     private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
+    private final FusionPaper fusion = this.plugin.getFusion();
+
     public String getString() {
         return this.messages.getProperty(this.property);
     }
@@ -159,14 +161,14 @@ public enum Messages {
         String message;
 
         if (isList()) {
-            message = StringUtils.chomp(Methods.toString(getList()));
+            message = StringUtils.chomp(this.fusion.getStringUtils().toString(getList()));
         } else {
             message = getString();
         }
 
         if (sender != null) {
             if (sender instanceof Player player) {
-                if (Support.placeholder_api.isEnabled()) {
+                if (this.fusion.isModReady(ModSupport.placeholder_api)) {
                     message = PlaceholderAPI.setPlaceholders(player, message);
                 }
             }

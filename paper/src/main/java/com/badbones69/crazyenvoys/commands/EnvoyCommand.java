@@ -9,6 +9,9 @@ import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
+import com.ryderbelserion.fusion.paper.FusionPaper;
+import com.ryderbelserion.fusion.paper.files.PaperFileManager;
+import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.Material;
@@ -18,6 +21,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +32,14 @@ import java.util.UUID;
 public class EnvoyCommand implements CommandExecutor {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+
+    private final Server server = this.plugin.getServer();
+
+    private final PluginManager pluginManager = this.server.getPluginManager();
+
+    private final FusionPaper fusion = this.plugin.getFusion();
+
+    private final PaperFileManager fileManager = this.plugin.getFileManager();
 
     private @NotNull final EditorSettings editorSettings = this.plugin.getEditorSettings();
     private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
@@ -42,7 +54,7 @@ public class EnvoyCommand implements CommandExecutor {
                 return true;
             }
 
-            this.plugin.getServer().dispatchCommand(sender, "envoy time");
+            this.server.dispatchCommand(sender, "envoy time"); //todo() wtf?
         } else {
             switch (args[0].toLowerCase()) {
                 case "help" -> {
@@ -64,13 +76,13 @@ public class EnvoyCommand implements CommandExecutor {
 
                     if (this.crazyManager.isEnvoyActive()) {
                         EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.RELOAD);
-                        this.plugin.getServer().getPluginManager().callEvent(event);
+                        this.pluginManager.callEvent(event);
                         this.crazyManager.endEnvoyEvent();
                     }
 
-                    this.plugin.getPaper().reload();
+                    this.fusion.reload();
 
-                    this.plugin.getFileManager().reloadFiles().init();
+                    this.fileManager.refresh(false);
 
                     this.crazyManager.reload(false);
 
@@ -254,7 +266,7 @@ public class EnvoyCommand implements CommandExecutor {
                         event = new EnvoyStartEvent(EnvoyStartEvent.EnvoyStartReason.FORCED_START_CONSOLE);
                     }
 
-                    this.plugin.getServer().getPluginManager().callEvent(event);
+                    this.pluginManager.callEvent(event);
 
                     if (!event.isCancelled() && this.crazyManager.startEnvoyEvent()) Messages.force_start.sendMessage(sender);
 
@@ -280,7 +292,7 @@ public class EnvoyCommand implements CommandExecutor {
                         event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.FORCED_END_CONSOLE);
                     }
 
-                    this.plugin.getServer().getPluginManager().callEvent(event);
+                    this.pluginManager.callEvent(event);
                     this.crazyManager.endEnvoyEvent();
                     Messages.ended.broadcastMessage(false);
                     Messages.force_end.sendMessage(sender);

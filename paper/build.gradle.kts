@@ -8,6 +8,10 @@ plugins {
 repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 
+    maven("https://repo.fancyinnovations.com/releases/")
+
+    maven("https://maven.enginehub.org/repo/")
+
     maven("https://repo.nexomc.com/releases/")
 
     maven("https://repo.oraxen.com/releases/")
@@ -22,7 +26,9 @@ dependencies {
 
     implementation(libs.metrics)
 
+    compileOnly(libs.bundles.holograms)
     compileOnly(libs.bundles.shared)
+    compileOnly(libs.worldguard)
 }
 
 tasks {

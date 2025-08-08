@@ -4,9 +4,10 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
-import com.ryderbelserion.vital.paper.api.builders.PlayerBuilder;
-import com.ryderbelserion.vital.paper.api.enums.Support;
-import com.ryderbelserion.vital.paper.util.PaperMethods;
+import com.ryderbelserion.fusion.core.api.support.ModSupport;
+import com.ryderbelserion.fusion.paper.FusionPaper;
+import com.ryderbelserion.fusion.paper.builders.PlayerBuilder;
+import com.ryderbelserion.fusion.paper.utils.ColorUtils;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import io.th0rgal.oraxen.api.OraxenItems;
@@ -39,6 +40,10 @@ import java.util.stream.Collectors;
 public class ItemBuilder {
 
     private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+
+    private final FusionPaper fusion = this.plugin.getFusion();
+
+    private final Server server = this.plugin.getServer();
 
     // Item Data
     private Material material;
@@ -87,7 +92,7 @@ public class ItemBuilder {
     private boolean isLeatherArmor;
 
     // Enchantments
-    private HashMap<Enchantment, Integer> enchantments;
+    private Map<Enchantment, Integer> enchantments;
 
     // Shields
     private boolean isShield;
@@ -101,8 +106,8 @@ public class ItemBuilder {
     private Color mapColor;
 
     // Placeholders
-    private HashMap<String, String> namePlaceholders;
-    private HashMap<String, String> lorePlaceholders;
+    private Map<String, String> namePlaceholders;
+    private Map<String, String> lorePlaceholders;
 
     // Misc
     private ItemStack referenceItem;
@@ -176,6 +181,8 @@ public class ItemBuilder {
         this.itemName = itemBuilder.itemName;
         this.itemLore = new ArrayList<>(itemBuilder.itemLore);
         this.itemAmount = itemBuilder.itemAmount;
+
+        this.customHead = itemBuilder.customHead;
 
         this.uuid = itemBuilder.uuid;
         this.url = itemBuilder.url;
@@ -293,7 +300,7 @@ public class ItemBuilder {
     /**
      * @return the enchantments on the item.
      */
-    public HashMap<Enchantment, Integer> getEnchantments() {
+    public Map<Enchantment, Integer> getEnchantments() {
         return this.enchantments;
     }
 
@@ -375,20 +382,20 @@ public class ItemBuilder {
     public ItemStack build() {
         ItemStack item = this.itemStack;
 
-        if (Support.head_database.isEnabled()) {
-            HeadDatabaseAPI api = this.plugin.getApi();
+        final Optional<HeadDatabaseAPI> optional = this.plugin.getApi();
 
-            if (api != null) {
-                if (!this.customHead.isEmpty()) {
-                    item = api.isHead(this.customHead) ? api.getItemHead(this.customHead) : item.withType(Material.PLAYER_HEAD);
-                    this.itemMeta = item.getItemMeta();
-                    this.material = Material.PLAYER_HEAD;
-                    this.isCustom = true;
-                }
-            }
+        if (optional.isPresent() && !this.customHead.isEmpty()) {
+            final HeadDatabaseAPI api = optional.get();
+
+            item = api.isHead(this.customHead) ? api.getItemHead(this.customHead) : item.withType(Material.PLAYER_HEAD);
+
+            this.itemMeta = item.getItemMeta();
+            this.material = Material.PLAYER_HEAD;
+
+            this.isCustom = true;
         }
 
-        if (Support.oraxen.isEnabled()) {
+        if (this.fusion.isModReady(ModSupport.oraxen)) {
             io.th0rgal.oraxen.items.ItemBuilder oraxenItem = OraxenItems.getItemById(this.customMaterial);
 
             if (oraxenItem != null && OraxenItems.exists(this.customMaterial)) {
@@ -398,8 +405,16 @@ public class ItemBuilder {
             }
         }
 
+        if (this.fusion.isModReady(ModSupport.nexo)) {
+
+        }
+
+        if (this.fusion.isModReady(ModSupport.items_adder)) {
+
+        }
+
         if (item.getType() == Material.AIR) {
-            this.plugin.getLogger().severe("Item cannot be AIR!");
+            this.fusion.log("error", "Item cannot be air!");
 
             return null;
         }
@@ -414,9 +429,9 @@ public class ItemBuilder {
         if (this.isHead && !this.isCustom) {
             if (this.itemMeta instanceof final SkullMeta skull) {
                 if (this.uuid != null && !skull.hasOwner()) {
-                    skull.setOwningPlayer(this.plugin.getServer().getOfflinePlayer(this.uuid));
+                    skull.setOwningPlayer(this.server.getOfflinePlayer(this.uuid));
                 } else {
-                    final PlayerProfile profile = this.plugin.getServer().createProfile(null, "");
+                    final PlayerProfile profile = this.server.createProfile(null, "");
 
                     profile.setProperty(new ProfileProperty("", ""));
 
@@ -424,8 +439,8 @@ public class ItemBuilder {
 
                     try {
                         textures.setSkin(URI.create(this.url).toURL(), PlayerTextures.SkinModel.CLASSIC);
-                    } catch (MalformedURLException exception) {
-                        this.plugin.getLogger().log(Level.SEVERE, "Failed to set the texture url", exception);
+                    } catch (final MalformedURLException exception) {
+                        this.fusion.log("error", "Failed to set the texture url.", exception);
                     }
 
                     profile.setTextures(textures);
@@ -506,7 +521,7 @@ public class ItemBuilder {
      * @param material the material you wish to set.
      * @return the ItemBuilder with updated info.
      */
-    public ItemBuilder setMaterial(Material material) {
+    public ItemBuilder setMaterial(final Material material) {
         this.material = material;
 
         this.itemStack = new ItemStack(this.material);
@@ -521,11 +536,10 @@ public class ItemBuilder {
      * Sets a custom skull
      *
      * @param skull the id of the skull
-     * @param hdb the {@link HeadDatabaseAPI}
      * @return {@link ItemBuilder}
      */
-    public @NotNull final ItemBuilder setSkull(@NotNull final String skull, @Nullable final HeadDatabaseAPI hdb) {
-        if (skull.isEmpty() || hdb == null) return this;
+    public @NotNull final ItemBuilder setSkull(@NotNull final String skull) {
+        if (skull.isEmpty() || this.plugin.getApi().isEmpty()) return this;
 
         this.customHead = skull;
         this.isCustom = true;
@@ -539,7 +553,7 @@ public class ItemBuilder {
      * @param trimMaterial pattern to set.
      * @return the ItemBuilder with updated info.
      */
-    public ItemBuilder setTrimMaterial(TrimMaterial trimMaterial) {
+    public ItemBuilder setTrimMaterial(final TrimMaterial trimMaterial) {
         this.trimMaterial = trimMaterial;
 
         return this;
@@ -551,7 +565,7 @@ public class ItemBuilder {
      * @param trimPattern pattern to set.
      * @return the ItemBuilder with updated info.
      */
-    public ItemBuilder setTrimPattern(TrimPattern trimPattern) {
+    public ItemBuilder setTrimPattern(final TrimPattern trimPattern) {
         this.trimPattern = trimPattern;
 
         return this;
@@ -590,9 +604,9 @@ public class ItemBuilder {
                     this.potionType = getPotionType(PotionEffectType.getByName(metaData));
                 } catch (Exception ignored) {}
 
-                this.potionColor = PaperMethods.getColor(metaData);
-                this.armorColor = PaperMethods.getColor(metaData);
-                this.mapColor = PaperMethods.getColor(metaData);
+                this.potionColor = ColorUtils.getColor(metaData);
+                this.armorColor = ColorUtils.getColor(metaData);
+                this.mapColor = ColorUtils.getColor(metaData);
             }
         } else if (material.contains("#")) {
             String[] b = material.split("#");
@@ -630,9 +644,9 @@ public class ItemBuilder {
 
     /**
      * @param damage the damage value of the item.
-     * @return
+     * @return {@link ItemBuilder}
      */
-    public ItemBuilder setDamage(int damage) {
+    public ItemBuilder setDamage(final int damage) {
         this.damage = damage;
 
         return this;
@@ -651,7 +665,7 @@ public class ItemBuilder {
      * @param itemName the name of the item.
      * @return the ItemBuilder with an updated name.
      */
-    public ItemBuilder setName(String itemName) {
+    public ItemBuilder setName(final String itemName) {
         if (itemName != null) this.itemName = MsgUtils.color(itemName);
 
         return this;
@@ -661,8 +675,9 @@ public class ItemBuilder {
      * @param placeholders the placeholders that will be used.
      * @return the ItemBuilder with updated placeholders.
      */
-    public ItemBuilder setNamePlaceholders(HashMap<String, String> placeholders) {
+    public ItemBuilder setNamePlaceholders(final Map<String, String> placeholders) {
         this.namePlaceholders = placeholders;
+
         return this;
     }
 
@@ -673,8 +688,9 @@ public class ItemBuilder {
      * @param argument the argument you wish to replace the placeholder with.
      * @return the ItemBuilder with updated info.
      */
-    public ItemBuilder addNamePlaceholder(String placeholder, String argument) {
+    public ItemBuilder addNamePlaceholder(final String placeholder, final String argument) {
         this.namePlaceholders.put(placeholder, argument);
+
         return this;
     }
 
@@ -684,8 +700,9 @@ public class ItemBuilder {
      * @param placeholder the placeholder you wish to remove.
      * @return the ItemBuilder with updated info.
      */
-    public ItemBuilder removeNamePlaceholder(String placeholder) {
+    public ItemBuilder removeNamePlaceholder(final String placeholder) {
         this.namePlaceholders.remove(placeholder);
+
         return this;
     }
 
@@ -695,7 +712,7 @@ public class ItemBuilder {
      * @param lore the lore of the item in the builder.
      * @return the ItemBuilder with updated info.
      */
-    public ItemBuilder setLore(List<String> lore) {
+    public ItemBuilder setLore(final List<String> lore) {
         if (lore != null) {
             this.itemLore.clear();
 
@@ -713,8 +730,9 @@ public class ItemBuilder {
      * @param lore the new line you wish to add.
      * @return the ItemBuilder with updated info.
      */
-    public ItemBuilder addLore(String lore) {
+    public ItemBuilder addLore(final String lore) {
         if (lore != null) this.itemLore.add(MsgUtils.color(lore));
+
         return this;
     }
 
@@ -724,8 +742,9 @@ public class ItemBuilder {
      * @param placeholders the placeholders that you wish to use.
      * @return the ItemBuilder with updated info.
      */
-    public ItemBuilder setLorePlaceholders(HashMap<String, String> placeholders) {
+    public ItemBuilder setLorePlaceholders(final Map<String, String> placeholders) {
         this.lorePlaceholders = placeholders;
+
         return this;
     }
 
@@ -736,8 +755,9 @@ public class ItemBuilder {
      * @param argument the argument that will replace the placeholder.
      * @return the ItemBuilder with updated info.
      */
-    public ItemBuilder addLorePlaceholder(String placeholder, String argument) {
+    public ItemBuilder addLorePlaceholder(final String placeholder, final String argument) {
         this.lorePlaceholders.put(placeholder, argument);
+
         return this;
     }
 
@@ -766,8 +786,9 @@ public class ItemBuilder {
      * @param placeholder the placeholder you wish to remove.
      * @return the ItemBuilder with updated info.
      */
-    public ItemBuilder removeLorePlaceholder(String placeholder) {
+    public ItemBuilder removeLorePlaceholder(final String placeholder) {
         this.lorePlaceholders.remove(placeholder);
+
         return this;
     }
 
@@ -775,8 +796,9 @@ public class ItemBuilder {
      * @param entityType the entity type the mob spawn egg will be.
      * @return the ItemBuilder with an updated mob spawn egg.
      */
-    public ItemBuilder setEntityType(EntityType entityType) {
+    public ItemBuilder setEntityType(final EntityType entityType) {
         this.entityType = entityType;
+
         return this;
     }
 
@@ -785,16 +807,15 @@ public class ItemBuilder {
      *
      * @param stringPattern the pattern you wish to add.
      */
-    private void addPatterns(String stringPattern) {
+    private void addPatterns(final String stringPattern) {
         try {
             String[] split = stringPattern.split(":");
 
             for (PatternType pattern : PatternType.values()) {
-
                 if (split[0].equalsIgnoreCase(pattern.name()) || split[0].equalsIgnoreCase(pattern.getIdentifier())) {
-                    DyeColor color = PaperMethods.getDyeColor(split[1]);
+                    DyeColor color = ColorUtils.getDyeColor(split[1]);
 
-                    if (color != null) addPattern(new Pattern(color, pattern));
+                    addPattern(new Pattern(color, pattern));
 
                     break;
                 }
@@ -806,8 +827,9 @@ public class ItemBuilder {
      * @param patterns the list of Patterns to add.
      * @return the ItemBuilder with updated patterns.
      */
-    public ItemBuilder addPatterns(List<String> patterns) {
-        patterns.forEach(this :: addPatterns);
+    public ItemBuilder addPatterns(final List<String> patterns) {
+        patterns.forEach(this::addPatterns);
+
         return this;
     }
 
@@ -815,8 +837,9 @@ public class ItemBuilder {
      * @param pattern a pattern to add.
      * @return the ItemBuilder with an updated pattern.
      */
-    public ItemBuilder addPattern(Pattern pattern) {
+    public ItemBuilder addPattern(final Pattern pattern) {
         this.patterns.add(pattern);
+
         return this;
     }
 
@@ -824,8 +847,9 @@ public class ItemBuilder {
      * @param patterns set a list of Patterns.
      * @return the ItemBuilder with an updated list of patterns.
      */
-    public ItemBuilder setPattern(List<Pattern> patterns) {
+    public ItemBuilder setPattern(final List<Pattern> patterns) {
         this.patterns = patterns;
+
         return this;
     }
 
@@ -833,8 +857,9 @@ public class ItemBuilder {
      * @param amount the amount of the item stack.
      * @return the ItemBuilder with an updated item count.
      */
-    public ItemBuilder setAmount(Integer amount) {
+    public ItemBuilder setAmount(final int amount) {
         this.itemAmount = amount;
+
         return this;
     }
 
@@ -844,7 +869,7 @@ public class ItemBuilder {
      * @param player the player being displayed on the head.
      * @return the ItemBuilder with an updated Player Name.
      */
-    public ItemBuilder setPlayerName(String player) {
+    public ItemBuilder setPlayerName(final String player) {
         if (player.isEmpty() || player.isBlank()) return this;
 
         // This is temporary until HDB is updated, The dev of the plugin has a house now
@@ -855,7 +880,7 @@ public class ItemBuilder {
             return this;
         }
 
-        @NotNull final PlayerBuilder builder = new PlayerBuilder(player);
+        @NotNull final PlayerBuilder builder = new PlayerBuilder(this.plugin, player);
         // More extensive but we only call methods once, and we avoid NPE.
         @Nullable final Player target = builder.getPlayer();
 
@@ -1072,7 +1097,7 @@ public class ItemBuilder {
                     }
                     case "lore" -> itemBuilder.setLore(Arrays.asList(value.split(",")));
                     case "player" -> itemBuilder.setPlayerName(value);
-                    case "skull" -> itemBuilder.setSkull(value, CrazyEnvoys.get().getApi());
+                    case "skull" -> itemBuilder.setSkull(value);
                     case "unbreakable-item" -> {
                         if (value.isEmpty() || value.equalsIgnoreCase("true")) itemBuilder.setUnbreakable(true);
                     }
@@ -1105,8 +1130,10 @@ public class ItemBuilder {
                         try {
                             for (PatternType pattern : PatternType.values()) {
                                 if (option.equalsIgnoreCase(pattern.name()) || value.equalsIgnoreCase(pattern.getIdentifier())) {
-                                    DyeColor color = PaperMethods.getDyeColor(value);
-                                    if (color != null) itemBuilder.addPattern(new Pattern(color, pattern));
+                                    DyeColor color = ColorUtils.getDyeColor(value);
+
+                                    itemBuilder.addPattern(new Pattern(color, pattern));
+
                                     break;
                                 }
                             }

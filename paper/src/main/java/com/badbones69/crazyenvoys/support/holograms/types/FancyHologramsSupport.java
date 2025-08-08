@@ -2,7 +2,8 @@ package com.badbones69.crazyenvoys.support.holograms.types;
 
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.support.holograms.HologramManager;
-import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
+import com.ryderbelserion.fusion.paper.scheduler.FoliaScheduler;
+import com.ryderbelserion.fusion.paper.scheduler.Scheduler;
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
@@ -36,12 +37,12 @@ public class FancyHologramsSupport extends HologramManager {
 
         final Server server = this.plugin.getServer();
 
-        new FoliaRunnable(this.plugin.getServer().getGlobalRegionScheduler()) {
+        new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
             @Override
             public void run() {
                 server.getOnlinePlayers().forEach(hologram::updateShownStateFor);
             }
-        }.run(this.plugin);
+        }.runNow();
 
         this.manager.addHologram(hologram);
     }

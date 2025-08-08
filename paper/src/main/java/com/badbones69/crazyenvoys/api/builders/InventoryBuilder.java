@@ -3,7 +3,8 @@ package com.badbones69.crazyenvoys.api.builders;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.util.MsgUtils;
-import com.ryderbelserion.vital.paper.api.enums.Support;
+import com.ryderbelserion.fusion.core.api.support.ModSupport;
+import com.ryderbelserion.fusion.paper.FusionPaper;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -21,6 +22,8 @@ public abstract class InventoryBuilder implements InventoryHolder, Listener {
 
     protected @NotNull final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
+    protected final FusionPaper fusion = this.plugin.getFusion();
+
     protected @NotNull final Server server = this.plugin.getServer();
 
     private Inventory inventory;
@@ -35,7 +38,7 @@ public abstract class InventoryBuilder implements InventoryHolder, Listener {
         this.title = title;
         this.size = size;
 
-        String inventoryTitle = Support.placeholder_api.isEnabled() ? PlaceholderAPI.setPlaceholders(getPlayer(), this.title) : this.title;
+        String inventoryTitle = this.fusion.isModReady(ModSupport.placeholder_api) ? PlaceholderAPI.setPlaceholders(getPlayer(), this.title) : this.title;
 
         this.inventory = this.server.createInventory(this, this.size, MsgUtils.color(inventoryTitle));
     }

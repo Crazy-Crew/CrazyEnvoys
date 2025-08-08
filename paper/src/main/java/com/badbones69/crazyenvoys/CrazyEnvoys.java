@@ -15,20 +15,25 @@ import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
 import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
-import com.ryderbelserion.vital.paper.VitalPaper;
-import com.ryderbelserion.vital.paper.api.enums.Support;
-import com.ryderbelserion.vital.paper.api.files.FileManager;
+import com.ryderbelserion.fusion.core.api.support.ModSupport;
+import com.ryderbelserion.fusion.core.files.FileManager;
+import com.ryderbelserion.fusion.core.files.enums.FileType;
+import com.ryderbelserion.fusion.paper.FusionPaper;
+import com.ryderbelserion.fusion.paper.files.PaperFileManager;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.support.MetricsWrapper;
+
+import java.nio.file.Path;
 import java.util.Locale;
+import java.util.Optional;
 
 public class CrazyEnvoys extends JavaPlugin {
 
@@ -50,24 +55,20 @@ public class CrazyEnvoys extends JavaPlugin {
 
     private CrazyManager crazyManager;
 
-    private HeadDatabaseAPI api;
-
-    private FileManager fileManager;
-
-    private VitalPaper paper;
+    private PaperFileManager fileManager;
+    private FusionPaper fusion;
 
     @Override
     public void onEnable() {
-        this.paper = new VitalPaper(this);
+        this.fusion = new FusionPaper(this);
+
+        final Path path = getDataPath();
 
         ConfigManager.load(getDataFolder(), getComponentLogger());
 
-        if (Support.head_database.isEnabled()) {
-            this.api = new HeadDatabaseAPI();
-        }
-
-        this.fileManager = new FileManager();
-        this.fileManager.addFile("users.yml").addFolder("tiers").init();
+        this.fileManager = this.fusion.getFileManager();
+        this.fileManager.addPaperFile(path.resolve("users.yml"), consumer -> {})
+            .addFolder(path.resolve("tiers"), FileType.PAPER);
 
         new MetricsWrapper(4514);
 
@@ -79,22 +80,22 @@ public class CrazyEnvoys extends JavaPlugin {
         this.crazyManager = new CrazyManager();
         this.crazyManager.load();
 
-        getServer().getPluginManager().registerEvents(new EnvoyEditListener(), this);
-        getServer().getPluginManager().registerEvents(new EnvoyClickListener(), this);
-        getServer().getPluginManager().registerEvents(new FlareClickListener(), this);
-        getServer().getPluginManager().registerEvents(new FireworkDamageListener(), this);
+        final PluginManager pluginManager = getServer().getPluginManager();
 
-        getServer().getPluginManager().registerEvents(new PrizeGui(), this);
+        pluginManager.registerEvents(new EnvoyEditListener(), this);
+        pluginManager.registerEvents(new EnvoyClickListener(), this);
+        pluginManager.registerEvents(new FlareClickListener(), this);
+        pluginManager.registerEvents(new FireworkDamageListener(), this);
 
-        if (Support.placeholder_api.isEnabled()) {
+        pluginManager.registerEvents(new PrizeGui(), this);
+
+        if (this.fusion.isModReady(ModSupport.placeholder_api)) {
             new PlaceholderAPISupport().register();
         }
 
         registerCommand(getCommand("crazyenvoys"), new EnvoyTab(), new EnvoyCommand());
 
-        if (isLogging()) {
-            getComponentLogger().info("Done ({})!", String.format(Locale.ROOT, "%.3fs", (double) (System.nanoTime() - this.startTime) / 1.0E9D));
-        }
+        this.fusion.log("info", "Done ({})!", String.format(Locale.ROOT, "%.3fs", (double) (System.nanoTime() - this.startTime) / 1.0E9D));
     }
 
     @Override
@@ -117,12 +118,8 @@ public class CrazyEnvoys extends JavaPlugin {
         this.crazyManager.reload(true);
     }
 
-    public final boolean isLogging() {
-        return this.paper.isVerbose();
-    }
-
-    public final VitalPaper getPaper() {
-        return this.paper;
+    public FusionPaper getFusion() {
+        return this.fusion;
     }
 
     private void registerCommand(PluginCommand pluginCommand, TabCompleter tabCompleter, CommandExecutor commandExecutor) {
@@ -133,15 +130,11 @@ public class CrazyEnvoys extends JavaPlugin {
         }
     }
 
-    public @Nullable final HeadDatabaseAPI getApi() {
-        if (this.api == null) {
-            return null;
-        }
-
-        return this.api;
+    public final Optional<HeadDatabaseAPI> getApi() {
+        return this.fusion.getHeadDatabaseAPI();
     }
 
-    public final FileManager getFileManager() {
+    public final PaperFileManager getFileManager() {
         return this.fileManager;
     }
 

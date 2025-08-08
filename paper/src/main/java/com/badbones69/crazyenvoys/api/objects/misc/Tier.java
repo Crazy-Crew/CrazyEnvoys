@@ -1,20 +1,19 @@
 package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.Methods;
+import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoys.util.MsgUtils;
-import com.ryderbelserion.vital.paper.api.files.CustomFile;
+import com.ryderbelserion.fusion.paper.utils.ColorUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
+import java.nio.file.Path;
+import java.util.*;
 
 public class Tier {
 
     private final String name;
-    private final CustomFile file;
 
     private boolean claimPermissionToggle;
 
@@ -38,49 +37,91 @@ public class Tier {
     private List<Prize> prizes;
     private List<String> prizeMessage;
 
-    // Placeholders,
-    private final Map<String, String> lorePlaceholders;
-    
-    /**
-     * Create a new tier.
-     *
-     * @param file the custom file object.
-     */
-    public Tier(final CustomFile file) {
-        this.name = file.getCleanName();
-        this.file = file;
+    public Tier(
+            final boolean claimPermissionToggle,
+            @NotNull final String claimPermission,
+            final boolean useChance,
+            final int spawnChance,
+            final boolean bulkToggle,
+            final boolean bulkRandom,
+            final int maxBulk,
+            final boolean holoToggle,
+            final int holoRange,
+            final double holoHeight,
+            @NotNull final List<String> holoMessage,
+            @NotNull final YamlConfiguration configuration,
+            @NotNull final Path path
+    ) {
+        this.claimPermissionToggle = claimPermissionToggle;
+        this.claimPermission = claimPermission;
+        this.useChance = useChance;
+        this.spawnChance = spawnChance;
+        this.bulkToggle = bulkToggle;
+        this.bulkRandom = bulkRandom;
+        this.bulkMax = maxBulk;
+        this.holoToggle = holoToggle;
+        this.holoRange = holoRange;
+        this.holoHeight = holoHeight;
+        this.holoMessage = holoMessage;
 
-        this.claimPermission = "";
-        this.claimPermissionToggle = false;
+        final ItemBuilder placedBlock = new ItemBuilder().setMaterial(configuration.getString("Settings.Placed-Block", "CHEST"));
 
-        this.spawnChance = 100;
-        this.useChance = true;
+        setPlacedBlockMaterial(placedBlock.getMaterial());
+        setPlacedBlockMetaData(placedBlock.getDamage());
 
-        this.placedBlockMaterial = Material.CHEST;
-        this.placedBlockMetaData = 0;
+        this.fireworkToggle = configuration.getBoolean("Settings.Firework-Toggle");
 
-        this.bulkToggle = false;
-        this.bulkRandom = true;
-        this.bulkMax = 3;
+        final List<String> colors = configuration.getStringList("Settings.Firework-Colors");
 
-        this.holoToggle = true;
-        this.holoRange = 8;
-        this.holoHeight = 1.5;
+        if (colors.isEmpty()) {
+            setFireworkColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
+        } else {
+            colors.forEach(color -> addFireworkColor(ColorUtils.getColor(color)));
+        }
 
-        this.holoMessage = new ArrayList<>();
-        this.lorePlaceholders = new HashMap<>();
+        if (configuration.contains("Settings.Prize-Message") && !configuration.getStringList("Settings.Prize-Message").isEmpty()) {
+            List<String> array = new ArrayList<>();
 
-        this.fireworkToggle = true;
-        this.fireworkColors = new ArrayList<>();
+            configuration.getStringList("Settings.Prize-Message").forEach(line -> array.add(line.replaceAll("%reward%", "{reward}").replaceAll("%tier%", "{tier}")));
 
-        this.signalFlareToggle = true;
-        this.signalFlareTimer = "15s";
-        this.signalFlareColors = new ArrayList<>();
+            setPrizeMessage(array);
+        }
 
-        this.prizes = new ArrayList<>();
-        this.prizeMessage = Collections.emptyList();
+        setSignalFlareToggle(configuration.getBoolean("Settings.Signal-Flare.Toggle"));
+        setSignalFlareTimer(configuration.getString("Settings.Signal-Flare.Time"));
 
-        this.holoMessage.add("&7&l(&6&l!&7&l) Envoy Crate");
+        if (configuration.getStringList("Settings.Signal-Flare.Colors").isEmpty()) {
+            setSignalFlareColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
+        } else {
+            configuration.getStringList("Settings.Signal-Flare.Colors").forEach(color -> addSignalFlareColor(ColorUtils.getColor(color)));
+        }
+
+        for (String prizeID : configuration.getConfigurationSection("Prizes").getKeys(false)) {
+            String cpath = "Prizes." + prizeID + ".";
+            int chance = configuration.getInt(cpath + "Chance");
+            String displayName = configuration.contains(cpath + "DisplayName") ? configuration.getString(cpath + "DisplayName") : "";
+
+            List<String> commands = new ArrayList<>();
+
+            configuration.getStringList(cpath + "Commands").forEach(line -> commands.add(line.replaceAll("%reward%", "{reward}")
+                    .replaceAll("%player%", "{player}")
+                    .replaceAll("%Player%", "{player}")
+                    .replaceAll("%tier%", "{tier}")));
+
+            List<String> messages = new ArrayList<>();
+
+            configuration.getStringList(cpath + "Messages").forEach(line -> messages.add(line.replaceAll("%reward%", "{reward}")
+                    .replaceAll("%player%", "{player}")
+                    .replaceAll("%Player%", "{player}")
+                    .replaceAll("%tier%", "{tier}")));
+
+            boolean dropItems = configuration.getBoolean(cpath + "Drop-Items");
+            List<ItemBuilder> items = ItemBuilder.convertStringList(configuration.getStringList(cpath + "Items"));
+            addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items)
+                    .setCommands(commands).setMessages(messages));
+        }
+
+        this.name = path.getFileName().toString().replace(".yml", "");
     }
 
     // Check if the envoy is allowed to require the claim permission.
@@ -122,13 +163,6 @@ public class Tier {
      */
     public String getName() {
         return this.name;
-    }
-    
-    /**
-     * Get the file for the tier.
-     */
-    public CustomFile getFile() {
-        return this.file;
     }
     
     /**
@@ -330,29 +364,12 @@ public class Tier {
     }
 
     /**
-     * Add a placeholder to the lore of the item.
-     *
-     * @param placeholder The placeholder you wish to replace.
-     * @param argument    The argument that will replace the placeholder.
-     */
-    public void addLorePlaceholder(String placeholder, String argument) {
-        this.lorePlaceholders.put(placeholder, argument);
-    }
-
-    /**
-     * @return All lore placeholders.
-     */
-    public Map<String, String> getLorePlaceholders() {
-        return this.lorePlaceholders;
-    }
-
-    /**
      * Get the hologram message with all the placeholders added to it.
      *
      * @return The hologram with all placeholders in it.
      */
     public List<String> getHoloMessage() {
-        return Methods.getPlaceholders(this.holoMessage, this.lorePlaceholders);
+        return Methods.getPlaceholders(this.holoMessage);
     }
 
     /**

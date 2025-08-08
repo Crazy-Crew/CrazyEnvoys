@@ -1,25 +1,22 @@
 package com.badbones69.crazyenvoys.listeners.timer;
 
-import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
+import com.ryderbelserion.fusion.paper.scheduler.FoliaScheduler;
+import com.ryderbelserion.fusion.paper.scheduler.Scheduler;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A simple countdown timer using the Runnable interface in seconds!
  *
  * @author ExpDev
  */
-public class CountdownTimer extends FoliaRunnable {
-
-    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+public class CountdownTimer extends FoliaScheduler {
 
     // Seconds and shiz
     private final int seconds;
     private int secondsLeft;
 
-    public CountdownTimer(JavaPlugin plugin, int seconds) {
-        super(plugin.getServer().getGlobalRegionScheduler());
+    public CountdownTimer(final JavaPlugin plugin, final int seconds) {
+        super(plugin, Scheduler.global_scheduler);
 
         this.seconds = seconds;
         this.secondsLeft = seconds;
@@ -64,6 +61,6 @@ public class CountdownTimer extends FoliaRunnable {
      * Schedules this instance to "run" every second.
      */
     public void scheduleTimer() {
-        runAtFixedRate(this.plugin, 0L, 20L);
+        runAtFixedRate(0L, 20L);
     }
 }

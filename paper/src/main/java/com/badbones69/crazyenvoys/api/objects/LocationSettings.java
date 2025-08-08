@@ -3,15 +3,17 @@ package com.badbones69.crazyenvoys.api.objects;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.enums.Files;
+import com.ryderbelserion.fusion.paper.FusionPaper;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LocationSettings {
 
-    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+
+    private final FusionPaper fusion = this.plugin.getFusion();
 
     private final List<Block> spawnLocations = new ArrayList<>();
 
@@ -165,7 +167,7 @@ public class LocationSettings {
 
     public void fixLocations() {
         if (!getFailedLocations().isEmpty()) {
-            if (this.plugin.isLogging()) this.plugin.getLogger().info("Attempting to fix " + getFailedLocations().size() + " locations that failed.");
+            this.fusion.log("info", "Attempting to fix {} locations that failed.", getFailedLocations().size());
 
             int failed = 0;
             int fixed = 0;
@@ -179,9 +181,13 @@ public class LocationSettings {
                 }
             }
 
-            if (fixed > 0) this.plugin.getLogger().info("Was able to fix " + fixed + " locations that failed.");
+            if (fixed > 0) {
+                this.fusion.log("info", "We were able to fix {} locations that failed.", fixed);
+            }
 
-            if (failed > 0) this.plugin.getLogger().severe("Failed to fix " + failed + " locations and will not reattempt.");
+            if (failed > 0) {
+                this.fusion.log("error", "We failed to fix {} locations and will not re-attempt.", failed);
+            }
         }
     }
 

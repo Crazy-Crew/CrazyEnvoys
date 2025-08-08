@@ -3,7 +3,7 @@ package com.badbones69.crazyenvoys;
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
-import com.ryderbelserion.vital.paper.util.scheduler.FoliaRunnable;
+import com.ryderbelserion.fusion.paper.scheduler.FoliaScheduler;
 import org.bukkit.entity.Marker;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.Inventory;
@@ -22,11 +22,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import com.badbones69.crazyenvoys.config.ConfigManager;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Methods {
@@ -113,12 +111,12 @@ public class Methods {
     }
 
     private static void detonate(Firework firework) {
-        new FoliaRunnable(plugin.getServer().getRegionScheduler(), firework.getLocation()) {
+        new FoliaScheduler(plugin, firework.getLocation()) {
             @Override
             public void run() {
                 firework.detonate();
             }
-        }.runDelayed(plugin, 2);
+        }.runDelayed(2);
     }
 
     public static List<String> getPage(List<String> list, Integer page) {
@@ -224,17 +222,7 @@ public class Methods {
         return new Location(w, x, y, z);
     }
 
-    public static List<String> getPlaceholders(List<String> message, Map<String, String> lorePlaceholders) {
-        List<String> lore = new ArrayList<>();
-
-        for (String msg : message) {
-            for (String placeholder : lorePlaceholders.keySet()) {
-                msg = msg.replace(placeholder, lorePlaceholders.get(placeholder)).replace(placeholder.toLowerCase(), lorePlaceholders.get(placeholder));
-            }
-
-            lore.add(msg);
-        }
-
-        return lore;
+    public static List<String> getPlaceholders(List<String> message) {
+        return new ArrayList<>(message);
     }
 }

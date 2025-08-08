@@ -11,6 +11,7 @@ repositories {
 
     maven("https://repo.triumphteam.dev/snapshots/")
 
+    maven("https://repo.crazycrew.us/libraries/")
     maven("https://repo.crazycrew.us/releases/")
 
     maven("https://jitpack.io/")
