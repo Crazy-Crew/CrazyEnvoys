@@ -1,10 +1,10 @@
 name: '${name}'
 main: '${group}.${name}'
 
-authors: ${authors}
+authors: [ badbones69, ryderbelserion ]
 
 version: '${version}'
-api-version: '${apiVersion}'
+api-version: '${minecraft}'
 description: '${description}'
 website: '${website}'
 
