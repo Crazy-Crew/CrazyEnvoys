@@ -198,7 +198,7 @@ public class CrazyManager {
 
         final Path dataPath = this.plugin.getDataPath();
 
-        for (final Path path : this.fusion.getFiles(dataPath, "yml")) {
+        for (final Path path : this.fusion.getFiles(dataPath.resolve("tiers"), "yml")) {
             final Optional<PaperCustomFile> file = this.fileManager.getPaperFile(path);
 
             if (file.isEmpty()) continue;
