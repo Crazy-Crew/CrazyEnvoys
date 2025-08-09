@@ -1,6 +1,7 @@
 package com.badbones69.crazyenvoys.api;
 
 import ch.jalu.configme.SettingsManager;
+import com.Zrips.CMI.Modules.ModuleHandling.CMIModule;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.enums.Files;
@@ -276,7 +277,7 @@ public class CrazyManager {
 
         switch (pluginName) {
             case "decentholograms" -> {
-                //if (!Support.decent_holograms.isEnabled()) return;
+                if (!this.fusion.isModReady(CrazyKeys.decent_holograms)) return;
 
                 if (this.holograms != null && this.holograms.getName().equalsIgnoreCase("DecentHolograms")) { // we don't need to do anything.
                     return;
@@ -286,13 +287,13 @@ public class CrazyManager {
             }
 
             case "fancyholograms" -> {
-                //if (!Support.fancy_holograms.isEnabled()) return;
+                if (!this.fusion.isModReady(CrazyKeys.fancy_holograms)) return;
 
                 this.holograms = new FancyHologramsSupport();
             }
 
             case "cmi" -> {
-                //if (!Support.cmi.isEnabled() && !CMIModule.holograms.isEnabled()) return;
+                if (!this.fusion.isModReady(CrazyKeys.cmi_holograms) && !CMIModule.holograms.isEnabled()) return;
 
                 this.holograms = new CMIHologramsSupport();
             }
@@ -300,23 +301,23 @@ public class CrazyManager {
             case "none" -> {}
 
             default -> {
-                //if (Support.decent_holograms.isEnabled()) {
-                //    if (this.holograms == null) {
-                //        this.holograms = new DecentHologramsSupport();
-                //    }
+                if (this.fusion.isModReady(CrazyKeys.decent_holograms)) {
+                    if (this.holograms == null) {
+                        this.holograms = new DecentHologramsSupport();
+                    }
 
-                //    break;
-                //}
+                    break;
+                }
 
-                //if (Support.fancy_holograms.isEnabled()) {
-                //    this.holograms = new FancyHologramsSupport();
+                if (this.fusion.isModReady(CrazyKeys.fancy_holograms)) {
+                    this.holograms = new FancyHologramsSupport();
 
-                //    break;
-                //}
+                    break;
+                }
 
-                //if (Support.cmi.isEnabled() && CMIModule.holograms.isEnabled()) {
-                //    this.holograms = new CMIHologramsSupport();
-                //}
+                if (this.fusion.isModReady(CrazyKeys.cmi_holograms) && !CMIModule.holograms.isEnabled()) {
+                    this.holograms = new CMIHologramsSupport();
+                }
             }
         }
 
@@ -324,7 +325,7 @@ public class CrazyManager {
             List.of(
                     "There was no hologram plugin found on the server. If you are using CMI",
                     "Please make sure you enabled the hologram module in modules.yml",
-                    "You can run /crazycrates reload if using CMI otherwise restart your server."
+                    "You can run /crazyenvoys reload if using CMI otherwise restart your server."
             ).forEach(line -> this.fusion.log("warn", line));
 
             return;
@@ -383,17 +384,18 @@ public class CrazyManager {
                         }
 
                         if (config.getProperty(ConfigKeys.envoys_random_locations) && center.getWorld() == null) {
-                            plugin.getLogger().warning("The envoy center's world can't be found and so envoy has been canceled.");
-                            plugin.getLogger().warning("Center String: " + centerString);
+                            fusion.log("warn", "The envoy center world cannot be found, the envoy has been cancelled. Center: {}", centerString);
 
                             setNextEnvoy(getEnvoyCooldown());
+
                             resetWarnings();
 
                             return;
                         }
 
                         EnvoyStartEvent event = new EnvoyStartEvent(autoTimer ? EnvoyStartReason.AUTO_TIMER : EnvoyStartReason.SPECIFIED_TIME);
-                        plugin.getServer().getPluginManager().callEvent(event);
+
+                        pluginManager.callEvent(event);
 
                         if (!event.isCancelled()) startEnvoyEvent();
                     }
