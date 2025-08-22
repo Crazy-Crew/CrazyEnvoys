@@ -6,6 +6,7 @@ import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -41,9 +42,10 @@ public class EnvoyEditListener implements Listener {
 
         Messages.add_location.sendMessage(player);
 
-        for (UUID uuid : this.editorSettings.getEditors()) {
-            if (uuid == player.getUniqueId()) player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
-        }
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (!this.editorSettings.getEditors().contains(player.getUniqueId())) return;
+            player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
+        }, 2L);
     }
     
     @EventHandler(ignoreCancelled = true)
