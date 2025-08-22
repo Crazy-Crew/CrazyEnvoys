@@ -5,6 +5,6 @@ import org.bukkit.Location;
 public class MiscUtils {
 
     public static String toString(final Location location) {
-        return location.getWorld().getName() + ":" + location.getX() + ":" + location.getY() + ":" + location.getZ();
+        return location.getWorld().getName() + "_" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ();
     }
 }
