@@ -83,7 +83,7 @@ public class FlareClickListener implements Listener {
                 EnvoyStartEvent envoyStartEvent = new EnvoyStartEvent(EnvoyStartEvent.EnvoyStartReason.FLARE);
                 this.plugin.getServer().getPluginManager().callEvent(envoyStartEvent);
 
-                if (!envoyStartEvent.isCancelled() && this.crazyManager.startEnvoyEvent()) {
+                if (!envoyStartEvent.isCancelled() && this.crazyManager.startEnvoyEvent(player)) {
                     Messages.used_flare.sendMessage(player);
 
                     this.flareSettings.takeFlare(player);

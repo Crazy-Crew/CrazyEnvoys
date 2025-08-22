@@ -397,7 +397,7 @@ public class CrazyManager {
 
                         pluginManager.callEvent(event);
 
-                        if (!event.isCancelled()) startEnvoyEvent();
+                        if (!event.isCancelled()) startEnvoyEvent(null);
                     }
                 }
             }
@@ -687,6 +687,15 @@ public class CrazyManager {
      * @return true if the event started successfully and false if it had an issue.
      */
     public boolean startEnvoyEvent() {
+        return startEnvoyEvent(null);
+    }
+
+    /**
+     * Starts the envoy event.
+     *
+     * @return true if the event started successfully and false if it had an issue.
+     */
+    public boolean startEnvoyEvent(Player starter) {
         // Called before locations are generated due to it setting those locations to air and causing
         // crates to spawn in the ground when not using falling blocks.
 
@@ -727,7 +736,13 @@ public class CrazyManager {
         int max = dropLocations.size();
         HashMap<String, String> placeholder = new HashMap<>();
         placeholder.put("{amount}", String.valueOf(max));
-        Messages.started.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_started), placeholder);
+
+        if (starter != null) {
+            placeholder.put("{starter}", starter.getName());
+            Messages.started_player.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_started_player), placeholder);
+        } else {
+            Messages.started.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_started), placeholder);
+        }
 
         if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle)) {
             this.countdownTimer = new CountdownTimer(this.plugin, this.config.getProperty(ConfigKeys.envoys_grace_period_timer));
