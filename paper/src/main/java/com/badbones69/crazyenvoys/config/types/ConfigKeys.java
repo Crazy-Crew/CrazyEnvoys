@@ -218,4 +218,12 @@ public class ConfigKeys implements SettingsHolder {
             "3s",
             "1s"
     ));
+
+    @Comment("Pick which messages are influenced by the ignore functionality (/envoy ignore)")
+    public static final Property<Boolean> envoys_ignore_behaviour_ended = newProperty("envoys.ignore-behaviour.ended", false);
+    public static final Property<Boolean> envoys_ignore_behaviour_warning = newProperty("envoys.ignore-behaviour.warning", false);
+    public static final Property<Boolean> envoys_ignore_behaviour_not_enough_players = newProperty("envoys.ignore-behaviour.not-enough-players", false);
+    public static final Property<Boolean> envoys_ignore_behaviour_no_spawn_locations_found = newProperty("envoys.ignore-behaviour.no-spawn-locations-found", false);
+    public static final Property<Boolean> envoys_ignore_behaviour_started = newProperty("envoys.ignore-behaviour.started", false);
+    public static final Property<Boolean> envoys_ignore_behaviour_envoys_remaining = newProperty("envoys.ignore-behaviour.envoys-remaining", true);
 }
