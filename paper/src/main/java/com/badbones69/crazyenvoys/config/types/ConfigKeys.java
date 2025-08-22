@@ -225,5 +225,6 @@ public class ConfigKeys implements SettingsHolder {
     public static final Property<Boolean> envoys_ignore_behaviour_not_enough_players = newProperty("envoys.ignore-behaviour.not-enough-players", false);
     public static final Property<Boolean> envoys_ignore_behaviour_no_spawn_locations_found = newProperty("envoys.ignore-behaviour.no-spawn-locations-found", false);
     public static final Property<Boolean> envoys_ignore_behaviour_started = newProperty("envoys.ignore-behaviour.started", false);
+    public static final Property<Boolean> envoys_ignore_behaviour_started_player = newProperty("envoys.ignore-behaviour.started-player", false);
     public static final Property<Boolean> envoys_ignore_behaviour_envoys_remaining = newProperty("envoys.ignore-behaviour.envoys-remaining", true);
 }

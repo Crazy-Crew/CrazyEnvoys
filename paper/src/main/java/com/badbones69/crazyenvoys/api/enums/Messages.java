@@ -25,6 +25,7 @@ public enum Messages {
     ended(MessageKeys.envoy_ended, true),
     warning(MessageKeys.envoy_warning),
     started(MessageKeys.envoy_started, true),
+    started_player(MessageKeys.envoy_started_player, true),
     on_going(MessageKeys.hologram_on_going),
     not_running(MessageKeys.hologram_not_running),
     reloaded(MessageKeys.envoy_plugin_reloaded),

@@ -272,15 +272,17 @@ public class EnvoyCommand implements CommandExecutor {
 
                     EnvoyStartEvent event;
 
+                    Player starter = null;
                     if (sender instanceof Player player) {
                         event = new EnvoyStartEvent(EnvoyStartEvent.EnvoyStartReason.FORCED_START_PLAYER, player);
+                        starter = player;
                     } else {
                         event = new EnvoyStartEvent(EnvoyStartEvent.EnvoyStartReason.FORCED_START_CONSOLE);
                     }
 
                     this.pluginManager.callEvent(event);
 
-                    if (!event.isCancelled() && this.crazyManager.startEnvoyEvent()) Messages.force_start.sendMessage(sender);
+                    if (!event.isCancelled() && this.crazyManager.startEnvoyEvent(starter)) Messages.force_start.sendMessage(sender);
 
                     return true;
                 }

@@ -60,6 +60,10 @@ public class MessageKeys implements SettingsHolder {
             "{prefix}&7An envoy event has just started. &6{amount} &7crates have spawned around spawn for 5m."
     ));
 
+    public static final Property<List<String>> envoy_started_player = newListProperty("envoys.started-player.list", List.of(
+            "{prefix}&7An envoy event has just been started by {starter}. &6{amount} &7crates have spawned around spawn for 5m."
+    ));
+
     public static final Property<List<String>> envoys_remaining = newListProperty("envoys.left", List.of(
             "{prefix}&6{player} &7has just found a tier envoy. There are now &6{amount} &7left to find."
     ));
