@@ -6,6 +6,8 @@ import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
+import com.ryderbelserion.fusion.paper.scheduler.FoliaScheduler;
+import com.ryderbelserion.fusion.paper.scheduler.Scheduler;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -14,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.NotNull;
-import java.util.UUID;
 
 public class EnvoyEditListener implements Listener {
 
@@ -41,9 +42,13 @@ public class EnvoyEditListener implements Listener {
 
         Messages.add_location.sendMessage(player);
 
-        for (UUID uuid : this.editorSettings.getEditors()) {
-            if (uuid == player.getUniqueId()) player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
-        }
+        new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
+            @Override
+            public void run() {
+                if (!editorSettings.getEditors().contains(player.getUniqueId())) return;
+                player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
+            }
+        }.runDelayed(2L);
     }
     
     @EventHandler(ignoreCancelled = true)
