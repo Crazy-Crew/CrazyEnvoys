@@ -101,6 +101,7 @@ public enum Messages {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
     private @NotNull final SettingsManager messages = ConfigManager.getMessages();
+    private @NotNull final SettingsManager config = ConfigManager.getConfig();
     private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
     private final FusionPaper fusion = this.plugin.getFusion();

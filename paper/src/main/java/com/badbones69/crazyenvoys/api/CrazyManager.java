@@ -361,7 +361,7 @@ public class CrazyManager {
                         if (check.compareTo(cal) == 0) {
                             HashMap<String, String> placeholder = new HashMap<>();
                             placeholder.put("{time}", getNextEnvoyTime());
-                            Messages.warning.broadcastMessage(false, placeholder);
+                            Messages.warning.broadcastMessage(config.getProperty(ConfigKeys.envoys_ignore_behaviour_warning), placeholder);
                         }
                     }
 
@@ -374,7 +374,7 @@ public class CrazyManager {
                             if (online < config.getProperty(ConfigKeys.envoys_minimum_players_amount)) {
                                 HashMap<String, String> placeholder = new HashMap<>();
                                 placeholder.put("{amount}", online + "");
-                                Messages.not_enough_players.broadcastMessage(false, placeholder);
+                                Messages.not_enough_players.broadcastMessage(config.getProperty(ConfigKeys.envoys_ignore_behaviour_not_enough_players), placeholder);
 
                                 setNextEnvoy(getEnvoyCooldown());
                                 resetWarnings();
@@ -707,7 +707,7 @@ public class CrazyManager {
             resetWarnings();
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.NO_LOCATIONS_FOUND);
             this.pluginManager.callEvent(event);
-            Messages.no_spawn_locations_found.broadcastMessage(false);
+            Messages.no_spawn_locations_found.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_no_spawn_locations_found));
             return false;
         }
 
@@ -727,7 +727,7 @@ public class CrazyManager {
         int max = dropLocations.size();
         HashMap<String, String> placeholder = new HashMap<>();
         placeholder.put("{amount}", String.valueOf(max));
-        Messages.started.broadcastMessage(false, placeholder);
+        Messages.started.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_started), placeholder);
 
         if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle)) {
             this.countdownTimer = new CountdownTimer(this.plugin, this.config.getProperty(ConfigKeys.envoys_grace_period_timer));
@@ -783,7 +783,7 @@ public class CrazyManager {
             public void run() {
                 EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.OUT_OF_TIME);
                 plugin.getServer().getPluginManager().callEvent(event);
-                Messages.ended.broadcastMessage(false);
+                Messages.ended.broadcastMessage(config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
                 endEnvoyEvent();
             }
         }.runDelayed(getTimeSeconds(this.config.getProperty(ConfigKeys.envoys_run_time)) * 20L);

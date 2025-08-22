@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoys.commands;
 
+import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.CrazyManager;
@@ -9,6 +10,8 @@ import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
+import com.badbones69.crazyenvoys.config.ConfigManager;
+import com.badbones69.crazyenvoys.config.types.ConfigKeys;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
 import org.bukkit.Server;
@@ -23,11 +26,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+
+import java.util.*;
 
 public class EnvoyCommand implements CommandExecutor {
 
@@ -45,6 +45,7 @@ public class EnvoyCommand implements CommandExecutor {
     private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
     private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
     private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private @NotNull final SettingsManager config = ConfigManager.getConfig();
     
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
@@ -110,14 +111,17 @@ public class EnvoyCommand implements CommandExecutor {
                         return true;
                     }
 
+                    boolean isSilent = Arrays.stream(args).anyMatch(s -> s.equalsIgnoreCase("-s"));
+                    boolean shouldAllow = Arrays.stream(args).anyMatch(s -> s.equalsIgnoreCase("no")); // Usage would be /envoy ignore no, so it should disable
+
                     UUID uuid = player.getUniqueId();
 
-                    if (this.crazyManager.isIgnoringMessages(uuid)) {
+                    if (this.crazyManager.isIgnoringMessages(uuid) || shouldAllow) {
                         this.crazyManager.removeIgnorePlayer(uuid);
-                        Messages.stop_ignoring_messages.sendMessage(player);
+                        if (!isSilent) Messages.stop_ignoring_messages.sendMessage(player);
                     } else {
                         this.crazyManager.addIgnorePlayer(uuid);
-                        Messages.start_ignoring_messages.sendMessage(player);
+                        if (!isSilent) Messages.start_ignoring_messages.sendMessage(player);
                     }
 
                     return true;
@@ -302,7 +306,7 @@ public class EnvoyCommand implements CommandExecutor {
 
                     this.pluginManager.callEvent(event);
                     this.crazyManager.endEnvoyEvent();
-                    Messages.ended.broadcastMessage(false);
+                    Messages.ended.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
                     Messages.force_end.sendMessage(sender);
 
                     return true;
