@@ -8,7 +8,6 @@ import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.ryderbelserion.fusion.paper.scheduler.FoliaScheduler;
 import com.ryderbelserion.fusion.paper.scheduler.Scheduler;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -17,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.NotNull;
-import java.util.UUID;
 
 public class EnvoyEditListener implements Listener {
 
