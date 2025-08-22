@@ -686,6 +686,15 @@ public class CrazyManager {
      *
      * @return true if the event started successfully and false if it had an issue.
      */
+    public boolean startEnvoyEvent() {
+        return startEnvoyEvent(null);
+    }
+
+    /**
+     * Starts the envoy event.
+     *
+     * @return true if the event started successfully and false if it had an issue.
+     */
     public boolean startEnvoyEvent(Player starter) {
         // Called before locations are generated due to it setting those locations to air and causing
         // crates to spawn in the ground when not using falling blocks.
