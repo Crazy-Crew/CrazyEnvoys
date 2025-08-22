@@ -28,7 +28,7 @@ public class FlareClickListener implements Listener {
 
     private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onFlareInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
