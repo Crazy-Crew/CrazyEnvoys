@@ -5,8 +5,8 @@ import com.Zrips.CMI.Modules.ModuleHandling.CMIModule;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.enums.Files;
-import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
+import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
@@ -16,6 +16,8 @@ import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
+import com.badbones69.crazyenvoys.config.ConfigManager;
+import com.badbones69.crazyenvoys.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.listeners.timer.CountdownTimer;
 import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.HologramManager;
@@ -32,21 +34,20 @@ import com.ryderbelserion.fusion.paper.scheduler.Scheduler;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.*;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
-import com.badbones69.crazyenvoys.config.ConfigManager;
-import com.badbones69.crazyenvoys.config.types.ConfigKeys;
+
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -709,9 +710,9 @@ public class CrazyManager {
 
         List<Block> dropLocations = generateSpawnLocations();
 
-        if (this.config.getProperty(ConfigKeys.envoys_random_drops) && isCenterLoaded()) testCenter();
+        if (this.config.getProperty(ConfigKeys.envoys_random_drops) && isCenterUnloaded()) testCenter();
 
-        if (dropLocations.isEmpty() || (this.config.getProperty(ConfigKeys.envoys_random_drops) && isCenterLoaded())) {
+        if (dropLocations.isEmpty() || (this.config.getProperty(ConfigKeys.envoys_random_locations) && isCenterUnloaded())) {
             setNextEnvoy(getEnvoyCooldown());
             resetWarnings();
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.NO_LOCATIONS_FOUND);
@@ -952,12 +953,12 @@ public class CrazyManager {
     }
 
     private boolean testCenter() {
-        if (isCenterLoaded()) { // Check to make sure the center exist and if not try to load it again.
+        if (isCenterUnloaded()) { // Check to make sure the center exist and if not try to load it again.
             this.fusion.log("warn", "Attempting to fix Center location that failed.");
             
             loadCenter();
 
-            if (isCenterLoaded()) { // If center still doesn't exist then it cancels the event.
+            if (isCenterUnloaded()) { // If center still doesn't exist then it cancels the event.
                 this.fusion.log("warn", "Debug Start");
                 this.fusion.log("warn", "Center String: \"{}'", centerString);
                 this.fusion.log("warn", "Location Object: \"{}'", center.toString());
@@ -990,7 +991,7 @@ public class CrazyManager {
         }
     }
 
-    private boolean isCenterLoaded() {
+    private boolean isCenterUnloaded() {
         return this.center.getWorld() == null;
     }
 
