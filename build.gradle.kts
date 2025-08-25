@@ -31,7 +31,7 @@ feather {
             task("dev-build")
 
             if (System.getenv("CE_WEBHOOK") != null) {
-                post(System.getenv("CC_WEBHOOK"))
+                post(System.getenv("CE_WEBHOOK"))
             }
 
             username("Ryder Belserion")
