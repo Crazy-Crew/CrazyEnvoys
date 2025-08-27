@@ -186,7 +186,7 @@ public class Methods {
         if (day > 0) message += day + Messages.day.getMessage() + ", ";
         if (day > 0 || hour > 0) message += hour + Messages.hour.getMessage() + ", ";
         if (day > 0 || hour > 0 || minute > 0) message += minute + Messages.minute.getMessage() + ", ";
-        if (day > 0 || hour > 0 || minute > 0 || second > 0) message += second + Messages.second.getMessage() + ", ";
+        if (second > 0) message += second + Messages.second.getMessage() + ", ";
 
         if (message.length() < 2) {
             message = "0" + Messages.second.getMessage();
