@@ -1,16 +1,23 @@
 ## What's changed?
-* Fixed an issue with DecentHolograms error due to using characters not allowed. [#154](https://github.com/Crazy-Crew/CrazyEnvoys/pull/154)
-* Fixed an issue by removing ignoreCancelled(true) which allows blocks like redstone torches to work while right-clicking air [#156](https://github.com/Crazy-Crew/CrazyEnvoys/pull/156)
-* Fixed a visual issue with the #sendBlockChange by delaying it by 2 ticks which is used to show the bedrock when placing or being in edit mode. [#155](https://github.com/Crazy-Crew/CrazyEnvoys/pull/155)
-* Added a new feature that allows the player who started the signal flare to be announced that they started it in chat. [#158](https://github.com/Crazy-Crew/CrazyEnvoys/pull/158)
-    * This adds a new message to your message file, and a new config.yml option.
-* Fixed an issue with data not saving to data.yml
-
-*All new config.yml options have values that represent how they were out of the box previously*
-
-### [#157](https://github.com/Crazy-Crew/CrazyEnvoys/pull/157)
-* Added a new argument to the `/crazyenvoys ignore` command which is `-s` or -`no`
-* Added the ability to turn off/on broadcasting via a new config.yml option.
-
-## New Contributors
-* [@InstantlyMoist](https://github.com/InstantlyMoist)
+- Fixed an issue with default tier files getting extracted despite deleting them.
+- No longer allow `0 seconds` being added to time related strings [#162](https://github.com/Crazy-Crew/CrazyEnvoys/pull/162)
+- Fixed an issue with random spawn behavior by using the correct config option
+```yml
+envoys:
+  generation:
+    # Whether to always spawn the max amount of crates possible set below, If the option is false. Spawn locations set using /envoy edit will instead spawn.
+    # Note: You should only use this if random-locations is false.
+    max-drops-toggle: false
+    # The max amount of crates that will spawn.
+    max-drops-amount: 20
+    # The min amount of crates that will spawn.
+    min-drops-amount: 7
+    # This option will spawn a random number of envoys between min-drops-amount and max-drops-amount.
+    # Note: You must set max-drops-toggle to false otherwise this will not function.
+    random-drops: true # -> This is the option it used before.
+    # Random location settings
+    random-locations:
+      toggle: true # -> This is the option it uses now.
+      max-radius: 300
+      min-radius: 20
+```
