@@ -26,9 +26,6 @@ dependencies {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-
-    withSourcesJar()
-    withJavadocJar()
 }
 
 tasks {
@@ -54,12 +51,12 @@ tasks {
             "description" to rootProject.description.toString(),
             "minecraft" to libs.findVersion("minecraft").get(),
             "website" to "https://github.com/Crazy-Crew/${rootProject.name}",
-            "id" to rootProject.name.lowercase(),
-            "group" to rootProject.group
+            "group" to project.group
         )
 
         with(copySpec {
-            include("*plugin.yml", "*paper-plugin.yml", "fabric.mod.json")
+            include("*paper-plugin.yml")
+
             from("src/main/resources") {
                 expand(inputs.properties)
             }

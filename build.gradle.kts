@@ -124,39 +124,6 @@ fun List<String>.convertList(): String {
     return builder.toString()
 }
 
-allprojects {
-    apply(plugin = "java-library")
-}
-
-tasks {
-    withType<Jar> {
-        subprojects {
-            dependsOn(project.tasks.build)
-        }
-
-        // get subproject's built jars
-        val jars = subprojects.map { zipTree(it.tasks.jar.get().archiveFile.get().asFile) }
-
-        // merge them into main jar (except their manifests)
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-        from(jars) {
-            exclude("META-INF/MANIFEST.MF")
-        }
-
-        // put behind an action because files don't exist at configuration time
-        doFirst {
-            // merge all subproject's manifests into main manifest
-            jars.forEach { jar ->
-                jar.matching { include("META-INF/MANIFEST.MF") }
-                    .files.forEach { file ->
-                        manifest.from(file)
-                    }
-            }
-        }
-    }
-}
-
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
 
@@ -170,7 +137,7 @@ modrinth {
 
     gameVersions.addAll(versions)
 
-    uploadFile = tasks.jar.get().archiveFile.get()
+    uploadFile = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${rootProject.version}.jar").get()
 
     loaders.addAll(listOf("paper", "folia", "purpur"))
 
@@ -194,7 +161,7 @@ hangarPublish {
 
         platforms {
             paper {
-                jar = tasks.jar.flatMap { it.archiveFile }
+                jar = rootProject.layout.buildDirectory.file("${rootProject.name}-${rootProject.version}.jar").get()
 
                 platformVersions.set(versions)
 
