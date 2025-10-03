@@ -52,7 +52,7 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             groupId = "${project.group}" // us.crazycrew.crazyenvoys
-            artifactId = "api"
+            artifactId = project.name
             version = "${project.version}"
 
             from(components["java"])

@@ -20,10 +20,6 @@ repositories {
     mavenLocal()
 }
 
-dependencies {
-    compileOnly(libs.findLibrary("annotations").get())
-}
-
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }

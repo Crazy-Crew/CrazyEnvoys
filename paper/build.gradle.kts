@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":crazyenvoys-api", configuration = "shadow"))
+    implementation(project(":api", configuration = "shadow"))
 
     implementation(libs.fusion.paper)
 
@@ -37,10 +37,14 @@ tasks {
         ).forEach {
             relocate(it, "libs.$it")
         }
+
+        archiveBaseName.set("${rootProject.name}-${rootProject.version}")
+
+        destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
     }
 
     compileJava {
-        dependsOn(":crazyenvoys-api:jar")
+        dependsOn(":api:jar")
     }
 
     runPaper.folia.registerTask()
