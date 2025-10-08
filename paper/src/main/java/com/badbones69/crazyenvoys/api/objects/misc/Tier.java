@@ -69,7 +69,7 @@ public class Tier {
         setPlacedBlockMaterial(placedBlock.getMaterial());
         setPlacedBlockMetaData(placedBlock.getDamage());
 
-        this.fireworkToggle = configuration.getBoolean("Settings.Firework-Toggle");
+        this.fireworkToggle = configuration.getBoolean("Settings.Firework-Toggle", false);
 
         final List<String> colors = configuration.getStringList("Settings.Firework-Colors");
 
