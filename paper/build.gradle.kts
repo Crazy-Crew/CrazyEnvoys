@@ -3,8 +3,6 @@ plugins {
 }
 
 repositories {
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-
     maven("https://repo.fancyinnovations.com/releases/")
 
     maven("https://maven.enginehub.org/repo/")
@@ -31,20 +29,16 @@ dependencies {
 }
 
 tasks {
+    build {
+        dependsOn(shadowJar)
+    }
+
     shadowJar {
         listOf(
             "org.bstats"
         ).forEach {
             relocate(it, "libs.$it")
         }
-
-        archiveBaseName.set("${rootProject.name}-${rootProject.version}")
-
-        destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
-    }
-
-    compileJava {
-        dependsOn(":api:jar")
     }
 
     runPaper.folia.registerTask()
