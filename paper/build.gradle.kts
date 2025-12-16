@@ -1,5 +1,5 @@
 plugins {
-    `config-paper`
+    `paper-plugin`
 }
 
 repositories {
@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":api", configuration = "shadow"))
+    implementation(project(":api"))
 
     implementation(libs.fusion.paper)
 
