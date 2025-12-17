@@ -22,7 +22,7 @@ public abstract class InventoryBuilder implements InventoryHolder, Listener {
 
     protected @NotNull final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
 
-    protected final FusionPaper fusion = this.plugin.getFusion();
+    protected @NotNull final FusionPaper fusion = this.plugin.getFusion();
 
     protected @NotNull final Server server = this.plugin.getServer();
 
