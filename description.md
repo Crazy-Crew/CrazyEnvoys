@@ -13,8 +13,8 @@
 
 <big>**Quick Links**</big><br>
 [Request Features](https://github.com/Crazy-Crew/CrazyEnvoys/issues)<br>
-[Documentation](https://docs.crazycrew.us/docs/category/crazyenvoys)<br>
-[Developer API](https://docs.crazycrew.us/docs/plugins/crazyenvoys/guides/api/intro)<br>
+[Documentation](https://docs.crazycrew.us/docs/mods/crazyenvoys)<br>
+[Developer API](https://docs.crazycrew.us/mods/crazyenvoys/guides/api/intro/)<br>
 [Report Bugs](https://github.com/Crazy-Crew/CrazyEnvoys/issues)<br>
 [Trello Board](https://trello.com/b/BGDNUdaj/crazyenvoys)
 
@@ -29,7 +29,7 @@ CrazyEnvoys as first install will come with a set of default files such as `conf
 You can simply edit these files, and configure the looks and settings then do `/crazyenvoys reload`<br>
 
 ![Features Banner](https://raw.githubusercontent.com/Crazy-Crew/Branding/main/crazyenvoys/banner/webp/features.webp)<br>
-**In-game location editing with multi user support.**<br>
+**In-game location editing with multi-user support.**<br>
 **Unlimited locations & prizes.**<br>
 **Configurable warning times.**<br>
 **Configure the falling block & crate block.**<br>
