@@ -20,7 +20,7 @@
 6) Edit `config.yml` and `messages.yml`
 7) Execute `/crazyenvoys reload`
 8) Execute `/crazyenvoys start`
-9) View the documentation @ https://docs.crazycrew.us/mods/crazycrates/
+9) View the documentation @ https://docs.crazycrew.us/mods/crazyenvoys/
 
 ## Features
 - https://docs.crazycrew.us/mods/crazyenvoys/#current-features/
