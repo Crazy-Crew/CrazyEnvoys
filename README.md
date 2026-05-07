@@ -62,7 +62,7 @@ Send any console errors or files you have through https://mclo.gs/ - (We don't o
 ![CrazyEnvoys Statistics](https://bstats.org/signatures/bukkit/CrazyEnvoy.svg)
 </center>
 
-[contributors-shield]: https://img.shields.io/github/contributors/Crazy-Crew/CrazyEnvoys.svg?style=flat&logo=appveyor
+[contributors-shield]: https://img.shields.io/github/contributors-anon/Crazy-Crew/CrazyEnvoys.svg?style=flat&logo=appveyor
 [contributors-url]: https://github.com/Crazy-Crew/CrazyEnvoys/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/Crazy-Crew/CrazyEnvoys.svg?style=flat&logo=appveyor
 [forks-url]: https://github.com/Crazy-Crew/CrazyEnvoys/network/members
