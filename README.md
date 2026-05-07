@@ -35,7 +35,7 @@ All support for the plugin is provided on Discord! If a question cannot be answe
 [![Discord Invite Button](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-plural_vector.svg)](https://discord.gg/badbones-s-live-chat-182615261403283459)
 
 ## Data Collection
-We collect anonymous statistics on how the plugin is used at https://bstats.org/plugin/bukkit/CrazyCrates/4514 and is visible to the public.
+We collect anonymous statistics on how the plugin is used at https://bstats.org/plugin/bukkit/CrazyEnvoy/4537 and is visible to the public.
 If you do not want this anonymous data sent, You currently have to go to the `bStats` folder, and set that to false.
 
 <hr>
