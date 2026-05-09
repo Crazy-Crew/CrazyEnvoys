@@ -1,0 +1,18 @@
+{
+  "worlds": {
+    "world": {
+      "countdown": "0000000000000",
+      "center": {
+        "world": "world",
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+
+      "locations": {
+        "inactive": [],
+        "active": []
+      }
+    }
+  }
+}
