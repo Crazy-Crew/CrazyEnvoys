@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoys.api;
 
-import com.ryderbelserion.fusion.core.FusionKey;
+import com.ryderbelserion.fusion.core.api.FusionKey;
 
 public class CrazyKeys {
 

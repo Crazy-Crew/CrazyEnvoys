@@ -5,7 +5,7 @@ import ch.jalu.configme.properties.Property;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.util.MsgUtils;
-import com.ryderbelserion.fusion.core.api.support.ModSupport;
+import com.ryderbelserion.fusion.core.api.constants.ModSupport;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang3.StringUtils;
@@ -163,7 +163,7 @@ public enum Messages {
         String message;
 
         if (isList()) {
-            message = StringUtils.chomp(this.fusion.getStringUtils().toString(getList()));
+            message = StringUtils.chomp(com.ryderbelserion.fusion.core.utils.StringUtils.toString(getList()));
         } else {
             message = getString();
         }

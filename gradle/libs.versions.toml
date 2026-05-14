@@ -24,7 +24,7 @@ cmi-lib = "1.5.9.3" # https://www.spigotmc.org/resources/cmilib.87610/
 ## Other
 triumph-cmds = "2.0.0-BETA-4" # https://github.com/TriumphTeam/triumph-cmds
 bStats = "3.2.1" # https://github.com/Bastian/bStats
-fusion = "2.9.14" # https://github.com/ryderbelserion/Fusion
+fusion = "4.21.4" # https://github.com/ryderbelserion/Fusion
 
 ## Gradle Plugins
 fix-javadoc = "1.19" # https://github.com/mfnalex/gradle-fix-javadoc-plugin
@@ -75,9 +75,9 @@ decent-holograms = { module = "com.github.decentsoftware-eu:decentholograms", ve
 # https://modrinth.com/plugin/fancyholograms
 fancy-holograms = { module = "de.oliver:FancyHolograms", version.ref = "fancyholograms" }
 # https://github.com/Zrips/CMI-API
-cmi-api = { module = "com.github.Zrips:CMI-API", version.ref = "cmi-api" }
+cmi-api = { module = "com.Zrips.CMI:CMI-API", version.ref = "cmi-api" }
 # https://www.spigotmc.org/resources/cmilib.87610/
-cmi-lib = { module = "com.github.Zrips:CMILib", version.ref = "cmi-lib" }
+cmi-lib = { module = "net.Zrips.CMILib:CMI-Lib", version.ref = "cmi-lib" }
 
 # https://github.com/KyoriPowered/adventure
 kyori-legacy = { module = "net.kyori:adventure-text-serializer-legacy", version.ref = "adventure" }
@@ -112,7 +112,10 @@ shared = [
 
 holograms = [
     "decent-holograms",
-    "fancy-holograms",
+    "fancy-holograms"
+]
+
+cmi = [
     "cmi-api",
     "cmi-lib"
 ]

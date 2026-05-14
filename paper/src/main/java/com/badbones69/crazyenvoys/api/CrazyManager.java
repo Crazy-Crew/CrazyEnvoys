@@ -25,12 +25,13 @@ import com.badbones69.crazyenvoys.support.holograms.types.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.types.DecentHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.types.FancyHologramsSupport;
 import com.badbones69.crazyenvoys.util.MiscUtils;
-import com.ryderbelserion.fusion.core.FusionKey;
+import com.ryderbelserion.fusion.core.api.FusionKey;
+import com.ryderbelserion.fusion.core.api.enums.Level;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
 import com.ryderbelserion.fusion.paper.files.types.PaperCustomFile;
-import com.ryderbelserion.fusion.paper.scheduler.FoliaScheduler;
-import com.ryderbelserion.fusion.paper.scheduler.Scheduler;
+import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
+import com.ryderbelserion.fusion.paper.builders.folia.Scheduler;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.*;
@@ -167,7 +168,7 @@ public class CrazyManager {
         this.locationSettings.populateMap();
 
         if (!this.locationSettings.getFailedLocations().isEmpty()) {
-            this.fusion.log("warn", "Failed to load {} locations and will reattempt in 10s.", this.locationSettings.getFailedLocations().size());
+            this.fusion.log(Level.WARNING, "Failed to load {} locations and will reattempt in 10s.", this.locationSettings.getFailedLocations().size());
         }
 
         if (Calendar.getInstance().after(getNextEnvoy())) setEnvoyActive(false);
@@ -199,7 +200,7 @@ public class CrazyManager {
 
         final Path dataPath = this.plugin.getDataPath();
 
-        for (final Path path : this.fusion.getFiles(dataPath.resolve("tiers"), "yml")) {
+        for (final Path path : this.fusion.getFilesByPath(dataPath.resolve("tiers"), ".yml")) {
             final Optional<PaperCustomFile> file = this.fileManager.getPaperFile(path);
 
             if (file.isEmpty()) continue;
@@ -327,12 +328,12 @@ public class CrazyManager {
                     "There was no hologram plugin found on the server. If you are using CMI",
                     "Please make sure you enabled the hologram module in modules.yml",
                     "You can run /crazyenvoys reload if using CMI otherwise restart your server."
-            ).forEach(line -> this.fusion.log("warn", line));
+            ).forEach(line -> this.fusion.log(Level.WARNING, line));
 
             return;
         }
 
-        this.fusion.log("warn", "{} support has been enabled.", this.holograms.getName());
+        this.fusion.log(Level.WARNING, "{} support has been enabled.", this.holograms.getName());
     }
 
     /**
@@ -385,7 +386,7 @@ public class CrazyManager {
                         }
 
                         if (config.getProperty(ConfigKeys.envoys_random_locations) && center.getWorld() == null) {
-                            fusion.log("warn", "The envoy center world cannot be found, the envoy has been cancelled. Center: {}", centerString);
+                            fusion.log(Level.WARNING, "The envoy center world cannot be found, the envoy has been cancelled. Center: {}", centerString);
 
                             setNextEnvoy(getEnvoyCooldown());
 
@@ -701,7 +702,7 @@ public class CrazyManager {
         // crates to spawn in the ground when not using falling blocks.
 
         if (this.tiers.isEmpty()) {
-            this.fusion.log("error", "<red>No tiers were found in the <yellow>tiers</yellow> folder, Please delete the folder to allow re-generating the examples.");
+            this.fusion.log(Level.ERROR, "<red>No tiers were found in the <yellow>tiers</yellow> folder, Please delete the folder to allow re-generating the examples.");
 
             return false;
         }
@@ -954,21 +955,21 @@ public class CrazyManager {
 
     private boolean testCenter() {
         if (isCenterUnloaded()) { // Check to make sure the center exist and if not try to load it again.
-            this.fusion.log("warn", "Attempting to fix Center location that failed.");
+            this.fusion.log(Level.WARNING, "Attempting to fix Center location that failed.");
             
             loadCenter();
 
             if (isCenterUnloaded()) { // If center still doesn't exist then it cancels the event.
-                this.fusion.log("warn", "Debug Start");
-                this.fusion.log("warn", "Center String: \"{}'", centerString);
-                this.fusion.log("warn", "Location Object: \"{}'", center.toString());
-                this.fusion.log("warn", "World Exist: \"{}'", center.getWorld() != null);
-                this.fusion.log("warn", "Debug End");
-                this.fusion.log("warn", "Failed to fix Center. Will try again next event.");
+                this.fusion.log(Level.WARNING, "Debug Start");
+                this.fusion.log(Level.WARNING, "Center String: \"{}'", centerString);
+                this.fusion.log(Level.WARNING, "Location Object: \"{}'", center.toString());
+                this.fusion.log(Level.WARNING, "World Exist: \"{}'", center.getWorld() != null);
+                this.fusion.log(Level.WARNING, "Debug End");
+                this.fusion.log(Level.WARNING, "Failed to fix Center. Will try again next event.");
 
                 return false;
             } else {
-                this.fusion.log("warn", "Center has been fixed and will continue event.");
+                this.fusion.log(Level.WARNING, "Center has been fixed and will continue event.");
             }
         }
 
@@ -987,7 +988,7 @@ public class CrazyManager {
         }
 
         if (this.center.getWorld() == null) {
-            this.fusion.log("warn", "Failed to fix Center. Will try again next event.");
+            this.fusion.log(Level.WARNING, "Failed to fix Center. Will try again next event.");
         }
     }
 

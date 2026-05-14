@@ -27,6 +27,7 @@ dependencies {
 
     compileOnly(libs.bundles.holograms)
     compileOnly(libs.bundles.shared)
+    compileOnly(libs.bundles.cmi)
     compileOnly(libs.worldguard)
 }
 

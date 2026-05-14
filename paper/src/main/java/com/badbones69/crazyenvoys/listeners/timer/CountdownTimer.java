@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.listeners.timer;
 
-import com.ryderbelserion.fusion.paper.scheduler.FoliaScheduler;
-import com.ryderbelserion.fusion.paper.scheduler.Scheduler;
+import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
+import com.ryderbelserion.fusion.paper.builders.folia.Scheduler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

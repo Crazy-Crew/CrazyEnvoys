@@ -4,9 +4,9 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
-import com.ryderbelserion.fusion.core.api.support.ModSupport;
+import com.ryderbelserion.fusion.core.api.constants.ModSupport;
 import com.ryderbelserion.fusion.paper.FusionPaper;
-import com.ryderbelserion.fusion.paper.builders.PlayerBuilder;
+import com.ryderbelserion.fusion.paper.builders.items.PlayerBuilder;
 import com.ryderbelserion.fusion.paper.utils.ColorUtils;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
@@ -414,7 +414,7 @@ public class ItemBuilder {
         }
 
         if (item.getType() == Material.AIR) {
-            this.fusion.log("error", "Item cannot be air!");
+            this.fusion.log(com.ryderbelserion.fusion.core.api.enums.Level.ERROR, "Item cannot be air!");
 
             return null;
         }
@@ -440,7 +440,7 @@ public class ItemBuilder {
                     try {
                         textures.setSkin(URI.create(this.url).toURL(), PlayerTextures.SkinModel.CLASSIC);
                     } catch (final MalformedURLException exception) {
-                        this.fusion.log("error", "Failed to set the texture url.", exception);
+                        this.fusion.log(com.ryderbelserion.fusion.core.api.enums.Level.ERROR, "Failed to set the texture url.", exception);
                     }
 
                     profile.setTextures(textures);
@@ -880,7 +880,7 @@ public class ItemBuilder {
             return this;
         }
 
-        @NotNull final PlayerBuilder builder = new PlayerBuilder(this.plugin, player);
+        @NotNull final PlayerBuilder builder = new PlayerBuilder(player);
         // More extensive but we only call methods once, and we avoid NPE.
         @Nullable final Player target = builder.getPlayer();
 

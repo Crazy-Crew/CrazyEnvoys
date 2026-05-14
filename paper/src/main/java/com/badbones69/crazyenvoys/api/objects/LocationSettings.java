@@ -3,6 +3,7 @@ package com.badbones69.crazyenvoys.api.objects;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.enums.Files;
+import com.ryderbelserion.fusion.core.api.enums.Level;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -167,7 +168,7 @@ public class LocationSettings {
 
     public void fixLocations() {
         if (!getFailedLocations().isEmpty()) {
-            this.fusion.log("info", "Attempting to fix {} locations that failed.", getFailedLocations().size());
+            this.fusion.log(Level.INFO, "Attempting to fix {} locations that failed.", getFailedLocations().size());
 
             int failed = 0;
             int fixed = 0;
@@ -182,11 +183,11 @@ public class LocationSettings {
             }
 
             if (fixed > 0) {
-                this.fusion.log("info", "We were able to fix {} locations that failed.", fixed);
+                this.fusion.log(Level.INFO, "We were able to fix {} locations that failed.", fixed);
             }
 
             if (failed > 0) {
-                this.fusion.log("error", "We failed to fix {} locations and will not re-attempt.", failed);
+                this.fusion.log(Level.ERROR, "We failed to fix {} locations and will not re-attempt.", failed);
             }
         }
     }

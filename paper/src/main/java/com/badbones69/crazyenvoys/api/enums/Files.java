@@ -2,7 +2,6 @@ package com.badbones69.crazyenvoys.api.enums;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.ryderbelserion.fusion.core.api.exceptions.FusionException;
-import com.ryderbelserion.fusion.core.files.enums.FileAction;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
 import com.ryderbelserion.fusion.paper.files.types.PaperCustomFile;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -48,6 +47,6 @@ public enum Files {
     }
 
     public void reload() {
-        this.fileManager.addPaperFile(this.path, consumer -> consumer.addAction(FileAction.EXTRACT_FILE));
+        this.fileManager.addPaperFile(this.path);
     }
 }

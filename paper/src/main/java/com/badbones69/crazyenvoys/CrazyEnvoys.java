@@ -15,8 +15,8 @@ import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
 import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
-import com.ryderbelserion.fusion.core.api.support.ModSupport;
-import com.ryderbelserion.fusion.core.files.enums.FileAction;
+import com.ryderbelserion.fusion.core.api.constants.ModSupport;
+import com.ryderbelserion.fusion.core.api.enums.Level;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
@@ -59,13 +59,14 @@ public class CrazyEnvoys extends JavaPlugin {
     @Override
     public void onEnable() {
         this.fusion = new FusionPaper(this);
+        this.fusion.init();
 
         final Path path = getDataPath();
 
         ConfigManager.load(getDataFolder(), getComponentLogger());
 
         this.fileManager = this.fusion.getFileManager();
-        this.fileManager.addPaperFile(path.resolve("users.yml"), consumer -> consumer.addAction(FileAction.EXTRACT_FILE))
+        this.fileManager.addPaperFile(path.resolve("users.yml"))
             .addPaperFolder(path.resolve("tiers"));
 
         new MetricsWrapper(4514);
@@ -93,7 +94,7 @@ public class CrazyEnvoys extends JavaPlugin {
 
         registerCommand(getCommand("crazyenvoys"), new EnvoyTab(), new EnvoyCommand());
 
-        this.fusion.log("info", "Done ({})!", String.format(Locale.ROOT, "%.3fs", (double) (System.nanoTime() - this.startTime) / 1.0E9D));
+        this.fusion.log(Level.INFO, "Done ({})!", String.format(Locale.ROOT, "%.3fs", (double) (System.nanoTime() - this.startTime) / 1.0E9D));
     }
 
     @Override
@@ -129,7 +130,7 @@ public class CrazyEnvoys extends JavaPlugin {
     }
 
     public final Optional<HeadDatabaseAPI> getApi() {
-        return this.fusion.getHeadDatabaseAPI();
+        return this.fusion.getHeadApi();
     }
 
     public final PaperFileManager getFileManager() {
