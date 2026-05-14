@@ -63,7 +63,8 @@ envoys:
   envoy-locations: '&e&lPozycje zrzutów: \n&c[ID], [Świat]: [X], [Y], [Z] &r{locations}'
   location-format: '\n&8[&3{id}&8] &c{world}: {x}, {y}, {z}'
 misc:
-  command-not-found: "{prefix}&cNieznaleziono komendy. Użyj /crazyenvoys help, aby zobaczyć listę komend."
+  command-not-found: '{prefix}&cPrawidłowe użycie tej komendy to &e{usage}.'
+  must-be-console-sender: '{prefix}&cMusisz korzystać z konsoli, aby użyć tej komendy.'
   player-only: "{prefix}&cTylko gracze mogą używać tej komendy."
   not-online: "{prefix}&cTen gracz nie jest aktywny w tym momencie."
   not-a-number: "{prefix}&cTo nie jest liczba."

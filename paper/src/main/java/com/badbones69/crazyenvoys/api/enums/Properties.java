@@ -5,13 +5,9 @@ import ch.jalu.configme.properties.Property;
 import ch.jalu.configme.resource.PropertyReader;
 import com.badbones69.crazyenvoys.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.config.types.MessageKeys;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
 import static ch.jalu.configme.properties.PropertyInitializer.newListProperty;
 import static ch.jalu.configme.properties.PropertyInitializer.newProperty;
 
@@ -80,7 +76,7 @@ public enum Properties {
 
     no_spawn_locations(MessageKeys.no_spawn_locations_found, newProperty("Messages.No-Spawn-Locations-Found", MessageKeys.no_spawn_locations_found.getDefaultValue())),
 
-    command_not_found(MessageKeys.command_not_found, newProperty("Messages.Command-Not-Found", MessageKeys.command_not_found.getDefaultValue())),
+    command_not_found(MessageKeys.unknown_command, newProperty("Messages.Command-Not-Found", MessageKeys.unknown_command.getDefaultValue())),
 
     hologram_active(MessageKeys.hologram_on_going, newProperty("Messages.Hologram-Placeholders.On-Going", MessageKeys.hologram_on_going.getDefaultValue())),
     hologram_not_active(MessageKeys.hologram_not_running, newProperty("Messages.Messages.Hologram-Placeholders.Not-Running", MessageKeys.hologram_not_running.getDefaultValue())),

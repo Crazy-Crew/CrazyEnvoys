@@ -25,35 +25,10 @@ softdepend:
   - ItemsAdder
   - Nexo
 
-commands:
-  crazyenvoys:
-    description: "Manage your envoys however you want."
-    aliases:
-      - envoys
-      - envoy
-
 permissions:
   envoy.bypass:
     default: op
   envoy.locations:
     default: false
-  envoy.stop:
-    default: false
-  envoy.start:
-    default: false
-  envoy.edit:
-    default: false
   envoy.flare.use:
     default: false
-  envoy.flare.give:
-    default: false
-  envoy.reload:
-    default: false
-  envoy.ignore:
-    default: true
-  envoy.drops:
-    default: true
-  envoy.help:
-    default: true
-  envoy.time:
-    default: true

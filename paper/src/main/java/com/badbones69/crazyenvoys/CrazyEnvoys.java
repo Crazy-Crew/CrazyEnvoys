@@ -1,7 +1,6 @@
 package com.badbones69.crazyenvoys;
 
 import com.badbones69.crazyenvoys.api.builders.types.PrizeGui;
-import com.badbones69.crazyenvoys.commands.EnvoyCommand;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
@@ -9,7 +8,7 @@ import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
-import com.badbones69.crazyenvoys.commands.EnvoyTab;
+import com.badbones69.crazyenvoys.commands.CommandManager;
 import com.badbones69.crazyenvoys.listeners.EnvoyEditListener;
 import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
 import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
@@ -92,9 +91,9 @@ public class CrazyEnvoys extends JavaPlugin {
             new PlaceholderAPISupport().register();
         }
 
-        registerCommand(getCommand("crazyenvoys"), new EnvoyTab(), new EnvoyCommand());
+        CommandManager.load();
 
-        this.fusion.log(Level.INFO, "Done ({})!", String.format(Locale.ROOT, "%.3fs", (double) (System.nanoTime() - this.startTime) / 1.0E9D));
+        this.fusion.log(Level.INFO, "Done (%s)!", String.format(Locale.ROOT, "%.3fs", (double) (System.nanoTime() - this.startTime) / 1.0E9D));
     }
 
     @Override

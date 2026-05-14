@@ -73,7 +73,8 @@ envoys:
     envoy-locations: '&e&lAll Envoy Locations: \n&c[ID], [World]: [X], [Y], [Z] &r{locations}'
     location-format: '\n&8[&3{id}&8] &c{world}: {x}, {y}, {z}'
 misc:
-    command-not-found: '{prefix}&cPlease do /crazyenvoys help for more information.'
+    command-not-found: '{prefix}&cThe correct usage for this command is &e{usage}.'
+    must-be-console-sender: '{prefix}&cYou must be using console to use this command.'
     player-only: '{prefix}&cOnly players can use that command.'
     not-online: '{prefix}&cThat player is not online at this time.'
     not-a-number: '{prefix}&cThat is not a number.'

@@ -67,7 +67,8 @@ envoys:
 
     &8[&3{id}&8] &c{world}: {x}, {y}, {z}"
 misc:
-  command-not-found: "{prefix}&7Utilise /envoy help pour plus d'informations."
+  command-not-found: '{prefix}&cL''utilisation correcte de cette commande est &e{usage}.'
+  must-be-console-sender: '{prefix}&cVous devez utiliser la console pour exécuter cette commande.'
   player-only: "{prefix}&7Seuls les joueurs peuvent utiliser cette commande."
   not-online: "{prefix}&7Ce joueur n'est pas en ligne pour le moment."
   not-a-number: "{prefix}&7Ce n'est pas un nombre."

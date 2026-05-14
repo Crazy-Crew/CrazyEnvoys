@@ -1,5 +1,6 @@
 package com.badbones69.crazyenvoys.config.types;
 
+import ch.jalu.configme.Comment;
 import ch.jalu.configme.SettingsHolder;
 import ch.jalu.configme.configurationdata.CommentsConfiguration;
 import ch.jalu.configme.properties.Property;
@@ -137,7 +138,13 @@ public class MessageKeys implements SettingsHolder {
 
     public static final Property<String> location_format = newProperty("envoys.location-format", "\\n&8[&3{id}&8] &c{world}: {x}, {y}, {z}");
 
-    public static final Property<String> command_not_found = newProperty("misc.command-not-found", "{prefix}&cPlease do /crazyenvoys help for more information.");
+    @Comment("A list of available placeholders: {command}")
+    public static final Property<String> unknown_command = newProperty("misc.command-not-found", "{prefix}&c{command} is not a known command.");
+
+    @Comment("A list of available placeholders: {usage}")
+    public static final Property<String> correct_usage = newProperty("misc.correct-usage", "{prefix}&cThe correct usage for this command is &e{usage}.");
+
+    public static final Property<String> must_be_console_sender = newProperty("misc.must-be-console-sender", "{prefix}&cYou must be using console to use this command.");
 
     public static final Property<String> player_only = newProperty("misc.player-only", "{prefix}&cOnly players can use that command.");
 

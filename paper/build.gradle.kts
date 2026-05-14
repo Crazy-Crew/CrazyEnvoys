@@ -65,3 +65,13 @@ tasks {
         minecraftVersion(libs.versions.minecraft.get())
     }
 }
+
+tasks.withType(xyz.jpenilla.runtask.task.AbstractRun::class) {
+    javaLauncher = javaToolchains.launcherFor {
+        vendor = JvmVendorSpec.JETBRAINS
+
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+
+    jvmArgs("-XX:+AllowEnhancedClassRedefinition")
+}
