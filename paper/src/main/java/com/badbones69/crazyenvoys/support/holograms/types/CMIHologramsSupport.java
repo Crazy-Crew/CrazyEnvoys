@@ -3,10 +3,11 @@ package com.badbones69.crazyenvoys.support.holograms.types;
 import com.Zrips.CMI.CMI;
 import com.Zrips.CMI.Modules.Display.CMIBillboard;
 import com.Zrips.CMI.Modules.Holograms.CMIHologram;
+import com.Zrips.CMI.Modules.Holograms.Settings.CMIHologramSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.support.holograms.HologramManager;
-import com.ryderbelserion.fusion.paper.scheduler.FoliaScheduler;
-import com.ryderbelserion.fusion.paper.scheduler.Scheduler;
+import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
+import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Container.CMILocation;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -30,17 +31,22 @@ public class CMIHologramsSupport extends HologramManager {
 
         final CMIHologram hologram = new CMIHologram(name(id), new CMILocation(location.clone().add(getVector(tier))));
 
-        hologram.setNewDisplayMethod(true);
-        hologram.setBillboard(CMIBillboard.CENTER);
+        final CMIHologramSettings settings = hologram.getSettings();
 
-        hologram.setLines(lines(tier));
+        settings.setBillboard(CMIBillboard.CENTER);
 
-        this.hologramManager.addHologram(hologram);
+        final List<String> lines = new ArrayList<>();
 
-        new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
+        tier.getHoloMessage().forEach(line -> lines.add(CMIChatColor.colorize(line)));
+
+        hologram.getPages().setLines(lines);
+
+        this.hologramManager.add(hologram);
+
+        new FoliaScheduler(this.plugin, location) {
             @Override
             public void run() {
-                location.getNearbyEntitiesByType(Player.class, 5).forEach(player -> hologramManager.handleHoloUpdates(player, hologram.getLocation()));
+                location.getNearbyEntitiesByType(Player.class, 5).forEach(player -> hologramManager.updatePlayer(player, hologram.getLocation()));
             }
         }.runNow();
     }

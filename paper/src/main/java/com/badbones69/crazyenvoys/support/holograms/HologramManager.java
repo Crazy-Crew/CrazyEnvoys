@@ -7,9 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,15 +49,5 @@ public abstract class HologramManager {
         }
 
         return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
-    }
-
-    protected @NotNull final List<String> lines(@NotNull final Tier tier) {
-        if (tier.getHoloMessage().isEmpty()) return Collections.emptyList();
-
-        final List<String> lines = new ArrayList<>();
-
-        tier.getHoloMessage().forEach(line -> lines.add(color(line)));
-
-        return lines;
     }
 }
