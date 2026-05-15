@@ -4,7 +4,8 @@ import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.commands.relations.ArgumentRelations;
-import com.badbones69.crazyenvoys.commands.relations.enums.MigrationType;
+import com.badbones69.crazyenvoys.commands.types.admin.migrator.MigrateCommand;
+import com.badbones69.crazyenvoys.commands.types.admin.migrator.enums.MigrationType;
 import com.badbones69.crazyenvoys.commands.types.admin.CenterCommand;
 import com.badbones69.crazyenvoys.commands.types.admin.ClearCommand;
 import com.badbones69.crazyenvoys.commands.types.admin.EditCommand;
@@ -99,6 +100,8 @@ public class CommandManager {
                 new DropCommand(),
                 new HelpCommand(),
                 new IgnoreCommand(),
+
+                new MigrateCommand(),
 
                 new CenterCommand(),
                 new ClearCommand(),

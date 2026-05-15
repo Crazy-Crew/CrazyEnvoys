@@ -4,18 +4,18 @@ import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.properties.Property;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.util.MsgUtils;
-import com.ryderbelserion.fusion.core.api.constants.ModSupport;
+import com.ryderbelserion.fusion.core.utils.StringUtils;
+import com.ryderbelserion.fusion.kyori.utils.AdvUtils;
 import com.ryderbelserion.fusion.paper.FusionPaper;
-import me.clip.placeholderapi.PlaceholderAPI;
-import org.apache.commons.lang3.StringUtils;
-import org.bukkit.command.CommandSender;
+import net.kyori.adventure.audience.Audience;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.config.types.MessageKeys;
+import org.jspecify.annotations.NonNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +73,16 @@ public enum Messages {
     second(MessageKeys.time_placeholder_second),
     envoy_locations(MessageKeys.envoy_locations),
     location_format(MessageKeys.location_format),
+
+    error_migrating(MessageKeys.error_migrating),
+    migration_not_available(MessageKeys.migration_not_available),
+    migration_plugin_not_enabled(MessageKeys.migration_plugin_not_enabled),
+    migration_no_crates_available(MessageKeys.migration_no_crates_available),
+    successfully_migrated(MessageKeys.successfully_migrated, true),
+    successfully_migrated_users(MessageKeys.successfully_migrated_users, true),
+
+    lacking_flag(MessageKeys.lacking_flag),
+
     help(MessageKeys.help, true);
 
     private Property<String> property;
@@ -86,7 +96,7 @@ public enum Messages {
      *
      * @param property the property
      */
-    Messages(Property<String> property) {
+    Messages(@NonNull final Property<String> property) {
         this.property = property;
     }
 
@@ -96,7 +106,7 @@ public enum Messages {
      * @param listProperty the list property
      * @param isList Defines if it's a list or not.
      */
-    Messages(Property<List<String>> listProperty, boolean isList) {
+    Messages(@NonNull final Property<List<String>> listProperty, final boolean isList) {
         this.listProperty = listProperty;
 
         this.isList = isList;
@@ -109,35 +119,78 @@ public enum Messages {
 
     private final FusionPaper fusion = this.plugin.getFusion();
 
-    public String getString() {
+    public @NonNull final String getString() {
         return this.messages.getProperty(this.property);
     }
 
-    public List<String> getList() {
+    public @NonNull final List<String> getList() {
         return this.messages.getProperty(this.listProperty);
     }
 
-    private boolean isList() {
-        return this.isList;
+    public void sendMessage(@Nullable final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
+        final State state = this.config.getProperty(ConfigKeys.message_state);
+
+        switch (state) {
+            case send_message -> sendRichMessage(sender, placeholder, replacement);
+            case send_actionbar -> sendActionBar(sender, placeholder, replacement);
+        }
     }
 
-    public String getMessage() {
-        return getMessage(null, new HashMap<>());
+    public void sendMessage(@Nullable final Audience sender, @NotNull final Map<String, String> placeholders) {
+        final State state = this.config.getProperty(ConfigKeys.message_state);
+
+        switch (state) {
+            case send_message -> sendRichMessage(sender, placeholders);
+            case send_actionbar -> sendActionBar(sender, placeholders);
+        }
     }
 
-    public String getMessage(final String placeholder, final String replacement) {
-        return getMessage(null, placeholder, replacement);
+    public void sendMessage(@Nullable final Audience sender) {
+        final State state = this.config.getProperty(ConfigKeys.message_state);
+
+        switch (state) {
+            case send_message -> sendRichMessage(sender);
+            case send_actionbar -> sendActionBar(sender);
+        }
     }
 
-    public String getMessage(final Map<String, String> placeholders) {
-        return getMessage(null, placeholders);
+    public void sendRichMessage(@Nullable final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
+        sendRichMessage(sender, Map.of(placeholder, replacement));
     }
 
-    public String getMessage(@Nullable final CommandSender sender) {
-        return getMessage(sender, new HashMap<>());
+    public void sendRichMessage(@Nullable final Audience sender, @NotNull final Map<String, String> placeholders) {
+        final String value = getMessage(sender, placeholders);
+
+        if (value.isBlank()) return;
+
+        if (sender instanceof Player player) {
+            player.sendMessage(this.fusion.asComponent(value));
+        }
     }
 
-    public String getMessage(@Nullable final CommandSender sender, @NotNull final String placeholder, @NotNull final String replacement) {
+    public void sendRichMessage(@Nullable final Audience sender) {
+        sendRichMessage(sender, Map.of());
+    }
+
+    public void sendActionBar(@Nullable final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
+        sendActionBar(sender, Map.of(placeholder, replacement));
+    }
+
+    public void sendActionBar(@Nullable final Audience sender, @NotNull final Map<String, String> placeholders) {
+        final String value = getMessage(sender, placeholders);
+
+        if (value.isBlank()) return;
+
+        if (sender instanceof Player player) {
+            player.sendActionBar(this.fusion.asComponent(value));
+        }
+    }
+
+    public void sendActionBar(@Nullable final Audience sender) {
+        sendActionBar(sender, Map.of());
+    }
+
+    public String getMessage(@Nullable final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
         final Map<String, String> placeholders = new HashMap<>();
 
         placeholders.put(placeholder, replacement);
@@ -145,76 +198,64 @@ public enum Messages {
         return getMessage(sender, placeholders);
     }
 
-    public String getMessage(@Nullable final CommandSender sender, @NotNull final Map<String, String> placeholders) {
-        return parse(sender, placeholders).replaceAll("\\{prefix}", MsgUtils.getPrefix());
+    public String getMessage(@Nullable final Audience sender, @NotNull final Map<String, String> placeholders) {
+        return parse(sender, placeholders);
     }
 
-    public void sendMessage(final CommandSender sender, final String placeholder, final String replacement) {
-        sender.sendMessage(getMessage(sender, placeholder, replacement));
+    public String getMessage(@Nullable final Audience sender) {
+        return getMessage(sender, new HashMap<>());
     }
 
-    public void sendMessage(final CommandSender sender, final Map<String, String> placeholders) {
-        sender.sendMessage(getMessage(sender, placeholders));
-    }
+    public void broadcast(final boolean isIgnoring, @NonNull final Map<String, String> placeholders) {
+        final Server server = this.plugin.getServer();
 
-    public void sendMessage(final CommandSender sender) {
-        sender.sendMessage(getMessage(sender));
-    }
+        final SettingsManager config = ConfigManager.getConfig();
 
-    private @NotNull String parse(@Nullable final CommandSender sender, @NotNull final Map<String, String> placeholders) {
-        String message;
-
-        if (isList()) {
-            message = StringUtils.chomp(com.ryderbelserion.fusion.core.utils.StringUtils.toString(getList()));
-        } else {
-            message = getString();
-        }
-
-        if (sender != null) {
-            if (sender instanceof Player player) {
-                if (this.fusion.isModReady(ModSupport.placeholder_api)) {
-                    message = PlaceholderAPI.setPlaceholders(player, message);
-                }
-            }
-        }
-
-        if (!placeholders.isEmpty()) {
-            for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
-                message = message.replace(placeholder.getKey(), placeholder.getValue()).replace(placeholder.getKey().toLowerCase(), placeholder.getValue());
-            }
-        }
-
-        return MsgUtils.color(message);
-    }
-
-    public void broadcastMessage(boolean ignore) {
-        broadcastMessage(ignore, new HashMap<>());
-    }
-
-    public void broadcastMessage(boolean ignore, Map<String, String> placeholder) {
         // Send in console because we should lol.
-        sendMessage(this.plugin.getServer().getConsoleSender(), placeholder);
+        sendMessage(server.getConsoleSender(), placeholders);
 
-        if (ConfigManager.getConfig().getProperty(ConfigKeys.envoys_world_messages)) {
-            for (Player player : this.plugin.getServer().getOnlinePlayers()) {
-                for (String world : ConfigManager.getConfig().getProperty(ConfigKeys.envoys_allowed_worlds)) {
-                    if (player.getWorld().getName().equalsIgnoreCase(world)) {
-                        if (ignore) {
-                            if (!this.crazyManager.isIgnoringMessages(player.getUniqueId())) sendMessage(player, placeholder);
-                        } else {
-                            sendMessage(player, placeholder);
-                        }
-                    }
-                }
+        if (config.getProperty(ConfigKeys.envoys_world_messages)) {
+            final List<String> worlds = config.getProperty(ConfigKeys.envoys_allowed_worlds);
+
+            for (final Player player : server.getOnlinePlayers()) {
+                final String worldName = player.getWorld().getName();
+
+                if (!worlds.contains(worldName)) continue;
+
+                if (isIgnoring && this.crazyManager.isIgnoringMessages(player.getUniqueId())) continue;
+
+                sendMessage(player, placeholders);
             }
-        } else {
-            for (Player player : this.plugin.getServer().getOnlinePlayers()) {
-                if (ignore) {
-                    if (!this.crazyManager.isIgnoringMessages(player.getUniqueId())) sendMessage(player, placeholder);
-                } else {
-                    sendMessage(player, placeholder);
-                }
-            }
+
+            return;
         }
+
+        for (final Player player : server.getOnlinePlayers()) {
+            if (isIgnoring && this.crazyManager.isIgnoringMessages(player.getUniqueId())) continue;
+
+            sendMessage(player, placeholders);
+        }
+    }
+
+    public void broadcast(final boolean isIgnoring) {
+        broadcast(isIgnoring, new HashMap<>());
+    }
+
+    public void migrate() {
+        if (this.isList) {
+            this.messages.setProperty(this.listProperty, AdvUtils.convert(this.messages.getProperty(this.listProperty), true));
+
+            return;
+        }
+
+        this.messages.setProperty(this.property, AdvUtils.convert(this.messages.getProperty(this.property), true));
+    }
+
+    private @NonNull String parse(@Nullable final Audience sender, @NonNull final Map<String, String> placeholders) {
+        final Map<String, String> origin = new HashMap<>(placeholders);
+
+        origin.putIfAbsent("{prefix}", this.config.getProperty(ConfigKeys.command_prefix));
+
+        return this.fusion.parse(sender, this.isList ? StringUtils.toString(getList()) : getString(), origin);
     }
 }

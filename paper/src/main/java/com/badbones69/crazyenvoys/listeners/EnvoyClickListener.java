@@ -197,13 +197,16 @@ public class EnvoyClickListener implements Listener {
             if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) {
                 placeholder.put("{player}", player.getName());
                 placeholder.put("{amount}", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
-                Messages.envoys_remaining.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_envoys_remaining), placeholder);
+
+                Messages.envoys_remaining.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_envoys_remaining), placeholder);
             }
         } else {
             EnvoyEndEvent envoyEndEvent = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);
-            this.plugin.getServer().getPluginManager().callEvent(envoyEndEvent);
+
+            this.server.getPluginManager().callEvent(envoyEndEvent);
             this.crazyManager.endEnvoyEvent();
-            Messages.ended.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
+
+            Messages.ended.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
         }
     }
 

@@ -657,7 +657,7 @@ public class CrazyManager {
         if (envoyLocationsBroadcast) {
             StringBuilder locations = getStringBuilder();
 
-            this.server.broadcast(Messages.envoy_locations.getMessage("{locations}", locations.toString().translateEscapes()).translateEscapes(), "envoy.locations");
+            //this.server.broadcast(Messages.envoy_locations.getMessage("{locations}", locations.toString().translateEscapes()).translateEscapes(), "envoy.locations");
         }
 
         return this.locationSettings.getDropLocations();
@@ -676,7 +676,7 @@ public class CrazyManager {
             placeholders.put("{y}", String.valueOf(block.getY()));
             placeholders.put("{z}", String.valueOf(block.getZ()));
 
-            locations.append(Messages.location_format.getMessage(placeholders).translateEscapes());
+            //locations.append(Messages.location_format.getMessage(placeholders).translateEscapes());
             x += 1;
         }
 
