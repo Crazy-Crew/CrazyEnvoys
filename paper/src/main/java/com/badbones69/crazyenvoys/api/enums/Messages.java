@@ -206,6 +206,10 @@ public enum Messages {
         return getMessage(sender, new HashMap<>());
     }
 
+    public String getMessage() {
+        return getMessage(null, new HashMap<>());
+    }
+
     public void broadcast(final boolean isIgnoring, @NonNull final Map<String, String> placeholders) {
         final Server server = this.plugin.getServer();
 

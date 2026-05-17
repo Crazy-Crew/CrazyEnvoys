@@ -89,7 +89,7 @@ public class CommandManager {
 
             if ((size % 10) > 0) size++;
 
-            for (int i = 1; i <= size; i++) drops.add(i + "");
+            for (int i = 1; i <= size; i++) drops.add(String.valueOf(i));
 
             return drops;
         });

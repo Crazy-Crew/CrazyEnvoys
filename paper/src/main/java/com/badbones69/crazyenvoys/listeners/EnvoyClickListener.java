@@ -16,12 +16,10 @@ import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.config.beans.GuiProperty;
 import com.badbones69.crazyenvoys.support.holograms.HologramManager;
 import com.badbones69.crazyenvoys.util.MiscUtils;
-import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.fusion.core.api.constants.ModSupport;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
 import com.ryderbelserion.fusion.paper.builders.folia.Scheduler;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -46,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import static java.util.regex.Matcher.quoteReplacement;
 
 public class EnvoyClickListener implements Listener {
 
@@ -125,47 +122,47 @@ public class EnvoyClickListener implements Listener {
 
         this.crazyManager.stopSignalFlare(block.getLocation());
 
-        Map<String, String> placeholder = new HashMap<>();
+        Map<String, String> placeholders = new HashMap<>();
 
-        if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) placeholder.put("{tier}", this.crazyManager.getTier(block).getName());
+        if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) placeholders.put("{tier}", this.crazyManager.getTier(block).getName());
 
         this.crazyManager.removeActiveEnvoy(block);
 
-        if (tier.getPrizes().isEmpty()) {
-            this.plugin.getServer().broadcastMessage(Methods.getPrefix() + MsgUtils.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+        if (tier.getPrizes().isEmpty()) { //todo() improve this
+            //this.plugin.getServer().broadcastMessage(Methods.getPrefix() + MsgUtils.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
 
             return;
         }
 
         final boolean isPapiReady = this.fusion.isModReady(ModSupport.placeholder_api);
 
-        for (Prize prize : envoyOpenEvent.getPrizes()) {
+        for (Prize prize : envoyOpenEvent.getPrizes()) { //todo() improve this
             if (!tier.getPrizeMessage().isEmpty() && prize.getMessages().isEmpty()) {
                 for (String message : tier.getPrizeMessage()) {
-                    if (isPapiReady) {
-                        message = PlaceholderAPI.setPlaceholders(player, message);
-                    }
+                    //if (isPapiReady) {
+                    //    message = PlaceholderAPI.setPlaceholders(player, message);
+                    //}
 
-                    player.sendMessage(MsgUtils.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
+                    //player.sendMessage(MsgUtils.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
                 }
             } else {
                 for (String message : prize.getMessages()) {
-                    if (isPapiReady) {
-                        message = PlaceholderAPI.setPlaceholders(player, message);
-                    }
+                    //if (isPapiReady) {
+                    //    message = PlaceholderAPI.setPlaceholders(player, message);
+                    //}
 
-                    player.sendMessage(MsgUtils.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
+                    //player.sendMessage(MsgUtils.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
                 }
             }
 
             new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
                 @Override
                 public void run() {
-                    for (String cmd : prize.getCommands()) {
-                        if (isPapiReady) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
+                    for (String cmd : prize.getCommands()) { //todo() improve this
+                        //if (isPapiReady) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
 
-                        server.dispatchCommand(server.getConsoleSender(), cmd.replace("{player}", player.getName())
-                                .replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
+                        //server.dispatchCommand(server.getConsoleSender(), cmd.replace("{player}", player.getName())
+                        //        .replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
                     }
                 }
             }.runNow();
@@ -195,10 +192,11 @@ public class EnvoyClickListener implements Listener {
 
         if (!this.crazyManager.getActiveEnvoys().isEmpty()) {
             if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) {
-                placeholder.put("{player}", player.getName());
-                placeholder.put("{amount}", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
 
-                Messages.envoys_remaining.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_envoys_remaining), placeholder);
+                placeholders.put("{player}", player.getName());
+                placeholders.put("{amount}", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
+
+                Messages.envoys_remaining.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_envoys_remaining), placeholders);
             }
         } else {
             EnvoyEndEvent envoyEndEvent = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);

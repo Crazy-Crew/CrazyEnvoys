@@ -48,7 +48,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
-
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -57,11 +56,11 @@ public class CrazyManager {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final Server server = this.plugin.getServer();
+    private @NotNull final Server server = this.plugin.getServer();
 
-    private final PluginManager pluginManager = this.server.getPluginManager();
+    private @NotNull final PluginManager pluginManager = this.server.getPluginManager();
 
-    private final FusionPaper fusion = this.plugin.getFusion();
+    private @NotNull final FusionPaper fusion = this.plugin.getFusion();
 
     private @NotNull final ComponentLogger logger = this.plugin.getComponentLogger();
     private @NotNull final SettingsManager config = ConfigManager.getConfig();
@@ -109,8 +108,10 @@ public class CrazyManager {
 
     private void getEnvoyTime(Calendar cal) {
         String time = this.config.getProperty(ConfigKeys.envoys_time);
+
         int hour = Integer.parseInt(time.split(" ")[0].split(":")[0]);
         int min = Integer.parseInt(time.split(" ")[0].split(":")[1]);
+
         int calender = Calendar.AM;
 
         if (time.split(" ")[1].equalsIgnoreCase("PM")) calender = Calendar.PM;
@@ -270,7 +271,6 @@ public class CrazyManager {
         this.flareSettings.load();
     }
 
-
     /**
      * Load the holograms.
      */
@@ -361,9 +361,9 @@ public class CrazyManager {
                         check.clear(Calendar.MILLISECOND);
 
                         if (check.compareTo(cal) == 0) {
-                            HashMap<String, String> placeholder = new HashMap<>();
-                            placeholder.put("{time}", getNextEnvoyTime());
-                            Messages.warning.broadcastMessage(config.getProperty(ConfigKeys.envoys_ignore_behaviour_warning), placeholder);
+                            Messages.warning.broadcast(config.getProperty(ConfigKeys.envoys_ignore_behaviour_warning), Map.of(
+                                    "{time}", getNextEnvoyTime()
+                            ));
                         }
                     }
 
@@ -374,9 +374,9 @@ public class CrazyManager {
                     if (next.compareTo(cal) <= 0 && !isEnvoyActive()) {
                         if (config.getProperty(ConfigKeys.envoys_minimum_players_toggle)) {
                             if (online < config.getProperty(ConfigKeys.envoys_minimum_players_amount)) {
-                                HashMap<String, String> placeholder = new HashMap<>();
-                                placeholder.put("{amount}", online + "");
-                                Messages.not_enough_players.broadcastMessage(config.getProperty(ConfigKeys.envoys_ignore_behaviour_not_enough_players), placeholder);
+                                Messages.not_enough_players.broadcast(config.getProperty(ConfigKeys.envoys_ignore_behaviour_not_enough_players), Map.of(
+                                        "{amount}", String.valueOf(online)
+                                ));
 
                                 setNextEnvoy(getEnvoyCooldown());
                                 resetWarnings();
@@ -715,10 +715,15 @@ public class CrazyManager {
 
         if (dropLocations.isEmpty() || (this.config.getProperty(ConfigKeys.envoys_random_locations) && isCenterUnloaded())) {
             setNextEnvoy(getEnvoyCooldown());
+
             resetWarnings();
+
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.NO_LOCATIONS_FOUND);
+
             this.pluginManager.callEvent(event);
-            Messages.no_spawn_locations_found.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_no_spawn_locations_found));
+
+            Messages.no_spawn_locations_found.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_no_spawn_locations_found));
+
             return false;
         }
 
@@ -726,8 +731,10 @@ public class CrazyManager {
             Player player = this.server.getPlayer(uuid);
 
             this.editorSettings.removeFakeBlocks();
+
             if (player != null) {
                 player.getInventory().removeItem(new ItemStack(Material.BEDROCK, 1));
+
                 Messages.kicked_from_editor_mode.sendMessage(player);
             }
         }
@@ -736,14 +743,16 @@ public class CrazyManager {
 
         setEnvoyActive(true);
         int max = dropLocations.size();
-        HashMap<String, String> placeholder = new HashMap<>();
-        placeholder.put("{amount}", String.valueOf(max));
+        Map<String, String> placeholders = new HashMap<>();
+
+        placeholders.put("{amount}", String.valueOf(max));
 
         if (starter != null) {
-            placeholder.put("{starter}", starter.getName());
-            Messages.started_player.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_started_player), placeholder);
+            placeholders.put("{starter}", starter.getName());
+
+            Messages.started_player.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_started_player), placeholders);
         } else {
-            Messages.started.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_started), placeholder);
+            Messages.started.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_started), placeholders);
         }
 
         if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle)) {
@@ -760,6 +769,7 @@ public class CrazyManager {
                     for (Entity entity : Methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
                         if (entity instanceof Player) {
                             spawnFallingBlock = true;
+
                             break;
                         }
                     }
@@ -799,8 +809,11 @@ public class CrazyManager {
             @Override
             public void run() {
                 EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.OUT_OF_TIME);
+
                 plugin.getServer().getPluginManager().callEvent(event);
-                Messages.ended.broadcastMessage(config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
+
+                Messages.ended.broadcast(config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
+
                 endEnvoyEvent();
             }
         }.runDelayed(getTimeSeconds(this.config.getProperty(ConfigKeys.envoys_run_time)) * 20L);

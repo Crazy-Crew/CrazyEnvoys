@@ -1,7 +1,6 @@
 package com.badbones69.crazyenvoys.api.objects;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.ryderbelserion.fusion.core.api.constants.ModSupport;
@@ -666,7 +665,7 @@ public class ItemBuilder {
      * @return the ItemBuilder with an updated name.
      */
     public ItemBuilder setName(final String itemName) {
-        if (itemName != null) this.itemName = MsgUtils.color(itemName);
+        //if (itemName != null) this.itemName = MsgUtils.color(itemName); //todo() improve this
 
         return this;
     }
@@ -717,7 +716,7 @@ public class ItemBuilder {
             this.itemLore.clear();
 
             for (String line : lore) {
-                this.itemLore.add(MsgUtils.color(line));
+                //this.itemLore.add(MsgUtils.color(line)); //todo() improve this
             }
         }
 
@@ -731,7 +730,7 @@ public class ItemBuilder {
      * @return the ItemBuilder with updated info.
      */
     public ItemBuilder addLore(final String lore) {
-        if (lore != null) this.itemLore.add(MsgUtils.color(lore));
+        //if (lore != null) this.itemLore.add(MsgUtils.color(lore)); //todo() improve this
 
         return this;
     }

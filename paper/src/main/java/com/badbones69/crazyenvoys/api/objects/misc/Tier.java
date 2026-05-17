@@ -2,7 +2,6 @@ package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
-import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.fusion.paper.utils.ColorUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -381,7 +380,7 @@ public class Tier {
         this.holoMessage.clear();
 
         for (String message : holoMessage) {
-            this.holoMessage.add(MsgUtils.color(message));
+            //this.holoMessage.add(MsgUtils.color(message)); //todo() improve this
         }
 
         return this;

@@ -1,7 +1,6 @@
 package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
-import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +104,7 @@ public class Prize {
         this.messages.clear();
 
         for (String message : messages) {
-            this.messages.add(MsgUtils.color(message));
+            //this.messages.add(MsgUtils.color(message)); //todo() improve this
         }
 
         return this;

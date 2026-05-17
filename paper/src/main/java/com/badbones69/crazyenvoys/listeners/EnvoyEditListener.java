@@ -46,7 +46,8 @@ public class EnvoyEditListener implements Listener {
             @Override
             public void run() {
                 if (!editorSettings.getEditors().contains(player.getUniqueId())) return;
-                player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData());
+
+                player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData()); //todo() improve this
             }
         }.runDelayed(2L);
     }

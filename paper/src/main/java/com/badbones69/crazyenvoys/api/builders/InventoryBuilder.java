@@ -2,7 +2,6 @@ package com.badbones69.crazyenvoys.api.builders;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
-import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.fusion.core.api.constants.ModSupport;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -40,7 +39,7 @@ public abstract class InventoryBuilder implements InventoryHolder, Listener {
 
         String inventoryTitle = this.fusion.isModReady(ModSupport.placeholder_api) ? PlaceholderAPI.setPlaceholders(getPlayer(), this.title) : this.title;
 
-        this.inventory = this.server.createInventory(this, this.size, MsgUtils.color(inventoryTitle));
+        //this.inventory = this.server.createInventory(this, this.size, MsgUtils.color(inventoryTitle)); //todo() improve this
     }
 
     public InventoryBuilder(@NotNull final Player player, @NotNull final String title, final int size, @NotNull final Tier tier) {

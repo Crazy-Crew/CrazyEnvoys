@@ -18,7 +18,7 @@ public class ConfigManager {
     private static SettingsManager messages;
     private static SettingsManager config;
 
-    public static void load(final File dataFolder, final ComponentLogger logger) {
+    public static void load(final File dataFolder, final ComponentLogger logger) { //todo() improve this
         YamlFileResourceOptions builder = YamlFileResourceOptions.builder().indentationSize(2).build();
 
         File configFile = new File(dataFolder, "config.yml");

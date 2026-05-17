@@ -7,8 +7,6 @@ import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
 import org.bukkit.entity.Marker;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.Inventory;
-import com.badbones69.crazyenvoys.config.types.ConfigKeys;
-import com.badbones69.crazyenvoys.util.MsgUtils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -33,19 +31,11 @@ public class Methods {
 
     private static final @NotNull SettingsManager config = ConfigManager.getConfig();
 
-    public static String getPrefix() {
-        return MsgUtils.color(config.getProperty(ConfigKeys.command_prefix));
-    }
-
     public static void addItem(final Player player, final ItemStack... items) {
         final Inventory inventory = player.getInventory();
 
         inventory.setMaxStackSize(64);
         inventory.addItem(items);
-    }
-
-    public static String getPrefix(String message) {
-        return MsgUtils.color(config.getProperty(ConfigKeys.command_prefix) + message);
     }
 
     public static ItemStack getItemInHand(Player player) {
