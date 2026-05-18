@@ -33,7 +33,6 @@ import com.ryderbelserion.fusion.paper.files.types.PaperCustomFile;
 import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
 import com.ryderbelserion.fusion.paper.builders.folia.Scheduler;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
-import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -62,7 +61,6 @@ public class CrazyManager {
 
     private @NotNull final FusionPaper fusion = this.plugin.getFusion();
 
-    private @NotNull final ComponentLogger logger = this.plugin.getComponentLogger();
     private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
     private @NotNull final PaperFileManager fileManager = this.plugin.getFileManager();
@@ -162,7 +160,9 @@ public class CrazyManager {
 
         this.blacklistedBlocks.clear();
         this.cachedChances.clear();
-        FileConfiguration users = Files.users.getConfiguration();
+
+        final FileConfiguration users = Files.users.getConfiguration();
+
         this.envoyTimeLeft = Calendar.getInstance();
 
         // Populate the array list.
@@ -181,16 +181,20 @@ public class CrazyManager {
 
             if (this.config.getProperty(ConfigKeys.envoys_countdown)) {
                 this.autoTimer = true;
+
                 cal.setTimeInMillis(users.getLong("Next-Envoy"));
 
                 if (Calendar.getInstance().after(cal)) cal.setTimeInMillis(getEnvoyCooldown().getTimeInMillis());
             } else {
                 this.autoTimer = false;
+
                 getEnvoyTime(cal);
             }
 
             this.nextEnvoy = cal;
+
             startEnvoyCountDown();
+
             resetWarnings();
         } else {
             this.nextEnvoy = Calendar.getInstance();
@@ -346,17 +350,18 @@ public class CrazyManager {
             @Override
             public void run() {
                 if (!isEnvoyActive()) {
-                    Calendar cal = Calendar.getInstance();
+                    final Calendar cal = Calendar.getInstance();
+
                     cal.clear(Calendar.MILLISECOND);
 
                     // Ryder Start
-                    int online = plugin.getServer().getOnlinePlayers().size();
+                    int online = server.getOnlinePlayers().size();
 
                     if (online == 0 && config.getProperty(ConfigKeys.envoys_ignore_empty_server)) return;
                     // Ryder End
-
                     for (Calendar warn : getWarnings()) {
                         Calendar check = Calendar.getInstance();
+
                         check.setTimeInMillis(warn.getTimeInMillis());
                         check.clear(Calendar.MILLISECOND);
 
@@ -379,6 +384,7 @@ public class CrazyManager {
                                 ));
 
                                 setNextEnvoy(getEnvoyCooldown());
+
                                 resetWarnings();
 
                                 return;
@@ -426,12 +432,14 @@ public class CrazyManager {
      */
     public void removeAllEnvoys(final boolean serverStop) {
         this.envoyActive = false;
+
         cleanLocations();
 
         for (Block block : getActiveEnvoys()) {
             if (!block.getChunk().isLoaded()) block.getChunk().load();
 
             block.setType(Material.AIR);
+
             stopSignalFlare(block.getLocation());
         }
 
@@ -524,6 +532,7 @@ public class CrazyManager {
      */
     public void resetWarnings() {
         this.warnings.clear();
+
         this.config.getProperty(ConfigKeys.envoys_warnings).forEach(time -> addWarning(makeWarning(time)));
     }
 
@@ -547,6 +556,7 @@ public class CrazyManager {
      */
     public Calendar makeWarning(String time) {
         Calendar cal = Calendar.getInstance();
+
         cal.setTimeInMillis(getNextEnvoy().getTimeInMillis());
 
         for (String i : time.split(" ")) {
@@ -607,7 +617,8 @@ public class CrazyManager {
 
         if (maxSpawns > (Math.pow(this.config.getProperty(ConfigKeys.envoys_max_radius) * 2, 2) - Math.pow((this.config.getProperty(ConfigKeys.envoys_min_radius) * 2 + 1), 2))) {
             maxSpawns = (int) (Math.pow(this.config.getProperty(ConfigKeys.envoys_max_radius) * 2, 2) - Math.pow((this.config.getProperty(ConfigKeys.envoys_min_radius) * 2 + 1), 2));
-            this.logger.warn("Crate spawn amount is larger than the area that was provided. Spawning " + maxSpawns + " crates instead.");
+
+            this.fusion.log(Level.WARNING, "Crate spawn amount is larger than the area that was provided. Spawning %s crates instead.", maxSpawns);
         }
 
         if (this.config.getProperty(ConfigKeys.envoys_random_locations)) {
@@ -629,6 +640,7 @@ public class CrazyManager {
                         this.blacklistedBlocks.contains(location.getBlock().getType())) continue;
 
                 Block block = location.getBlock();
+
                 if (block.getType() != Material.AIR) block = block.getLocation().add(0, 1, 0).getBlock();
 
                 this.locationSettings.addDropLocations(block);
@@ -780,6 +792,7 @@ public class CrazyManager {
                     if (!block.getChunk().isLoaded()) block.getChunk().load();
 
                     int fallingHeight = this.config.getProperty(ConfigKeys.envoy_falling_height);
+
                     Material material = Material.valueOf(this.config.getProperty(ConfigKeys.envoy_falling_block_type));
 
                     FallingBlock fallingBlock = block.getWorld().spawn(block.getLocation().add(.5, fallingHeight, .5), FallingBlock.class);
@@ -799,6 +812,7 @@ public class CrazyManager {
                     if (tier.isHoloEnabled() && this.holograms != null) this.holograms.createHologram(block.getLocation(), tier, MiscUtils.toString(block.getLocation()));
 
                     addActiveEnvoy(block, tier);
+
                     this.locationSettings.addActiveLocation(block);
 
                     if (tier.getSignalFlareToggle() && block.getChunk().isLoaded()) startSignalFlare(block.getLocation(), tier);
@@ -811,7 +825,7 @@ public class CrazyManager {
             public void run() {
                 EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.OUT_OF_TIME);
 
-                plugin.getServer().getPluginManager().callEvent(event);
+                pluginManager.callEvent(event);
 
                 Messages.ended.broadcast(config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
 
@@ -829,11 +843,14 @@ public class CrazyManager {
      */
     public void endEnvoyEvent() {
         removeAllEnvoys(false);
+
         setEnvoyActive(false);
+
         cancelEnvoyRunTime();
 
         if (this.config.getProperty(ConfigKeys.envoys_run_time_toggle)) {
             setNextEnvoy(getEnvoyCooldown());
+
             resetWarnings();
         }
 
@@ -868,7 +885,7 @@ public class CrazyManager {
      * @param tier The tier the signal is.
      */
     public void startSignalFlare(final Location loc, final Tier tier) {
-        ScheduledTask task = new FoliaScheduler(this.plugin, loc) {
+        final ScheduledTask task = new FoliaScheduler(this.plugin, loc) {
             @Override
             public void run() {
                 firework(loc.clone().add(.5, 0, .5), tier);
@@ -903,6 +920,7 @@ public class CrazyManager {
      */
     public void setCenter(Location loc) {
         this.center = loc;
+
         this.centerString = Methods.getUnBuiltLocation(this.center);
 
         Files.users.getConfiguration().set("Center", this.centerString);
@@ -1056,6 +1074,7 @@ public class CrazyManager {
         location.add(-radius, 0, -radius);
         locations2.add(radius, 0, radius);
         List<Block> locations = new ArrayList<>();
+
         int topBlockX = (Math.max(location.getBlockX(), locations2.getBlockX()));
         int bottomBlockX = (Math.min(location.getBlockX(), locations2.getBlockX()));
         int topBlockZ = (Math.max(location.getBlockZ(), locations2.getBlockZ()));

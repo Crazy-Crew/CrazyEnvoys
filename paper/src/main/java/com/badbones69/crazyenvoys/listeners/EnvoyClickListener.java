@@ -34,6 +34,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.types.ConfigKeys;
@@ -45,16 +46,16 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static java.util.regex.Matcher.quoteReplacement;
-
 public class EnvoyClickListener implements Listener {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
     private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
-    private final FusionPaper fusion = this.plugin.getFusion();
+    private @NotNull final FusionPaper fusion = this.plugin.getFusion();
 
-    private final Server server = this.plugin.getServer();
+    private @NotNull final Server server = this.plugin.getServer();
+
+    private @NotNull final PluginManager pluginManager = this.server.getPluginManager();
 
     private @NotNull final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
     private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
@@ -116,8 +117,10 @@ public class EnvoyClickListener implements Listener {
         // Ryder End
 
         List<Prize> prizes = tier.getUseChance() ? pickPrizesByChance(tier) : pickRandomPrizes(tier);
-        EnvoyOpenEvent envoyOpenEvent = new EnvoyOpenEvent(player, block, tier, prizes);
-        this.plugin.getServer().getPluginManager().callEvent(envoyOpenEvent);
+
+        final EnvoyOpenEvent envoyOpenEvent = new EnvoyOpenEvent(player, block, tier, prizes);
+
+        this.pluginManager.callEvent(envoyOpenEvent);
 
         if (envoyOpenEvent.isCancelled()) return;
 
@@ -215,9 +218,10 @@ public class EnvoyClickListener implements Listener {
                 Messages.envoys_remaining.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_envoys_remaining), placeholders);
             }
         } else {
-            EnvoyEndEvent envoyEndEvent = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);
+            final EnvoyEndEvent envoyEndEvent = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);
 
-            this.server.getPluginManager().callEvent(envoyEndEvent);
+            this.pluginManager.callEvent(envoyEndEvent);
+
             this.crazyManager.endEnvoyEvent();
 
             Messages.ended.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
@@ -252,7 +256,9 @@ public class EnvoyClickListener implements Listener {
         if (this.holograms != null) this.holograms.createHologram(location, tier, MiscUtils.toString(location));
 
         this.crazyManager.removeFallingBlock(entity);
+
         this.crazyManager.addActiveEnvoy(block, tier);
+
         this.locationSettings.addActiveLocation(block);
 
         if (tier.getSignalFlareToggle() && block.getChunk().isLoaded()) this.crazyManager.startSignalFlare(location, tier);
