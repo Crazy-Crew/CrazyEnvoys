@@ -1,12 +1,15 @@
 package com.badbones69.crazyenvoys.api.objects.misc;
 
+import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.util.ItemUtil;
-import com.ryderbelserion.fusion.paper.builders.items.ItemBuilder;
+import com.ryderbelserion.fusion.core.api.exceptions.FusionException;
+import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.utils.ColorUtils;
 import com.ryderbelserion.fusion.paper.utils.ItemUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ItemType;
@@ -15,6 +18,10 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class Tier {
+
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
+
+    private final FusionPaper fusion = this.plugin.getFusion();
 
     private final ItemStack itemStack;
 
@@ -98,33 +105,47 @@ public class Tier {
             configuration.getStringList("Settings.Signal-Flare.Colors").forEach(color -> addSignalFlareColor(ColorUtils.getColor(color)));
         }
 
-        for (String prizeID : configuration.getConfigurationSection("Prizes").getKeys(false)) {
-            String cpath = "Prizes." + prizeID + ".";
-            int chance = configuration.getInt(cpath + "Chance");
-            String displayName = configuration.contains(cpath + "DisplayName") ? configuration.getString(cpath + "DisplayName") : "";
+        this.name = path.getFileName().toString().replace(".yml", "");
 
-            List<String> commands = new ArrayList<>();
+        final ConfigurationSection prizes = configuration.getConfigurationSection("Prizes");
 
-            configuration.getStringList(cpath + "Commands").forEach(line -> commands.add(line.replaceAll("%reward%", "{reward}")
-                    .replaceAll("%player%", "{player}")
-                    .replaceAll("%Player%", "{player}")
-                    .replaceAll("%tier%", "{tier}")));
-
-            List<String> messages = new ArrayList<>();
-
-            configuration.getStringList(cpath + "Messages").forEach(line -> messages.add(line.replaceAll("%reward%", "{reward}")
-                    .replaceAll("%player%", "{player}")
-                    .replaceAll("%Player%", "{player}")
-                    .replaceAll("%tier%", "{tier}")));
-
-            boolean dropItems = configuration.getBoolean(cpath + "Drop-Items");
-
-            final List<ItemBuilder> items = ItemUtil.convertStringList(configuration.getStringList(cpath + "Items"), prizeID);
-
-            addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
+        if (prizes == null) {
+            throw new FusionException("Failed to find the prizes section in %s".formatted(this.name));
         }
 
-        this.name = path.getFileName().toString().replace(".yml", "");
+        final Map<String, String> placeholders = Map.of(
+                "%player%", "{player}",
+                "%Player%", "{player}",
+                "%tier%", "{tier}"
+        );
+
+        for (final String id : prizes.getKeys(false)) {
+            final ConfigurationSection prize = prizes.getConfigurationSection(id);
+
+            if (prize == null) continue;
+
+            final List<String> commands = new ArrayList<>();
+
+            for (final String command : prize.getStringList("Commands")) {
+                if (command.isBlank()) continue;
+
+                commands.add(this.fusion.replacePlaceholders(command, placeholders));
+            }
+
+            final List<String> messages = new ArrayList<>();
+
+            for (final String message : prize.getStringList("Messages")) {
+                if (message.isBlank()) continue;
+
+                messages.add(this.fusion.replacePlaceholders(message, placeholders));
+            }
+
+            addPrize(new Prize(id).setDisplayName(prize.getString("DisplayName", ""))
+                    .setChance(prize.getInt("Chance", 10))
+                    .setDropItems(prize.getBoolean("Drop-Items", true))
+                    .setItemBuilders(ItemUtil.convertStringList(prize.getStringList("Items"), id))
+                    .setCommands(commands).setMessages(messages));
+        }
     }
 
     // Check if the envoy is allowed to require the claim permission.
