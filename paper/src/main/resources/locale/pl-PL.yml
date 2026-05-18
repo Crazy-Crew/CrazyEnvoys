@@ -9,49 +9,49 @@
 #  2. Jeżeli chcesz użyć więcej niż jednej lini użyj list.
 # Przykłady:
 #   Linia:
-#     No-Permission: '{prefix}&cNie masz uprawnień, aby użyć tej komendy.'
+#     No-Permission: '{prefix}<red>Nie masz uprawnień, aby użyć tej komendy.'
 #   List:
 #     No-Permission:
-#       - '{prefix}&cNie masz uprawnień,'
-#       - '&caby użyć tej komendy. Spróbuj innej.'
+#       - '{prefix}<red>Nie masz uprawnień,'
+#       - '<red>aby użyć tej komendy. Spróbuj innej.'
 player:
-  no-permission: "{prefix}&cNie masz uprawnień, aby użyć tej komendy."
-  no-permission-to-claim: "{prefix}&cNie masz uprawnień, aby otworzyć ten zrzut."
+  no-permission: "{prefix}<red>Nie masz uprawnień, aby użyć tej komendy."
+  no-permission-to-claim: "{prefix}<red>Nie masz uprawnień, aby otworzyć ten zrzut."
 envoys:
-  already-started: "{prefix}&cWydarzenie zrzutów już jest w trakcie działania. Zatrzymaj je, aby rozpocząć kolejne."
-  force-start: "{prefix}&7Zacząłeś zrzuty."
-  not-started: "{prefix}&cW tym momencie żadne wydarzenie zrzutów nie jest aktywne."
-  force-ended: "{prefix}&cZakończyłeś zrzuty."
-  warning: "{prefix}&c[&4UWAGA&c] &7Wydarzenie zrzutów zacznie się za &6{time}."
-  started: "{prefix}&7Zrzuty właśnie zaczęły spadać. &6{amount} &7zrzutów spadło i będzie tam leżało przez 5m."
-  left: "{prefix}&6{player} &7znalazł zrzut. Pozostało &6{amount} zrzutów"
-  ended: "{prefix}&cWydarzenie zrzutów właśnie się zakończyło, oczekujcie nowego."
-  not-enough-players: "{prefix}&7Nie wystarczająco graczy, aby zacząć wydarzenie zrzutów. Tylko &6{amount} &7jest teraz aktywnych."
-  enter-editor-mode: "{prefix}&7Wszedłeś w tryb edycji."
-  leave-editor-mode: "{prefix}&7Opuściłeś tryb edycji."
-  editor-clear-locations: "{prefix}&7Wyczyściłeś pozycje zrzutów w edytorze."
-  editor-clear-failure: "{prefix}&7Musisz być edytorze, aby zmieniać pozycje zrzutów."
-  kicked-from-editor-mode: "{prefix}&cWydarzenie zrzutów jest aktywne. Zatrzymaj je lub poczekaj do jego."
-  add-location: "{prefix}&7Dodałeś lokację zrzutu."
-  remove-location: "{prefix}&cUsunąłeś lokację zrzutu."
-  time-left: "{prefix}&7Aktualne wydarzenie będzie trwało jescze przez &6{time}&7."
-  time-till-event: "{prefix}&7Następne wydarzenie zrzutów odbędzie za &6{time}&7."
+  already-started: "{prefix}<red>Wydarzenie zrzutów już jest w trakcie działania. Zatrzymaj je, aby rozpocząć kolejne."
+  force-start: "{prefix}<gray>Zacząłeś zrzuty."
+  not-started: "{prefix}<red>W tym momencie żadne wydarzenie zrzutów nie jest aktywne."
+  force-ended: "{prefix}<red>Zakończyłeś zrzuty."
+  warning: "{prefix}<red>[<dark_red>UWAGA<red>] <gray>Wydarzenie zrzutów zacznie się za <gold>{time}."
+  started: "{prefix}<gray>Zrzuty właśnie zaczęły spadać. <gold>{amount} <gray>zrzutów spadło i będzie tam leżało przez 5m."
+  left: "{prefix}<gold>{player} <gray>znalazł zrzut. Pozostało <gold>{amount} zrzutów"
+  ended: "{prefix}<red>Wydarzenie zrzutów właśnie się zakończyło, oczekujcie nowego."
+  not-enough-players: "{prefix}<gray>Nie wystarczająco graczy, aby zacząć wydarzenie zrzutów. Tylko <gold>{amount} <gray>jest teraz aktywnych."
+  enter-editor-mode: "{prefix}<gray>Wszedłeś w tryb edycji."
+  leave-editor-mode: "{prefix}<gray>Opuściłeś tryb edycji."
+  editor-clear-locations: "{prefix}<gray>Wyczyściłeś pozycje zrzutów w edytorze."
+  editor-clear-failure: "{prefix}<gray>Musisz być edytorze, aby zmieniać pozycje zrzutów."
+  kicked-from-editor-mode: "{prefix}<red>Wydarzenie zrzutów jest aktywne. Zatrzymaj je lub poczekaj do jego."
+  add-location: "{prefix}<gray>Dodałeś lokację zrzutu."
+  remove-location: "{prefix}<red>Usunąłeś lokację zrzutu."
+  time-left: "{prefix}<gray>Aktualne wydarzenie będzie trwało jescze przez <gold>{time}<gray>."
+  time-till-event: "{prefix}<gray>Następne wydarzenie zrzutów odbędzie za <gold>{time}<gray>."
   flare:
-    used-flare: "{prefix}&7Rozpocząłeś wydarzenie zrzutów za pomocą flary."
-    cant-use-flares: "{prefix}&cNie masz uprawnień do korzystania z flary."
-    sent-flare: "{prefix}&7Flary przekazane graczowi &6{player} &7w ilości {amount}."
-    received-flare: "{prefix}&7Dostałeś flary w ilości &6{amount}&7."
-  new-center: "{prefix}&7Ustawiłeś nowe centrum zrzutów."
-  not-in-world-guard-region: "{prefix}&cMusisz być w strefie wojny aby używać flar."
-  start-ignoring-messages: "{prefix}&7Od teraz wiadomośći zbiorowe nie będą ci wyświetlane."
-  stop-ignoring-messages: "{prefix}&7Od teraz będziesz widział wiadomości zbiorowe."
-  cooldown-left: "{prefix}&7Musisz odczekać jeszcze &6{time} &7zanim otworzysz kolejne zrzuty."
-  countdown-in-progress: "{prefix}&7Nie możesz otwierać rzutów prezez następne &6{time}s."
-  drops-available: "{prefix}&7Lista wszystkich zrzutów."
-  drops-possibilities: "{prefix}&7Lista lokacji na które mogą spadać zrzuty."
-  drops-page: "{prefix}&7Użyj /crazyenvoys drop [strona], aby zobaczyć więcej."
-  drops-format: "&7[&6{id}&7]: {world}, {x}, {y}, {z}"
-  no-spawn-locations-found: "{prefix}&cŻadne pozycje zrzutów nie zostały znalezione, więc wydarzenie zostało zakończone, a opóźnienie zresetowane."
+    used-flare: "{prefix}<gray>Rozpocząłeś wydarzenie zrzutów za pomocą flary."
+    cant-use-flares: "{prefix}<red>Nie masz uprawnień do korzystania z flary."
+    sent-flare: "{prefix}<gray>Flary przekazane graczowi <gold>{player} <gray>w ilości {amount}."
+    received-flare: "{prefix}<gray>Dostałeś flary w ilości <gold>{amount}<gray>."
+  new-center: "{prefix}<gray>Ustawiłeś nowe centrum zrzutów."
+  not-in-world-guard-region: "{prefix}<red>Musisz być w strefie wojny aby używać flar."
+  start-ignoring-messages: "{prefix}<gray>Od teraz wiadomośći zbiorowe nie będą ci wyświetlane."
+  stop-ignoring-messages: "{prefix}<gray>Od teraz będziesz widział wiadomości zbiorowe."
+  cooldown-left: "{prefix}<gray>Musisz odczekać jeszcze <gold>{time} <gray>zanim otworzysz kolejne zrzuty."
+  countdown-in-progress: "{prefix}<gray>Nie możesz otwierać rzutów prezez następne <gold>{time}s."
+  drops-available: "{prefix}<gray>Lista wszystkich zrzutów."
+  drops-possibilities: "{prefix}<gray>Lista lokacji na które mogą spadać zrzuty."
+  drops-page: "{prefix}<gray>Użyj /crazyenvoys drop [strona], aby zobaczyć więcej."
+  drops-format: "<gray>[<gold>{id}<gray>]: {world}, {x}, {y}, {z}"
+  no-spawn-locations-found: "{prefix}<red>Żadne pozycje zrzutów nie zostały znalezione, więc wydarzenie zostało zakończone, a opóźnienie zresetowane."
   hologram-placeholders:
     on-going: W trakcie
     not-running: Brak akcji
@@ -60,23 +60,23 @@ envoys:
     hour: g
     minute: m
     second: s
-  envoy-locations: '&e&lPozycje zrzutów: \n&c[ID], [Świat]: [X], [Y], [Z] &r{locations}'
-  location-format: '\n&8[&3{id}&8] &c{world}: {x}, {y}, {z}'
+  envoy-locations: '<yellow><b>Pozycje zrzutów: \n<red>[ID], [Świat]: [X], [Y], [Z] <reset>{locations}'
+  location-format: '\n<dark_gray>[<dark_aqua>{id}<dark_gray>] <red>{world}: {x}, {y}, {z}'
 misc:
-  command-not-found: '{prefix}&cPrawidłowe użycie tej komendy to &e{usage}.'
-  must-be-console-sender: '{prefix}&cMusisz korzystać z konsoli, aby użyć tej komendy.'
-  player-only: "{prefix}&cTylko gracze mogą używać tej komendy."
-  not-online: "{prefix}&cTen gracz nie jest aktywny w tym momencie."
-  not-a-number: "{prefix}&cTo nie jest liczba."
-  config-reload: "{prefix}&7Przeładowałeś wszystkie pliki."
+  command-not-found: '{prefix}<red>Prawidłowe użycie tej komendy to <yellow>{usage}.'
+  must-be-console-sender: '{prefix}<red>Musisz korzystać z konsoli, aby użyć tej komendy.'
+  player-only: "{prefix}<red>Tylko gracze mogą używać tej komendy."
+  not-online: "{prefix}<red>Ten gracz nie jest aktywny w tym momencie."
+  not-a-number: "{prefix}<red>To nie jest liczba."
+  config-reload: "{prefix}<gray>Przeładowałeś wszystkie pliki."
   help:
-    - "&6/crazyenvoys help &7- Pokazuje te informacje."
-    - "&6/crazyenvoys reload &7- Przeładowuje wszystkie pliki związane z ustawieniami pluginu."
-    - "&6/crazyenvoys time &7- Pokazuje czas do startu lub końca wydarzenia zrzutów."
-    - "&6/crazyenvoys drops [page] &7- Pokazuje wszystkie aktualne pozycje."
-    - "&6/crazyenvoys ignore &7- Włącza ingorowanie wiadomości zbiorowych."
-    - "&6/crazyenvoys flare [ilość] [gracz] &7- Daje graczowi flary pozwalające rozpocząć event."
-    - "&6/crazyenvoys edit &7- Edytuj pozycje zrzutów za pomocą bedrock'a."
-    - "&6/crazyenvoys start &7- Zmusza do rozpoczęcia zrzutu."
-    - "&6/crazyenvoys stop &7- Zmusza do zakończenia zrzutu."
-    - "&6/crazyenvoys center &7- Ustawia centrum losowego zrzutu."
+    - "<gold>/crazyenvoys help <gray>- Pokazuje te informacje."
+    - "<gold>/crazyenvoys reload <gray>- Przeładowuje wszystkie pliki związane z ustawieniami pluginu."
+    - "<gold>/crazyenvoys time <gray>- Pokazuje czas do startu lub końca wydarzenia zrzutów."
+    - "<gold>/crazyenvoys drops [page] <gray>- Pokazuje wszystkie aktualne pozycje."
+    - "<gold>/crazyenvoys ignore <gray>- Włącza ingorowanie wiadomości zbiorowych."
+    - "<gold>/crazyenvoys flare [ilość] [gracz] <gray>- Daje graczowi flary pozwalające rozpocząć event."
+    - "<gold>/crazyenvoys edit <gray>- Edytuj pozycje zrzutów za pomocą bedrock'a."
+    - "<gold>/crazyenvoys start <gray>- Zmusza do rozpoczęcia zrzutu."
+    - "<gold>/crazyenvoys stop <gray>- Zmusza do zakończenia zrzutu."
+    - "<gold>/crazyenvoys center <gray>- Ustawia centrum losowego zrzutu."

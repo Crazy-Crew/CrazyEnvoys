@@ -4,7 +4,7 @@ Settings:
   # What permission they need.
   Claim-Permission-Name: 'basic.envoy.use'
   Prize-Message:
-    - '&7You have won &c{reward} &7from &c{tier}.'
+    - '<gray>You have won <red>{reward} <gray>from <red>{tier}.'
   Spawn-Chance: 85 #The chance that this tier will spawn.
   Use-Chance: true #If true then it uses the chance option in the prizes and if false then each prize has a 1/(Amount of Prizes) chance of winning.
   Placed-Block: 'CHEST' #The block that will be clicked when they land.
@@ -16,9 +16,9 @@ Settings:
   Hologram-Height: 1.5 #How high the hologram will be from the crate.
   Hologram-Range: 8 # The distance the hologram can be seen. Only works with CMI and DecentHolograms
   Hologram: #Requires 3rd party plugins such as DecentHolograms to function. https://github.com/Crazy-Crew/CrazyEnvoys/blob/main/platforms/paper/src/main/java/com/badbones69/crazyenvoys/support/libraries/PluginSupport.java
-  # Available placeholders:
-  # %crazyenvoys_crates_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
-    - '&7&l(&6&l!&7&l) Basic Crate'
+    # Available placeholders:
+    # %crazyenvoys_crates_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
+    - '<gray><b>(<gold><b>!<gray><b>) Basic Crate'
     - '%crazyenvoys_crates_time%'
   Firework-Toggle: true #Toggle on or off fireworks.
   Firework-Colors: #The colors the fireworks will be.
@@ -44,27 +44,27 @@ Settings:
 ###################################
 Prizes: #The prizes that can be won.
   '1': #Prize number
-    DisplayName: '&a$1,000' #The display name used in {reward}
+    DisplayName: '<green>$1,000' #The display name used in {reward}
     Chance: 10 #The chance that it will be won.
     Drop-Items: false #Drop all items in the Items: option on the ground instead of into their inventory.
     Messages: #The message that will be sent to the player if won.
-      - '&7You have just won {reward}.'
+      - '<gray>You have just won {reward}.'
     Commands: #The commands that will be run when this prize is won.
       - 'eco give {player} 1000'
   '2':
-    DisplayName: '&616 Gold Apples' #The display name used in %reward%
+    DisplayName: '<gold>16 Gold Apples' #The display name used in %reward%
     Chance: 75
     Drop-Items: false
     Messages:
-      - '&7You have just won {reward}.'
+      - '<gray>You have just won {reward}.'
     Items:
-      - 'Item:GOLDEN_APPLE, Amount:16, Name:&dJuicy Golden Apple, Lore:&7I am a yummy apple,&7Make sure to savor my flavor.'
+      - 'Item:GOLDEN_APPLE, Amount:16, Name:<light_purple>Juicy Golden Apple, Lore:<gray>I am a yummy apple,<gray>Make sure to savor my flavor.'
   '3':
-    DisplayName: '&dFood Pack' #The display name used in {reward}
+    DisplayName: '<light_purple>Food Pack' #The display name used in {reward}
     Chance: 40
     Drop-Items: false
     Messages:
-      - '&7You have just had a great harvest.'
+      - '<gray>You have just had a great harvest.'
     Items:
       - 'Item:COOKED_BEEF, Amount:16'
       - 'Item:APPLE, Amount:16'

@@ -40,6 +40,7 @@ public class FlareClickListener implements Listener {
 
                 if (!player.hasPermission("envoy.flare.use")) {
                     Messages.cant_use_flares.sendMessage(player);
+
                     return;
                 }
 
@@ -52,10 +53,9 @@ public class FlareClickListener implements Listener {
                 int online = this.plugin.getServer().getOnlinePlayers().size();
 
                 if (this.config.getProperty(ConfigKeys.envoys_flare_minimum_players_toggle) && online < this.config.getProperty(ConfigKeys.envoys_flare_minimum_players_amount)) {
-                    Map<String, String> placeholder = new HashMap<>();
-                    placeholder.put("{amount}", String.valueOf(online));
-
-                    Messages.not_enough_players.sendMessage(player, placeholder);
+                    Messages.not_enough_players.sendMessage(player, Map.of(
+                            "{amount}", String.valueOf(online)
+                    ));
 
                     return;
                 }

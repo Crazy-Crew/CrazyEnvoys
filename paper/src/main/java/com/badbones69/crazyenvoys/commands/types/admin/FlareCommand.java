@@ -20,14 +20,14 @@ public class FlareCommand extends EnvoyCommand {
     @Permission(value = "envoy.flare.give", def = PermissionDefault.OP)
     @Syntax("/envoys flare [amount] [player]")
     public void execute(final CommandSender sender, @ArgName("amount") @Suggestion("numbers") final int amount, @ArgName("player") @Optional @Suggestion("players") final Player player) {
-        final Map<String, String> placeholder = new HashMap<>();
+        final Map<String, String> placeholders = new HashMap<>();
 
-        placeholder.put("{player}", player.getName());
-        placeholder.put("{amount}", amount + "");
+        placeholders.put("{player}", player.getName());
+        placeholders.put("{amount}", amount + "");
 
-        Messages.give_flare.sendMessage(sender, placeholder);
+        Messages.give_flare.sendMessage(sender, placeholders);
 
-        if (!sender.getName().equalsIgnoreCase(player.getName())) Messages.given_flare.sendMessage(player, placeholder);
+        if (!sender.getName().equalsIgnoreCase(player.getName())) Messages.given_flare.sendMessage(player, placeholders);
 
         this.flareSettings.giveFlare(player, amount);
     }

@@ -1,4 +1,4 @@
-package com.badbones69.crazyenvoys.commands.relations.enums;
+package com.badbones69.crazyenvoys.commands.types.admin.migrator.enums;
 
 public enum MigrationType {
 

@@ -11,7 +11,7 @@ public class GuiProperty {
     }
 
     public GuiProperty() {
-        this.title = "&cEnvoy Drops";
+        this.title = "<red>Envoy Drops";
         this.size = 27;
     }
 

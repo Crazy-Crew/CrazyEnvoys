@@ -16,16 +16,16 @@ public class HelpCommand extends EnvoyCommand {
     @Permission(value = "envoy.time", def = PermissionDefault.TRUE)
     @Syntax("/envoys")
     public void execute(final CommandSender sender) {
-        Map<String, String> placeholder = new HashMap<>();
+        Map<String, String> placeholders = new HashMap<>();
 
         if (this.crazyManager.isEnvoyActive()) {
-            placeholder.put("{time}", this.crazyManager.getEnvoyRunTimeLeft());
+            placeholders.put("{time}", this.crazyManager.getEnvoyRunTimeLeft());
 
-            Messages.time_left.sendMessage(sender, placeholder);
+            Messages.time_left.sendMessage(sender, placeholders);
         } else {
-            placeholder.put("{time}", this.crazyManager.getNextEnvoyTime());
+            placeholders.put("{time}", this.crazyManager.getNextEnvoyTime());
 
-            Messages.time_till_event.sendMessage(sender, placeholder);
+            Messages.time_till_event.sendMessage(sender, placeholders);
         }
     }
 

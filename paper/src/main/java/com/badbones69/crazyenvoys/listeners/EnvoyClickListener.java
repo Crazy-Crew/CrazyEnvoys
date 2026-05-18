@@ -4,19 +4,17 @@ import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.api.builders.types.PrizeGui;
+import com.badbones69.crazyenvoys.api.builders.gui.PrizeGui;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyOpenEvent;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
-import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.config.beans.GuiProperty;
 import com.badbones69.crazyenvoys.support.holograms.HologramManager;
 import com.badbones69.crazyenvoys.util.MiscUtils;
-import com.badbones69.crazyenvoys.util.MsgUtils;
 import com.ryderbelserion.fusion.core.api.constants.ModSupport;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
@@ -46,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+
 import static java.util.regex.Matcher.quoteReplacement;
 
 public class EnvoyClickListener implements Listener {
@@ -125,36 +124,47 @@ public class EnvoyClickListener implements Listener {
 
         this.crazyManager.stopSignalFlare(block.getLocation());
 
-        Map<String, String> placeholder = new HashMap<>();
+        Map<String, String> placeholders = new HashMap<>();
 
-        if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) placeholder.put("{tier}", this.crazyManager.getTier(block).getName());
+        if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) placeholders.put("{tier}", this.crazyManager.getTier(block).getName());
 
         this.crazyManager.removeActiveEnvoy(block);
 
         if (tier.getPrizes().isEmpty()) {
-            this.plugin.getServer().broadcastMessage(Methods.getPrefix() + MsgUtils.color("&cNo prizes were found in the " + tier + " tier." + " Please add prizes other wise errors will occur."));
+            this.server.broadcast(this.fusion.asComponent("<red>No prizes were found in the tier named {tier}, Please check your configurations otherwise things will break", Map.of("{tier}", tier.getName())));
 
             return;
         }
 
         final boolean isPapiReady = this.fusion.isModReady(ModSupport.placeholder_api);
 
-        for (Prize prize : envoyOpenEvent.getPrizes()) {
-            if (!tier.getPrizeMessage().isEmpty() && prize.getMessages().isEmpty()) {
-                for (String message : tier.getPrizeMessage()) {
-                    if (isPapiReady) {
-                        message = PlaceholderAPI.setPlaceholders(player, message);
-                    }
+        final String playerName = player.getName();
 
-                    player.sendMessage(MsgUtils.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
+        for (Prize prize : envoyOpenEvent.getPrizes()) {
+            final String displayName = prize.getDisplayName();
+            final String tierName = tier.getName();
+
+            final Map<String, String> values = Map.of(
+                    "{player}", playerName,
+                    "{reward}", displayName,
+                    "{tier}", tierName
+            );
+
+            if (!tier.getPrizeMessage().isEmpty() && prize.getMessages().isEmpty()) {
+                for (final String message : tier.getPrizeMessage()) {
+                    player.sendMessage(this.fusion.asComponent(
+                            player,
+                            message,
+                            values
+                    ));
                 }
             } else {
-                for (String message : prize.getMessages()) {
-                    if (isPapiReady) {
-                        message = PlaceholderAPI.setPlaceholders(player, message);
-                    }
-
-                    player.sendMessage(MsgUtils.color(message.replaceAll("\\{player}", player.getName()).replaceAll("\\{reward}", quoteReplacement(prize.getDisplayName())).replaceAll("\\{tier}", tier.getName())));
+                for (final String message : prize.getMessages()) {
+                    player.sendMessage(this.fusion.asComponent(
+                            player,
+                            message,
+                            values
+                    ));
                 }
             }
 
@@ -188,22 +198,26 @@ public class EnvoyClickListener implements Listener {
                 if (!prize.getItems().isEmpty()) {
                     GuiProperty property = this.config.getProperty(ConfigKeys.envoy_menu);
 
-                    player.openInventory(new PrizeGui(player, property.getTitle(), property.getSize(), tier, prize).build().getInventory());
+                    new PrizeGui(player, tier, prize, property.getTitle(), property.getSize()).build();
                 }
             }
         }
 
         if (!this.crazyManager.getActiveEnvoys().isEmpty()) {
             if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) {
-                placeholder.put("{player}", player.getName());
-                placeholder.put("{amount}", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
-                Messages.envoys_remaining.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_envoys_remaining), placeholder);
+
+                placeholders.put("{player}", player.getName());
+                placeholders.put("{amount}", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
+
+                Messages.envoys_remaining.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_envoys_remaining), placeholders);
             }
         } else {
             EnvoyEndEvent envoyEndEvent = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.ALL_CRATES_COLLECTED);
-            this.plugin.getServer().getPluginManager().callEvent(envoyEndEvent);
+
+            this.server.getPluginManager().callEvent(envoyEndEvent);
             this.crazyManager.endEnvoyEvent();
-            Messages.ended.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
+
+            Messages.ended.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
         }
     }
 
@@ -228,7 +242,7 @@ public class EnvoyClickListener implements Listener {
 
         if (block.getType() != Material.AIR) block = block.getLocation().add(0, 1, 0).getBlock();
 
-        block.setType(new ItemBuilder().setMaterial(tier.getPlacedBlockMaterial()).getMaterial());
+        block.setType(tier.getPlacedBlockMaterial());
 
         final Location location = block.getLocation();
 

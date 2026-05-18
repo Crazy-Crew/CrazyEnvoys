@@ -3,36 +3,34 @@ package com.badbones69.crazyenvoys.api.objects;
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
+import com.badbones69.crazyenvoys.config.types.ConfigKeys;
+import com.badbones69.crazyenvoys.util.ItemUtil;
+import com.ryderbelserion.fusion.paper.builders.items.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import com.badbones69.crazyenvoys.config.ConfigManager;
-import com.badbones69.crazyenvoys.config.types.ConfigKeys;
+import org.jetbrains.annotations.NotNull;
 
 public class FlareSettings {
     
-    private ItemBuilder flareItemBuilder;
+    private ItemBuilder builder;
     
     public void load() {
-        SettingsManager config = ConfigManager.getConfig();
+        final SettingsManager config = ConfigManager.getConfig();
 
-        this.flareItemBuilder = new ItemBuilder()
-                .setMaterial(config.getProperty(ConfigKeys.envoys_flare_item_type))
-                .setGlow(config.getProperty(ConfigKeys.envoys_flare_item_glowing))
-                .setName(config.getProperty(ConfigKeys.envoys_flare_item_name))
-                .setLore(config.getProperty(ConfigKeys.envoys_flare_item_lore));
+        this.builder = ItemBuilder.from(config.getProperty(ConfigKeys.envoys_flare_item_type))
+                .withDisplayName(config.getProperty(ConfigKeys.envoys_flare_item_name))
+                .withDisplayLore(config.getProperty(ConfigKeys.envoys_flare_item_lore));
+
+        ItemUtil.addGlow(this.builder, String.valueOf(config.getProperty(ConfigKeys.envoys_flare_item_glowing)));
     }
     
-    public ItemStack getFlare() {
-        return getFlare(1);
+    public ItemStack getFlare(@NotNull final Player player) {
+        return getFlare(player, 1);
     }
     
-    public ItemStack getFlare(int amount) {
-        ItemStack itemStack = this.flareItemBuilder.setAmount(amount).build();
-
-        itemStack.editPersistentDataContainer(container -> container.set(PersistentKeys.envoy_flare.getNamespacedKey(), PersistentDataType.BOOLEAN, true));
-
-        return itemStack;
+    public ItemStack getFlare(@NotNull final Player player, int amount) {
+        return this.builder.setPersistentBoolean(PersistentKeys.envoy_flare.getNamespacedKey(), true).setAmount(amount).asItemStack(player);
     }
     
     public boolean isFlare(ItemStack item) {
@@ -45,13 +43,13 @@ public class FlareSettings {
     
     public void giveFlare(Player player, int amount) {
         if (Methods.isInvFull(player)) {
-            player.getWorld().dropItem(player.getLocation(), getFlare(amount));
+            player.getWorld().dropItem(player.getLocation(), getFlare(player, amount));
         } else {
-            Methods.addItem(player, getFlare(amount));
+            Methods.addItem(player, getFlare(player, amount));
         }
     }
     
     public void takeFlare(Player player) {
-        player.getInventory().removeItem(getFlare());
+        player.getInventory().removeItem(getFlare(player));
     }
 }

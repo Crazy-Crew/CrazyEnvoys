@@ -34,7 +34,7 @@ public class StopCommand extends EnvoyCommand {
         this.pluginManager.callEvent(event);
         this.crazyManager.endEnvoyEvent();
 
-        Messages.ended.broadcastMessage(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
+        Messages.ended.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_ended));
 
         Messages.force_end.sendMessage(sender);
     }

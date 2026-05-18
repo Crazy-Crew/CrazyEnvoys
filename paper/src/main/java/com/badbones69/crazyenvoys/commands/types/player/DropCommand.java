@@ -3,7 +3,6 @@ package com.badbones69.crazyenvoys.commands.types.player;
 import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.commands.types.EnvoyCommand;
-import com.badbones69.crazyenvoys.util.MsgUtils;
 import dev.triumphteam.cmd.bukkit.annotation.Permission;
 import dev.triumphteam.cmd.core.annotations.ArgName;
 import dev.triumphteam.cmd.core.annotations.Command;
@@ -23,11 +22,11 @@ public class DropCommand extends EnvoyCommand {
     @Permission(value = "envoy.drops", def = PermissionDefault.TRUE)
     @Syntax("/envoys [page]")
     public void execute(final CommandSender sender, @ArgName("drop") @Suggestion("drops") final int page) {
-        List<String> locs = new ArrayList<>();
+        final List<String> locs = new ArrayList<>();
 
         int amount = 1;
 
-        Map<String, String> placeholders = new HashMap<>();
+        final Map<String, String> placeholders = new HashMap<>();
 
         for (Block block : this.crazyManager.isEnvoyActive() ? this.crazyManager.getActiveEnvoys() : this.locationSettings.getSpawnLocations()) {
             placeholders.put("{id}", String.valueOf(amount));
@@ -50,7 +49,7 @@ public class DropCommand extends EnvoyCommand {
         }
 
         for (String dropLocation : Methods.getPage(locs, page)) {
-            sender.sendMessage(MsgUtils.color(dropLocation));
+            sender.sendMessage(this.fusion.asComponent(sender, dropLocation));
         }
 
         if (!this.crazyManager.isEnvoyActive()) Messages.drops_page.sendMessage(sender);
