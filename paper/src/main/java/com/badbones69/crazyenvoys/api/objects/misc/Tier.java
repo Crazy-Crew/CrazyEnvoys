@@ -101,8 +101,8 @@ public class Tier {
             this.prizeMessage.add(this.fusion.replacePlaceholders(message, placeholders));
         }
 
-        setSignalFlareToggle(configuration.getBoolean("Settings.Signal-Flare.Toggle"));
-        setSignalFlareTimer(configuration.getString("Settings.Signal-Flare.Time"));
+        setSignalFlareToggle(configuration.getBoolean("Settings.Signal-Flare.Toggle", false));
+        setSignalFlareTimer(configuration.getString("Settings.Signal-Flare.Time", "40s"));
 
         if (configuration.getStringList("Settings.Signal-Flare.Colors").isEmpty()) {
             setSignalFlareColors(Arrays.asList(Color.GRAY, Color.BLACK, Color.ORANGE));
