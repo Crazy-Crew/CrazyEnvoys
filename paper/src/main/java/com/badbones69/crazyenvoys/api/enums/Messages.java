@@ -211,6 +211,10 @@ public enum Messages {
     }
 
     public void broadcast(final boolean isIgnoring, @NonNull final Map<String, String> placeholders) {
+        broadcast(isIgnoring, "", placeholders);
+    }
+
+    public void broadcast(final boolean isIgnoring, @NonNull final String permission, @NonNull final Map<String, String> placeholders) {
         final Server server = this.plugin.getServer();
 
         final SettingsManager config = ConfigManager.getConfig();
@@ -228,6 +232,8 @@ public enum Messages {
 
                 if (isIgnoring && this.crazyManager.isIgnoringMessages(player.getUniqueId())) continue;
 
+                if (!permission.isBlank() && !player.hasPermission(permission)) continue;
+
                 sendMessage(player, placeholders);
             }
 
@@ -236,6 +242,8 @@ public enum Messages {
 
         for (final Player player : server.getOnlinePlayers()) {
             if (isIgnoring && this.crazyManager.isIgnoringMessages(player.getUniqueId())) continue;
+
+            if (!permission.isBlank() && !player.hasPermission(permission)) continue;
 
             sendMessage(player, placeholders);
         }

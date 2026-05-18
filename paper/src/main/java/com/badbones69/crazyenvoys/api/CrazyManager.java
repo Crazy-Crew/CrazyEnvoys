@@ -652,13 +652,9 @@ public class CrazyManager {
             }
         }
 
-        boolean envoyLocationsBroadcast = ConfigManager.getConfig().getProperty(ConfigKeys.envoys_locations_broadcast);
-
-        if (envoyLocationsBroadcast) {
-            StringBuilder locations = getStringBuilder();
-
-            //this.server.broadcast(Messages.envoy_locations.getMessage("{locations}", locations.toString().translateEscapes()).translateEscapes(), "envoy.locations");
-        }
+        Messages.envoy_locations.broadcast(this.config.getProperty(ConfigKeys.envoys_locations_broadcast), "envoy.locations", Map.of(
+                "{locations}", getStringBuilder().toString().translateEscapes()
+        ));
 
         return this.locationSettings.getDropLocations();
     }
@@ -668,15 +664,18 @@ public class CrazyManager {
         StringBuilder locations = new StringBuilder();
 
         int x = 1;
+
         for (Block block : this.locationSettings.getDropLocations()) {
             HashMap<String, String> placeholders = new HashMap<>();
+
             placeholders.put("{id}", String.valueOf(x));
             placeholders.put("{world}", block.getWorld().getName());
             placeholders.put("{x}", String.valueOf(block.getX()));
             placeholders.put("{y}", String.valueOf(block.getY()));
             placeholders.put("{z}", String.valueOf(block.getZ()));
 
-            //locations.append(Messages.location_format.getMessage(placeholders).translateEscapes());
+            locations.append(Messages.location_format.getMessage(null, placeholders).translateEscapes());
+
             x += 1;
         }
 

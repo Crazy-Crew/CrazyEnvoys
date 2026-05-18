@@ -1,6 +1,5 @@
 package com.badbones69.crazyenvoys;
 
-import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
@@ -19,7 +18,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import com.badbones69.crazyenvoys.config.ConfigManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -28,8 +26,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Methods {
 
     private static final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
-
-    private static final @NotNull SettingsManager config = ConfigManager.getConfig();
 
     public static void addItem(final Player player, final ItemStack... items) {
         final Inventory inventory = player.getInventory();

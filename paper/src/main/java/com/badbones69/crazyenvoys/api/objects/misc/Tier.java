@@ -1,16 +1,22 @@
 package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.Methods;
-import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
+import com.badbones69.crazyenvoys.util.ItemUtil;
+import com.ryderbelserion.fusion.paper.builders.items.ItemBuilder;
 import com.ryderbelserion.fusion.paper.utils.ColorUtils;
+import com.ryderbelserion.fusion.paper.utils.ItemUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.NotNull;
 import java.nio.file.Path;
 import java.util.*;
 
 public class Tier {
+
+    private final ItemStack itemStack;
 
     private final String name;
 
@@ -20,8 +26,6 @@ public class Tier {
     
     private int spawnChance;
     private boolean useChance;
-    private Material placedBlockMaterial;
-    private short placedBlockMetaData;
     private boolean bulkToggle;
     private boolean bulkRandom;
     private int bulkMax;
@@ -63,10 +67,9 @@ public class Tier {
         this.holoHeight = holoHeight;
         this.holoMessage = holoMessage;
 
-        final ItemBuilder placedBlock = new ItemBuilder().setMaterial(configuration.getString("Settings.Placed-Block", "CHEST"));
+        final ItemType itemType = ItemUtils.getItemType(configuration.getString("Settings.Placed-Block", "chest").toLowerCase());
 
-        setPlacedBlockMaterial(placedBlock.getMaterial());
-        setPlacedBlockMetaData(placedBlock.getDamage());
+        this.itemStack = itemType == null ? ItemType.CHEST.createItemStack() : itemType.createItemStack();
 
         this.fireworkToggle = configuration.getBoolean("Settings.Firework-Toggle", false);
 
@@ -115,9 +118,10 @@ public class Tier {
                     .replaceAll("%tier%", "{tier}")));
 
             boolean dropItems = configuration.getBoolean(cpath + "Drop-Items");
-            List<ItemBuilder> items = ItemBuilder.convertStringList(configuration.getStringList(cpath + "Items"));
-            addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items)
-                    .setCommands(commands).setMessages(messages));
+
+            final List<ItemBuilder> items = ItemUtil.convertStringList(configuration.getStringList(cpath + "Items"), prizeID);
+
+            addPrize(new Prize(prizeID).setDisplayName(displayName).setChance(chance).setDropItems(dropItems).setItemBuilders(items).setCommands(commands).setMessages(messages));
         }
 
         this.name = path.getFileName().toString().replace(".yml", "");
@@ -199,52 +203,12 @@ public class Tier {
 
         return this;
     }
-    
+
     /**
      * Get the material of the block that acts as the crate.
      */
     public Material getPlacedBlockMaterial() {
-        return this.placedBlockMaterial;
-    }
-    
-    /**
-     * Set the material of the block that acts as the crate.
-     *
-     * @param placedBlockMaterial Material of the block.
-     */
-    public Tier setPlacedBlockMaterial(Material placedBlockMaterial) {
-        this.placedBlockMaterial = placedBlockMaterial;
-
-        return this;
-    }
-    
-    /**
-     * Get the metadata of the block that is acts as the crate.
-     */
-    public short getPlacedBlockMetaData() {
-        return this.placedBlockMetaData;
-    }
-    
-    /**
-     * Set the metadata of the block that acts as the crate.
-     *
-     * @param placedBlockMetaData The metadata as a Short.
-     */
-    public Tier setPlacedBlockMetaData(short placedBlockMetaData) {
-        this.placedBlockMetaData = placedBlockMetaData;
-
-        return this;
-    }
-    
-    /**
-     * Set the metadata of the block that acts as the crate.
-     *
-     * @param placedBlockMetaData The metadata as a Short.
-     */
-    public Tier setPlacedBlockMetaData(int placedBlockMetaData) {
-        this.placedBlockMetaData = (short) placedBlockMetaData;
-
-        return this;
+        return this.itemStack.getType();
     }
     
     /**
@@ -379,9 +343,7 @@ public class Tier {
     public Tier setHoloMessage(List<String> holoMessage) {
         this.holoMessage.clear();
 
-        for (String message : holoMessage) {
-            //this.holoMessage.add(MsgUtils.color(message)); //todo() improve this
-        }
+        this.holoMessage.addAll(holoMessage);
 
         return this;
     }

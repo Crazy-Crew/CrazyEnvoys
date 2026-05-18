@@ -49,7 +49,7 @@ public class DropCommand extends EnvoyCommand {
         }
 
         for (String dropLocation : Methods.getPage(locs, page)) {
-            //sender.sendMessage(MsgUtils.color(dropLocation)); //todo() improve this
+            sender.sendMessage(this.fusion.asComponent(sender, dropLocation));
         }
 
         if (!this.crazyManager.isEnvoyActive()) Messages.drops_page.sendMessage(sender);

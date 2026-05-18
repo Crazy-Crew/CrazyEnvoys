@@ -1,7 +1,8 @@
 package com.badbones69.crazyenvoys.api.objects.misc;
 
-import com.badbones69.crazyenvoys.api.objects.ItemBuilder;
+import com.ryderbelserion.fusion.paper.builders.items.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,7 @@ public class Prize {
     private boolean dropItems;
     private final List<String> messages;
     private List<String> commands;
-    private List<ItemStack> items;
-    private List<ItemBuilder> itemBuilders;
+    private List<ItemBuilder> builders;
     private String displayName;
     
     public Prize(String prizeID) {
@@ -23,8 +23,7 @@ public class Prize {
         this.displayName = "";
         this.messages = new ArrayList<>();
         this.commands = new ArrayList<>();
-        this.items = new ArrayList<>();
-        this.itemBuilders = new ArrayList<>();
+        this.builders = new ArrayList<>();
     }
 
     public String getDisplayName() {
@@ -100,12 +99,10 @@ public class Prize {
      *
      * @param messages The new messages the player gets. This will auto color code the messages.
      */
-    public Prize setMessages(List<String> messages) {
+    public Prize setMessages(@NotNull final List<String> messages) {
         this.messages.clear();
 
-        for (String message : messages) {
-            //this.messages.add(MsgUtils.color(message)); //todo() improve this
-        }
+        this.messages.addAll(messages);
 
         return this;
     }
@@ -122,7 +119,7 @@ public class Prize {
      *
      * @param commands List of commands to be run.
      */
-    public Prize setCommands(List<String> commands) {
+    public Prize setCommands(@NotNull final List<String> commands) {
         this.commands = commands;
 
         return this;
@@ -134,27 +131,15 @@ public class Prize {
      * @return The items that are won in the prize.
      */
     public List<ItemStack> getItems() {
-        return new ArrayList<>(this.items);
+        return this.builders.stream().map(ItemBuilder::asItemStack).toList();
     }
-    
-    /**
-     * Set the items that can be found in this prize.
-     *
-     * @param items The new items that are won in the prize.
-     */
-    public Prize setItems(List<ItemStack> items) {
-        this.items = items;
 
-        return this;
-    }
-    
     public List<ItemBuilder> getItemBuilders() {
-        return this.itemBuilders;
+        return this.builders;
     }
     
-    public Prize setItemBuilders(List<ItemBuilder> itemBuilders) {
-        this.itemBuilders = itemBuilders;
-        itemBuilders.forEach(itemBuilder -> items.add(itemBuilder.build()));
+    public Prize setItemBuilders(@NotNull final List<ItemBuilder> itemBuilders) {
+        this.builders = itemBuilders;
 
         return this;
     }

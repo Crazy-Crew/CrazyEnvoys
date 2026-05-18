@@ -1,6 +1,5 @@
 package com.badbones69.crazyenvoys;
 
-import com.badbones69.crazyenvoys.api.builders.types.PrizeGui;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
@@ -19,9 +18,6 @@ import com.ryderbelserion.fusion.core.api.enums.Level;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -85,8 +81,6 @@ public class CrazyEnvoys extends JavaPlugin {
         pluginManager.registerEvents(new FlareClickListener(), this);
         pluginManager.registerEvents(new FireworkDamageListener(), this);
 
-        pluginManager.registerEvents(new PrizeGui(), this);
-
         if (this.fusion.isModReady(ModSupport.placeholder_api)) {
             new PlaceholderAPISupport().register();
         }
@@ -118,14 +112,6 @@ public class CrazyEnvoys extends JavaPlugin {
 
     public FusionPaper getFusion() {
         return this.fusion;
-    }
-
-    private void registerCommand(PluginCommand pluginCommand, TabCompleter tabCompleter, CommandExecutor commandExecutor) {
-        if (pluginCommand != null) {
-            pluginCommand.setExecutor(commandExecutor);
-
-            if (tabCompleter != null) pluginCommand.setTabCompleter(tabCompleter);
-        }
     }
 
     public final Optional<HeadDatabaseAPI> getApi() {
