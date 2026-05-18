@@ -11,4 +11,4 @@ plugins {
 
 rootProject.name = "CrazyEnvoys"
 
-include("paper", "api")
+include("paper", "common", "api")

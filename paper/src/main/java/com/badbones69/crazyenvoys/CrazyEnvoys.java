@@ -1,6 +1,7 @@
 package com.badbones69.crazyenvoys;
 
 import com.badbones69.crazyenvoys.api.CrazyManager;
+import com.badbones69.crazyenvoys.api.PaperEnvoysPlugin;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
@@ -24,6 +25,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.support.MetricsWrapper;
+import org.jspecify.annotations.NonNull;
+
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Optional;
@@ -41,6 +44,8 @@ public class CrazyEnvoys extends JavaPlugin {
         this.startTime = System.nanoTime();
     }
 
+    private PaperEnvoysPlugin plugin;
+
     private EditorSettings editorSettings;
     private FlareSettings flareSettings;
     private CoolDownSettings coolDownSettings;
@@ -53,8 +58,9 @@ public class CrazyEnvoys extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.fusion = new FusionPaper(this);
-        this.fusion.init();
+        this.plugin = new PaperEnvoysPlugin(new FusionPaper(this));
+
+        this.fusion = this.plugin.getFusion();
 
         final Path path = getDataPath();
 
@@ -140,5 +146,9 @@ public class CrazyEnvoys extends JavaPlugin {
 
     public final CrazyManager getCrazyManager() {
         return this.crazyManager;
+    }
+
+    public @NonNull final PaperEnvoysPlugin getPlugin() {
+        return this.plugin;
     }
 }
