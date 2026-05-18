@@ -16,7 +16,7 @@ public class HelpCommand extends EnvoyCommand {
     @Permission(value = "envoy.time", def = PermissionDefault.TRUE)
     @Syntax("/envoys")
     public void execute(final CommandSender sender) {
-        Map<String, String> placeholders = new HashMap<>();
+        final Map<String, String> placeholders = new HashMap<>();
 
         if (this.crazyManager.isEnvoyActive()) {
             placeholders.put("{time}", this.crazyManager.getEnvoyRunTimeLeft());

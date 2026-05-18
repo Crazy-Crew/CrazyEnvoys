@@ -665,8 +665,8 @@ public class CrazyManager {
 
         int x = 1;
 
-        for (Block block : this.locationSettings.getDropLocations()) {
-            HashMap<String, String> placeholders = new HashMap<>();
+        for (final Block block : this.locationSettings.getDropLocations()) {
+            final Map<String, String> placeholders = new HashMap<>();
 
             placeholders.put("{id}", String.valueOf(x));
             placeholders.put("{world}", block.getWorld().getName());
@@ -741,8 +741,10 @@ public class CrazyManager {
         this.editorSettings.getEditors().clear();
 
         setEnvoyActive(true);
+
         int max = dropLocations.size();
-        Map<String, String> placeholders = new HashMap<>();
+
+        final Map<String, String> placeholders = new HashMap<>();
 
         placeholders.put("{amount}", String.valueOf(max));
 

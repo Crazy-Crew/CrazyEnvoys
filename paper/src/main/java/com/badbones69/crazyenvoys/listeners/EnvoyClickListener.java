@@ -82,15 +82,18 @@ public class EnvoyClickListener implements Listener {
 
         if (!player.hasPermission("envoy.bypass")) {
             if (this.config.getProperty(ConfigKeys.envoys_grace_period_toggle) && this.crazyManager.getCountdownTimer().getSecondsLeft() != 0) {
-                Map<String, String> placeholder = new HashMap<>();
-                placeholder.put("{time}", String.valueOf(this.crazyManager.getCountdownTimer().getSecondsLeft()));
+                final Map<String, String> placeholders = new HashMap<>();
 
-                Messages.countdown_in_progress.sendMessage(player, placeholder);
+                placeholders.put("{time}", String.valueOf(this.crazyManager.getCountdownTimer().getSecondsLeft()));
+
+                Messages.countdown_in_progress.sendMessage(player, placeholders);
+
                 return;
             }
 
             if (tier.isClaimPermissionToggleEnabled() && !player.hasPermission(tier.getClaimPermission())) {
                 Messages.no_claim_permission.sendMessage(player);
+
                 return;
             }
 
@@ -98,10 +101,12 @@ public class EnvoyClickListener implements Listener {
                 UUID uuid = player.getUniqueId();
 
                 if (this.coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(this.coolDownSettings.getCooldown().get(uuid))) {
-                    Map<String, String> placeholder = new HashMap<>();
-                    placeholder.put("{time}", Methods.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
+                    final Map<String, String> placeholders = new HashMap<>();
 
-                    Messages.cooldown_left.sendMessage(player, placeholder);
+                    placeholders.put("{time}", Methods.convertTimeToString(this.coolDownSettings.getCooldown().get(uuid)));
+
+                    Messages.cooldown_left.sendMessage(player, placeholders);
+
                     return;
                 }
 
@@ -124,7 +129,7 @@ public class EnvoyClickListener implements Listener {
 
         this.crazyManager.stopSignalFlare(block.getLocation());
 
-        Map<String, String> placeholders = new HashMap<>();
+        final Map<String, String> placeholders = new HashMap<>();
 
         if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) placeholders.put("{tier}", this.crazyManager.getTier(block).getName());
 
@@ -174,8 +179,7 @@ public class EnvoyClickListener implements Listener {
                     for (String cmd : prize.getCommands()) {
                         if (isPapiReady) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
 
-                        server.dispatchCommand(server.getConsoleSender(), cmd.replace("{player}", player.getName())
-                                .replaceAll("\\{tier}", quoteReplacement(prize.getDisplayName())));
+                        server.dispatchCommand(server.getConsoleSender(), fusion.replacePlaceholders(cmd, placeholders));
                     }
                 }
             }.runNow();
@@ -205,7 +209,6 @@ public class EnvoyClickListener implements Listener {
 
         if (!this.crazyManager.getActiveEnvoys().isEmpty()) {
             if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) {
-
                 placeholders.put("{player}", player.getName());
                 placeholders.put("{amount}", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
 

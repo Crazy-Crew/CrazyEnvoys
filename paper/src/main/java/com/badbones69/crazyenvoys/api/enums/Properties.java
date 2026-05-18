@@ -5,9 +5,15 @@ import ch.jalu.configme.properties.Property;
 import ch.jalu.configme.resource.PropertyReader;
 import com.badbones69.crazyenvoys.config.types.ConfigKeys;
 import com.badbones69.crazyenvoys.config.types.MessageKeys;
+import com.ryderbelserion.fusion.core.api.FusionProvider;
+import com.ryderbelserion.fusion.kyori.FusionKyori;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import static ch.jalu.configme.properties.PropertyInitializer.newListProperty;
 import static ch.jalu.configme.properties.PropertyInitializer.newProperty;
 
@@ -144,6 +150,8 @@ public enum Properties {
 
     envoys_allowed_worlds(ConfigKeys.envoys_allowed_worlds, newListProperty("Settings.World-Messages.Worlds", ConfigKeys.envoys_allowed_worlds.getDefaultValue()), Collections.emptyList()),
     envoys_warnings(ConfigKeys.envoys_warnings, newListProperty("Settings.Envoy-Warnings", ConfigKeys.envoys_warnings.getDefaultValue()), Collections.emptyList());
+
+    private final FusionKyori fusion = (FusionKyori) FusionProvider.getInstance();
 
     private Property<String> newString;
     private Property<String> oldString;
@@ -311,17 +319,21 @@ public enum Properties {
      * @return the finalized message to set
      */
     private String replace(final String message) {
-        return message.replaceAll("%prefix%", "{prefix}")
-                .replaceAll("%Prefix%", "{prefix}")
-                .replaceAll("%time%", "{time}")
-                .replaceAll("%amount%", "{amount}")
-                .replaceAll("%tier%", "{tier}")
-                .replaceAll("%player%", "{player}")
-                .replaceAll("%world%", "{world}")
-                .replaceAll("%x%", "{x}")
-                .replaceAll("%y%", "{y}")
-                .replaceAll("%z%", "{z}")
-                .replaceAll("%id%", "{id}")
-                .replaceAll("%locations%", "{locations}");
+        final Map<String, String> placeholders = new HashMap<>();
+
+        placeholders.put("%prefix%", "{prefix}");
+        placeholders.put("%Prefix%", "{prefix}");
+        placeholders.put("%time%", "{time}");
+        placeholders.put("%amount%", "{amount}");
+        placeholders.put("%tier%", "{tier}");
+        placeholders.put("%player%", "{player}");
+        placeholders.put("%world%", "{world}");
+        placeholders.put("%x%", "{x}");
+        placeholders.put("%y%", "{y}");
+        placeholders.put("%z%", "{z}");
+        placeholders.put("%id%", "{id}");
+        placeholders.put("%locations%", "{locations}");
+
+        return this.fusion.replacePlaceholders(message, placeholders);
     }
 }

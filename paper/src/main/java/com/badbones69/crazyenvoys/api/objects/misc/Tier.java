@@ -88,12 +88,17 @@ public class Tier {
             colors.forEach(color -> addFireworkColor(ColorUtils.getColor(color)));
         }
 
-        if (configuration.contains("Settings.Prize-Message") && !configuration.getStringList("Settings.Prize-Message").isEmpty()) {
-            List<String> array = new ArrayList<>();
+        final Map<String, String> placeholders = Map.of(
+                "%player%", "{player}",
+                "%reward", "{reward}",
+                "%Player%", "{player}",
+                "%tier%", "{tier}"
+        );
 
-            configuration.getStringList("Settings.Prize-Message").forEach(line -> array.add(line.replaceAll("%reward%", "{reward}").replaceAll("%tier%", "{tier}")));
+        for (final String message : configuration.getStringList("Settings.Prize-Message")) {
+            if (message.isBlank()) continue;
 
-            setPrizeMessage(array);
+            this.prizeMessage.add(this.fusion.replacePlaceholders(message, placeholders));
         }
 
         setSignalFlareToggle(configuration.getBoolean("Settings.Signal-Flare.Toggle"));
@@ -112,12 +117,6 @@ public class Tier {
         if (prizes == null) {
             throw new FusionException("Failed to find the prizes section in %s".formatted(this.name));
         }
-
-        final Map<String, String> placeholders = Map.of(
-                "%player%", "{player}",
-                "%Player%", "{player}",
-                "%tier%", "{tier}"
-        );
 
         for (final String id : prizes.getKeys(false)) {
             final ConfigurationSection prize = prizes.getConfigurationSection(id);
