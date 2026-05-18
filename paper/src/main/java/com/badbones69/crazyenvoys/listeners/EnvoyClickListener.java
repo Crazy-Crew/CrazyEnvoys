@@ -24,7 +24,9 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -68,7 +70,7 @@ public class EnvoyClickListener implements Listener {
 
         if (event.getClickedBlock() == null && !this.crazyManager.isEnvoyActive()) return;
 
-        Block block = event.getClickedBlock();
+        final Block block = event.getClickedBlock();
 
         if (!this.crazyManager.isActiveEnvoy(block)) return;
 
@@ -144,8 +146,6 @@ public class EnvoyClickListener implements Listener {
             return;
         }
 
-        final boolean isPapiReady = this.fusion.isModReady(ModSupport.placeholder_api);
-
         final String playerName = player.getName();
 
         for (Prize prize : envoyOpenEvent.getPrizes()) {
@@ -179,30 +179,38 @@ public class EnvoyClickListener implements Listener {
             new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
                 @Override
                 public void run() {
-                    for (String cmd : prize.getCommands()) {
-                        if (isPapiReady) cmd = PlaceholderAPI.setPlaceholders(player, cmd);
+                    final ConsoleCommandSender sender = server.getConsoleSender();
 
-                        server.dispatchCommand(server.getConsoleSender(), fusion.replacePlaceholders(cmd, placeholders));
+                    for (final String command : prize.getCommands()) {
+                        server.dispatchCommand(sender, fusion.parse(player, command, placeholders));
                     }
                 }
             }.runNow();
 
-            if (!this.config.getProperty(ConfigKeys.envoy_menu_open)) {
-                for (ItemStack item : prize.getItems()) {
-                    if (prize.getDropItems()) {
-                        event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
-                    } else {
-                        if (Methods.isInvFull(player)) {
-                            event.getClickedBlock().getWorld().dropItem(block.getLocation(), item);
-                        } else {
-                            Methods.addItem(player, item);
-                        }
-                    }
-                }
+            final List<ItemStack> items = prize.getItems();
 
+            final World world = block.getWorld();
+            final Location location = block.getLocation();
+
+            if (!this.config.getProperty(ConfigKeys.envoy_menu_open)) {
+                for (final ItemStack item : items) {
+                    if (prize.getDropItems()) {
+                        world.dropItem(location, item);
+
+                        continue;
+                    }
+
+                    if (player.getInventory().isEmpty()) {
+                        world.dropItem(location, item);
+
+                        continue;
+                    }
+
+                    Methods.addItem(player, item);
+                }
                 player.updateInventory();
             } else {
-                if (!prize.getItems().isEmpty()) {
+                if (!items.isEmpty()) {
                     GuiProperty property = this.config.getProperty(ConfigKeys.envoy_menu);
 
                     new PrizeGui(player, tier, prize, property.getTitle(), property.getSize()).build();

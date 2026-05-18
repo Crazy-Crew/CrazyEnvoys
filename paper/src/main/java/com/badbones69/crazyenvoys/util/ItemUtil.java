@@ -40,9 +40,7 @@ public class ItemUtil {
                 String value = optionString.replace(option + ":", "").replace(option, "");
 
                 switch (option.toLowerCase()) {
-                    case "item" -> {
-                        itemBuilder = ItemBuilder.from(value.toLowerCase());
-                    }
+                    case "item" -> itemBuilder = ItemBuilder.from(value.toLowerCase());
                     case "data" -> itemBuilder.withBase64(value);
                     case "name" -> itemBuilder.withDisplayName(value);
                     case "glowing" -> ItemUtil.addGlow(itemBuilder, value);

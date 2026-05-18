@@ -42,7 +42,7 @@ public class FlareSettings {
     }
     
     public void giveFlare(Player player, int amount) {
-        if (Methods.isInvFull(player)) {
+        if (player.getInventory().isEmpty()) {
             player.getWorld().dropItem(player.getLocation(), getFlare(player, amount));
         } else {
             Methods.addItem(player, getFlare(player, amount));

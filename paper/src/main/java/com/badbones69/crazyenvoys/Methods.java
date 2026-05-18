@@ -3,6 +3,7 @@ package com.badbones69.crazyenvoys;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
+import org.bukkit.Server;
 import org.bukkit.entity.Marker;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.Inventory;
@@ -26,6 +27,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Methods {
 
     private static final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
+
+    private static final @NotNull Server server = plugin.getServer();
 
     public static void addItem(final Player player, final ItemStack... items) {
         final Inventory inventory = player.getInventory();
@@ -52,34 +55,6 @@ public class Methods {
         }
 
         return cal;
-    }
-
-    public static boolean isInt(String s) {
-        try {
-            Integer.parseInt(s);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public static boolean isOnline(String name) {
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
-            if (player.getName().equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static Player getPlayer(String name) {
-        return plugin.getServer().getPlayer(name);
-    }
-
-    public static boolean isInvFull(Player player) {
-        return player.getInventory().firstEmpty() == -1;
     }
 
     public static void firework(Location loc, List<Color> colors) {
@@ -188,14 +163,14 @@ public class Methods {
     }
 
     public static Location getBuiltLocation(String locationString) {
-        World w = plugin.getServer().getWorlds().getFirst();
+        World w = server.getWorlds().getFirst();
         int x = 0;
         int y = 0;
         int z = 0;
 
         for (String i : locationString.toLowerCase().split(", ")) {
             if (i.startsWith("world:")) {
-                w = plugin.getServer().getWorld(i.replace("world:", ""));
+                w = server.getWorld(i.replace("world:", ""));
             } else if (i.startsWith("x:")) {
                 x = Integer.parseInt(i.replace("x:", ""));
             } else if (i.startsWith("y:")) {
