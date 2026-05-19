@@ -10,6 +10,11 @@ project.group = "us.crazycrew.crazyenvoys"
 
 val projectVersion = rootProject.property("api_version").toString()
 
+dependencies {
+    compileOnly(libs.bundles.adventure)
+    compileOnly(libs.fusion.kyori)
+}
+
 java {
     withSourcesJar()
     withJavadocJar()

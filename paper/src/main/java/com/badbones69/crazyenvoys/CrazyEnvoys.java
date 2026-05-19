@@ -59,6 +59,7 @@ public class CrazyEnvoys extends JavaPlugin {
     @Override
     public void onEnable() {
         this.plugin = new PaperEnvoysPlugin(new FusionPaper(this));
+        this.plugin.init();
 
         this.fusion = this.plugin.getFusion();
 
