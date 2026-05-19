@@ -1,4 +1,4 @@
-package com.badbones69.crazyenvoys.objects;
+package us.crazycrew.api.objects;
 
 public class EnvoyLocation {
 
