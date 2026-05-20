@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.listeners;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.api.PaperEnvoysPlugin;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.api.registry.PaperUserRegistry;
@@ -25,13 +25,13 @@ public class EnvoyEditListener implements Listener {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private @NotNull final PaperEnvoysPlugin envoys = this.plugin.getPlugin();
+    private @NotNull final CrazyEnvoysPlatform platform = this.plugin.getPlatform();
 
-    private @NotNull final StorageHolder holder = this.envoys.getStorageHolder();
+    private @NotNull final StorageHolder holder = this.platform.getStorageHolder();
 
-    private @NotNull final EnvoyRegistry envoyRegistry = this.envoys.getEnvoyRegistry();
+    private @NotNull final EnvoyRegistry envoyRegistry = this.platform.getEnvoyRegistry();
 
-    private @NotNull final PaperUserRegistry userRegistry = this.envoys.getUserRegistry();
+    private @NotNull final PaperUserRegistry userRegistry = this.platform.getUserRegistry();
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent event) {
@@ -62,7 +62,7 @@ public class EnvoyEditListener implements Listener {
                 new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
                     @Override
                     public void run() {
-                        envoys.sendBlockChange(player, Material.BEDROCK);
+                        platform.sendBlockChange(player, Material.BEDROCK);
                     }
                 }.runDelayed(2);
             });

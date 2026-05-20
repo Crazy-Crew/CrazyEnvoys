@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.api.registry;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.EnvoysPlugin;
+import com.badbones69.crazyenvoys.CrazyPlugin;
 import com.badbones69.crazyenvoys.api.registry.adapters.PaperUserAdapter;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -46,6 +46,6 @@ public class PaperUserRegistry implements IUserRegistry<Player> {
 
     @Override
     public @NotNull final IUser getConsole() {
-        return this.users.get(EnvoysPlugin.CONSOLE_UUID);
+        return this.users.get(CrazyPlugin.CONSOLE_UUID);
     }
 }

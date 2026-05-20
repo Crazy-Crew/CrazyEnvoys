@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoys.storage;
 
-import com.badbones69.crazyenvoys.EnvoysPlugin;
+import com.badbones69.crazyenvoys.CrazyPlugin;
 import com.badbones69.crazyenvoys.registry.EnvoyRegistry;
 import com.badbones69.crazyenvoys.storage.impl.file.SqliteFactory;
 import com.badbones69.crazyenvoys.storage.impl.objects.StorageHolder;
@@ -15,7 +15,7 @@ public class StorageManager {
     private final FusionKyori fusion;
     private final Path dataPath;
 
-    public StorageManager(@NonNull final EnvoysPlugin plugin) {
+    public StorageManager(@NonNull final CrazyPlugin plugin) {
         this.registry = plugin.getEnvoyRegistry();
         this.dataPath = plugin.getDataPath();
         this.fusion = plugin.getFusion();

@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.api.registry.adapters;
 
-import com.badbones69.crazyenvoys.EnvoysPlugin;
-import com.badbones69.crazyenvoys.api.PaperEnvoysPlugin;
+import com.badbones69.crazyenvoys.CrazyPlugin;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.badbones69.crazyenvoys.api.adapters.sender.ISenderAdapter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.UUID;
 
-public class PaperSenderAdapter extends ISenderAdapter<PaperEnvoysPlugin, Component, CommandSender> {
+public class PaperSenderAdapter extends ISenderAdapter<CrazyEnvoysPlatform, Component, CommandSender> {
 
     public PaperSenderAdapter() {
         super();
@@ -24,7 +24,7 @@ public class PaperSenderAdapter extends ISenderAdapter<PaperEnvoysPlugin, Compon
             return player.getUniqueId();
         }
 
-        return EnvoysPlugin.CONSOLE_UUID;
+        return CrazyPlugin.CONSOLE_UUID;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class PaperSenderAdapter extends ISenderAdapter<PaperEnvoysPlugin, Compon
             return player.getName();
         }
 
-        return EnvoysPlugin.CONSOLE_NAME;
+        return CrazyPlugin.CONSOLE_NAME;
     }
 
     @Override

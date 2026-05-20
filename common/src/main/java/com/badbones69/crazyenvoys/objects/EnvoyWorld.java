@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoys.objects;
 
-import com.badbones69.crazyenvoys.EnvoysPlugin;
+import com.badbones69.crazyenvoys.CrazyPlugin;
 import com.badbones69.crazyenvoys.storage.impl.objects.StorageHolder;
 import org.jspecify.annotations.NonNull;
 import us.crazycrew.api.CrazyEnvoys;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class EnvoyWorld implements IEnvoyWorld {
 
-    private final EnvoysPlugin plugin = (EnvoysPlugin) CrazyEnvoys.Provider.getInstance();
+    private final CrazyPlugin plugin = (CrazyPlugin) CrazyEnvoys.Provider.getInstance();
 
     private final StorageHolder holder = this.plugin.getStorageHolder();
 

@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.listeners;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.EnvoysPlugin;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.badbones69.crazyenvoys.objects.EnvoyWorld;
 import com.badbones69.crazyenvoys.registry.EnvoyRegistry;
 import org.bukkit.World;
@@ -16,9 +16,9 @@ public class EnvoyWorldListener implements Listener {
 
     private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final EnvoysPlugin envoys = this.plugin.getPlugin();
+    private final CrazyEnvoysPlatform platform = this.plugin.getPlatform();
 
-    private final EnvoyRegistry registry = this.envoys.getEnvoyRegistry();
+    private final EnvoyRegistry registry = this.platform.getEnvoyRegistry();
 
     @EventHandler
     public void onWorldLoad(WorldLoadEvent event) {

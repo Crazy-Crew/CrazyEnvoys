@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.api;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.EnvoysPlugin;
+import com.badbones69.crazyenvoys.CrazyPlugin;
 import com.badbones69.crazyenvoys.api.registry.PaperContextRegistry;
 import com.badbones69.crazyenvoys.api.registry.PaperUserRegistry;
 import com.badbones69.crazyenvoys.api.registry.adapters.PaperSenderAdapter;
@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class PaperEnvoysPlugin extends EnvoysPlugin<Location, Material, Audience, FusionPaper> {
+public class CrazyEnvoysPlatform extends CrazyPlugin<Location, Material, Audience, FusionPaper> {
 
     private final CrazyEnvoys plugin;
     private final Server server;
 
-    public PaperEnvoysPlugin(@NonNull final CrazyEnvoys plugin, @NonNull final FusionPaper fusion) {
+    public CrazyEnvoysPlatform(@NonNull final CrazyEnvoys plugin, @NonNull final FusionPaper fusion) {
         super(fusion);
 
         this.plugin = plugin;

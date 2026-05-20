@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys.listeners;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.api.PaperEnvoysPlugin;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.badbones69.crazyenvoys.api.registry.PaperUserRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +14,7 @@ public class EnvoyCacheListener implements Listener {
 
     private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final PaperEnvoysPlugin platform = this.plugin.getPlugin();
+    private final CrazyEnvoysPlatform platform = this.plugin.getPlatform();
 
     private final PaperUserRegistry userRegistry = this.platform.getUserRegistry();
 

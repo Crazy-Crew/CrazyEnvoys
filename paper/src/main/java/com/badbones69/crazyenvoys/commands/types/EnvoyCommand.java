@@ -3,7 +3,7 @@ package com.badbones69.crazyenvoys.commands.types;
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.api.PaperEnvoysPlugin;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.registry.PaperUserRegistry;
@@ -22,13 +22,13 @@ public class EnvoyCommand {
 
     protected @NonNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    protected @NonNull final PaperEnvoysPlugin envoysPlugin = this.plugin.getPlugin();
+    protected @NonNull final CrazyEnvoysPlatform platform = this.plugin.getPlatform();
 
-    protected @NonNull final StorageHolder holder = this.envoysPlugin.getStorageHolder();
+    protected @NonNull final StorageHolder holder = this.platform.getStorageHolder();
 
-    protected @NonNull final EnvoyRegistry envoyRegistry = this.envoysPlugin.getEnvoyRegistry();
+    protected @NonNull final EnvoyRegistry envoyRegistry = this.platform.getEnvoyRegistry();
 
-    protected @NonNull final PaperUserRegistry userRegistry = this.envoysPlugin.getUserRegistry();
+    protected @NonNull final PaperUserRegistry userRegistry = this.platform.getUserRegistry();
 
     protected @NonNull final PaperFileManager fileManager = this.plugin.getFileManager();
 

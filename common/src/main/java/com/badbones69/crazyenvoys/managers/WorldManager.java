@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoys.managers;
 
-import com.badbones69.crazyenvoys.EnvoysPlugin;
+import com.badbones69.crazyenvoys.CrazyPlugin;
 import com.badbones69.crazyenvoys.objects.EnvoyWorld;
 import com.badbones69.crazyenvoys.storage.impl.objects.StorageHolder;
 import org.jspecify.annotations.NonNull;
@@ -10,9 +10,9 @@ import java.util.Map;
 public class WorldManager {
 
     private final StorageHolder holder;
-    private final EnvoysPlugin plugin;
+    private final CrazyPlugin plugin;
 
-    public WorldManager(@NonNull final EnvoysPlugin plugin) {
+    public WorldManager(@NonNull final CrazyPlugin plugin) {
         this.holder = plugin.getStorageHolder();
         this.plugin = plugin;
     }

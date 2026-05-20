@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoys.api.registry.adapters;
 
-import com.badbones69.crazyenvoys.EnvoysPlugin;
+import com.badbones69.crazyenvoys.CrazyPlugin;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -31,11 +31,11 @@ public class PaperUserAdapter extends IUser {
 
     @Override
     public @NotNull final UUID getUniqueId() {
-        return this.player == null ? EnvoysPlugin.CONSOLE_UUID : this.player.getUniqueId();
+        return this.player == null ? CrazyPlugin.CONSOLE_UUID : this.player.getUniqueId();
     }
 
     @Override
     public @NotNull final String getUsername() {
-        return this.player == null ? EnvoysPlugin.CONSOLE_NAME : this.player.getName();
+        return this.player == null ? CrazyPlugin.CONSOLE_NAME : this.player.getName();
     }
 }

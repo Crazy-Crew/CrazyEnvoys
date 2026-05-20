@@ -35,7 +35,7 @@ public class EditCommand extends EnvoyCommand {
             if (user.isEditorMode) {
                 user.isEditorMode = false;
 
-                this.envoysPlugin.sendBlockChange(player, Material.AIR);
+                this.platform.sendBlockChange(player, Material.AIR);
 
                 for (final ItemStack itemStack : inventory.getContents()) {
                     if (itemStack == null || itemStack.isEmpty()) continue;
@@ -54,7 +54,7 @@ public class EditCommand extends EnvoyCommand {
 
             user.isEditorMode = true;
 
-            this.envoysPlugin.sendBlockChange(player, Material.BEDROCK);
+            this.platform.sendBlockChange(player, Material.BEDROCK);
 
             inventory.addItem(ItemBuilder.from(ItemType.BEDROCK).setPersistentBoolean(PersistentKeys.envoy_wand.getNamespacedKey(), true).asItemStack());
 

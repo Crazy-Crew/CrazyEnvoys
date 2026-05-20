@@ -1,6 +1,6 @@
 package com.badbones69.crazyenvoys.registry;
 
-import com.badbones69.crazyenvoys.EnvoysPlugin;
+import com.badbones69.crazyenvoys.CrazyPlugin;
 import us.crazycrew.api.events.AbstractEvent;
 import us.crazycrew.api.events.interfaces.IEventHandler;
 import us.crazycrew.api.events.interfaces.IEventListener;
@@ -18,7 +18,7 @@ public final class EventRegistry implements IEventRegistry {
 
     private final FusionKyori fusion;
 
-    public EventRegistry(final EnvoysPlugin plugin) {
+    public EventRegistry(final CrazyPlugin plugin) {
         this.fusion = plugin.getFusion();
     }
 

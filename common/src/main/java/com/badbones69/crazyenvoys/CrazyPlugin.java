@@ -9,7 +9,6 @@ import com.badbones69.crazyenvoys.storage.impl.objects.StorageHolder;
 import com.ryderbelserion.fusion.core.api.enums.Level;
 import com.ryderbelserion.fusion.kyori.FusionKyori;
 import net.kyori.adventure.audience.Audience;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import us.crazycrew.api.CrazyEnvoys;
 import us.crazycrew.api.adapters.IPlayerAdapter;
@@ -20,7 +19,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class EnvoysPlugin<L, M, S extends Audience, K extends FusionKyori<S>> extends CrazyEnvoys<S, K> {
+public abstract class CrazyPlugin<L, M, S extends Audience, K extends FusionKyori<S>> extends CrazyEnvoys<S, K> {
 
     public static final UUID CONSOLE_UUID = new UUID(0, 0);
     public static final String CONSOLE_NAME = "Console";
@@ -31,7 +30,7 @@ public abstract class EnvoysPlugin<L, M, S extends Audience, K extends FusionKyo
     protected IPlayerAdapter<?> adapter;
     protected final K fusion;
 
-    public EnvoysPlugin(@NonNull final K fusion) {
+    public CrazyPlugin(@NonNull final K fusion) {
         this.fusion = fusion;
     }
 

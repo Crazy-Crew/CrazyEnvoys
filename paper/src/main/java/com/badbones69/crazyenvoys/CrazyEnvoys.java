@@ -1,7 +1,7 @@
 package com.badbones69.crazyenvoys;
 
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.api.PaperEnvoysPlugin;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.badbones69.crazyenvoys.api.enums.Permissions;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
@@ -43,7 +43,7 @@ public class CrazyEnvoys extends JavaPlugin {
         this.startTime = System.nanoTime();
     }
 
-    private PaperEnvoysPlugin plugin;
+    private CrazyEnvoysPlatform platform;
 
     private FlareSettings flareSettings;
     private CoolDownSettings coolDownSettings;
@@ -56,10 +56,10 @@ public class CrazyEnvoys extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.plugin = new PaperEnvoysPlugin(this, new FusionPaper(this));
-        this.plugin.init();
+        this.platform = new CrazyEnvoysPlatform(this, new FusionPaper(this));
+        this.platform.init();
 
-        this.fusion = this.plugin.getFusion();
+        this.fusion = this.platform.getFusion();
 
         final Path path = getDataPath();
 
@@ -150,7 +150,7 @@ public class CrazyEnvoys extends JavaPlugin {
         return this.crazyManager;
     }
 
-    public @NonNull final PaperEnvoysPlugin getPlugin() {
-        return this.plugin;
+    public @NonNull final CrazyEnvoysPlatform getPlatform() {
+        return this.platform;
     }
 }
