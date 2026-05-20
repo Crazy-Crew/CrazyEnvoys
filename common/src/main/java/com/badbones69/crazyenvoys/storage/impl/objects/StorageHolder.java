@@ -56,7 +56,7 @@ public class StorageHolder extends IStorageHolder<EnvoyWorld> {
     @Override
     public void addWorld(@NonNull final EnvoyWorld world) {
         if (tableExists("envoy_worlds") && hasWorld(world)) {
-            this.fusion.log(Level.WARNING, "<red>The world <yellow>%s <red>already is in the database!", world.getWorld());
+            this.fusion.log(Level.WARNING, "<red>The world <yellow>%s <red>already is in the database!", world.getWorldName());
 
             this.envoyRegistry.addWorld(world);
 
