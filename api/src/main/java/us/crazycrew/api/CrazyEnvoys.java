@@ -5,6 +5,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import us.crazycrew.api.events.interfaces.IEventRegistry;
+import us.crazycrew.api.interfaces.IEnvoyRegistry;
 import us.crazycrew.api.storage.IStorageHolder;
 import java.nio.file.Path;
 
@@ -13,6 +14,8 @@ public abstract class CrazyEnvoys<S, K extends FusionKyori<S>> {
     public abstract @NonNull IStorageHolder getStorageHolder();
 
     public abstract @NonNull IEventRegistry getEventRegistry();
+
+    public abstract @NonNull IEnvoyRegistry getEnvoyRegistry();
 
     public abstract @NonNull Path getDataPath();
 

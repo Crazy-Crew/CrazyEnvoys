@@ -7,6 +7,7 @@ public abstract class ConnectionFactory {
 
     protected final String create_envoy_locations_table = "create table if not exists envoy_worlds(" +
             "world varchar(36) primary key, " +
+            "name varchar(36) not null, " +
             "countdown varchar(64) not null, " +
             "x bigint not null, " +
             "y bigint not null, " +
@@ -15,6 +16,7 @@ public abstract class ConnectionFactory {
     protected final String create_envoy_worlds_table = "create table if not exists envoy_locations(" +
             "id varchar(16) primary key, " +
             "world varchar(36) not null, " +
+            "name varchar(36) not null, " +
             "x bigint not null, " +
             "y bigint not null, " +
             "z bigint not null, " +

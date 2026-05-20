@@ -101,7 +101,7 @@ public class CrazyManager {
      * Run this when you are starting up the server.
      */
     public void load() {
-        loadEnvoys();
+        //loadEnvoys();
     }
 
     private void getEnvoyTime(Calendar cal) {

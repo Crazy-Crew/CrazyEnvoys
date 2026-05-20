@@ -81,12 +81,11 @@ public class CrazyEnvoys extends JavaPlugin {
         this.crazyManager = new CrazyManager();
         this.crazyManager.load();
 
-        final PluginManager pluginManager = getServer().getPluginManager();
-
         pluginManager.registerEvents(new EnvoyEditListener(), this);
         pluginManager.registerEvents(new EnvoyClickListener(), this);
         pluginManager.registerEvents(new FlareClickListener(), this);
         pluginManager.registerEvents(new FireworkDamageListener(), this);
+        pluginManager.registerEvents(new EnvoyWorldListener(), this);
 
         if (this.fusion.isModReady(ModSupport.placeholder_api)) {
             new PlaceholderAPISupport().register();
@@ -99,7 +98,7 @@ public class CrazyEnvoys extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (Player player : getServer().getOnlinePlayers()) {
+        /*for (Player player : getServer().getOnlinePlayers()) {
             if (this.editorSettings.isEditor(player)) {
                 this.editorSettings.removeEditor(player);
                 this.editorSettings.removeFakeBlocks();
@@ -114,7 +113,7 @@ public class CrazyEnvoys extends JavaPlugin {
             this.crazyManager.endEnvoyEvent();
         }
 
-        this.crazyManager.reload(true);
+        this.crazyManager.reload(true);*/
     }
 
     public FusionPaper getFusion() {

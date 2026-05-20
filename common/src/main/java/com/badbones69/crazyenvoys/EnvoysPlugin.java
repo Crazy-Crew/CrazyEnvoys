@@ -2,6 +2,7 @@ package com.badbones69.crazyenvoys;
 
 import com.badbones69.crazyenvoys.registry.EventRegistry;
 import com.badbones69.crazyenvoys.storage.StorageManager;
+import com.badbones69.crazyenvoys.registry.EnvoyRegistry;
 import com.badbones69.crazyenvoys.storage.impl.objects.StorageHolder;
 import com.ryderbelserion.fusion.core.api.enums.Level;
 import com.ryderbelserion.fusion.kyori.FusionKyori;
@@ -15,6 +16,7 @@ public abstract class EnvoysPlugin<S, K extends FusionKyori<S>> extends CrazyEnv
 
     protected EventRegistry eventRegistry;
     protected StorageHolder storageHolder;
+    protected EnvoyRegistry envoyRegistry;
     protected final K fusion;
 
     public EnvoysPlugin(@NonNull final K fusion) {
@@ -33,6 +35,8 @@ public abstract class EnvoysPlugin<S, K extends FusionKyori<S>> extends CrazyEnv
 
         this.eventRegistry = new EventRegistry(this);
 
+        this.envoyRegistry = new EnvoyRegistry();
+
         try {
             this.storageHolder = new StorageManager(this).init();
         } catch (final Exception exception) {
@@ -48,6 +52,11 @@ public abstract class EnvoysPlugin<S, K extends FusionKyori<S>> extends CrazyEnv
     @Override
     public @NonNull EventRegistry getEventRegistry() {
         return this.eventRegistry;
+    }
+
+    @Override
+    public @NonNull EnvoyRegistry getEnvoyRegistry() {
+        return this.envoyRegistry;
     }
 
     @Override

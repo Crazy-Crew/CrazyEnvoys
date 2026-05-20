@@ -11,9 +11,21 @@ import java.util.Locale;
 
 public abstract class IStorageHolder<E extends IEnvoyWorld> {
 
+    public abstract boolean hasWorld(@NonNull final E world);
+
     public abstract void addWorld(@NonNull final E world);
 
+    public abstract void setCountdown(@NonNull final E world, @NonNull final String countdown);
+
+    public abstract void addLocation(@NonNull final E world, final int x, final int y, final int z);
+
+    public abstract void removeLocation(@NonNull final String id);
+
+    public abstract void populate(@NonNull final E world);
+
     public abstract @NonNull IStorageHolder init();
+
+    public abstract boolean tableExists(@NonNull final String table);
 
     public abstract void stop();
 

@@ -1,16 +1,10 @@
 package com.badbones69.crazyenvoys.listeners;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.Methods;
-import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.api.enums.Messages;
-import com.badbones69.crazyenvoys.api.objects.EditorSettings;
-import com.badbones69.crazyenvoys.api.objects.LocationSettings;
-import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
-import com.ryderbelserion.fusion.paper.builders.folia.Scheduler;
-import org.bukkit.Material;
+import com.badbones69.crazyenvoys.EnvoysPlugin;
+import com.badbones69.crazyenvoys.registry.EnvoyRegistry;
+import com.badbones69.crazyenvoys.storage.impl.objects.StorageHolder;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -21,15 +15,21 @@ public class EnvoyEditListener implements Listener {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private @NotNull final EditorSettings editorSettings = this.plugin.getEditorSettings();
+    private @NotNull final EnvoysPlugin envoys = this.plugin.getPlugin();
 
-    private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
+    private @NotNull final StorageHolder holder = this.envoys.getStorageHolder();
 
-    private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
-    
+    private @NotNull final EnvoyRegistry registry = this.envoys.getEnvoyRegistry();
+
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent event) {
-        Player player = event.getPlayer();
+        final Block block = event.getBlock();
+
+        if (block.isEmpty()) return;
+
+        this.registry.getWorld(block.getWorld().getUID()).ifPresent(world -> this.holder.addLocation(world, block.getX(), block.getY(), block.getZ()));;
+
+        /*Player player = event.getPlayer();
         Block block = event.getBlock();
 
         if (!this.editorSettings.isEditor(player)) return;
@@ -49,12 +49,20 @@ public class EnvoyEditListener implements Listener {
 
                 player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData()); //todo() improve this
             }
-        }.runDelayed(2L);
+        }.runDelayed(2L);*/
     }
     
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        Player player = event.getPlayer();
+        final Block block = event.getBlock();
+
+        if (block.isEmpty()) return;
+
+        //this.registry.getWorld(block.getWorld().getName()).ifPresent(world -> {
+
+        //});
+
+        /*Player player = event.getPlayer();
         Block block = event.getBlock();
 
         if (!this.editorSettings.isEditor(player)) return;
@@ -67,6 +75,6 @@ public class EnvoyEditListener implements Listener {
 
         this.locationSettings.removeSpawnLocation(block);
 
-        Messages.remove_location.sendMessage(player);
+        Messages.remove_location.sendMessage(player);*/
     }
 }

@@ -16,18 +16,18 @@ import java.util.Map;
 public class MigrateCommand extends EnvoyCommand {
 
     @Command("migrate")
-    @Permission(value = "crazycrates.migrate", def = PermissionDefault.OP)
+    @Permission(value = "crazyenvoys.migrate", def = PermissionDefault.OP)
     @Flag(flag = "mt", longFlag = "migration_type", argument = String.class, suggestion = "migrators")
-    @Flag(flag = "envoy", longFlag = "envoy", argument = String.class, suggestion = "envoys")
+    @Flag(flag = "envoy", longFlag = "envoy", argument = String.class, suggestion = "drops")
     @Flag(flag = "d", longFlag = "data")
-    @Syntax("/crazycrates migrate -mt <migration_type> [-c/--crate] <crate_name> [-d/--data]")
+    @Syntax("/crazyenvoys migrate -mt <migration_type> [-c/--crate] <crate_name> [-d/--data]")
     public void migrate(final CommandSender sender, Flags flags) {
         final boolean hasFlag = flags.hasFlag("mt");
 
         if (!hasFlag) {
             Messages.lacking_flag.sendMessage(sender, Map.of(
                     "{flag}", "-mt",
-                    "{usage}", "/crazycrates migrate -mt <migration_type>"
+                    "{usage}", "/crazyenvoys migrate -mt <migration_type>"
             ));
 
             return;
