@@ -2,8 +2,7 @@ package com.badbones69.crazyenvoys;
 
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.PaperEnvoysPlugin;
-import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
-import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
+import com.badbones69.crazyenvoys.api.enums.Permissions;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
@@ -11,6 +10,7 @@ import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.commands.CommandManager;
 import com.badbones69.crazyenvoys.listeners.EnvoyEditListener;
 import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
+import com.badbones69.crazyenvoys.listeners.EnvoyWorldListener;
 import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
 import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
@@ -19,15 +19,15 @@ import com.ryderbelserion.fusion.core.api.enums.Level;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
-import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.support.MetricsWrapper;
 import org.jspecify.annotations.NonNull;
-
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -58,7 +58,7 @@ public class CrazyEnvoys extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.plugin = new PaperEnvoysPlugin(new FusionPaper(this));
+        this.plugin = new PaperEnvoysPlugin(this, new FusionPaper(this));
         this.plugin.init();
 
         this.fusion = this.plugin.getFusion();
@@ -72,6 +72,15 @@ public class CrazyEnvoys extends JavaPlugin {
             .addPaperFolder(path.resolve("tiers"));
 
         new MetricsWrapper(4514);
+
+        final PluginManager pluginManager = getServer().getPluginManager();
+
+        Arrays.stream(Permissions.values()).toList().forEach(permission -> pluginManager.addPermission(new Permission(
+                permission.getPermission(),
+                permission.getDescription(),
+                permission.isDefault(),
+                permission.getChildren()
+        )));
 
         this.locationSettings = new LocationSettings();
         this.editorSettings = new EditorSettings();
