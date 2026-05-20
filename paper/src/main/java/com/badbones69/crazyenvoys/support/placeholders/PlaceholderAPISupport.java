@@ -66,12 +66,12 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
     @Override
     @NotNull
     public String getAuthor() {
-        return this.plugin.getDescription().getAuthors().toString();
+        return this.plugin.getPluginMeta().getAuthors().toString();
     }
     
     @Override
     @NotNull
     public String getVersion() {
-        return this.plugin.getDescription().getVersion();
+        return this.plugin.getPluginMeta().getVersion();
     }
 }
