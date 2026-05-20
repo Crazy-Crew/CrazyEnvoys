@@ -129,12 +129,14 @@ public class StorageHolder extends IStorageHolder<EnvoyWorld> {
 
         CompletableFuture.runAsync(() -> {
            try (final Connection connection = this.factory.getConnection(); final PreparedStatement statement =
-                   connection.prepareStatement("update envoy_worlds set (x, y, z) values (?, ?, ?) where world=?")) {
+                   connection.prepareStatement("update envoy_worlds set x=?, y=?, z=? where world=?")) {
                statement.setInt(1, location.getX());
                statement.setInt(2, location.getY());
                statement.setInt(3, location.getZ());
 
                statement.setString(4, index.getWorldAsString());
+
+               statement.executeUpdate();
 
                index.setCenter(location);
 
