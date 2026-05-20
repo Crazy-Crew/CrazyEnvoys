@@ -19,7 +19,7 @@ public abstract class IStorageHolder<E extends IEnvoyWorld> {
 
     public abstract void addLocation(@NonNull final E world, final int x, final int y, final int z);
 
-    public abstract void removeLocation(@NonNull final String id);
+    public abstract boolean removeLocation(@NonNull final String id);
 
     public abstract void populate(@NonNull final E world);
 

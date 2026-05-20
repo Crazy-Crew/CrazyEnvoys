@@ -2,7 +2,7 @@ package com.badbones69.crazyenvoys.registry;
 
 import com.badbones69.crazyenvoys.objects.EnvoyWorld;
 import org.jspecify.annotations.NonNull;
-import us.crazycrew.api.interfaces.IEnvoyRegistry;
+import us.crazycrew.api.interfaces.registry.IEnvoyRegistry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

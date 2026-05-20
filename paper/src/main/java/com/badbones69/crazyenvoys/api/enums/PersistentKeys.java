@@ -8,7 +8,9 @@ public enum PersistentKeys {
 
     no_firework_damage("firework"),
     prize_item("prize_item"),
-    envoy_flare("envoy_flare");
+    envoy_flare("envoy_flare"),
+
+    envoy_wand("envoy_wand");
 
     private final @NotNull CrazyEnvoys plugin = CrazyEnvoys.get();
 

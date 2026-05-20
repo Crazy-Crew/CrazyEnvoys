@@ -1,6 +1,8 @@
-package us.crazycrew.api.interfaces;
+package us.crazycrew.api.interfaces.registry;
 
 import org.jspecify.annotations.NonNull;
+import us.crazycrew.api.interfaces.IEnvoyWorld;
+
 import java.util.Optional;
 import java.util.UUID;
 

@@ -14,16 +14,18 @@ public class ClearCommand extends EnvoyCommand {
     @Permission(value = "envoy.clear", def = PermissionDefault.OP)
     @Syntax("/envoys clear")
     public void clear(final Player player) {
-        if (this.editorSettings.isEditor(player)) {
-            // User is in editor mode and is able to clear all locations.
-            this.locationSettings.clearSpawnLocations();
+        this.userRegistry.getUser(player.getUniqueId()).ifPresent(user -> {
+            if (user.isEditorMode) {
+                // User is in editor mode and is able to clear all locations.
+                this.locationSettings.clearSpawnLocations();
 
-            Messages.editor_clear_locations.sendMessage(player);
+                Messages.editor_clear_locations.sendMessage(player);
 
-            return;
-        }
+                return;
+            }
 
-        // User must be in editor mode to clear locations. This is to help prevent accidental clears.
-        Messages.editor_clear_failure.sendMessage(player);
+            // User must be in editor mode to clear locations. This is to help prevent accidental clears.
+            Messages.editor_clear_failure.sendMessage(player);
+        });
     }
 }

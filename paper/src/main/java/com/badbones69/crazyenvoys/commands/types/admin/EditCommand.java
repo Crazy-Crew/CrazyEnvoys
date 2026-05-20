@@ -1,15 +1,20 @@
 package com.badbones69.crazyenvoys.commands.types.admin;
 
 import com.badbones69.crazyenvoys.api.enums.Messages;
+import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
 import com.badbones69.crazyenvoys.commands.types.EnvoyCommand;
+import com.ryderbelserion.fusion.paper.builders.items.ItemBuilder;
 import dev.triumphteam.cmd.bukkit.annotation.Permission;
 import dev.triumphteam.cmd.core.annotations.Command;
 import dev.triumphteam.cmd.core.annotations.Syntax;
+import io.papermc.paper.persistence.PersistentDataContainerView;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ItemType;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.PermissionDefault;
+import java.util.UUID;
 
 public class EditCommand extends EnvoyCommand {
 
@@ -23,23 +28,37 @@ public class EditCommand extends EnvoyCommand {
             return;
         }
 
-        final Inventory inventory = player.getInventory();
+        final PlayerInventory inventory = player.getInventory();
+        final UUID uuid = player.getUniqueId();
 
-        if (this.editorSettings.isEditor(player)) {
-            this.editorSettings.removeEditor(player);
-            this.editorSettings.removeFakeBlocks(player);
+        this.userRegistry.getUser(uuid).ifPresent(user -> {
+            if (user.isEditorMode) {
+                user.isEditorMode = false;
 
-            inventory.remove(Material.BEDROCK); //todo() pdc
+                this.envoysPlugin.sendBlockChange(player, Material.AIR);
 
-            Messages.leave_editor_mode.sendMessage(player);
+                for (final ItemStack itemStack : inventory.getContents()) {
+                    if (itemStack == null || itemStack.isEmpty()) continue;
 
-        } else {
-            this.editorSettings.addEditor(player);
-            this.editorSettings.showFakeBlocks(player);
+                    final PersistentDataContainerView container = itemStack.getPersistentDataContainer();
 
-            inventory.addItem(ItemType.BEDROCK.createItemStack()); //todo() pdc
+                    if (!container.has(PersistentKeys.envoy_wand.getNamespacedKey())) continue;
+
+                    inventory.remove(itemStack);
+                }
+
+                Messages.leave_editor_mode.sendMessage(player);
+
+                return;
+            }
+
+            user.isEditorMode = true;
+
+            this.envoysPlugin.sendBlockChange(player, Material.BEDROCK);
+
+            inventory.addItem(ItemBuilder.from(ItemType.BEDROCK).setPersistentBoolean(PersistentKeys.envoy_wand.getNamespacedKey(), true).asItemStack());
 
             Messages.enter_editor_mode.sendMessage(player);
-        }
+        });
     }
 }

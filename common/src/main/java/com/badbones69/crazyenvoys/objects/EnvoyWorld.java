@@ -6,8 +6,12 @@ import org.jspecify.annotations.NonNull;
 import us.crazycrew.api.CrazyEnvoys;
 import us.crazycrew.api.interfaces.IEnvoyWorld;
 import us.crazycrew.api.objects.EnvoyLocation;
+
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class EnvoyWorld implements IEnvoyWorld {
@@ -44,7 +48,14 @@ public class EnvoyWorld implements IEnvoyWorld {
 
     @Override
     public void addLocation(@NonNull final String id, final int x, final int y, final int z) {
-        this.active.put(id, new EnvoyLocation(x, y, z));
+        this.active.put(id, new EnvoyLocation(this.world, x, y, z));
+    }
+
+    public Optional<EnvoyLocation> getLocationByCoordinates(final int x, final int y, final int z) {
+        final List<EnvoyLocation> location = this.active.values().stream().filter(entry ->
+                entry.getX() == x && entry.getY() == y && entry.getZ() == z).toList();
+
+        return location.isEmpty() ? Optional.empty() : Optional.of(location.getFirst());
     }
 
     @Override
@@ -60,6 +71,11 @@ public class EnvoyWorld implements IEnvoyWorld {
     @Override
     public @NonNull final String getCountdown() {
         return this.countdown;
+    }
+
+    @Override
+    public @NonNull final Map<String, EnvoyLocation> getActiveMarkers() {
+        return Collections.unmodifiableMap(this.active);
     }
 
     @Override

@@ -8,18 +8,15 @@ import com.badbones69.crazyenvoys.api.builders.gui.PrizeGui;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyOpenEvent;
-import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Prize;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.config.beans.GuiProperty;
 import com.badbones69.crazyenvoys.support.holograms.HologramManager;
 import com.badbones69.crazyenvoys.util.MiscUtils;
-import com.ryderbelserion.fusion.core.api.constants.ModSupport;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
 import com.ryderbelserion.fusion.paper.builders.folia.Scheduler;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -41,11 +38,9 @@ import org.jetbrains.annotations.NotNull;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.types.ConfigKeys;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class EnvoyClickListener implements Listener {
@@ -59,7 +54,6 @@ public class EnvoyClickListener implements Listener {
 
     private @NotNull final PluginManager pluginManager = this.server.getPluginManager();
 
-    private @NotNull final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
     private @NotNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
 
     private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
@@ -74,7 +68,7 @@ public class EnvoyClickListener implements Listener {
 
         if (!this.crazyManager.isActiveEnvoy(block)) return;
 
-        if (player.getGameMode() == GameMode.valueOf("SPECTATOR")) return;
+        if (player.getGameMode() == GameMode.valueOf("SPECTATOR")) return; //todo() the fuck? lol
 
         if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission("envoy.gamemode-bypass")) return;
 
@@ -100,7 +94,7 @@ public class EnvoyClickListener implements Listener {
                 return;
             }
 
-            if (this.config.getProperty(ConfigKeys.envoys_grab_cooldown_toggle)) {
+            /*if (this.config.getProperty(ConfigKeys.envoys_grab_cooldown_toggle)) { //todo() update
                 UUID uuid = player.getUniqueId();
 
                 if (this.coolDownSettings.getCooldown().containsKey(uuid) && Calendar.getInstance().before(this.coolDownSettings.getCooldown().get(uuid))) {
@@ -114,7 +108,7 @@ public class EnvoyClickListener implements Listener {
                 }
 
                 this.coolDownSettings.addCooldown(uuid, this.config.getProperty(ConfigKeys.envoys_grab_cooldown_timer));
-            }
+            }*/
         }
         // Ryder End
 

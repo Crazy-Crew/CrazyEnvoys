@@ -3,9 +3,10 @@ package com.badbones69.crazyenvoys.commands.types;
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.CrazyManager;
-import com.badbones69.crazyenvoys.api.objects.EditorSettings;
+import com.badbones69.crazyenvoys.api.PaperEnvoysPlugin;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
+import com.badbones69.crazyenvoys.api.registry.PaperUserRegistry;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
@@ -19,6 +20,10 @@ public class EnvoyCommand {
 
     protected @NonNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
+    protected @NonNull final PaperEnvoysPlugin envoysPlugin = this.plugin.getPlugin();
+
+    protected @NonNull final PaperUserRegistry userRegistry = this.envoysPlugin.getUserRegistry();
+
     protected @NonNull final PaperFileManager fileManager = this.plugin.getFileManager();
 
     protected @NonNull final Server server = this.plugin.getServer();
@@ -28,8 +33,6 @@ public class EnvoyCommand {
     protected @NonNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
     protected @NonNull final FusionPaper fusion = this.plugin.getFusion();
-
-    protected @NonNull final EditorSettings editorSettings = this.plugin.getEditorSettings();
 
     protected @NonNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
 

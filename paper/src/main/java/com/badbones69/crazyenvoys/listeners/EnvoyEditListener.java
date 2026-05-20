@@ -1,25 +1,37 @@
 package com.badbones69.crazyenvoys.listeners;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
-import com.badbones69.crazyenvoys.EnvoysPlugin;
+import com.badbones69.crazyenvoys.api.PaperEnvoysPlugin;
+import com.badbones69.crazyenvoys.api.enums.Messages;
+import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
+import com.badbones69.crazyenvoys.api.registry.PaperUserRegistry;
 import com.badbones69.crazyenvoys.registry.EnvoyRegistry;
 import com.badbones69.crazyenvoys.storage.impl.objects.StorageHolder;
+import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
+import com.ryderbelserion.fusion.paper.builders.folia.Scheduler;
+import io.papermc.paper.persistence.PersistentDataContainerView;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import java.util.UUID;
 
 public class EnvoyEditListener implements Listener {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private @NotNull final EnvoysPlugin envoys = this.plugin.getPlugin();
+    private @NotNull final PaperEnvoysPlugin envoys = this.plugin.getPlugin();
 
     private @NotNull final StorageHolder holder = this.envoys.getStorageHolder();
 
-    private @NotNull final EnvoyRegistry registry = this.envoys.getEnvoyRegistry();
+    private @NotNull final EnvoyRegistry envoyRegistry = this.envoys.getEnvoyRegistry();
+
+    private @NotNull final PaperUserRegistry userRegistry = this.envoys.getUserRegistry();
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent event) {
@@ -27,29 +39,34 @@ public class EnvoyEditListener implements Listener {
 
         if (block.isEmpty()) return;
 
-        this.registry.getWorld(block.getWorld().getUID()).ifPresent(world -> this.holder.addLocation(world, block.getX(), block.getY(), block.getZ()));;
+        final Player player = event.getPlayer();
 
-        /*Player player = event.getPlayer();
-        Block block = event.getBlock();
+        this.userRegistry.getUser(player.getUniqueId()).ifPresent(user -> {
+            if (!user.isEditorMode) return;
 
-        if (!this.editorSettings.isEditor(player)) return;
+            final ItemStack itemStack = event.getItemInHand();
 
-        event.setCancelled(true);
+            if (itemStack.isEmpty()) return;
 
-        if (Methods.getItemInHand(player).getType() != Material.BEDROCK) return;
+            final PersistentDataContainerView container = itemStack.getPersistentDataContainer();
 
-        this.locationSettings.addSpawnLocation(block);
+            if (!container.has(PersistentKeys.envoy_wand.getNamespacedKey())) return;
 
-        Messages.add_location.sendMessage(player);
+            event.setCancelled(true);
 
-        new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
-            @Override
-            public void run() {
-                if (!editorSettings.getEditors().contains(player.getUniqueId())) return;
+            this.envoyRegistry.getWorld(block.getWorld().getUID()).ifPresent(world -> {
+                this.holder.addLocation(world, block.getX(), block.getY(), block.getZ());
 
-                player.sendBlockChange(block.getLocation(), Material.BEDROCK.createBlockData()); //todo() improve this
-            }
-        }.runDelayed(2L);*/
+                Messages.add_location.sendMessage(player);
+
+                new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
+                    @Override
+                    public void run() {
+                        envoys.sendBlockChange(player, Material.BEDROCK);
+                    }
+                }.runDelayed(2);
+            });
+        });
     }
     
     @EventHandler(ignoreCancelled = true)
@@ -58,23 +75,31 @@ public class EnvoyEditListener implements Listener {
 
         if (block.isEmpty()) return;
 
-        //this.registry.getWorld(block.getWorld().getName()).ifPresent(world -> {
+        final Player player = event.getPlayer();
 
-        //});
+        this.userRegistry.getUser(player.getUniqueId()).ifPresent(user -> {
+            if (!user.isEditorMode) return;
 
-        /*Player player = event.getPlayer();
-        Block block = event.getBlock();
+            final ItemStack itemStack = player.getActiveItem();
 
-        if (!this.editorSettings.isEditor(player)) return;
+            if (itemStack.isEmpty()) return;
 
-        event.setCancelled(true);
+            final PersistentDataContainerView container = itemStack.getPersistentDataContainer();
 
-        if (!this.crazyManager.isLocation(block.getLocation())) return;
+            if (!container.has(PersistentKeys.envoy_wand.getNamespacedKey())) return;
 
-        block.getState().update();
+            this.envoyRegistry.getWorld(block.getWorld().getUID()).ifPresent(world -> world.getLocationByCoordinates(block.getX(), block.getY(), block.getZ()).ifPresent(location -> {
+                final UUID uuid = location.getWorld();
+                final String id = uuid.toString();
 
-        this.locationSettings.removeSpawnLocation(block);
+                if (this.holder.removeLocation(id)) {
+                    Messages.remove_location.sendMessage(player);
 
-        Messages.remove_location.sendMessage(player);*/
+                    block.getState(true).update();
+
+                    world.removeLocation(id);
+                }
+            }));
+        });
     }
 }

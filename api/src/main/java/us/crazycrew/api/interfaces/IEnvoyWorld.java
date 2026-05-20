@@ -1,6 +1,9 @@
 package us.crazycrew.api.interfaces;
 
 import org.jspecify.annotations.NonNull;
+import us.crazycrew.api.objects.EnvoyLocation;
+
+import java.util.Map;
 import java.util.UUID;
 
 public interface IEnvoyWorld {
@@ -12,6 +15,8 @@ public interface IEnvoyWorld {
     void setCountdown(@NonNull final String countdown);
 
     String getCountdown();
+
+    Map<String, EnvoyLocation> getActiveMarkers();
 
     String getWorldAsString();
 

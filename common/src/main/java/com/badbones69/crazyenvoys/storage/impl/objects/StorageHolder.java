@@ -149,8 +149,26 @@ public class StorageHolder extends IStorageHolder<EnvoyWorld> {
     }
 
     @Override
-    public void removeLocation(@NonNull final String id) {
+    public boolean removeLocation(@NonNull final String id) {
+        return CompletableFuture.supplyAsync(() -> {
+            boolean isValid = false;
 
+            try (final Connection connection = this.factory.getConnection(); final PreparedStatement statement =
+                    connection.prepareStatement("delete from envoy_locations where id=?")) {
+
+                statement.setString(1, id);
+
+                statement.executeUpdate();
+
+                isValid = true;
+
+                return isValid;
+            } catch (final SQLException exception) {
+                exception.printStackTrace();
+
+                return isValid;
+            }
+        }).join();
     }
 
     @Override

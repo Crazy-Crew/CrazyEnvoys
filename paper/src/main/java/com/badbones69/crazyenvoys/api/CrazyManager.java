@@ -12,7 +12,6 @@ import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent.EnvoyStartReason;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
-import com.badbones69.crazyenvoys.api.objects.EditorSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
@@ -41,7 +40,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -66,8 +64,6 @@ public class CrazyManager {
     private @NotNull final PaperFileManager fileManager = this.plugin.getFileManager();
 
     private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
-
-    private @NotNull final EditorSettings editorSettings = this.plugin.getEditorSettings();
 
     private @NotNull final CoolDownSettings coolDownSettings = this.plugin.getCoolDownSettings();
 
@@ -738,7 +734,7 @@ public class CrazyManager {
             return false;
         }
 
-        for (UUID uuid : this.editorSettings.getEditors()) {
+        /*for (UUID uuid : this.editorSettings.getEditors()) { //todo() update
             Player player = this.server.getPlayer(uuid);
 
             this.editorSettings.removeFakeBlocks();
@@ -750,7 +746,7 @@ public class CrazyManager {
             }
         }
 
-        this.editorSettings.getEditors().clear();
+        this.editorSettings.getEditors().clear();*/
 
         setEnvoyActive(true);
 
