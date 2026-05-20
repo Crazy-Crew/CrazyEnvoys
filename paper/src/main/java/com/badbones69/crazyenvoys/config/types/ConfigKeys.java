@@ -12,7 +12,7 @@ import static ch.jalu.configme.properties.PropertyInitializer.*;
 import static ch.jalu.configme.properties.PropertyInitializer.newBeanProperty;
 
 public class ConfigKeys implements SettingsHolder {
-    
+
     protected ConfigKeys() {}
 
     @Override
@@ -32,7 +32,7 @@ public class ConfigKeys implements SettingsHolder {
                 "This is your warning before the change happens.",
                 ""
         };
-        
+
         conf.setComment("root", header);
     }
 
@@ -86,7 +86,7 @@ public class ConfigKeys implements SettingsHolder {
     public static final Property<Boolean> envoy_falling_block_toggle = newProperty("envoys.falling-blocks.toggle", true);
 
     @Comment("The block type falling when an envoy spawns.")
-    public static final Property<String> envoy_falling_block_type = newProperty("envoys.falling-blocks.type", "BEACON");
+    public static final Property<String> envoy_falling_block_type = newProperty("envoys.falling-blocks.type", "beacon");
 
     @Comment("How high should the block spawn when an envoy spawns?")
     public static final Property<Integer> envoy_falling_height = newProperty("envoys.falling-blocks.height", 15);
@@ -162,7 +162,7 @@ public class ConfigKeys implements SettingsHolder {
     public static final Property<String> envoys_flare_item_name = newProperty("flare.item.name", "<bold><gray>(<dark_red>!<gray>)</bold> <red>Flare");
 
     @Comment("The material of the flare item.")
-    public static final Property<String> envoys_flare_item_type = newProperty("flare.item.type", "REDSTONE_TORCH");
+    public static final Property<String> envoys_flare_item_type = newProperty("flare.item.type", "redstone_torch");
 
     @Comment("If the flare will glow.")
     public static final Property<Boolean> envoys_flare_item_glowing = newProperty("flare.item.glowing", false);

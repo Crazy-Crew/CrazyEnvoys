@@ -58,7 +58,7 @@ Prizes: #The prizes that can be won.
     Messages:
       - '<gray>You have just won {reward}.'
     Items:
-      - 'Item:GOLDEN_APPLE, Amount:16, Name:<light_purple>Juicy Golden Apple, Lore:<gray>I am a yummy apple,<gray>Make sure to savor my flavor.'
+      - 'item:golden_apple, amount:16, name:<light_purple>juicy golden apple, lore:<gray>i am a yummy apple,<gray>make sure to savor my flavor.'
   '3':
     DisplayName: '<light_purple>Food Pack' #The display name used in {reward}
     Chance: 40
@@ -66,9 +66,9 @@ Prizes: #The prizes that can be won.
     Messages:
       - '<gray>You have just had a great harvest.'
     Items:
-      - 'Item:COOKED_BEEF, Amount:16'
-      - 'Item:APPLE, Amount:16'
-      - 'Item:COOKED_COD, Amount:16'
-      - 'Item:COOKED_SALMON, Amount:16'
-      - 'Item:CARROT, Amount:16'
-      - 'Item:BREAD, Amount:16'
+      - 'item:cooked_beef, amount:16'
+      - 'item:apple, amount:16'
+      - 'item:cooked_cod, amount:16'
+      - 'item:cooked_salmon, amount:16'
+      - 'item:carrot, amount:16'
+      - 'item:bread, amount:16'

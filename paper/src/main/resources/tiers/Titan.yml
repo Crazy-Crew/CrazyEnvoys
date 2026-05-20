@@ -58,7 +58,7 @@ Prizes:
     Messages:
       - '<gray>Congratulations you have just won a {reward}.'
     Items:
-      - 'Item:DIAMOND_SWORD, Amount:1, Name:<dark_red>Titan Sword, Sharpness:5, Unbreaking:3, Knockback:2, Fire_Aspect:2, Looting:3'
+      - 'item:diamond_sword, amount:1, name:<dark_red>titan sword, sharpness:5, unbreaking:3, knockback:2, fire_aspect:2, looting:3'
   '3':
     DisplayName: '<dark_red>Titan <gray>Armor'
     Chance: 10
@@ -68,7 +68,7 @@ Prizes:
     # Available Materials: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimMaterial.html
     # Available Patterns: https://jd.papermc.io/paper/1.20/org/bukkit/inventory/meta/trim/TrimPattern.html
     Items:
-      - 'Item:DIAMOND_HELMET, Damage:50, Trim-Pattern:SENTRY, Trim-Material:QUARTZ, Amount:1, Name:<dark_red>Titan Helmet, Protection:4, Unbreaking:3'
-      - 'Item:DIAMOND_CHESTPLATE, Damage:50, Trim-Pattern:DUNE, Trim-Material:REDSTONE, Amount:1, Name:<dark_red>Titan Chestplate, Protection:4, Unbreaking:3'
-      - 'Item:DIAMOND_LEGGINGS, Damage:50, Trim-Pattern:HOST, Trim-Material:COPPER, Amount:1, Name:<dark_red>Titan Leggings, Protection:4, Unbreaking:3'
-      - 'Item:DIAMOND_BOOTS, Damage:50, Trim-Pattern:SHAPER, Trim-Material:GOLD, Amount:1, Name:<dark_red>Titan Boots, Protection:4, Unbreaking:3'
+      - 'item:diamond_helmet, damage:50, trim-pattern:sentry, trim-material:quartz, amount:1, name:<dark_red>titan helmet, protection:4, unbreaking:3'
+      - 'item:diamond_chestplate, damage:50, trim-pattern:dune, trim-material:redstone, amount:1, name:<dark_red>titan chestplate, protection:4, unbreaking:3'
+      - 'item:diamond_leggings, damage:50, trim-pattern:host, trim-material:copper, amount:1, name:<dark_red>titan leggings, protection:4, unbreaking:3'
+      - 'item:diamond_boots, damage:50, trim-pattern:shaper, trim-material:gold, amount:1, name:<dark_red>titan boots, protection:4, unbreaking:3'
