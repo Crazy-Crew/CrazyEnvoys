@@ -20,6 +20,7 @@ import com.ryderbelserion.fusion.paper.builders.items.PlayerBuilder;
 import dev.triumphteam.cmd.bukkit.BukkitCommandManager;
 import dev.triumphteam.cmd.core.suggestion.SuggestionKey;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -92,6 +93,16 @@ public class CommandManager {
             for (int i = 1; i <= size; i++) drops.add(String.valueOf(i));
 
             return drops;
+        });
+
+        commandManager.registerSuggestion(SuggestionKey.of("worlds"), (_) -> {
+            final List<String> worlds = new ArrayList<>();
+
+            for (final World world : server.getWorlds()) {
+                worlds.add(world.getKey().toString());
+            }
+
+            return worlds;
         });
 
         commandManager.registerArgument(PlayerBuilder.class, (_, context) -> new PlayerBuilder(context));
