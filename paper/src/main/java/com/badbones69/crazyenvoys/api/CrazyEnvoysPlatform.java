@@ -10,11 +10,8 @@ import com.badbones69.crazyenvoys.api.registry.adapters.PaperUserAdapter;
 import com.badbones69.crazyenvoys.commands.CommandManager;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.listeners.EnvoyCacheListener;
-import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
 import com.badbones69.crazyenvoys.listeners.EnvoyEditListener;
 import com.badbones69.crazyenvoys.listeners.EnvoyWorldListener;
-import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
-import com.badbones69.crazyenvoys.listeners.FlareClickListener;
 import com.badbones69.crazyenvoys.objects.EnvoyWorld;
 import com.badbones69.crazyenvoys.support.MetricsWrapper;
 import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
@@ -82,17 +79,21 @@ public class CrazyEnvoysPlatform extends CrazyPlugin<Location, Material, Audienc
         List.of(
                 new EnvoyCacheListener(),
                 new EnvoyWorldListener(),
-                new EnvoyEditListener(),
+                new EnvoyEditListener()
 
-                new FireworkDamageListener(),
-                new EnvoyClickListener(),
-                new FlareClickListener()
+                //new FireworkDamageListener(),
+                //new EnvoyClickListener(),
+                //new FlareClickListener()
         ).forEach(event -> this.pluginManager.registerEvents(event, this.plugin));
 
         final List<World> worlds = this.server.getWorlds();
 
         for (final World world : worlds) {
-            this.storageHolder.addWorld(new EnvoyWorld(world.getUID(), world.getKey().toString()));
+            final EnvoyWorld context = new EnvoyWorld(world.getUID(), world.getKey().toString());
+
+            context.init();
+
+            this.envoyRegistry.addWorld(context);
         }
 
         if (this.fusion.isModReady(ModSupport.placeholder_api)) {

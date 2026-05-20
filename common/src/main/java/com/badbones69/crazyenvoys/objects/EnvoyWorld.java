@@ -35,6 +35,7 @@ public class EnvoyWorld implements IEnvoyWorld {
     }
 
     private String countdown = "0000000000000";
+    private boolean isActive = false;
     private EnvoyLocation center;
 
     @Override
@@ -64,6 +65,16 @@ public class EnvoyWorld implements IEnvoyWorld {
     @Override
     public void setCenter(@NonNull final EnvoyLocation center) {
         this.center = center;
+    }
+
+    @Override
+    public void setActive(final boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    @Override
+    public final boolean isActive() {
+        return this.isActive;
     }
 
     @Override

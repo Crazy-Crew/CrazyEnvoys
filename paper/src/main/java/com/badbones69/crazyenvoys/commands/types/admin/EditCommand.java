@@ -22,7 +22,7 @@ public class EditCommand extends EnvoyCommand {
     @Permission(value = "envoy.edit", def = PermissionDefault.OP)
     @Syntax("/envoys edit")
     public void edit(final Player player) {
-        if (this.crazyManager.isEnvoyActive()) {
+        if (this.envoyRegistry.isEnvoyActive(player.getWorld().getUID())) {
             Messages.kicked_from_editor_mode.sendMessage(player);
 
             return;

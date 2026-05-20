@@ -17,6 +17,10 @@ public interface IEnvoyWorld {
 
     void setCenter(@NonNull final EnvoyLocation center);
 
+    void setActive(final boolean isActive);
+
+    boolean isActive();
+
     @NonNull EnvoyLocation getCenter();
 
     @NonNull String getCountdown();

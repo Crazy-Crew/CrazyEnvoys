@@ -88,13 +88,15 @@ public class StorageHolder extends IStorageHolder<EnvoyWorld> {
     public void populate(@NonNull final EnvoyWorld world) {
         CompletableFuture.runAsync(() -> {
             try (final Connection connection = this.factory.getConnection(); final PreparedStatement statement =
-                    connection.prepareStatement("select countdown from envoy_worlds where world=?")) {
+                    connection.prepareStatement("select worlds.countdown, locations.* from envoy_worlds worlds inner join envoy_locations locations on worlds.world = locations.world and worlds.world=?")) {
                 statement.setString(1, world.getWorldAsString());
 
                 final ResultSet rs = statement.executeQuery();
 
                 while (rs.next()) {
                     world.setCountdown(rs.getString("countdown"));
+
+                    world.addLocation(rs.getString("id"), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
                 }
             } catch (final SQLException exception) {
                 exception.printStackTrace();
