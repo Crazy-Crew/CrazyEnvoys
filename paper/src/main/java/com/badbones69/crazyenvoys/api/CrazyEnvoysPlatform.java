@@ -77,6 +77,8 @@ public class CrazyEnvoysPlatform extends CrazyPlugin<Location, Material, Audienc
 
         this.userAdapter = new PaperSenderAdapter();
 
+        registerPermissions();
+
         List.of(
                 new EnvoyCacheListener(),
                 new EnvoyWorldListener(),
