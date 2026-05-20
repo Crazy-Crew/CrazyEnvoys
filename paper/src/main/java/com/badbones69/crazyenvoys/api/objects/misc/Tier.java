@@ -2,6 +2,7 @@ package com.badbones69.crazyenvoys.api.objects.misc;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.badbones69.crazyenvoys.util.ItemUtil;
 import com.ryderbelserion.fusion.core.api.exceptions.FusionException;
 import com.ryderbelserion.fusion.paper.FusionPaper;
@@ -21,7 +22,9 @@ public class Tier {
 
     private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final FusionPaper fusion = this.plugin.getFusion();
+    private final CrazyEnvoysPlatform platform = this.plugin.getPlatform();
+
+    private final FusionPaper fusion = this.platform.getFusion();
 
     private final ItemStack itemStack;
 

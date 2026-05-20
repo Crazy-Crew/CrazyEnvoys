@@ -1,7 +1,9 @@
 package com.badbones69.crazyenvoys.api.enums;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.ryderbelserion.fusion.core.api.exceptions.FusionException;
+import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
 import com.ryderbelserion.fusion.paper.files.types.PaperCustomFile;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,9 +15,13 @@ public enum Files {
 
     users("users.yml");
 
-    private final CrazyEnvoys plugin = JavaPlugin.getPlugin(CrazyEnvoys.class);
+    private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final PaperFileManager fileManager = this.plugin.getFileManager();
+    private final CrazyEnvoysPlatform platform = this.plugin.getPlatform();
+
+    private final FusionPaper fusion = this.platform.getFusion();
+
+    private final PaperFileManager fileManager = this.fusion.getFileManager();
 
     private final Path path;
 

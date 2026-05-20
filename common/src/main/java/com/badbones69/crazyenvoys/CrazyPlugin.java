@@ -28,9 +28,11 @@ public abstract class CrazyPlugin<L, M, S extends Audience, K extends FusionKyor
     protected StorageHolder storageHolder;
     protected EnvoyRegistry envoyRegistry;
     protected IPlayerAdapter<?> adapter;
+    protected final long startTime;
     protected final K fusion;
 
     public CrazyPlugin(@NonNull final K fusion) {
+        this.startTime = System.nanoTime();
         this.fusion = fusion;
     }
 
@@ -39,6 +41,8 @@ public abstract class CrazyPlugin<L, M, S extends Audience, K extends FusionKyor
     public abstract @NonNull Optional<L> toLocation(@NonNull final EnvoyLocation location);
 
     public abstract ISenderAdapter getSenderAdapter();
+
+    public abstract void registerPermissions();
 
     @Override
     public void init() {

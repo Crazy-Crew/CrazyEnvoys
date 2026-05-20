@@ -33,6 +33,8 @@ public abstract class CrazyEnvoys<S, K extends FusionKyori<S>> {
 
     public abstract void init();
 
+    public abstract void stop();
+
     public static class Provider {
         private static CrazyEnvoys instance;
 

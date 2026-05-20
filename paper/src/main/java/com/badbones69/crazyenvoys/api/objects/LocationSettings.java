@@ -2,6 +2,7 @@ package com.badbones69.crazyenvoys.api.objects;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.badbones69.crazyenvoys.api.enums.Files;
 import com.ryderbelserion.fusion.core.api.enums.Level;
 import com.ryderbelserion.fusion.paper.FusionPaper;
@@ -14,7 +15,9 @@ public class LocationSettings {
 
     private final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private final FusionPaper fusion = this.plugin.getFusion();
+    private final CrazyEnvoysPlatform platform = this.plugin.getPlatform();
+
+    private final FusionPaper fusion = this.platform.getFusion();
 
     private final List<Block> spawnLocations = new ArrayList<>();
 

@@ -3,6 +3,7 @@ package com.badbones69.crazyenvoys.api.enums;
 import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.properties.Property;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.ryderbelserion.fusion.core.utils.StringUtils;
 import com.ryderbelserion.fusion.kyori.utils.AdvUtils;
@@ -112,12 +113,16 @@ public enum Messages {
         this.isList = isList;
     }
 
-    private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
-    private @NotNull final SettingsManager messages = ConfigManager.getMessages();
-    private @NotNull final SettingsManager config = ConfigManager.getConfig();
-    private @NotNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
+    private @NonNull final SettingsManager messages = ConfigManager.getMessages();
+    private @NonNull final SettingsManager config = ConfigManager.getConfig();
 
-    private final FusionPaper fusion = this.plugin.getFusion();
+    private @NonNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+
+    private @NonNull final CrazyEnvoysPlatform platform = this.plugin.getPlatform();
+
+    private @NonNull final FusionPaper fusion = this.platform.getFusion();
+
+    private @NonNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
 
     public @NonNull final String getString() {
         return this.messages.getProperty(this.property);

@@ -30,15 +30,15 @@ public class EnvoyCommand {
 
     protected @NonNull final PaperUserRegistry userRegistry = this.platform.getUserRegistry();
 
-    protected @NonNull final PaperFileManager fileManager = this.plugin.getFileManager();
+    protected @NonNull final FusionPaper fusion = this.platform.getFusion();
+
+    protected @NonNull final PaperFileManager fileManager = this.fusion.getFileManager();
 
     protected @NonNull final Server server = this.plugin.getServer();
 
     protected @NonNull final PluginManager pluginManager = this.server.getPluginManager();
 
     protected @NonNull final CrazyManager crazyManager = this.plugin.getCrazyManager();
-
-    protected @NonNull final FusionPaper fusion = this.plugin.getFusion();
 
     protected @NonNull final LocationSettings locationSettings = this.plugin.getLocationSettings();
 

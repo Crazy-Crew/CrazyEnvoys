@@ -2,33 +2,13 @@ package com.badbones69.crazyenvoys;
 
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
-import com.badbones69.crazyenvoys.api.enums.Permissions;
 import com.badbones69.crazyenvoys.api.objects.CoolDownSettings;
 import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
-import com.badbones69.crazyenvoys.commands.CommandManager;
-import com.badbones69.crazyenvoys.listeners.EnvoyEditListener;
-import com.badbones69.crazyenvoys.listeners.EnvoyClickListener;
-import com.badbones69.crazyenvoys.listeners.EnvoyWorldListener;
-import com.badbones69.crazyenvoys.listeners.FireworkDamageListener;
-import com.badbones69.crazyenvoys.listeners.FlareClickListener;
-import com.badbones69.crazyenvoys.support.placeholders.PlaceholderAPISupport;
-import com.ryderbelserion.fusion.core.api.constants.ModSupport;
-import com.ryderbelserion.fusion.core.api.enums.Level;
 import com.ryderbelserion.fusion.paper.FusionPaper;
-import com.ryderbelserion.fusion.paper.files.PaperFileManager;
-import me.arcaniax.hdb.api.HeadDatabaseAPI;
-import org.bukkit.permissions.Permission;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import com.badbones69.crazyenvoys.config.ConfigManager;
-import com.badbones69.crazyenvoys.support.MetricsWrapper;
 import org.jspecify.annotations.NonNull;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Optional;
 
 public class CrazyEnvoys extends JavaPlugin {
 
@@ -37,48 +17,18 @@ public class CrazyEnvoys extends JavaPlugin {
         return JavaPlugin.getPlugin(CrazyEnvoys.class);
     }
 
-    private final long startTime;
-
-    public CrazyEnvoys() {
-        this.startTime = System.nanoTime();
-    }
-
     private CrazyEnvoysPlatform platform;
 
-    private FlareSettings flareSettings;
     private CoolDownSettings coolDownSettings;
     private LocationSettings locationSettings;
+    private FlareSettings flareSettings;
 
     private CrazyManager crazyManager;
-
-    private PaperFileManager fileManager;
-    private FusionPaper fusion;
 
     @Override
     public void onEnable() {
         this.platform = new CrazyEnvoysPlatform(this, new FusionPaper(this));
         this.platform.init();
-
-        this.fusion = this.platform.getFusion();
-
-        final Path path = getDataPath();
-
-        ConfigManager.load(getDataFolder(), getComponentLogger());
-
-        this.fileManager = this.fusion.getFileManager();
-        this.fileManager.addPaperFile(path.resolve("users.yml"))
-            .addPaperFolder(path.resolve("tiers"));
-
-        new MetricsWrapper(4514);
-
-        final PluginManager pluginManager = getServer().getPluginManager();
-
-        Arrays.stream(Permissions.values()).toList().forEach(permission -> pluginManager.addPermission(new Permission(
-                permission.getPermission(),
-                permission.getDescription(),
-                permission.isDefault(),
-                permission.getChildren()
-        )));
 
         this.locationSettings = new LocationSettings();
         this.coolDownSettings = new CoolDownSettings();
@@ -86,56 +36,15 @@ public class CrazyEnvoys extends JavaPlugin {
 
         this.crazyManager = new CrazyManager();
         this.crazyManager.load();
-
-        pluginManager.registerEvents(new EnvoyEditListener(), this);
-        pluginManager.registerEvents(new EnvoyClickListener(), this);
-        pluginManager.registerEvents(new FlareClickListener(), this);
-        pluginManager.registerEvents(new FireworkDamageListener(), this);
-        pluginManager.registerEvents(new EnvoyWorldListener(), this);
-
-        if (this.fusion.isModReady(ModSupport.placeholder_api)) {
-            new PlaceholderAPISupport().register();
-        }
-
-        CommandManager.load();
-
-        this.fusion.log(Level.INFO, "Done (%s)!", String.format(Locale.ROOT, "%.3fs", (double) (System.nanoTime() - this.startTime) / 1.0E9D));
     }
 
     @Override
     public void onDisable() {
-        /*for (Player player : getServer().getOnlinePlayers()) {
-            if (this.editorSettings.isEditor(player)) {
-                this.editorSettings.removeEditor(player);
-                this.editorSettings.removeFakeBlocks();
-            }
-        }
-
-        if (this.crazyManager.isEnvoyActive()) {
-            EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndReason.SHUTDOWN);
-
-            getServer().getPluginManager().callEvent(event);
-
-            this.crazyManager.endEnvoyEvent();
-        }
-
-        this.crazyManager.reload(true);*/
+        this.platform.stop();
     }
 
-    public FusionPaper getFusion() {
-        return this.fusion;
-    }
-
-    public final Optional<HeadDatabaseAPI> getApi() {
-        return this.fusion.getHeadApi();
-    }
-
-    public final PaperFileManager getFileManager() {
-        return this.fileManager;
-    }
-
-    public final FlareSettings getFlareSettings() {
-        return this.flareSettings;
+    public @NonNull final CrazyEnvoysPlatform getPlatform() {
+        return this.platform;
     }
 
     public final CoolDownSettings getCoolDownSettings() {
@@ -146,11 +55,11 @@ public class CrazyEnvoys extends JavaPlugin {
         return this.locationSettings;
     }
 
-    public final CrazyManager getCrazyManager() {
-        return this.crazyManager;
+    public final FlareSettings getFlareSettings() {
+        return this.flareSettings;
     }
 
-    public @NonNull final CrazyEnvoysPlatform getPlatform() {
-        return this.platform;
+    public final CrazyManager getCrazyManager() {
+        return this.crazyManager;
     }
 }

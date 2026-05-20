@@ -3,6 +3,7 @@ package com.badbones69.crazyenvoys.listeners;
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.Methods;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.builders.gui.PrizeGui;
 import com.badbones69.crazyenvoys.api.enums.Messages;
@@ -37,6 +38,8 @@ import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import com.badbones69.crazyenvoys.config.ConfigManager;
 import com.badbones69.crazyenvoys.config.types.ConfigKeys;
+import org.jspecify.annotations.NonNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,9 +49,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public class EnvoyClickListener implements Listener {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
+
+    private @NonNull final CrazyEnvoysPlatform platform = this.plugin.getPlatform();
+
     private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
-    private @NotNull final FusionPaper fusion = this.plugin.getFusion();
+    private @NotNull final FusionPaper fusion = this.platform.getFusion();
 
     private @NotNull final Server server = this.plugin.getServer();
 

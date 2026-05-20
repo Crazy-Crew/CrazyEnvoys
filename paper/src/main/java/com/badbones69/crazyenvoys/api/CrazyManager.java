@@ -45,6 +45,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
+
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -53,15 +55,17 @@ public class CrazyManager {
 
     private @NotNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
+    private @NonNull final CrazyEnvoysPlatform platform = this.plugin.getPlatform();
+
     private @NotNull final Server server = this.plugin.getServer();
 
     private @NotNull final PluginManager pluginManager = this.server.getPluginManager();
 
-    private @NotNull final FusionPaper fusion = this.plugin.getFusion();
+    private @NotNull final FusionPaper fusion = this.platform.getFusion();
 
     private @NotNull final SettingsManager config = ConfigManager.getConfig();
 
-    private @NotNull final PaperFileManager fileManager = this.plugin.getFileManager();
+    private @NotNull final PaperFileManager fileManager = this.fusion.getFileManager();
 
     private @NotNull final FlareSettings flareSettings = this.plugin.getFlareSettings();
 

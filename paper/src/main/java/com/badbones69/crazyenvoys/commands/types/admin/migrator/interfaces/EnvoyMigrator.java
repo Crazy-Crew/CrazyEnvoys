@@ -2,6 +2,7 @@ package com.badbones69.crazyenvoys.commands.types.admin.migrator.interfaces;
 
 import ch.jalu.configme.SettingsManager;
 import com.badbones69.crazyenvoys.CrazyEnvoys;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.badbones69.crazyenvoys.api.CrazyManager;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.commands.types.admin.migrator.enums.MigrationType;
@@ -21,9 +22,11 @@ public abstract class EnvoyMigrator {
 
     protected final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    protected final FusionPaper fusion = this.plugin.getFusion();
+    protected final CrazyEnvoysPlatform platform = this.plugin.getPlatform();
 
-    protected final PaperFileManager fileManager = this.plugin.getFileManager();
+    protected final FusionPaper fusion = this.platform.getFusion();
+
+    protected final PaperFileManager fileManager = this.fusion.getFileManager();
 
     protected final CrazyManager crazyManager = this.plugin.getCrazyManager();
 

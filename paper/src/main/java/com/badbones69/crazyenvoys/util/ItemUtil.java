@@ -1,6 +1,7 @@
 package com.badbones69.crazyenvoys.util;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
+import com.badbones69.crazyenvoys.api.CrazyEnvoysPlatform;
 import com.ryderbelserion.fusion.core.api.enums.Level;
 import com.ryderbelserion.fusion.core.utils.StringUtils;
 import com.ryderbelserion.fusion.paper.FusionPaper;
@@ -17,7 +18,9 @@ public class ItemUtil {
 
     private static final CrazyEnvoys plugin = CrazyEnvoys.get();
 
-    private static final FusionPaper fusion = plugin.getFusion();
+    private static final CrazyEnvoysPlatform platform = plugin.getPlatform();
+
+    private static final FusionPaper fusion = platform.getFusion();
 
     public static void addGlow(@NotNull final ItemBuilder builder, final String value) {
         switch (value.toLowerCase()) {
