@@ -8,6 +8,8 @@ import com.badbones69.crazyenvoys.api.objects.FlareSettings;
 import com.badbones69.crazyenvoys.api.objects.LocationSettings;
 import com.badbones69.crazyenvoys.api.registry.PaperUserRegistry;
 import com.badbones69.crazyenvoys.config.ConfigManager;
+import com.badbones69.crazyenvoys.registry.EnvoyRegistry;
+import com.badbones69.crazyenvoys.storage.impl.objects.StorageHolder;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
 import dev.triumphteam.cmd.core.annotations.Command;
@@ -21,6 +23,10 @@ public class EnvoyCommand {
     protected @NonNull final CrazyEnvoys plugin = CrazyEnvoys.get();
 
     protected @NonNull final PaperEnvoysPlugin envoysPlugin = this.plugin.getPlugin();
+
+    protected @NonNull final StorageHolder holder = this.envoysPlugin.getStorageHolder();
+
+    protected @NonNull final EnvoyRegistry envoyRegistry = this.envoysPlugin.getEnvoyRegistry();
 
     protected @NonNull final PaperUserRegistry userRegistry = this.envoysPlugin.getUserRegistry();
 

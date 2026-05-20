@@ -4,6 +4,7 @@ import org.jspecify.annotations.NonNull;
 import us.crazycrew.api.objects.EnvoyLocation;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface IEnvoyWorld {
@@ -14,15 +15,21 @@ public interface IEnvoyWorld {
 
     void setCountdown(@NonNull final String countdown);
 
-    String getCountdown();
+    void setCenter(@NonNull final EnvoyLocation center);
 
-    Map<String, EnvoyLocation> getActiveMarkers();
+    @NonNull EnvoyLocation getCenter();
 
-    String getWorldAsString();
+    @NonNull String getCountdown();
 
-    String getWorldName();
+    @NonNull Map<String, EnvoyLocation> getActiveMarkers();
 
-    UUID getWorld();
+    @NonNull Optional<EnvoyLocation> getLocationByCoordinates(final int x, final int y, final int z);
+
+    @NonNull String getWorldAsString();
+
+    @NonNull String getWorldName();
+
+    @NonNull UUID getWorld();
 
     void init();
 

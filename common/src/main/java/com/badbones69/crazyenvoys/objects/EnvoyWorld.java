@@ -25,15 +25,17 @@ public class EnvoyWorld implements IEnvoyWorld {
     // prevent changes if envoy is running as the running envoy relies on this hashmap.
     private final Map<String, EnvoyLocation> active = new HashMap<>();
 
-    private final UUID world;
     private final String name;
+    private final UUID world;
 
     public EnvoyWorld(@NonNull final UUID world, @NonNull final String name) {
+        this.center = new EnvoyLocation(world, 0, 0, 0);
         this.world = world;
         this.name = name;
     }
 
     private String countdown = "0000000000000";
+    private EnvoyLocation center;
 
     @Override
     public void init() {
@@ -51,11 +53,22 @@ public class EnvoyWorld implements IEnvoyWorld {
         this.active.put(id, new EnvoyLocation(this.world, x, y, z));
     }
 
-    public Optional<EnvoyLocation> getLocationByCoordinates(final int x, final int y, final int z) {
+    @Override
+    public @NonNull Optional<EnvoyLocation> getLocationByCoordinates(final int x, final int y, final int z) {
         final List<EnvoyLocation> location = this.active.values().stream().filter(entry ->
                 entry.getX() == x && entry.getY() == y && entry.getZ() == z).toList();
 
         return location.isEmpty() ? Optional.empty() : Optional.of(location.getFirst());
+    }
+
+    @Override
+    public void setCenter(@NonNull final EnvoyLocation center) {
+        this.center = center;
+    }
+
+    @Override
+    public @NonNull final EnvoyLocation getCenter() {
+        return this.center;
     }
 
     @Override

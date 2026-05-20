@@ -80,7 +80,6 @@ public class CrazyManager {
     private WorldGuardSupport worldGuardSupportVersion;
     private HologramManager holograms;
     private Location center;
-    private String centerString;
 
     private final Map<Block, Tier> activeEnvoys = new HashMap<>();
     private final Map<Location, ScheduledTask> activeSignals = new HashMap<>();
@@ -388,7 +387,7 @@ public class CrazyManager {
                         }
 
                         if (config.getProperty(ConfigKeys.envoys_random_locations) && center.getWorld() == null) {
-                            fusion.log(Level.WARNING, "The envoy center world cannot be found, the envoy has been cancelled. Center: {}", centerString);
+                            //fusion.log(Level.WARNING, "The envoy center world cannot be found, the envoy has been cancelled. Center: {}", centerString);
 
                             setNextEnvoy(getEnvoyCooldown());
 
@@ -910,20 +909,6 @@ public class CrazyManager {
     }
 
     /**
-     * Sets the center location for the random crates.
-     *
-     * @param loc The new center location.
-     */
-    public void setCenter(Location loc) {
-        this.center = loc;
-
-        this.centerString = Methods.getUnBuiltLocation(this.center);
-
-        Files.users.getConfiguration().set("Center", this.centerString);
-        Files.users.save();
-    }
-
-    /**
      * Check if a player is ignoring the messages.
      *
      * @param uuid The player's UUID.
@@ -989,7 +974,7 @@ public class CrazyManager {
 
             if (isCenterUnloaded()) { // If center still doesn't exist then it cancels the event.
                 this.fusion.log(Level.WARNING, "Debug Start");
-                this.fusion.log(Level.WARNING, "Center String: \"{}'", centerString);
+                //this.fusion.log(Level.WARNING, "Center String: \"{}'", centerString);
                 this.fusion.log(Level.WARNING, "Location Object: \"{}'", center.toString());
                 this.fusion.log(Level.WARNING, "World Exist: \"{}'", center.getWorld() != null);
                 this.fusion.log(Level.WARNING, "Debug End");
@@ -1008,9 +993,9 @@ public class CrazyManager {
         FileConfiguration users = Files.users.getConfiguration();
 
         if (users.contains("Center")) {
-            this.centerString = users.getString("Center");
+            //this.centerString = users.getString("Center");
 
-            if (this.centerString != null) this.center = Methods.getBuiltLocation(centerString);
+            //if (this.centerString != null) this.center = Methods.getBuiltLocation(centerString);
         } else {
             this.center = this.server.getWorlds().getFirst().getSpawnLocation();
         }

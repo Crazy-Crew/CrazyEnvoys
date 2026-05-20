@@ -2,6 +2,8 @@ package us.crazycrew.api.storage;
 
 import org.jspecify.annotations.NonNull;
 import us.crazycrew.api.interfaces.IEnvoyWorld;
+import us.crazycrew.api.objects.EnvoyLocation;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +18,8 @@ public abstract class IStorageHolder<E extends IEnvoyWorld> {
     public abstract void addWorld(@NonNull final E world);
 
     public abstract void setCountdown(@NonNull final E world, @NonNull final String countdown);
+
+    public abstract void setCenter(@NonNull final E world, @NonNull final EnvoyLocation location);
 
     public abstract void addLocation(@NonNull final E world, final int x, final int y, final int z);
 
