@@ -134,15 +134,15 @@ public class MessageKeys implements SettingsHolder {
     public static final Property<String> time_placeholder_minute = newProperty("envoys.time-placeholders.minute", "m");
     public static final Property<String> time_placeholder_second = newProperty("envoys.time-placeholders.second", "s");
 
-    public static final Property<String> envoy_locations = newProperty("envoys.envoy-locations", "&e&lAll Envoy Locations: \\n<red>[ID], [World]: [X], [Y], [Z] &r{locations}");
+    public static final Property<String> envoy_locations = newProperty("envoys.envoy-locations", "<yellow><bold>All Envoy Locations:</bold></yellow> \\n<red>[ID], [World]: [X], [Y], [Z] <reset>{locations}");
 
-    public static final Property<String> location_format = newProperty("envoys.location-format", "\\n&8[&3{id}&8] <red>{world}: {x}, {y}, {z}");
+    public static final Property<String> location_format = newProperty("envoys.location-format", "\\n<dark_gray>[<blue>{id}<dark_gray>] <red>{world}: {x}, {y}, {z}");
 
     @Comment("A list of available placeholders: {command}")
     public static final Property<String> unknown_command = newProperty("misc.command-not-found", "{prefix}<red>{command} is not a known command.");
 
     @Comment("A list of available placeholders: {usage}")
-    public static final Property<String> correct_usage = newProperty("misc.correct-usage", "{prefix}<red>The correct usage for this command is &e{usage}.");
+    public static final Property<String> correct_usage = newProperty("misc.correct-usage", "{prefix}<red>The correct usage for this command is <yellow>{usage}.");
 
     public static final Property<String> must_be_console_sender = newProperty("misc.must-be-console-sender", "{prefix}<red>You must be using console to use this command.");
 
