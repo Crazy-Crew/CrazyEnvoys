@@ -11,6 +11,7 @@
   - All materials are now lowercase, existing configurations *should* work.
   - All enchantments are now mojang mapped, existing configurations *should* work.
     - SHARPNESS → sharpness, and so on.
+- Improved folia support maybe?
 
 ## Bugs Fixed 🐛
 - Fixed an issue with CMI Holograms by forking CMI and updating the API ourselves.
