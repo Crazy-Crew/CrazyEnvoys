@@ -32,6 +32,7 @@ import com.ryderbelserion.fusion.paper.files.PaperFileManager;
 import com.ryderbelserion.fusion.paper.files.types.PaperCustomFile;
 import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
 import com.ryderbelserion.fusion.paper.builders.folia.Scheduler;
+import com.ryderbelserion.fusion.paper.utils.ItemUtils;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -42,6 +43,7 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -789,23 +791,29 @@ public class CrazyManager {
                 }
 
                 if (spawnFallingBlock) {
-                    if (!block.getChunk().isLoaded()) block.getChunk().load();
+                    final Chunk chunk = block.getChunk();
 
-                    int fallingHeight = this.config.getProperty(ConfigKeys.envoy_falling_height);
+                    if (!chunk.isLoaded()) chunk.load();
 
-                    Material material = Material.valueOf(this.config.getProperty(ConfigKeys.envoy_falling_block_type));
+                    final int fallingHeight = this.config.getProperty(ConfigKeys.envoy_falling_height);
 
-                    FallingBlock fallingBlock = block.getWorld().spawn(block.getLocation().add(.5, fallingHeight, .5), FallingBlock.class);
-                    fallingBlock.setBlockData(material.createBlockData());
+                    final ItemType itemType = ItemUtils.getItemType(this.config.getProperty(ConfigKeys.envoy_falling_block_type));
 
-                    fallingBlock.setDropItem(false);
-                    fallingBlock.setHurtEntities(false);
+                    if (itemType != null) {
+                        FallingBlock fallingBlock = block.getWorld().spawn(block.getLocation().add(.5, fallingHeight, .5), FallingBlock.class);
+                        fallingBlock.setBlockData(itemType.createItemStack().getType().createBlockData());
 
-                    this.fallingBlocks.put(fallingBlock, block);
+                        fallingBlock.setDropItem(false);
+                        fallingBlock.setHurtEntities(false);
+
+                        this.fallingBlocks.put(fallingBlock, block);
+                    }
                 } else {
                     Tier tier = pickRandomTier();
 
-                    if (!block.getChunk().isLoaded()) block.getChunk().load();
+                    final Chunk chunk = block.getChunk();
+
+                    if (!chunk.isLoaded()) chunk.load();
 
                     block.setType(tier.getPlacedBlockMaterial());
 
@@ -815,7 +823,7 @@ public class CrazyManager {
 
                     this.locationSettings.addActiveLocation(block);
 
-                    if (tier.getSignalFlareToggle() && block.getChunk().isLoaded()) startSignalFlare(block.getLocation(), tier);
+                    if (tier.getSignalFlareToggle() && chunk.isLoaded()) startSignalFlare(block.getLocation(), tier);
                 }
             }
         }
