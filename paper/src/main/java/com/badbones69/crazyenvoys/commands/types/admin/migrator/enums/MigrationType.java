@@ -2,16 +2,15 @@ package com.badbones69.crazyenvoys.commands.types.admin.migrator.enums;
 
 public enum MigrationType {
 
-    MOJANG_MAPPED_SINGLE("MojangMappedSingle"),
     MOJANG_MAPPED_ALL("MojangMappedAll"),
 
-    LEGACY_COLOR_ALL("LegacyColorAll"),
+    LEGACY_COLOR_ALL("LegacyColorAll");
 
-    WEIGHT_MIGRATION("WeightMigration"),
+    //WEIGHT_MIGRATION("WeightMigration"),
 
-    NEW_ITEM_FORMAT("NewItemFormat"),
+    //NEW_ITEM_FORMAT("NewItemFormat"),
 
-    ENVOYS_DEPRECATED_ALL("EnvoysDeprecated");
+    //ENVOYS_DEPRECATED_ALL("EnvoysDeprecated");
 
     private final String name;
 

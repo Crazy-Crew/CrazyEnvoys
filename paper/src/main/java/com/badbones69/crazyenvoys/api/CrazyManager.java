@@ -797,7 +797,7 @@ public class CrazyManager {
 
                     final int fallingHeight = this.config.getProperty(ConfigKeys.envoy_falling_height);
 
-                    final ItemType itemType = ItemUtils.getItemType(this.config.getProperty(ConfigKeys.envoy_falling_block_type));
+                    final ItemType itemType = ItemUtils.getItemType(this.config.getProperty(ConfigKeys.envoy_falling_block_type).toLowerCase());
 
                     if (itemType != null) {
                         FallingBlock fallingBlock = block.getWorld().spawn(block.getLocation().add(.5, fallingHeight, .5), FallingBlock.class);

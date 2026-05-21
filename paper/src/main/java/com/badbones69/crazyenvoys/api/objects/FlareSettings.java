@@ -18,7 +18,7 @@ public class FlareSettings {
     public void load() {
         final SettingsManager config = ConfigManager.getConfig();
 
-        this.builder = ItemBuilder.from(config.getProperty(ConfigKeys.envoys_flare_item_type))
+        this.builder = ItemBuilder.from(config.getProperty(ConfigKeys.envoys_flare_item_type).toLowerCase())
                 .withDisplayName(config.getProperty(ConfigKeys.envoys_flare_item_name))
                 .withDisplayLore(config.getProperty(ConfigKeys.envoys_flare_item_lore));
 

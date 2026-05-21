@@ -13,7 +13,7 @@ public class ReloadCommand extends EnvoyCommand {
 
     @Command("reload")
     @Permission(value = "envoy.reload", def = PermissionDefault.OP)
-    @Syntax("/envoys reloadd")
+    @Syntax("/envoys reload")
     public void execute(final CommandSender sender) {
         if (this.crazyManager.isEnvoyActive()) {
             EnvoyEndEvent event = new EnvoyEndEvent(EnvoyEndEvent.EnvoyEndReason.RELOAD);

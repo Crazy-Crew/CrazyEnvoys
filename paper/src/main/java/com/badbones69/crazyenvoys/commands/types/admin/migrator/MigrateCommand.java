@@ -4,6 +4,7 @@ import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.commands.types.EnvoyCommand;
 import com.badbones69.crazyenvoys.commands.types.admin.migrator.enums.MigrationType;
 import com.badbones69.crazyenvoys.commands.types.admin.migrator.types.LegacyColorMigrator;
+import com.badbones69.crazyenvoys.commands.types.admin.migrator.types.MojangMappedMigrator;
 import dev.triumphteam.cmd.bukkit.annotation.Permission;
 import dev.triumphteam.cmd.core.annotations.Command;
 import dev.triumphteam.cmd.core.annotations.Flag;
@@ -43,6 +44,7 @@ public class MigrateCommand extends EnvoyCommand {
 
         switch (type) {
             case LEGACY_COLOR_ALL -> new LegacyColorMigrator(sender).run();
+            case MOJANG_MAPPED_ALL -> new MojangMappedMigrator(sender).run();
         }
     }
 }
