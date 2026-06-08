@@ -34,6 +34,7 @@ import com.ryderbelserion.fusion.paper.builders.folia.FoliaScheduler;
 import com.ryderbelserion.fusion.paper.builders.folia.Scheduler;
 import com.ryderbelserion.fusion.paper.utils.ItemUtils;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -688,7 +689,7 @@ public class CrazyManager {
             placeholders.put("{y}", String.valueOf(block.getY()));
             placeholders.put("{z}", String.valueOf(block.getZ()));
 
-            locations.append(Messages.location_format.getMessage(null, placeholders).translateEscapes());
+            locations.append(Messages.location_format.getMessage(Audience.empty(), placeholders).translateEscapes());
 
             x += 1;
         }

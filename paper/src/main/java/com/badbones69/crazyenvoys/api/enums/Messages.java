@@ -127,7 +127,7 @@ public enum Messages {
         return this.messages.getProperty(this.listProperty);
     }
 
-    public void sendMessage(@Nullable final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
+    public void sendMessage(@NotNull final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
         final State state = this.config.getProperty(ConfigKeys.message_state);
 
         switch (state) {
@@ -136,7 +136,7 @@ public enum Messages {
         }
     }
 
-    public void sendMessage(@Nullable final Audience sender, @NotNull final Map<String, String> placeholders) {
+    public void sendMessage(@NotNull final Audience sender, @NotNull final Map<String, String> placeholders) {
         final State state = this.config.getProperty(ConfigKeys.message_state);
 
         switch (state) {
@@ -145,7 +145,7 @@ public enum Messages {
         }
     }
 
-    public void sendMessage(@Nullable final Audience sender) {
+    public void sendMessage(@NotNull final Audience sender) {
         final State state = this.config.getProperty(ConfigKeys.message_state);
 
         switch (state) {
@@ -154,43 +154,43 @@ public enum Messages {
         }
     }
 
-    public void sendRichMessage(@Nullable final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
+    public void sendRichMessage(@NotNull final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
         sendRichMessage(sender, Map.of(placeholder, replacement));
     }
 
-    public void sendRichMessage(@Nullable final Audience sender, @NotNull final Map<String, String> placeholders) {
+    public void sendRichMessage(@NotNull final Audience sender, @NotNull final Map<String, String> placeholders) {
         final String value = getMessage(sender, placeholders);
 
         if (value.isBlank()) return;
 
-        if (sender instanceof Player player) {
-            player.sendMessage(this.fusion.asComponent(value));
-        }
+        sender.sendMessage(this.fusion.asComponent(value));
     }
 
-    public void sendRichMessage(@Nullable final Audience sender) {
+    public void sendRichMessage(@NotNull final Audience sender) {
         sendRichMessage(sender, Map.of());
     }
 
-    public void sendActionBar(@Nullable final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
+    public void sendActionBar(@NotNull final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
         sendActionBar(sender, Map.of(placeholder, replacement));
     }
 
-    public void sendActionBar(@Nullable final Audience sender, @NotNull final Map<String, String> placeholders) {
+    public void sendActionBar(@NotNull final Audience sender, @NotNull final Map<String, String> placeholders) {
         final String value = getMessage(sender, placeholders);
 
         if (value.isBlank()) return;
 
         if (sender instanceof Player player) {
             player.sendActionBar(this.fusion.asComponent(value));
+        } else {
+            sender.sendMessage(this.fusion.asComponent(value));
         }
     }
 
-    public void sendActionBar(@Nullable final Audience sender) {
+    public void sendActionBar(@NotNull final Audience sender) {
         sendActionBar(sender, Map.of());
     }
 
-    public String getMessage(@Nullable final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
+    public String getMessage(@NotNull final Audience sender, @NotNull final String placeholder, @NotNull final String replacement) {
         final Map<String, String> placeholders = new HashMap<>();
 
         placeholders.put(placeholder, replacement);
@@ -198,16 +198,16 @@ public enum Messages {
         return getMessage(sender, placeholders);
     }
 
-    public String getMessage(@Nullable final Audience sender, @NotNull final Map<String, String> placeholders) {
+    public String getMessage(@NotNull final Audience sender, @NotNull final Map<String, String> placeholders) {
         return parse(sender, placeholders);
     }
 
-    public String getMessage(@Nullable final Audience sender) {
+    public String getMessage(@NotNull final Audience sender) {
         return getMessage(sender, new HashMap<>());
     }
 
     public String getMessage() {
-        return getMessage(null, new HashMap<>());
+        return getMessage(Audience.empty(), new HashMap<>());
     }
 
     public void broadcast(final boolean isIgnoring, @NonNull final Map<String, String> placeholders) {
@@ -263,7 +263,7 @@ public enum Messages {
         this.messages.setProperty(this.property, AdvUtils.convert(this.messages.getProperty(this.property), true));
     }
 
-    private @NonNull String parse(@Nullable final Audience sender, @NonNull final Map<String, String> placeholders) {
+    private @NonNull String parse(@NotNull final Audience sender, @NonNull final Map<String, String> placeholders) {
         final Map<String, String> origin = new HashMap<>(placeholders);
 
         origin.putIfAbsent("{prefix}", this.config.getProperty(ConfigKeys.command_prefix));
