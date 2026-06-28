@@ -14,6 +14,7 @@
 - Improved folia support maybe?
 
 ## Bugs Fixed 🐛
+- Fixed pre-defined envoy locations not spawning when an event starts, the location cleaner was running after the crates were placed and removing them.
 - Fixed an issue with CMI Holograms by forking CMI and updating the API ourselves.
 
 As always, Report 🐛 to https://github.com/Crazy-Crew/CrazyEnvoys/issues
