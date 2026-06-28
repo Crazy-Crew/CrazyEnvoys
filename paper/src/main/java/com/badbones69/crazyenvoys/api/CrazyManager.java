@@ -778,55 +778,17 @@ public class CrazyManager {
         }
 
         for (Block block : dropLocations) {
-            if (block != null) {
-                boolean spawnFallingBlock = false;
+            if (block == null) continue;
 
-                if (this.config.getProperty(ConfigKeys.envoy_falling_block_toggle)) {
-                    for (Entity entity : Methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
-                        if (entity instanceof Player) {
-                            spawnFallingBlock = true;
-
-                            break;
-                        }
-                    }
+            // Spawn on the region scheduler so the block is placed on the thread that owns its
+            // location (required on Folia). The location cleaner is scheduled first in removeAllEnvoys,
+            // so this runs after the old blocks are set to air instead of being wiped by them.
+            new FoliaScheduler(this.plugin, block.getLocation()) {
+                @Override
+                public void run() {
+                    spawnEnvoy(block);
                 }
-
-                if (spawnFallingBlock) {
-                    final Chunk chunk = block.getChunk();
-
-                    if (!chunk.isLoaded()) chunk.load();
-
-                    final int fallingHeight = this.config.getProperty(ConfigKeys.envoy_falling_height);
-
-                    final ItemType itemType = ItemUtils.getItemType(this.config.getProperty(ConfigKeys.envoy_falling_block_type).toLowerCase());
-
-                    if (itemType != null) {
-                        FallingBlock fallingBlock = block.getWorld().spawn(block.getLocation().add(.5, fallingHeight, .5), FallingBlock.class);
-                        fallingBlock.setBlockData(itemType.createItemStack().getType().createBlockData());
-
-                        fallingBlock.setDropItem(false);
-                        fallingBlock.setHurtEntities(false);
-
-                        this.fallingBlocks.put(fallingBlock, block);
-                    }
-                } else {
-                    Tier tier = pickRandomTier();
-
-                    final Chunk chunk = block.getChunk();
-
-                    if (!chunk.isLoaded()) chunk.load();
-
-                    block.setType(tier.getPlacedBlockMaterial());
-
-                    if (tier.isHoloEnabled() && this.holograms != null) this.holograms.createHologram(block.getLocation(), tier, MiscUtils.toString(block.getLocation()));
-
-                    addActiveEnvoy(block, tier);
-
-                    this.locationSettings.addActiveLocation(block);
-
-                    if (tier.getSignalFlareToggle() && chunk.isLoaded()) startSignalFlare(block.getLocation(), tier);
-                }
-            }
+            }.runNextTick();
         }
 
         this.runTimeTask = new FoliaScheduler(this.plugin, Scheduler.global_scheduler) {
@@ -845,6 +807,62 @@ public class CrazyManager {
         this.envoyTimeLeft = getEnvoyRunTimeCalendar();
 
         return true;
+    }
+
+    /**
+     * Spawns a single envoy crate at the given block.
+     * Must be run on the region that owns the block's location.
+     *
+     * @param block The block to spawn the crate at.
+     */
+    private void spawnEnvoy(final Block block) {
+        boolean spawnFallingBlock = false;
+
+        if (this.config.getProperty(ConfigKeys.envoy_falling_block_toggle)) {
+            for (Entity entity : Methods.getNearbyEntities(block.getLocation(), 40, 40, 40)) {
+                if (entity instanceof Player) {
+                    spawnFallingBlock = true;
+
+                    break;
+                }
+            }
+        }
+
+        if (spawnFallingBlock) {
+            final Chunk chunk = block.getChunk();
+
+            if (!chunk.isLoaded()) chunk.load();
+
+            final int fallingHeight = this.config.getProperty(ConfigKeys.envoy_falling_height);
+
+            final ItemType itemType = ItemUtils.getItemType(this.config.getProperty(ConfigKeys.envoy_falling_block_type).toLowerCase());
+
+            if (itemType != null) {
+                FallingBlock fallingBlock = block.getWorld().spawn(block.getLocation().add(.5, fallingHeight, .5), FallingBlock.class);
+                fallingBlock.setBlockData(itemType.createItemStack().getType().createBlockData());
+
+                fallingBlock.setDropItem(false);
+                fallingBlock.setHurtEntities(false);
+
+                this.fallingBlocks.put(fallingBlock, block);
+            }
+        } else {
+            Tier tier = pickRandomTier();
+
+            final Chunk chunk = block.getChunk();
+
+            if (!chunk.isLoaded()) chunk.load();
+
+            block.setType(tier.getPlacedBlockMaterial());
+
+            if (tier.isHoloEnabled() && this.holograms != null) this.holograms.createHologram(block.getLocation(), tier, MiscUtils.toString(block.getLocation()));
+
+            addActiveEnvoy(block, tier);
+
+            this.locationSettings.addActiveLocation(block);
+
+            if (tier.getSignalFlareToggle() && chunk.isLoaded()) startSignalFlare(block.getLocation(), tier);
+        }
     }
 
     /**
