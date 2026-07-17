@@ -9,6 +9,8 @@ val libs = extensions.getByType(VersionCatalogsExtension::class.java).named("lib
 repositories {
     maven("https://repo.codemc.io/repository/maven-public/")
 
+    maven("https://repo.opencollab.dev/maven-snapshots/")
+
     maven("https://repo.triumphteam.dev/snapshots/")
 
     maven("https://repo.crazycrew.us/libraries/")
@@ -17,7 +19,6 @@ repositories {
     maven("https://jitpack.io/")
 
     mavenCentral()
-    mavenLocal()
 }
 
 java {
@@ -41,11 +42,14 @@ tasks {
             "description" to rootProject.description.toString(),
             "minecraft" to libs.findVersion("minecraft").get(),
             "website" to "https://github.com/${rootProject.property("repository_owner")}/${rootProject.name}",
-            "group" to project.group
+            "group" to project.group,
+
+            "current_commit" to rootProject.ext.get("current_commit").toString(),
+            "previous_commit" to rootProject.ext.get("previous_commit").toString()
         )
 
         with(copySpec {
-            include("*paper-plugin.yml", "*plugin.yml")
+            include("*paper-plugin.yml", "*plugin.yml", "*version.json")
 
             from("src/main/resources") {
                 expand(inputs.properties)

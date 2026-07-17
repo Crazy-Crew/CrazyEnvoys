@@ -7,6 +7,10 @@ project.group = "${rootProject.group}"
 repositories {
     maven("https://repo.fancyinnovations.com/releases/")
 
+    maven("https://repo.momirealms.net/releases/")
+
+    maven("https://repo.hibiscusmc.com/releases/")
+
     maven("https://maven.enginehub.org/repo/")
 
     maven("https://repo.nexomc.com/releases/")
@@ -25,6 +29,8 @@ dependencies {
 
     implementation(libs.metrics)
 
+    implementation(libs.jalu)
+
     compileOnly(libs.bundles.holograms)
     compileOnly(libs.bundles.shared)
     compileOnly(libs.bundles.cmi)
@@ -39,18 +45,16 @@ tasks {
     shadowJar {
         listOf(
             "com.ryderbelserion.fusion",
-            "org.bstats"
+            "io.leangen.geantyref",
+            "dev.triumphteam.cmd",
+            "org.spongepowered",
+            "com.google.gson",
+            "org.jspecify",
+            "org.bstats",
+            "org.yaml",
+            "ch.jalu"
         ).forEach {
             relocate(it, "libs.$it")
-        }
-    }
-
-    configurations.all { //todo() FIX ME later, fucking forced dependencies, give me a fucking break
-        resolutionStrategy {
-            force("org.apache.logging.log4j:log4j-bom:2.24.1")
-            force("com.google.guava:guava:33.3.1-jre")
-            force("com.google.code.gson:gson:2.11.0")
-            force("it.unimi.dsi:fastutil:8.5.15")
         }
     }
 
@@ -64,14 +68,4 @@ tasks {
 
         minecraftVersion(libs.versions.minecraft.get())
     }
-}
-
-tasks.withType(xyz.jpenilla.runtask.task.AbstractRun::class) {
-    javaLauncher = javaToolchains.launcherFor {
-        vendor = JvmVendorSpec.JETBRAINS
-
-        languageVersion = JavaLanguageVersion.of(25)
-    }
-
-    jvmArgs("-XX:+AllowEnhancedClassRedefinition")
 }
