@@ -27,7 +27,9 @@ public class CMIHologramsSupport extends HologramManager {
         }
 
         // We don't want to create a new one if one already exists.
-        if (exists(id)) return;
+        if (exists(id)) {
+            return;
+        }
 
         final CMIHologram hologram = new CMIHologram(name(id), new CMILocation(location.clone().add(getVector(tier))));
 
@@ -67,17 +69,11 @@ public class CMIHologramsSupport extends HologramManager {
 
     @Override
     public void purge(final boolean isShutdown) {
-        final String name = this.plugin.getName().toLowerCase();
-
-        final List<String> holograms = new ArrayList<>();
-
         hologramManager.getHolograms().forEach((id, hologram) -> {
-            if (id.startsWith(name + "-")) {
-                holograms.add(id.replace(name + "-", ""));
+            if (id.startsWith(this.name)) {
+                hologram.remove();
             }
         });
-
-        holograms.forEach(this::removeHologram);
     }
 
     @Override

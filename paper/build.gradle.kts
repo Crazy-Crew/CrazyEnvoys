@@ -5,6 +5,8 @@ plugins {
 project.group = "${rootProject.group}"
 
 repositories {
+    maven("https://maven.fancyspaces.net/fancyinnovations/snapshots/")
+
     maven("https://repo.fancyinnovations.com/releases/")
 
     maven("https://repo.momirealms.net/releases/")
@@ -16,8 +18,6 @@ repositories {
     maven("https://repo.nexomc.com/releases/")
 
     maven("https://repo.oraxen.com/releases/")
-
-    maven("https://maven.devs.beer/")
 }
 
 dependencies {

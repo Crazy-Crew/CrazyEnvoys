@@ -1,4 +1,4 @@
-package com.badbones69.crazyenvoys.support.holograms.types;
+package com.badbones69.crazyenvoys.support.holograms.types.fancyholograms;
 
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
 import com.badbones69.crazyenvoys.support.holograms.HologramManager;
@@ -9,15 +9,16 @@ import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FancyHologramsSupport extends HologramManager {
+public class FancyHologramsV2Support extends HologramManager {
 
     private final de.oliver.fancyholograms.api.HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
 
     @Override
-    public void createHologram(final Location location, final Tier tier, final String id) {
+    public void createHologram(@NotNull final Location location, @NotNull final Tier tier, @NotNull final String id) {
         if (!tier.isHoloEnabled()) {
             removeHologram(id);
 
@@ -25,7 +26,9 @@ public class FancyHologramsSupport extends HologramManager {
         }
 
         // We don't want to create a new one if one already exists.
-        if (exists(id)) return;
+        if (exists(id)) {
+            return;
+        }
 
         TextHologramData hologramData = new TextHologramData(name(id), location.clone().add(getVector(tier)));
 
@@ -48,38 +51,28 @@ public class FancyHologramsSupport extends HologramManager {
     }
 
     @Override
-    public void removeHologram(final String id) {
-        final Hologram hologram = this.manager.getHologram(name(id)).orElse(null);
-
-        if (hologram == null) return;
-
-        FancyHologramsPlugin.get().getHologramThread().submit(() -> this.manager.removeHologram(hologram));
+    public void removeHologram(@NotNull final String id) {
+        this.manager.getHologram(name(id)).ifPresent(hologram -> FancyHologramsPlugin.get().getHologramThread().submit(() -> this.manager.removeHologram(hologram)));
     }
 
     @Override
-    public boolean exists(final String id) {
-        return this.manager.getHologram(name(id)).orElse(null) != null;
+    public boolean exists(@NotNull final String id) {
+        return this.manager.getHologram(name(id)).isPresent();
     }
 
     @Override
     public void purge(final boolean isShutdown) {
-        final String name = this.plugin.getName().toLowerCase();
-
-        final List<String> holograms = new ArrayList<>();
-
-        manager.getHolograms().forEach(hologram -> {
+        this.manager.getHolograms().forEach(hologram -> {
             final String id = hologram.getName();
 
-            if (id.startsWith(name + "-")) {
-                holograms.add(id.replace(name + "-", ""));
+            if (id.startsWith(this.name)) {
+                FancyHologramsPlugin.get().getHologramThread().submit(() -> this.manager.removeHologram(hologram));
             }
         });
-
-        holograms.forEach(this::removeHologram);
     }
 
     @Override
-    public final String getName() {
+    public @NotNull final String getName() {
         return "FancyHolograms";
     }
 }

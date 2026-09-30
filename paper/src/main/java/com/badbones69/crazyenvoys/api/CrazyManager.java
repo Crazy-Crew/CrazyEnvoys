@@ -7,6 +7,7 @@ import com.badbones69.crazyenvoys.Methods;
 import com.badbones69.crazyenvoys.api.enums.Files;
 import com.badbones69.crazyenvoys.api.enums.Messages;
 import com.badbones69.crazyenvoys.api.enums.PersistentKeys;
+import com.badbones69.crazyenvoys.api.enums.other.Plugins;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent;
 import com.badbones69.crazyenvoys.api.events.EnvoyEndEvent.EnvoyEndReason;
 import com.badbones69.crazyenvoys.api.events.EnvoyStartEvent;
@@ -23,9 +24,9 @@ import com.badbones69.crazyenvoys.support.claims.WorldGuardSupport;
 import com.badbones69.crazyenvoys.support.holograms.HologramManager;
 import com.badbones69.crazyenvoys.support.holograms.types.CMIHologramsSupport;
 import com.badbones69.crazyenvoys.support.holograms.types.DecentHologramsSupport;
-import com.badbones69.crazyenvoys.support.holograms.types.FancyHologramsSupport;
+import com.badbones69.crazyenvoys.support.holograms.types.fancyholograms.FancyHologramsV2Support;
+import com.badbones69.crazyenvoys.support.holograms.types.fancyholograms.FancyHologramsV3Support;
 import com.badbones69.crazyenvoys.util.MiscUtils;
-import com.ryderbelserion.fusion.core.api.FusionKey;
 import com.ryderbelserion.fusion.core.api.enums.Level;
 import com.ryderbelserion.fusion.paper.FusionPaper;
 import com.ryderbelserion.fusion.paper.files.PaperFileManager;
@@ -267,7 +268,7 @@ public class CrazyManager {
         this.blacklistedBlocks.add(Material.GLASS_PANE);
         this.blacklistedBlocks.add(Material.STONE_SLAB);
 
-        if (this.fusion.isModReady(new FusionKey("crazyenvoys", "WorldEdit")) && this.fusion.isModReady(new FusionKey("crazyenvoys", "WorldGuard"))) {
+        if (Plugins.worldguard.isEnabled() && Plugins.worldedit.isEnabled()) {
             this.worldGuardSupportVersion = new WorldGuardSupport();
         }
 
@@ -286,7 +287,7 @@ public class CrazyManager {
 
         switch (pluginName) {
             case "decentholograms" -> {
-                if (!this.fusion.isModReady(CrazyKeys.decent_holograms)) return;
+                if (!Plugins.decent_holograms.isEnabled()) return;
 
                 if (this.holograms != null && this.holograms.getName().equalsIgnoreCase("DecentHolograms")) { // we don't need to do anything.
                     return;
@@ -296,13 +297,27 @@ public class CrazyManager {
             }
 
             case "fancyholograms" -> {
-                if (!this.fusion.isModReady(CrazyKeys.fancy_holograms)) return;
+                if (!Plugins.fancy_holograms.isEnabled()) return;
 
-                this.holograms = new FancyHologramsSupport();
+                this.holograms = new FancyHologramsV2Support();
+            }
+
+            case "fancyholograms-v3" -> {
+                final Plugins hologram = Plugins.fancy_holograms;
+
+                if (!hologram.isEnabled()) return;
+
+                if (!hologram.isClassPresent("com.fancyinnovations.fancyholograms.api.FancyHolograms")) {
+                    this.holograms = new FancyHologramsV2Support();
+
+                    return;
+                }
+
+                this.holograms = new FancyHologramsV3Support();
             }
 
             case "cmi" -> {
-                if (!this.fusion.isModReady(CrazyKeys.cmi_holograms) && !CMIModule.holograms.isEnabled()) return;
+                if (!Plugins.cmi.isEnabled() && !CMIModule.holograms.isEnabled()) return;
 
                 this.holograms = new CMIHologramsSupport();
             }
@@ -310,7 +325,7 @@ public class CrazyManager {
             case "none" -> {}
 
             default -> {
-                if (this.fusion.isModReady(CrazyKeys.decent_holograms)) {
+                if (Plugins.decent_holograms.isEnabled()) {
                     if (this.holograms == null) {
                         this.holograms = new DecentHologramsSupport();
                     }
@@ -318,14 +333,16 @@ public class CrazyManager {
                     break;
                 }
 
-                if (this.fusion.isModReady(CrazyKeys.fancy_holograms)) {
-                    this.holograms = new FancyHologramsSupport();
+                if (Plugins.cmi.isEnabled() && !CMIModule.holograms.isEnabled()) {
+                    this.holograms = new CMIHologramsSupport();
 
                     break;
                 }
 
-                if (this.fusion.isModReady(CrazyKeys.cmi_holograms) && !CMIModule.holograms.isEnabled()) {
-                    this.holograms = new CMIHologramsSupport();
+                final Plugins hologram = Plugins.fancy_holograms;
+
+                if (hologram.isEnabled()) {
+                    this.holograms = hologram.isClassPresent("com.fancyinnovations.fancyholograms.api.FancyHolograms") ? new FancyHologramsV3Support() : new FancyHologramsV2Support();
                 }
             }
         }

@@ -21,7 +21,9 @@ public class DecentHologramsSupport extends HologramManager {
         }
 
         // We don't want to create a new one if one already exists.
-        if (exists(id)) return;
+        if (exists(id)) {
+            return;
+        }
 
         final Hologram hologram = DHAPI.createHologram(name(id), location.clone().add(getVector(tier)));
 

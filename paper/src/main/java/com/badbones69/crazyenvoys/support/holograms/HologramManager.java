@@ -2,12 +2,12 @@ package com.badbones69.crazyenvoys.support.holograms;
 
 import com.badbones69.crazyenvoys.CrazyEnvoys;
 import com.badbones69.crazyenvoys.api.objects.misc.Tier;
+import com.ryderbelserion.fusion.paper.FusionPaper;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +15,10 @@ import java.util.regex.Pattern;
 public abstract class HologramManager {
 
     protected CrazyEnvoys plugin = CrazyEnvoys.get();
+
+    protected FusionPaper fusion = this.plugin.getFusion();
+
+    protected String name = this.plugin.getName().toLowerCase();
     
     public abstract void createHologram(final Location location, final Tier tier, final String id);
 
@@ -26,12 +30,8 @@ public abstract class HologramManager {
 
     public abstract String getName();
 
-    protected @NotNull final String name() {
-        return this.plugin.getName().toLowerCase() + "-" + UUID.randomUUID();
-    }
-
     protected @NotNull final String name(final String id) {
-        return this.plugin.getName().toLowerCase() + "-" + id;
+        return "%s-%s".formatted(this.name, id);
     }
 
     protected @NotNull final Vector getVector(@NotNull final Tier tier) {
