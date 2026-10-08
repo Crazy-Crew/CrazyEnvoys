@@ -158,6 +158,8 @@ public class EnvoyClickListener implements Listener {
                     "{tier}", tierName
             );
 
+            placeholders.putAll(values);
+
             if (!tier.getPrizeMessage().isEmpty() && prize.getMessages().isEmpty()) {
                 for (final String message : tier.getPrizeMessage()) {
                     player.sendMessage(this.fusion.asComponent(
