@@ -148,17 +148,18 @@ public class EnvoyClickListener implements Listener {
 
         final String playerName = player.getName();
 
+        placeholders.put("{player}", playerName);
+
         for (Prize prize : envoyOpenEvent.getPrizes()) {
             final String displayName = prize.getDisplayName();
             final String tierName = tier.getName();
 
-            final Map<String, String> values = Map.of(
-                    "{player}", playerName,
-                    "{reward}", displayName,
-                    "{tier}", tierName
-            );
+            final Map<String, String> values = new HashMap<>();
 
-            placeholders.putAll(values);
+            values.put("{reward}", displayName);
+            values.put("{tier}", tierName);
+
+            values.putAll(placeholders);
 
             if (!tier.getPrizeMessage().isEmpty() && prize.getMessages().isEmpty()) {
                 for (final String message : tier.getPrizeMessage()) {
@@ -184,7 +185,7 @@ public class EnvoyClickListener implements Listener {
                     final ConsoleCommandSender sender = server.getConsoleSender();
 
                     for (final String command : prize.getCommands()) {
-                        server.dispatchCommand(sender, fusion.parse(player, command, placeholders));
+                        server.dispatchCommand(sender, fusion.parse(player, command, values));
                     }
                 }
             }.runNow();
@@ -222,7 +223,6 @@ public class EnvoyClickListener implements Listener {
 
         if (!this.crazyManager.getActiveEnvoys().isEmpty()) {
             if (this.config.getProperty(ConfigKeys.envoys_announce_player_pickup)) {
-                placeholders.put("{player}", player.getName());
                 placeholders.put("{amount}", String.valueOf(this.crazyManager.getActiveEnvoys().size()));
 
                 Messages.envoys_remaining.broadcast(this.config.getProperty(ConfigKeys.envoys_ignore_behaviour_envoys_remaining), placeholders);
