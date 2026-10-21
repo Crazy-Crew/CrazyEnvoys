@@ -52,6 +52,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -531,6 +534,12 @@ public class CrazyManager {
         if (message.equals("0" + Messages.second.getString())) message = Messages.on_going.getString();
 
         return message;
+    }
+
+    public String getNextEnvoyHourTime() {
+        final Calendar calendar = getNextEnvoy();
+
+        return LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US));
     }
 
     /**

@@ -41,6 +41,7 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
 
         return switch (lower) {
             case "cooldown" -> this.crazyManager.isEnvoyActive() ? this.messages.getProperty(MessageKeys.hologram_on_going) : this.crazyManager.getNextEnvoyTime();
+            case "clock" -> this.crazyManager.isEnvoyActive() ? this.messages.getProperty(MessageKeys.hologram_on_going) : this.crazyManager.getNextEnvoyHourTime();
             case "time_left" -> this.crazyManager.isEnvoyActive() ? this.crazyManager.getEnvoyRunTimeLeft() : this.messages.getProperty(MessageKeys.hologram_not_running);
             case "envoys_left" -> String.valueOf(this.crazyManager.getActiveEnvoys().size());
             default -> "";

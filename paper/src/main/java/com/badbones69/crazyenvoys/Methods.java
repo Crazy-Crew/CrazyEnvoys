@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Methods {
@@ -42,7 +43,7 @@ public class Methods {
     }
 
     public static Calendar getTimeFromString(String time) {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(TimeZone.getDefault());
 
         for (String i : time.split(" ")) {
             if (i.contains("D") || i.contains("d")) cal.add(Calendar.DATE, Integer.parseInt(i.replace("D", "").replace("d", "")));
