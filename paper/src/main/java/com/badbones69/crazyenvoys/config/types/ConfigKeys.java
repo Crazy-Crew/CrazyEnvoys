@@ -174,6 +174,9 @@ public class ConfigKeys implements SettingsHolder {
             "<gray>start an envoy event."
     ));
 
+    @Comment("The custom model data of the item.")
+    public static final Property<Integer> envoys_flare_model_data = newProperty("flare.item.custom-model-data", -1);
+
     @Comment("If they are limited to use flares only in specified regions.")
     public static final Property<Boolean> envoys_flare_world_guard_toggle = newProperty("flare.support.worldguard.toggle", false);
 

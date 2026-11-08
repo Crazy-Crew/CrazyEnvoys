@@ -18,9 +18,11 @@ public class FlareSettings {
     public void load() {
         final SettingsManager config = ConfigManager.getConfig();
 
-        this.builder = ItemBuilder.from(config.getProperty(ConfigKeys.envoys_flare_item_type).toLowerCase())
+        final ItemBuilder builder = ItemBuilder.from(config.getProperty(ConfigKeys.envoys_flare_item_type).toLowerCase())
                 .withDisplayName(config.getProperty(ConfigKeys.envoys_flare_item_name))
                 .withDisplayLore(config.getProperty(ConfigKeys.envoys_flare_item_lore));
+
+        builder.asCustomBuilder().setCustomModelData(config.getProperty(ConfigKeys.envoys_flare_model_data)).build();
 
         ItemUtil.addGlow(this.builder, String.valueOf(config.getProperty(ConfigKeys.envoys_flare_item_glowing)));
     }
