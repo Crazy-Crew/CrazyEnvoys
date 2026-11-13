@@ -17,9 +17,9 @@ Settings:
   Hologram-Range: 8 # The distance the hologram can be seen. Only works with CMI and DecentHolograms
   Hologram: #Requires 3rd party plugins such as DecentHolograms to function. https://github.com/Crazy-Crew/CrazyEnvoys/blob/main/platforms/paper/src/main/java/com/badbones69/crazyenvoys/support/libraries/PluginSupport.java
     # Available placeholders:
-    # %crazyenvoys_crates_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
+    # %crazyenvoys_envoys_time% shows the grace period of the envoy if the option in config.yml called Crate-Countdown.Toggle is enabled.
     - '<gray><b>(<gold><b>!<gray><b>) Basic Crate'
-    - '%crazyenvoys_crates_time%'
+    - '%crazyenvoys_envoys_time%'
   Firework-Toggle: true #Toggle on or off fireworks.
   Firework-Colors: #The colors the fireworks will be.
     - 'Gray'
