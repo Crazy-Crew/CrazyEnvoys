@@ -22,6 +22,8 @@ public class FlareSettings {
                 .withDisplayName(config.getProperty(ConfigKeys.envoys_flare_item_name))
                 .withDisplayLore(config.getProperty(ConfigKeys.envoys_flare_item_lore));
 
+        this.builder = builder;
+
         builder.asCustomBuilder().setCustomModelData(config.getProperty(ConfigKeys.envoys_flare_model_data)).build();
 
         ItemUtil.addGlow(this.builder, String.valueOf(config.getProperty(ConfigKeys.envoys_flare_item_glowing)));
